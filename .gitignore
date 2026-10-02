@@ -13,6 +13,7 @@ dist/
 coverage/
 .angular/
 *.tsbuildinfo
+backend/src/generated/prisma/
 
 # Local secrets and environment overrides
 .env

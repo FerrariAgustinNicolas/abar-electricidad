@@ -1,7 +1,9 @@
 # H0.1 — Inventario y versiones base
 
-**Estado:** inventario y propuesta técnica local; no equivale a instalación, integración probada ni aprobación comercial.  
-**Fecha de evidencia:** 2 de octubre de 2026.  
+**Estado:** inventario y propuesta técnica local; no equivale a instalación, integración probada ni aprobación comercial.
+
+**Fecha de evidencia:** 2 de octubre de 2026.
+
 **Alcance:** H0.1 únicamente. No es el informe de cierre de H0.
 
 ## Inventario observado
