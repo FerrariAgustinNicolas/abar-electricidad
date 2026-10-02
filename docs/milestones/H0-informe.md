@@ -1,13 +1,23 @@
 # H0 — Informe de avance PARCIAL
 
-**Estado global: PARCIAL.** Se completó la unidad backend/servicios locales de H0.2 y se verificó técnicamente el candidato transversal H0.3, incluida la igualdad semántica live de Swagger para health. H0.4 (mapa/UI), la auditoría/aprobación global de H0 y la revisión final siguen pendientes. No se declara cerrado H0 ni se inicia H1.
+**Estado global: PARCIAL; H0 no está cerrado y H1 no se inicia.** El mínimo frontend H0.2 y el mapa H0.4 están implementados; build/lint/tests/audit pasan y la integración local frontend→API quedó verificada en esta continuación. El review final y la verificación visual siguen pendientes.
+
+### Estado actual de Docker y servicios — restaurado
+
+El verificador fresco `murd1ygm-e-v5rl` informó que los comandos de recuperación de Docker terminaron con exit 0 y que PostgreSQL SQL/TCP y Mailpit SMTP pasaron. No se recibieron aquí las líneas de comando completas ni resultados desglosados; no se inventan. La smoke de esta continuación inició un backend propio, recibió HTTP 200 tras `SELECT 1` real, sirvió el landing Angular y confirmó que el proxy `/health` devolvió `{"status":"ok"}`. Sus procesos hijos finalizaron por el cleanup del script; no se modificaron Compose, servicios o volúmenes.
+
+#### Incidente Docker anterior (evidencia histórica, restablecido)
+
+El verificador de solo lectura `murcsh9p-c-1827` observó entonces Docker context `desktop-linux`; `docker version` mostró solo cliente 29.7.2, sin servidor, exit 1. `docker compose ps --all`, `docker compose port postgres 5432` y `docker compose ps -q postgres` terminaron con exit 1 por `failed to connect to the docker API at unix:///Users/agustin/.docker/run/docker.sock; check if the path is correct and if the daemon is running: dial unix /Users/agustin/.docker/run/docker.sock: connect: no such file or directory`. Probes TCP a `127.0.0.1:5432` y `127.0.0.1:8025` devolvieron `ECONNREFUSED`; `lsof` en 5432/1025/8025 no encontró listeners. En aquella inspección los exit codes individuales de lecturas iniciales de context/info no se registraron. Contenedores e SQL interno no pudieron verificarse en ese momento; eso no indicaba fallo de consulta SQL interna ni explicaba la pérdida del endpoint. No se presume causa ni reinicio por agentes.
+
+El verificador informó que código fuente y `git status` inicial/final de esa inspección no cambiaron. Esta continuación implementa únicamente el arreglo acotado del smoke y su prueba; el worktree conserva los cambios frontend/README anteriores sin commit. El smoke previo con PostgreSQL inaccesible falló antes de lanzar Angular, por lo que entonces no verificó su startup/landing/proxy. Ahora el smoke posterior a la recuperación sí verificó esas partes. Los criterios H0.2 #3 y #4 quedan **CUMPLE** y **PASS**, respectivamente, por la evidencia fresca de servicios y la smoke integrada actual; esto no cierra H0 ni reemplaza review.
 
 ## Estado Git y alcance
 
-- Raíz verificada: `/Users/agustin/Repos/personal/abar-electricidad`; rama `chore/h0-base`; estado H0.3 iniciado desde HEAD/base `1545ab93168b920420e853a695428877ac0c8d88`. La observación histórica al inicio de H0.2 fue `120499f24cad23d2d557e6096781256958c971fd` (H0.1). Base inicial H0: `b7bca3e1eee63e3c63a436d4eb9eaeeea2100fd2`.
-- El informe y la implementación son cambios locales sin commit. No se cambió de rama ni se ejecutaron acciones remotas.
+- Raíz verificada: `/Users/agustin/Repos/personal/abar-electricidad`; rama `chore/h0-base`; esta unidad frontend/UI parte de HEAD/base `0680f130e3b538fc7d851d4fd4ddf1bc38942980`, que sigue a `529388c922244b1bd410411812bae34b3a329dee` (validator follow-up H0.3). La observación histórica al inicio de H0.2 fue `120499f24cad23d2d557e6096781256958c971fd` (H0.1). Base inicial H0: `b7bca3e1eee63e3c63a436d4eb9eaeeea2100fd2`. La rama no se cambió y esta unidad no hizo commits ni operaciones remotas.
+- El informe y la implementación son cambios locales sin commit. No se cambió de rama ni se ejecutaron acciones remotas. HEAD permanece `0680f130e3b538fc7d851d4fd4ddf1bc38942980`; la revisión documental actual no ejecutó acciones Git modificadoras.
 - El `.env.example` sin seguimiento fue creado por el usuario con valores ficticios confirmados. No se leyó ni modificó con herramientas de archivos. Las operaciones Compose autorizadas lo consumieron. No se leyó `.env`; `git check-ignore .env backend/.env` confirmó que ambas rutas están ignoradas.
-- Se mantuvo el alcance backend/servicios: no hay frontend, endpoints comerciales, autenticación, tablas/modelos comerciales, migraciones ni seeds. El esquema Prisma está vacío; el cliente generado explícitamente bajo `backend/src/generated/prisma` sí es código de infraestructura.
+- En la unidad backend/servicios original no se implementaron entonces frontend, endpoints comerciales, autenticación, tablas/modelos comerciales, migraciones ni seeds. El frontend mínimo se documenta en la continuación posterior de este informe; siguen ausentes las funciones comerciales y el esquema Prisma conserva solo infraestructura.
 
 ### Incidente Git y control nativo previo
 
@@ -70,7 +80,7 @@ Los comandos con errores iniciales se diagnosticaron y luego volvieron a ejecuta
 | `npm --prefix backend audit --json` | PASS, exit 0; 0 info/low/moderate/high/critical vulnerabilidades al finalizar. |
 | `docker compose --env-file .env.example config --quiet` | PASS, exit 0; Compose resuelve configuración. Se usó como operación autorizada; el archivo no fue abierto con herramientas de lectura. |
 | `docker compose --env-file .env.example up -d` | PASS, exit 0. Descargó las imágenes fijadas, creó volúmenes nombrados; al incorporar persistencia Mailpit recreó solo el contenedor Mailpit creado durante esta tarea, sin eliminar volúmenes. |
-| `docker compose --env-file .env.example ps` | PASS, exit 0; PostgreSQL y Mailpit `healthy`, puertos publicados en `127.0.0.1` (`5432`, `1025`, `8025`). |
+| `docker compose --env-file .env.example ps` (verificación histórica) | PASS, exit 0 en esa ejecución; PostgreSQL y Mailpit reportaron `healthy`, puertos publicados en `127.0.0.1` (`5432`, `1025`, `8025`). No acredita disponibilidad actual del daemon/servicios. |
 | `node --check scripts/h0-backend-smoke.mjs` | PASS, exit 0. |
 | `node scripts/h0-backend-smoke.mjs` | PASS, exit 0: `SELECT 1` real con PostgreSQL disponible, Swagger/OpenAPI 3.0.3, 404 seguro, SMTP ficticio capturado por Mailpit y HTTP 503 real con PostgreSQL local no disponible, manteniendo el error seguro/UUID. El script detuvo sus procesos backend al acabar. |
 | `git diff --check` | PASS, exit 0 para cambios rastreados actuales. |
@@ -78,17 +88,17 @@ Los comandos con errores iniciales se diagnosticaron y luego volvieron a ejecuta
 | `git check-ignore .env backend/.env` | PASS; ambas rutas ignoradas. No se abrió ninguna. |
 | `lsof -nP -iTCP:3000 -iTCP:5432 -iTCP:1025 -iTCP:8025 -sTCP:LISTEN` | Tras smoke solo Docker escucha en loopback `5432`, `1025`, `8025`; no quedó proceso backend escuchando en `3000`. El comando devuelve exit 1 cuando no encuentra una de las cuatro coincidencias, comportamiento normal de `lsof`. |
 
-**Estado al entregar:** Compose queda en ejecución con PostgreSQL y Mailpit saludables; volúmenes locales intactos. No se detuvieron servicios Compose ni se ejecutó `down`. El servidor backend hijo del smoke se detuvo.
+**Estado al terminar aquella verificación histórica:** Compose reportó PostgreSQL y Mailpit healthy, con volúmenes locales intactos; no se detuvieron servicios ni se ejecutó `down`. El proceso backend hijo del smoke se detuvo. Este resultado no acredita el estado actual: el último diagnóstico encontró Docker Desktop sin endpoint y no pudo inspeccionar contenedores ni volúmenes.
 
 ## Avance H0 y pendientes
 
 | Frente | Estado | Evidencia / límite |
 |---|---|---|
 | H0.1 inventario/versiones | Hecho previamente | Documento y commit `120499f`; review H0.1 aprobada según lineage informado. El fallo histórico whitespace se documenta arriba y el arreglo actual pasa `git diff --check`. |
-| H0.2 backend/servicios | Hecho para esta unidad | Tests, build, Prisma, Compose, conexión PostgreSQL, HTTP/OpenAPI y recepción SMTP. Review con lineage `review-4f1a84dd1e036080` aprobada/acknowledged; autoridad consumida. Advisories no bloqueantes R3-health-timeout (`health.service.ts:10`) y R3-smtp-error (`scripts/h0-backend-smoke.mjs:170`); no se infiere texto de findings más allá de sus identificadores/ubicaciones. Commit `1545ab93168b920420e853a695428877ac0c8d88`. |
+| H0.2 backend/servicios | Backend con PASS histórico; servicios restaurados/verificados | Tests/build/Prisma/Compose/SQL/HTTP/OpenAPI/SMTP cuentan con PASS histórico, y el verificador fresco `murd1ygm-e-v5rl` reporta recuperación Docker/SQL-TCP/Mailpit SMTP PASS. Review lineage `review-4f1a84dd1e036080` corresponde a unidad anterior. Advisories R3-health-timeout (`health.service.ts:10`) y R3-smtp-error (`scripts/h0-backend-smoke.mjs:170`) se conservan. Backend commit `1545ab93168b920420e853a695428877ac0c8d88`. Criterio H0.2 #3: **CUMPLE** con evidencia fresca. |
 | H0.3 contrato transversal | Implementado y verificado técnicamente; candidato pendiente de auditoría | Contrato, tres ejemplos, decisión, changelog, validador y metadata Swagger de health coinciden semánticamente. Validación documental, negativa, e2e y live pasan; no representa aprobación comercial ni cierre global. |
-| H0.4 mapa UI/frontend | Pendiente | No hay frontend ni verificación visual; el worker no afirma haber inspeccionado Figma. |
-| Verify/review global | Pendiente | No se inició review nativa de este candidato ni revisión de H0 completo. |
+| H0.4 mapa UI/frontend | Mapa y esqueleto mínimo realizados; visual pendiente | `docs/figma-map.md`, rutas H0 reales, layouts placeholders, tokens CSS y pruebas Angular DOM. No hubo navegador ni inspección nueva de Figma; criterios 360/768/1440/teclado/zoom/contraste siguen pendientes. |
+| Verify/review global | Parcial; verificación técnica local PASS, review pendiente | Backend/frontend checks actuales PASS según el verificador fresco; smoke propia verificó landing Angular y proxy a PostgreSQL. Docker incidente previo quedó restablecido. Review global y verificación visual continúan pendientes. |
 
 ## H0.3 — Evidencia de esta continuación
 
@@ -157,7 +167,46 @@ Cambios de este seguimiento, sin dependencias ni comportamiento backend:
 | `npm --prefix backend run contract:validate:live` | exit 0; Swagger, health PostgreSQL 200 y error safe 503 verificados; script detuvo únicamente sus procesos backend. |
 | `git diff --check` | PASS, exit 0 después de esta edición de informe. |
 
-La review de `529388c...` no fue alterada ni reabierta. Esta unidad no hizo commit ni alteró servicios/Compose, archivos de entorno o dependencias. H0 y H0.3 siguen sujetos a la auditoría/global verification descrita en este informe.
+La review de `529388c...` no fue alterada ni reabierta. El padre informó para este follow-up una evaluación nativa **medium**, 178 líneas, `reviewDue=false`, `under_budget`; se difirió a esta slice y **no es aprobación de review** para el follow-up. Esta unidad no hizo commit ni operaciones remotas. H0 y H0.3 siguen sujetos a la auditoría/global verification descrita en este informe.
+
+## H0.2 Frontend mínimo y H0.4 UI map — continuación desde `0680f13`
+
+Esta unidad trabajó en ABAR, rama `chore/h0-base`, desde `0680f130e3b538fc7d851d4fd4ddf1bc38942980`, posterior al commit aprobado `529388c922244b1bd410411812bae34b3a329dee`. Un único writer; sin cambios de rama, commits, push, backend, contrato o servicios. No se leyó `.env` ni `.env.example` con herramientas. Las horas siguen sin evidencia; P01–P10 permanecen abiertos; no se cierra formalmente H0.1 ni se inicia H1.
+
+### Implementación
+
+- `frontend/` contiene Angular framework/common/compiler/core/platform-browser/router `21.2.25`; CLI/build `21.2.24`; compiler-cli `21.2.25`; TypeScript `5.9.3`; RxJS `7.8.2`; angular-eslint `21.4.0`; ESLint `9.39.5`; typescript-eslint `8.71.0`; Vitest `4.1.11`; jsdom `27.4.0`. Pins directos exactos y lockfile aislado; no hay manifest/lockfile de monorepo raíz.
+- `npm audit` inicial halló dos vulnerabilidades críticas en `piscina <5.3.2`, dependencia de `@angular/build` 21.2.24 (el remedio npm sugerido cambiaba Angular a 22.2.1). Se fijó override transitive `piscina 5.3.2`, misma major y compatible con la dependencia declarada 5.2.0 de Angular build, verificado en metadata registry. No se cambió ningún pin Angular ni major por auditoría automática; el audit final quedó en cero vulnerabilidades. npm advierte ESLint 9.39.5 deprecado/no soportado y scripts de instalación de paquetes bloqueados por su política; build/test/lint funcionaron.
+- Aplicación standalone/zoneless por features, `HttpClient`, HealthOk mínimo derivado de `contracts/openapi.yaml`, proxy same-origin de `/health` y `/api`. Salud comunica estados loading/success/error y retry sin exponer la excepción interna. `/health` permanece fuera de `/api/v1`.
+- Rutas reales limitadas a `/`, `/estado`, `/admin/login`, `/admin` y fallback 404. Public/auth/admin tienen shell; login y administración son placeholders explícitos “Base H0; no autenticación implementada”, sin formularios/credenciales, acciones privadas, CRUD, catálogo, carrito, checkout ni datos privados. Home cita como referencia documental Home CORREGIDA `17:256` y no alega acceso directo Figma.
+- `docs/figma-map.md` documenta tabla completa §5, niveles de evidencia, DIF01–09, tokens, layouts, rutas reales vs propuestas, estados faltantes y criterios visuales. Figma no fue auditado en esta sesión. Sin navegador disponible: responsive 360/768/1440, teclado, zoom y contraste permanecen pendientes visuales.
+- `scripts/h0-frontend-smoke.mjs` inicia backend compilado propio (loopback 3000) y Angular dev server propio (puerto frontend libre), usa variables explícitas ficticias, consulta landing y proxy `/health`, y detiene solo hijos que inicia. No arranca Compose ni toca volúmenes.
+
+### TDD frontend
+
+- **RED:** `npm --prefix frontend test -- --watch=false` ejecutó un test de comportamiento y falló porque el shell inicial no renderizaba el estado de salud accesible: `expected null not to be null` (1 test, 1 fallo). Una ejecución anterior, antes de ajustar la configuración Angular Vitest, no corrió tests porque `browsers: jsdom` activaba el runner de browser y exigía paquete browser; se corrigió usando el builder Angular que aplica jsdom por defecto. No se presenta ese error de setup como RED conductual.
+- **GREEN:** tras implementar layout/rutas, health service/panel y proxy, la misma suite pasó 6/6.
+- **TRIANGULATE:** tests cubren éxito/error 503/cuerpo malformado, retry, path exacto GET `/health`, render Home, rutas admin/login inertes y fallback. jsdom no es navegador ni evidencia visual.
+- El follow-up previo del validador H0.3 registró además que la primera sintaxis de su test fue inválida antes del RED conductual; está narrado en su sección histórica. No se oculta ni se atribuye a este frontend.
+
+### Verificación de esta unidad
+
+| Comando exacto | Resultado observado |
+|---|---|
+| `npm --prefix frontend install` (inicial) | exit 0, 577 paquetes instalados; audit inicial reportó 2 críticas, investigadas y corregidas mediante override compatible descrito arriba. |
+| `npm --prefix frontend install` (tras override) | exit 0; dependencia transitive `piscina` actualizada a 5.3.2; audit incluido cero vulnerabilidades. |
+| `npm --prefix frontend ci` | PASS, exit 0; 577 paquetes; lock reproducible, audit incluido cero. Avisos de scripts restringidos/deprecación citados arriba. |
+| `npm --prefix frontend run build` | PASS, exit 0; Angular production build completado, chunks de home/auth/admin lazy. |
+| `npm --prefix frontend run lint` | PASS, exit 0. Una primera ejecución reportó `prefer-inject`; se pasó a `inject()` y volvió a pasar. |
+| `npm --prefix frontend test -- --watch=false` | PASS, exit 0; 2 test files, 6 tests (Vitest 4.1.11 + jsdom). RED conductual anterior documentado arriba. |
+| `node scripts/h0-frontend-smoke.mjs` | FAIL histórico, exit 1 en dos intentos: el backend hijo respondió HTTP 503 y el diagnóstico reportó `ECONNREFUSED` en `127.0.0.1:5432`. La secuencia se detuvo antes de lanzar Angular, así que no verificó su startup, landing ni proxy. No se alteraron servicios ni volúmenes; el diagnóstico actual del Docker endpoint se registra al inicio de este informe. El script detuvo sus propios backend hijos. |
+| `npm --prefix frontend audit --json` (inicial) | FAIL, exit 1; 2 críticas (Angular build transitiva `piscina` 5.2.0 vulnerable). Fix disponible de npm proponía Angular 22 major, rechazado; override patch-minor compatible aplicado. |
+| `npm --prefix frontend audit --json` (final) | PASS, exit 0; total 0 vulnerabilidades. |
+| `git diff --check` | PASS, exit 0. |
+
+| `python3 -c` (escaneo de espacios finales en README, mapa, informe, script y archivos frontend no generados) | PASS; sin espacios finales. |
+
+No hubo verificación en navegador real, así que compilar/testear no certifica presentación responsive. La integración técnica proxy+base ahora tiene PASS; permanecen pendientes criterios visuales, review final y auditoría. El informe no equivale a aprobación del candidato ni al cierre formal de H0.
 
 ## Integridad del candidato y verificación previa suministrada
 
@@ -166,3 +215,32 @@ El padre informó que H0.2 fue aprobado/acknowledged bajo lineage `review-4f1a84
 El padre informó también que la transición del índice fue su `git add` selectivo explícito, no mutación del worker; el candidato congelado `ccc9a3679269408305be0bf04eb678ed3b43cec2` tuvo el mismo árbol que el commit. En ese momento `git diff --cached --check` pasó y `git diff --exit-code` fue limpio. H0.1 whitespace inicial se corrigió en `1545ab9`; la evidencia previa reporta que el commit previo `1545ab9` está en la rama objetivo. Esta continuación no realizó staging ni commit.
 
 Las horas consumidas siguen sin evidencia y quedan pendientes. No se inventa saldo frente a las 200 horas del plan. H0.3 está en el commit padre `529388c922244b1bd410411812bae34b3a329dee`; este seguimiento queda sin commit. H0.4, verificación global y cierre siguen pendientes; H1 permanece detenido hasta auditoría/autorización explícita.
+
+## H0.2 frontend smoke — corrección acotada del runner
+
+Esta continuación retoma la rama `chore/h0-base` en HEAD `0680f130e3b538fc7d851d4fd4ddf1bc38942980`. Se modificaron solo `scripts/h0-frontend-smoke.mjs`, su test nuevo y este informe; README quedó sin cambios. No se cambiaron versiones/configuración, instalaciones, servicios, volúmenes, herramientas ni archivos de entorno. No hubo commit ni cambio de rama.
+
+### Diagnóstico y cambio
+
+El verificador de solo lectura `murd6ekt-f-7rr` confirmó que Angular CLI 21.2.24 rechaza `--no-progress` con `Unknown argument: progress` (exit 1). El script lo agregaba a los argumentos de `ng serve`; además, `stdio: 'ignore'` ocultaba el stderr que identificaba el fallo. No había evidencia de fallo de PATH o permisos. Se eliminó únicamente esa opción, se añadió una función pequeña de construcción de argumentos para regresión y una guarda de ejecución para poder importar el test sin arrancar procesos. El smoke captura solo stderr Angular en un buffer acotado a 64 KiB; muestra diagnóstico saneado únicamente al fallar, sin imprimir entorno ni argumentos con credenciales.
+
+### TDD y verificación
+
+- **RED:** `node --test scripts/h0-frontend-smoke.test.mjs` antes del cambio falló 1/1: detectó el argumento literal `--no-progress` en el runner.
+- **GREEN:** el mismo test después del cambio pasó 1/1 y comprueba los argumentos loopback/proxy soportados.
+- **TRIANGULATE:** la ejecución smoke completa inició procesos propios, verificó landing Angular y `/health` proxied con respuesta real PostgreSQL `{"status":"ok"}`; el cleanup del script completó al salir con código 0.
+
+| Comando exacto | Resultado observado |
+|---|---|
+| `node --test scripts/h0-frontend-smoke.test.mjs` (antes del fix) | RED, exit 1; flag Angular no soportado presente. |
+| `node --test scripts/h0-frontend-smoke.test.mjs` (después del fix) | PASS, exit 0; 1 test. |
+| `node scripts/h0-frontend-smoke.mjs` (antes del fix, diagnóstico suministrado) | FAIL, exit 1; Angular CLI 21.2.24 rechazó `--no-progress` como `Unknown argument: progress`; stderr estaba silenciado. |
+| `node scripts/h0-frontend-smoke.mjs` (después del fix) | PASS, exit 0: backend propio respondió health HTTP 200 tras PostgreSQL `SELECT 1`; Angular sirvió HTML con `<abar-root` y título en loopback `59037`; el proxy frontend `/health` devolvió HTTP 200 y `{"status":"ok"}`. Solo los procesos hijos de smoke se detuvieron; Compose/volúmenes quedaron intactos. |
+| `npm --prefix frontend run build` | PASS, exit 0; Angular production build. |
+| `npm --prefix frontend run lint` | PASS, exit 0. |
+| `npm --prefix frontend test -- --watch=false` | PASS, exit 0; 2 archivos, 6 tests. |
+| `npm --prefix backend run contract:validate:live` | PASS, exit 0; OpenAPI 3.0.3, Swagger, PostgreSQL-backed HTTP 200 y HTTP 503 seguro; el validador detuvo solo sus procesos backend. |
+| Docker recovery, servicios y smoke de correo (evidencia del verificador `murd1ygm-e-v5rl`) | Recovery commands exit 0; SQL/TCP PostgreSQL y Mailpit SMTP PASS, según el verificador. No se recibieron sus comandos completos/resultados desglosados y no se inventan. |
+| `git diff --check` | PASS, exit 0; sin errores de whitespace en los cambios de esta continuación. |
+
+El cambio verifica servidor real y proxy, pero no es verificación visual de navegador. Responsive 360/768/1440, teclado, zoom y contraste continúan pendientes. Los criterios H0.2 #3 CUMPLE y #4 PASS reflejan la evidencia fresca de servicios y smoke integrada; review final permanece pendiente. El candidato sigue sin commit en HEAD `0680f130e3b538fc7d851d4fd4ddf1bc38942980`; la evaluación nativa H0.3 medium, 178 líneas, `reviewDue=false`, `under_budget` fue diferida desde `529388c` y no equivale a aprobación del review de este follow-up. No se declara H0 cerrado ni se autoriza H1.

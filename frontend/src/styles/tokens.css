@@ -1,0 +1,11 @@
+:root {
+  --color-blue: #0B6FB3;
+  --color-blue-dark: #084D7D;
+  --color-orange: #F7931E;
+  --color-text: #20262c;
+  --color-muted: #56616b;
+  --color-surface: #ffffff;
+  --color-surface-subtle: #f3f6f8;
+  --color-border: #c7d0d8;
+  --font-family-sans: Inter, 'Segoe UI', sans-serif;
+}

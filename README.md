@@ -2,7 +2,7 @@
 
 ## Backend y servicios locales (H0.2)
 
-Esta es únicamente la base local del backend y sus dependencias: NestJS, PostgreSQL y Mailpit. No hay frontend, autenticación ni endpoints comerciales implementados todavía. El entorno es para desarrollo local; no es una configuración de producción.
+Esta sección describe la base local del backend y sus dependencias: NestJS, PostgreSQL y Mailpit. El frontend Angular mínimo de H0.2 se documenta más abajo. No hay autenticación funcional ni endpoints comerciales implementados. El entorno es para desarrollo local; no es una configuración de producción.
 
 ### Requisitos
 
@@ -73,3 +73,31 @@ npm --prefix backend run contract:validate:live
 ```
 
 La opción live usa únicamente variables explícitas ficticias de desarrollo (nunca lee `.env` ni `.env.example`), liga el backend a loopback y detiene solo los procesos que inicia. Requiere PostgreSQL local accesible para comprobar 200; un segundo proceso usa un puerto de base deliberadamente inaccesible para verificar el error 503. Los componentes comerciales, convenciones de sesión e idempotencia son candidatos documentales, no funcionalidades. El rollout comercial permanece cerrado hasta autorización explícita; H1 no se inicia con este cambio.
+
+## Frontend Angular (H0.2)
+
+El frontend es una aplicación Angular standalone/zoneless con dependencias fijadas en `frontend/package.json` y lockfile separado. Requiere Node.js 24.x y npm 11.x. No se añadió gestor de monorepo.
+
+Con PostgreSQL/Mailpit locales y el backend iniciado en loopback `127.0.0.1:3000` (ver comandos anteriores), desde la raíz:
+
+```sh
+npm --prefix frontend ci
+npm --prefix frontend run build
+npm --prefix frontend run lint
+npm --prefix frontend test -- --watch=false
+npm --prefix frontend start
+```
+
+Abrí `http://127.0.0.1:4200`. El servidor Angular se liga solo a loopback y el proxy conserva `GET /health` fuera de `/api/v1`; también pasa `/api` sin reescribirlo. El estado visible consulta la respuesta normativa `{"status":"ok"}` y muestra carga, disponibilidad, error o reintento. El endpoint solo responde saludable cuando PostgreSQL contestó `SELECT 1`.
+
+El shell público toma como referencia documental Home CORREGIDA (`17:256`), sin afirmar acceso o reproducción directa de Figma. Login y administración son placeholders explícitos; no existe autenticación funcional, operaciones, CRUD, catálogo, carrito o checkout en H0.4. Las pruebas con Vitest/jsdom verifican DOM, rutas y HTTP, no son pruebas de navegador real ni certifican responsive/contraste.
+
+Para iniciar procesos backend y frontend propios, comprobar que el landing se sirve y que el proxy recibe el health real de PostgreSQL:
+
+```sh
+node scripts/h0-frontend-smoke.mjs
+```
+
+El smoke requiere que `127.0.0.1:3000` esté libre, inicia backend propio en ese puerto (target fijo del proxy) y elige un puerto frontend loopback disponible. Usa únicamente una URL PostgreSQL local ficticia explícita, no lee archivos de entorno, no inicia ni detiene Compose y termina solo los procesos que inició. Si 3000 está ocupado, falla sin contactar ni detener ese proceso.
+
+El mapa completo de nodos/rutas, brechas y criterios visuales pendientes está en `docs/figma-map.md`. La verificación real en navegador a 360/768/1440 px, teclado, zoom y contraste sigue pendiente; compilar y jsdom no la sustituyen.

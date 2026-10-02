@@ -1,0 +1,30 @@
+@import url('./styles/tokens.css');
+
+* { box-sizing: border-box; }
+html { color-scheme: light; font-family: var(--font-family-sans); }
+body { margin: 0; color: var(--color-text); background: var(--color-surface); line-height: 1.5; }
+a { color: var(--color-blue-dark); }
+button, a { min-height: 2.75rem; }
+button { color: #fff; background: var(--color-blue-dark); border: 0; border-radius: .25rem; padding: .5rem .875rem; font: inherit; cursor: pointer; }
+button:disabled { cursor: not-allowed; opacity: .65; }
+:focus-visible { outline: 3px solid var(--color-orange); outline-offset: 3px; }
+.site-header, .site-footer, .site-main, .admin-header, .admin-shell, .auth-shell { padding: 1rem max(1rem, calc((100vw - 72rem) / 2)); }
+.site-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; border-bottom: 1px solid var(--color-border); }
+.brand { color: var(--color-blue-dark); font-size: 1.25rem; font-weight: 700; text-decoration: none; }
+.site-main { min-height: 55vh; padding-top: 2rem; padding-bottom: 3rem; }
+.site-footer { background: var(--color-surface-subtle); color: var(--color-muted); font-size: .9rem; }
+.hero { padding: clamp(1.5rem, 6vw, 4rem); background: var(--color-surface-subtle); border-left: .35rem solid var(--color-orange); }
+.hero h1 { color: var(--color-blue-dark); font-size: clamp(2rem, 7vw, 3.25rem); line-height: 1.1; }
+.eyebrow { color: var(--color-blue-dark); font-weight: 700; }
+.health-card { margin-block: 1.5rem; padding: 1rem; border: 1px solid var(--color-border); border-radius: .35rem; }
+.notice { padding: .75rem 1rem; background: #fff4e5; border-left: .25rem solid var(--color-orange); }
+.admin-header { background: var(--color-blue-dark); color: white; }
+.admin-shell { display: grid; grid-template-columns: minmax(12rem, 1fr) 3fr; gap: 1.5rem; min-height: 50vh; }
+.skip-link { position: absolute; top: -5rem; left: 1rem; z-index: 1; padding: .5rem; background: white; }
+.skip-link:focus { top: 1rem; }
+.not-found { max-width: 42rem; margin: 4rem auto; padding: 1rem; }
+
+@media (max-width: 48rem) {
+  .admin-shell { grid-template-columns: 1fr; }
+  .site-header, .site-footer, .site-main, .admin-header, .admin-shell, .auth-shell { padding-left: 1rem; padding-right: 1rem; }
+}
