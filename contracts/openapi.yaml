@@ -1,0 +1,234 @@
+openapi: 3.0.3
+info:
+  title: ABAR Electricidad API — transversal candidate
+  version: 0.3.0
+  description: |
+    Normative H0 transversal contract candidate. Only GET /health is implemented.
+    The commercial API is projected under /api/v1 with public, auth and admin areas;
+    those areas and their schemas are candidates for H1+, not implemented operations.
+    This document preserves unresolved P01–P10 and does not finalize buyer-field rules.
+  x-abar-contract-status: candidate
+  x-abar-projected-areas:
+    - /api/v1/public
+    - /api/v1/auth
+    - /api/v1/admin
+  x-abar-examples:
+    - file: examples/health-ok.json
+      schema: HealthOk
+    - file: examples/health-unavailable.json
+      schema: ApiError
+    - file: examples/money-ars.json
+      schema: Money
+servers:
+  - url: http://localhost:3000
+    description: Local development only; production transport must use HTTPS.
+security: []
+tags:
+  - name: operational
+    description: Implemented operational endpoint, outside the commercial /api/v1 prefix.
+  - name: projected
+    description: Candidate components and conventions only; no business operations are implemented.
+paths:
+  /health:
+    get:
+      tags: [operational]
+      operationId: getHealth
+      summary: Check API and PostgreSQL availability
+      description: Returns success only after a real PostgreSQL SELECT 1. Failure bodies contain no internal details.
+      responses:
+        '200':
+          description: PostgreSQL answered SELECT 1.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthOk'
+              examples:
+                success:
+                  externalValue: ./examples/health-ok.json
+        '503':
+          description: PostgreSQL is temporarily unavailable; safe uniform error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                unavailable:
+                  externalValue: ./examples/health-unavailable.json
+components:
+  securitySchemes:
+    AdminSessionCookie:
+      type: apiKey
+      in: cookie
+      name: abar_admin_session
+      description: |
+        Projected revocable server-side administrative session, not implemented in H0.
+        HttpOnly, SameSite=Lax or stricter, Secure in production; Secure may be omitted
+        only for explicitly local HTTP development. Mutations require CSRF protection
+        and origin validation. Never use JWT or localStorage for this session.
+  headers:
+    IdempotencyKey:
+      description: |
+        Projected on critical mutation operations. Same key and same request replays the
+        prior result; same key with a different request returns 409 IDEMPOTENCY_CONFLICT.
+        H0 does not implement or reserve these operations.
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 200
+    RequestId:
+      description: Correlation identifier for the completed request.
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    HealthOk:
+      type: object
+      additionalProperties: false
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [ok]
+    ApiError:
+      type: object
+      additionalProperties: false
+      description: Uniform safe error envelope. fieldErrors is optional and operation-specific.
+      required: [code, message, requestId]
+      properties:
+        code:
+          type: string
+          minLength: 1
+        message:
+          type: string
+          minLength: 1
+        fieldErrors:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldError'
+        requestId:
+          type: string
+          format: uuid
+    FieldError:
+      type: object
+      additionalProperties: false
+      required: [field, code, message]
+      properties:
+        field:
+          type: string
+          minLength: 1
+        code:
+          type: string
+          minLength: 1
+        message:
+          type: string
+          minLength: 1
+    Money:
+      type: object
+      additionalProperties: false
+      description: Projected candidate; minor units are a decimal integer string, never a JSON number or binary float.
+      required: [amountMinor, currency]
+      properties:
+        amountMinor:
+          type: string
+          pattern: '^(0|[1-9][0-9]*)$'
+          example: '1250000'
+        currency:
+          type: string
+          enum: [ARS]
+    PresentationUnit:
+      type: string
+      description: Projected sales units; presentation-specific rules remain subject to business review.
+      enum: [UNIT, METER, ROLL]
+    PositiveQuantity:
+      type: integer
+      format: int32
+      minimum: 1
+      description: Projected quantity; increments are whole units only.
+    PositiveLengthMeters:
+      type: integer
+      format: int32
+      minimum: 1
+      description: Projected positive configured roll length in meters, applicable to ROLL only where relevant.
+    OpaqueId:
+      type: string
+      format: uuid
+      description: Projected opaque UUID identifier; not a sequential or public business number.
+    UtcDateTime:
+      type: string
+      format: date-time
+      description: Projected RFC 3339 timestamp normalized to UTC.
+      example: '2026-10-02T15:04:05Z'
+    PaginationQuery:
+      type: object
+      description: |
+        Projected list query. page starts at 1; pageSize defaults to 20 and is at most 100.
+        sort values are an explicit candidate allowlist, not an approved business rule.
+      properties:
+        page:
+          type: integer
+          minimum: 1
+          default: 1
+        pageSize:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+        sort:
+          type: string
+          enum: [name-asc, name-desc, price-asc, price-desc]
+          description: Candidate finite allowlist; each operation must publish only applicable values before implementation.
+    PageInfo:
+      type: object
+      additionalProperties: false
+      description: Projected page metadata.
+      required: [page, pageSize, totalItems, totalPages]
+      properties:
+        page:
+          type: integer
+          minimum: 1
+        pageSize:
+          type: integer
+          minimum: 1
+          maximum: 100
+        totalItems:
+          type: integer
+          minimum: 0
+        totalPages:
+          type: integer
+          minimum: 0
+    OrderStatus:
+      type: string
+      description: Projected candidate order progress; transitions are proposals, not finalized business rules.
+      enum: [RECEIVED, PREPARING, READY, DELIVERED, CANCELLED]
+    PaymentStatus:
+      type: string
+      description: Projected commercial payment status, distinct from provider attempt result.
+      enum: [PENDING, REJECTED, PAID]
+    PaymentAttemptStatus:
+      type: string
+      description: Projected outcome of one payment attempt, distinct from OrderStatus and PaymentStatus.
+      enum: [PENDING, APPROVED, REJECTED]
+    DeliveryMode:
+      type: string
+      description: Projected delivery mode, not an order-progress state.
+      enum: [PICKUP, COORDINATED]
+    ExpectedVersion:
+      type: integer
+      minimum: 1
+      description: Projected optimistic concurrency precondition for edits; stale versions return 409.
+    IdempotencySemantics:
+      type: object
+      description: |
+        Projected convention only: same key and same payload returns the prior result;
+        same key with a different payload returns 409 IDEMPOTENCY_CONFLICT.
+        Creation of unpaid orders and simulated APPROVED attempts do not reserve or debit stock.
+        Only explicit manual atomic payment confirmation may debit stock once; delivery/progress
+        changes and simulated outcomes never debit. No such operation is implemented in H0.
+      properties: {}
+      additionalProperties: false
+x-abar-review-boundaries:
+  unresolved: [P01, P02, P03, P04, P05, P06, P07, P08, P09, P10]
+  buyerFieldRules: unresolved; do not treat projected DTO examples as finalized requirements.
+  stock: No reservation on unpaid order creation or simulated APPROVED outcome. Only manual atomic payment confirmation debits once.
+  rollOpening: Opening is explicit and manual; checkout never converts closed rolls to meters.
+  rollout: Commercial rollout remains closed until explicit opening authorization; no production readiness is implied.

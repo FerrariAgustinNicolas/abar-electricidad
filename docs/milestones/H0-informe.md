@@ -1,10 +1,10 @@
 # H0 — Informe de avance PARCIAL
 
-**Estado global: PARCIAL.** Se completó la unidad backend/servicios locales de H0.2 con sus pruebas y comprobaciones de entorno. H0.3 (contrato transversal), H0.4 (mapa/UI), la revisión H0.2 y la verificación global siguen pendientes. No se declara cerrado H0 ni se inicia H1.
+**Estado global: PARCIAL.** Se completó la unidad backend/servicios locales de H0.2 y se verificó técnicamente el candidato transversal H0.3, incluida la igualdad semántica live de Swagger para health. H0.4 (mapa/UI), la auditoría/aprobación global de H0 y la revisión final siguen pendientes. No se declara cerrado H0 ni se inicia H1.
 
 ## Estado Git y alcance
 
-- Raíz verificada: `/Users/agustin/Repos/personal/abar-electricidad`; rama `chore/h0-base`; HEAD observado: `120499f24cad23d2d557e6096781256958c971fd` (inventario H0.1). Base inicial H0: `b7bca3e1eee63e3c63a436d4eb9eaeeea2100fd2`.
+- Raíz verificada: `/Users/agustin/Repos/personal/abar-electricidad`; rama `chore/h0-base`; estado H0.3 iniciado desde HEAD/base `1545ab93168b920420e853a695428877ac0c8d88`. La observación histórica al inicio de H0.2 fue `120499f24cad23d2d557e6096781256958c971fd` (H0.1). Base inicial H0: `b7bca3e1eee63e3c63a436d4eb9eaeeea2100fd2`.
 - El informe y la implementación son cambios locales sin commit. No se cambió de rama ni se ejecutaron acciones remotas.
 - El `.env.example` sin seguimiento fue creado por el usuario con valores ficticios confirmados. No se leyó ni modificó con herramientas de archivos. Las operaciones Compose autorizadas lo consumieron. No se leyó `.env`; `git check-ignore .env backend/.env` confirmó que ambas rutas están ignoradas.
 - Se mantuvo el alcance backend/servicios: no hay frontend, endpoints comerciales, autenticación, tablas/modelos comerciales, migraciones ni seeds. El esquema Prisma está vacío; el cliente generado explícitamente bajo `backend/src/generated/prisma` sí es código de infraestructura.
@@ -85,9 +85,57 @@ Los comandos con errores iniciales se diagnosticaron y luego volvieron a ejecuta
 | Frente | Estado | Evidencia / límite |
 |---|---|---|
 | H0.1 inventario/versiones | Hecho previamente | Documento y commit `120499f`; review H0.1 aprobada según lineage informado. El fallo histórico whitespace se documenta arriba y el arreglo actual pasa `git diff --check`. |
-| H0.2 backend/servicios | Hecho para esta unidad | Tests, build, Prisma, Compose, conexión PostgreSQL, HTTP/OpenAPI y recepción SMTP con resultados de la tabla. Review H0.2 pendiente del padre. |
-| H0.3 contrato transversal | Pendiente | No se creó `contracts/openapi.yaml`, ejemplos compartidos ni decisiones de contrato completas. Swagger solo refleja la operación H0 implementada. |
+| H0.2 backend/servicios | Hecho para esta unidad | Tests, build, Prisma, Compose, conexión PostgreSQL, HTTP/OpenAPI y recepción SMTP. Review con lineage `review-4f1a84dd1e036080` aprobada/acknowledged; autoridad consumida. Advisories no bloqueantes R3-health-timeout (`health.service.ts:10`) y R3-smtp-error (`scripts/h0-backend-smoke.mjs:170`); no se infiere texto de findings más allá de sus identificadores/ubicaciones. Commit `1545ab93168b920420e853a695428877ac0c8d88`. |
+| H0.3 contrato transversal | Implementado y verificado técnicamente; candidato pendiente de auditoría | Contrato, tres ejemplos, decisión, changelog, validador y metadata Swagger de health coinciden semánticamente. Validación documental, negativa, e2e y live pasan; no representa aprobación comercial ni cierre global. |
 | H0.4 mapa UI/frontend | Pendiente | No hay frontend ni verificación visual; el worker no afirma haber inspeccionado Figma. |
 | Verify/review global | Pendiente | No se inició review nativa de este candidato ni revisión de H0 completo. |
 
-Las horas consumidas siguen sin evidencia y quedan pendientes. No se inventa saldo frente a las 200 horas del plan. No hay candidato commit de H0. Próxima unidad autorizada: H0.3/H0.4 y revisión/verificación del padre; H1 sigue bloqueado hasta auditoría explícita de H0.
+## H0.3 — Evidencia de esta continuación
+
+El trabajo partió de `chore/h0-base` en `1545ab93168b920420e853a695428877ac0c8d88`; el árbol estaba limpio. No se cambió rama, no se hicieron commits ni operaciones remotas, y no se tocó backend runtime, `.env`, `.env.example`, infraestructura ni configuración global. La dependencia backend aprobada se preservó. No se afirma que los pendientes P01–P10 estén resueltos.
+
+Archivos de H0.3:
+
+- `contracts/openapi.yaml`: OpenAPI 3.0.3 candidata; la única operación es GET `/health`. Proyecta, no implementa, las áreas `/api/v1/public`, `/api/v1/auth` y `/api/v1/admin`; componentes comerciales marcan su carácter candidato. Incluye dinero ARS en cadena minor-unit, unidades/cantidades/longitudes, IDs/fechas, paginación, enums separados, errores, cookie administrativa/CSRF, idempotencia y expectedVersion. Documenta explícitamente ausencia de reserva en pedido impago/aprobación simulada, débito único solo en confirmación manual atómica, apertura manual de rollos y rollout cerrado hasta autorización.
+- `contracts/examples/{health-ok,health-unavailable,money-ars}.json` y `contracts/examples/CHANGELOG.md`: fixtures ficticios y saneados.
+- `contracts/redocly.yaml`: permite solo avisos conocidos por licencia, localhost de desarrollo, 4xx ausente en health y componentes intencionalmente proyectados/no usados; OpenAPI errors siguen siendo bloqueantes.
+- `scripts/h0-contract-validate.mjs` y `.test.mjs`: Redocly 2.57.0 + AJV/YAML validan el documento, JSON externo, estructuras negativas y comparación semántica Swagger. La opción `--live` inicia backend únicamente con env ficticio explícito, comprueba HTTP health real y detiene solo sus procesos.
+- `backend/package.json` / `backend/package-lock.json`: `contract:validate`, `contract:validate:live`; pins de desarrollo `@redocly/cli 2.57.0`, `ajv 8.18.0`, `yaml 2.8.3`.
+- `backend/src/health/health.controller.ts`: solo documentación Swagger; `HealthOk` y `ApiError` incluyen `additionalProperties: false`, campos obligatorios y constraints normativos, con `fieldErrors` opcional y cerrado. Sin cambio de lógica, ruta ni comportamiento.
+- `backend/test/app.e2e-spec.ts`: assertion HTTP de igualdad del schema Swagger completo para 200 y 503.
+- `docs/decisions/H0-contract.md`, `README.md`, este informe: límites/proyección, uso y evidencia.
+
+### TDD y verificación
+
+- **RED:** En la continuación, `npm --prefix backend run test:e2e -- --runInBand` falló primero en la nueva assertion de schema: Swagger carecía de `additionalProperties: false` en health 200 (503 tampoco tenía schema). La ejecución previa de `npm --prefix backend run contract:validate:live` también había fallado exit 1 por ambas diferencias.
+- **GREEN:** tras corregir exclusivamente los metadatos Swagger, la e2e pasó 5/5 y `npm --prefix backend run contract:validate:live` verificó Swagger, HTTP 200 PostgreSQL-backed y error HTTP 503 seguro; ambos procesos iniciados fueron detenidos.
+- **TRIANGULATE:** `node --test scripts/h0-contract-validate.test.mjs` pasó 5/5 e incluye negativos que vuelven a detectar `additionalProperties` ausente en health 200 y schema ausente en 503. También rechaza amountMinor numérico, unidad no permitida, cantidad cero, ApiError con UUID inválido/campo extra y contrato ausente/inválido. Los JSON positivos se validan con AJV.
+
+| Comando exacto | Resultado observado |
+|---|---|
+| `npm --prefix backend install --save-dev @redocly/cli@2.57.0 ajv@8.17.1 yaml@2.8.1` | exit 0; audit inicial halló 2 moderadas directas en Ajv/YAML, por eso se fijaron versiones corregidas antes de cerrar. |
+| `npm --prefix backend install --save-dev ajv@8.18.0 yaml@2.8.3` | exit 0; auditoría incluida observó 0 vulnerabilidades. |
+| `npm --prefix backend install --save-dev --save-exact @redocly/cli@2.57.0 ajv@8.18.0 yaml@2.8.3` | exit 0; fijó versiones exactas en `package.json`; auditoría incluida observó 0 vulnerabilidades. |
+| `npm --prefix backend ci` | exit 0, 799 paquetes; 0 vulnerabilidades. Se mantienen avisos npm de paquetes/scripts de instalación restringidos y deprecación `glob`/ESLint heredados. |
+| `npm --prefix backend run contract:validate` | PASS; Redocly acepta el OAS 3.0.3 y AJV valida los tres ejemplos JSON externos. |
+| `node --test scripts/h0-contract-validate.test.mjs` | PASS: 5 tests, 0 fallos. |
+| `npm --prefix backend run contract:validate:live` (intento previo) | FAIL, exit 1: HTTP 200/503 runtime se confirmó, pero Swagger 200 omitía `additionalProperties: false` y Swagger 503 no tenía schema. |
+| `npm --prefix backend run test:e2e -- --runInBand` (antes de metadata) | RED, exit 1: la nueva assertion detectó la ausencia de `additionalProperties: false` en schema 200; el schema 503 tampoco estaba documentado. |
+| `npm --prefix backend run test:e2e -- --runInBand` (tras metadata) | PASS: 1 suite, 5 tests; incluye schema Swagger health 200/503 exacto. |
+| `npm --prefix backend run contract:validate:live` (tras metadata) | PASS: Swagger semánticamente coincide con OpenAPI; PostgreSQL-backed 200 y error safe 503 pasan. Validator detuvo exclusivamente sus dos procesos backend. |
+| `npm --prefix backend run build` | PASS; cliente Prisma 7.10.0 generado y TypeScript compilado. |
+| `npm --prefix backend run lint` | PASS, exit 0. |
+| `npm --prefix backend test -- --runInBand` | PASS: 3 suites, 9 tests. |
+| `npm --prefix backend audit --json` | PASS, exit 0; 0 vulnerabilidades tras subir Ajv/YAML. El primer audit de pins previos falló con 2 moderadas y se corrigió, no se ocultó. |
+| `git diff --check` | PASS, exit 0; cambios rastreados sin whitespace inválido. |
+| `if grep -nE '[[:blank:]]+$' README.md backend/package.json backend/package-lock.json backend/src/health/health.controller.ts backend/test/app.e2e-spec.ts docs/milestones/H0-informe.md contracts/openapi.yaml contracts/redocly.yaml contracts/examples/health-ok.json contracts/examples/health-unavailable.json contracts/examples/money-ars.json contracts/examples/CHANGELOG.md docs/decisions/H0-contract.md scripts/h0-contract-validate.mjs scripts/h0-contract-validate.test.mjs; then exit 1; else test $? -eq 1; fi` | PASS, exit 0; todos los archivos rastreados/añadidos modificados en esta continuación sin espacios finales. |
+
+La primera comparación live falló ante la brecha metadata-only; la corrección autorizada quedó verificada con equality semántica, sin relajar el contrato ni el comparador. Este handoff global sigue **PARCIAL** por H0.4 y auditoría/revisión global pendientes; no se declara H0 cerrado ni se habilita H1.
+
+## Integridad del candidato y verificación previa suministrada
+
+El padre informó que H0.2 fue aprobado/acknowledged bajo lineage `review-4f1a84dd1e036080` y que su autoridad quedó consumida. Independiente verifier `murapcpm-7-1ao6` reprodujo `npm ci` (797 paquetes), backend tests/build/lint/audit 0, Prisma y pruebas reales de PostgreSQL/SMTP. Advisories no bloqueantes conservados: `R3-health-timeout` en `health.service.ts:10` y `R3-smtp-error` en `scripts/h0-backend-smoke.mjs:170`; el proveedor dio solo IDs/ubicaciones y no se inventa el texto de findings. El override transitive deepmerge 7.1.5→8.0.2 fue probado en el CLI ejercitado, sin afirmar compatibilidad universal; advertencias de deprecación siguen como deuda.
+
+El padre informó también que la transición del índice fue su `git add` selectivo explícito, no mutación del worker; el candidato congelado `ccc9a3679269408305be0bf04eb678ed3b43cec2` tuvo el mismo árbol que el commit. En ese momento `git diff --cached --check` pasó y `git diff --exit-code` fue limpio. H0.1 whitespace inicial se corrigió en `1545ab9`; la evidencia previa reporta que el commit previo `1545ab9` está en la rama objetivo. Esta continuación no realizó staging ni commit.
+
+Las horas consumidas siguen sin evidencia y quedan pendientes. No se inventa saldo frente a las 200 horas del plan. No hay commit H0.3 ni candidato Git producido por esta continuación. H0.4, revisión del candidato H0.3, verificación global y cierre siguen pendientes; H1 permanece detenido hasta auditoría/autorización explícita.

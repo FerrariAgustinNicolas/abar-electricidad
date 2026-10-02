@@ -36,6 +36,40 @@ describe('H0 HTTP contract', () => {
     expect(Object.keys(response.body.paths)).toEqual(['/health']);
   });
 
+  it('documents exact closed health response schemas for success and safe errors', async () => {
+    const { body } = await request(app.getHttpServer()).get('/api/docs-json').expect(200);
+    const responses = body.paths['/health'].get.responses;
+    expect(responses['200'].content['application/json'].schema).toEqual({
+      type: 'object',
+      additionalProperties: false,
+      required: ['status'],
+      properties: { status: { type: 'string', enum: ['ok'] } },
+    });
+    expect(responses['503'].content['application/json'].schema).toEqual({
+      type: 'object',
+      additionalProperties: false,
+      required: ['code', 'message', 'requestId'],
+      properties: {
+        code: { type: 'string', minLength: 1 },
+        message: { type: 'string', minLength: 1 },
+        fieldErrors: {
+          type: 'array',
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['field', 'code', 'message'],
+            properties: {
+              field: { type: 'string', minLength: 1 },
+              code: { type: 'string', minLength: 1 },
+              message: { type: 'string', minLength: 1 },
+            },
+          },
+        },
+        requestId: { type: 'string', format: 'uuid' },
+      },
+    });
+  });
+
   it('returns a safe, uniform 503 when PostgreSQL is unavailable', async () => {
     query.mockRejectedValueOnce(new Error('password=/private/secret database=private'));
     const response = await request(app.getHttpServer()).get('/health').expect(503);
