@@ -1,12 +1,17 @@
 openapi: 3.0.3
 info:
   title: ABAR Electricidad API — transversal candidate
-  version: 0.3.0
+  version: 0.4.0
+  x-abar-milestone: H1-contract-freeze
+  x-abar-runtime-stage: h0
   description: |
-    Normative H0 transversal contract candidate. Only GET /health is implemented.
-    The commercial API is projected under /api/v1 with public, auth and admin areas;
-    those areas and their schemas are candidates for H1+, not implemented operations.
-    This document preserves unresolved P01–P10 and does not finalize buyer-field rules.
+    Single normative contract: H1 authentication direction frozen, NOT implemented or
+    externally approved. Only GET /health currently runs. Nine H1 operations below
+    are normative for future implementation; public/business components remain projected.
+    P01–P10 and buyer-field rules remain unresolved. No production readiness is implied.
+    All H1 responses use Cache-Control: no-store. No passwords, cookie values or runtime
+    nonces are provided as examples. Required response headers use x-required: true.
+    Cookie authentication does not replace Origin/CSRF checks. See docs/decisions/H1-auth.md.
   x-abar-contract-status: candidate
   x-abar-projected-areas:
     - /api/v1/public
@@ -19,6 +24,14 @@ info:
       schema: ApiError
     - file: examples/money-ars.json
       schema: Money
+    - file: examples/admin-session.json
+      schema: AdminSessionView
+    - file: examples/admin-user.json
+      schema: AdminUserView
+    - file: examples/admin-users.json
+      schema: AdminUserList
+    - file: examples/auth-error.json
+      schema: ApiError
 servers:
   - url: http://localhost:3000
     description: Local development only; production transport must use HTTPS.
@@ -28,6 +41,10 @@ tags:
     description: Implemented operational endpoint, outside the commercial /api/v1 prefix.
   - name: projected
     description: Candidate components and conventions only; no business operations are implemented.
+  - name: auth
+    description: Frozen H1 session protocol; runtime pending.
+  - name: admin
+    description: Frozen H1 administrative users; equal capabilities, no roles.
 paths:
   /health:
     get:
@@ -54,6 +71,329 @@ paths:
               examples:
                 unavailable:
                   externalValue: ./examples/health-unavailable.json
+  /api/v1/auth/csrf:
+    get:
+      tags: [auth]
+      operationId: getAuthCsrf
+      summary: Obtain stateful CSRF metadata
+      description: |
+        Anonymous: create/reuse a separate 15-minute pre-auth context, with hashed
+        random context ID and independently random recoverable nonce in PostgreSQL.
+        Authenticated: return the same session-bound nonce, without per-request rotation.
+        mustChangePassword sessions receive 403 PASSWORD_CHANGE_REQUIRED; reload uses me.
+        Both identifiers and nonces use CSPRNG 32 bytes encoded base64url. Nonces are
+        not authentication credentials alone. Frontend keeps CSRF in memory only.
+      security: [{}, {AdminSessionCookie: []}]
+      x-abar-errors:
+        '403': [PASSWORD_CHANGE_REQUIRED]
+        '429': [RATE_LIMITED]
+        '503': [SERVICE_UNAVAILABLE]
+      responses:
+        '200':
+          description: CSRF metadata; anonymous responses set/reuse the pre-auth cookie only.
+          headers:
+            Cache-Control: {$ref: '#/components/headers/NoStore'}
+            Set-Cookie: {$ref: '#/components/headers/PreauthCookie'}
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/CsrfMetadata'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '429': {$ref: '#/components/responses/RateLimited'}
+        '503': {$ref: '#/components/responses/Unavailable'}
+  /api/v1/auth/login:
+    post:
+      tags: [auth]
+      operationId: loginAdmin
+      summary: Authenticate and rotate session
+      description: |
+        Validate exact configured Origin and CSRF bound to the pre-auth context (or
+        an ordinary active session). A successful login destroys the pre-auth context,
+        clears its cookie and rotates session ID and CSRF nonce. Restricted sessions
+        may use only me/change-password/logout. Nonexistent, wrong-password and inactive
+        accounts receive identical INVALID_CREDENTIALS errors with equivalent password
+        verification work. IP 10/60s and normalized account 10/15min, per-process limits.
+        Login accepts password length 1–128 to allow generic incorrect verification;
+        apply NFC consistently without trimming whitespace or truncating.
+      security: [{AuthPreauthCookie: []}, {AdminSessionCookie: []}]
+      parameters:
+        - {$ref: '#/components/parameters/Origin'}
+        - {$ref: '#/components/parameters/CsrfToken'}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/LoginRequest'}
+      x-abar-errors:
+        '400': [VALIDATION_ERROR]
+        '401': [INVALID_CREDENTIALS]
+        '403': [ORIGIN_INVALID, CSRF_INVALID, PASSWORD_CHANGE_REQUIRED]
+        '429': [RATE_LIMITED]
+        '503': [SERVICE_UNAVAILABLE]
+      responses:
+        '200':
+          description: Sanitized identity and expiration, rotated session cookie and nonce header.
+          headers:
+            Cache-Control: {$ref: '#/components/headers/NoStore'}
+            Set-Cookie: {$ref: '#/components/headers/SessionCookie'}
+            X-CSRF-Token: {$ref: '#/components/headers/CsrfToken'}
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AdminSessionView'}
+              examples:
+                session: {externalValue: ./examples/admin-session.json}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '429': {$ref: '#/components/responses/RateLimited'}
+        '503': {$ref: '#/components/responses/Unavailable'}
+  /api/v1/auth/me:
+    get:
+      tags: [auth]
+      operationId: getAdminSession
+      summary: Restore sanitized session, including mandatory-change sessions
+      description: |
+        Check active account and session expiry/revocation/server state every time.
+        Return the existing bound CSRF nonce in the header, not the JSON identity DTO.
+        A stale tab may refresh me for a future explicit user retry, never automatically
+        retry writes. Session rotation invalidates old tabs; no per-request nonce churn.
+      security: [{AdminSessionCookie: []}]
+      x-abar-errors:
+        '401': [SESSION_EXPIRED]
+        '503': [SERVICE_UNAVAILABLE]
+      responses:
+        '200':
+          description: Session view; mandatory-change reload obtains nonce from this header.
+          headers:
+            Cache-Control: {$ref: '#/components/headers/NoStore'}
+            X-CSRF-Token: {$ref: '#/components/headers/CsrfToken'}
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AdminSessionView'}
+              examples:
+                session: {externalValue: ./examples/admin-session.json}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '503': {$ref: '#/components/responses/Unavailable'}
+  /api/v1/auth/logout:
+    post:
+      tags: [auth]
+      operationId: logoutAdmin
+      summary: Revoke active session or safely clear a stale cookie
+      description: |
+        ALWAYS validate Origin. Active session: require its bound CSRF, revoke and clear.
+        Missing/unknown/expired/revoked/malformed cookie with NO active session: clear
+        stale cookie and return 204, no session mutation or pre-auth proof required.
+        A database failure is 503, never treated as absence. Never resurrect sessions.
+      security: [{}, {AdminSessionCookie: []}]
+      parameters:
+        - {$ref: '#/components/parameters/Origin'}
+        - name: X-CSRF-Token
+          in: header
+          required: false
+          description: Required exactly when there is an active session; bound to that session.
+          schema: {$ref: '#/components/schemas/CsrfNonce'}
+      x-abar-errors:
+        '403': [ORIGIN_INVALID, CSRF_INVALID]
+        '503': [SERVICE_UNAVAILABLE]
+      responses:
+        '204':
+          description: Session revoked or no active session; matching session cookie attributes cleared.
+          headers:
+            Cache-Control: {$ref: '#/components/headers/NoStore'}
+            Set-Cookie: {$ref: '#/components/headers/ClearSessionCookie'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '503': {$ref: '#/components/responses/Unavailable'}
+  /api/v1/auth/change-password:
+    post:
+      tags: [auth]
+      operationId: changeAdminPassword
+      summary: Change own password, rotate current session and revoke others
+      description: |
+        Allowed with mustChangePassword. Verify current password generically, validate
+        new password policy, atomically clear mandatory change, revoke other sessions
+        and renew current session ID/CSRF. Return no JSON body; consume renewed header.
+      security: [{AdminSessionCookie: []}]
+      parameters:
+        - {$ref: '#/components/parameters/Origin'}
+        - {$ref: '#/components/parameters/CsrfToken'}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/ChangePasswordRequest'}
+      x-abar-errors:
+        '400': [VALIDATION_ERROR, PASSWORD_POLICY]
+        '401': [SESSION_EXPIRED, INVALID_CREDENTIALS]
+        '403': [ORIGIN_INVALID, CSRF_INVALID]
+        '503': [SERVICE_UNAVAILABLE]
+      responses:
+        '204':
+          description: Password changed; other sessions revoked, current session renewed.
+          headers:
+            Cache-Control: {$ref: '#/components/headers/NoStore'}
+            Set-Cookie: {$ref: '#/components/headers/SessionCookie'}
+            X-CSRF-Token: {$ref: '#/components/headers/CsrfToken'}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '503': {$ref: '#/components/responses/Unavailable'}
+  /api/v1/admin/users:
+    get:
+      tags: [admin]
+      operationId: listAdminUsers
+      summary: List sanitized administrators
+      description: |
+        Deny mandatory-change accounts. page defaults to 1, pageSize to 20 (max 100).
+        Sort allowlist is name/email/createdAt, optionally prefixed minus for descending,
+        default -createdAt. Always use ascending opaque id as stable secondary key.
+        No out-of-range query silently coerced. Empty pages still return pageInfo.
+      security: [{AdminSessionCookie: []}]
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema: {type: integer, minimum: 1, default: 1}
+        - name: pageSize
+          in: query
+          required: false
+          schema: {type: integer, minimum: 1, maximum: 100, default: 20}
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [name, '-name', email, '-email', createdAt, '-createdAt']
+            default: '-createdAt'
+      x-abar-errors:
+        '400': [VALIDATION_ERROR]
+        '401': [SESSION_EXPIRED]
+        '403': [PASSWORD_CHANGE_REQUIRED]
+        '503': [SERVICE_UNAVAILABLE]
+      responses:
+        '200':
+          description: Page of sanitized users; pageInfo is always present.
+          headers:
+            Cache-Control: {$ref: '#/components/headers/NoStore'}
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AdminUserList'}
+              examples:
+                users: {externalValue: ./examples/admin-users.json}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '503': {$ref: '#/components/responses/Unavailable'}
+    post:
+      tags: [admin]
+      operationId: createAdminUser
+      summary: Create active administrator requiring password change
+      description: Normalize email by trim/lowercase; unique in PostgreSQL. New version is 1.
+      security: [{AdminSessionCookie: []}]
+      parameters:
+        - {$ref: '#/components/parameters/Origin'}
+        - {$ref: '#/components/parameters/CsrfToken'}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/CreateAdminUserRequest'}
+      x-abar-errors:
+        '400': [VALIDATION_ERROR, PASSWORD_POLICY]
+        '401': [SESSION_EXPIRED]
+        '403': [PASSWORD_CHANGE_REQUIRED, ORIGIN_INVALID, CSRF_INVALID]
+        '409': [EMAIL_IN_USE]
+        '503': [SERVICE_UNAVAILABLE]
+      responses:
+        '201':
+          description: Active administrator created with mustChangePassword true and version 1.
+          headers:
+            Cache-Control: {$ref: '#/components/headers/NoStore'}
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AdminUserView'}
+              examples:
+                user: {externalValue: ./examples/admin-user.json}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '503': {$ref: '#/components/responses/Unavailable'}
+  /api/v1/admin/users/{id}:
+    patch:
+      tags: [admin]
+      operationId: patchAdminUser
+      summary: Edit name or active state using optimistic concurrency
+      description: |
+        At least one of name/active is required, plus expectedVersion >= 1. Email and
+        password are not patchable. Increment version atomically on successful mutation;
+        stale version is 409. Deactivation revokes all target sessions, including self.
+        Serialize last-active protection so concurrent writes cannot leave zero active admins.
+      security: [{AdminSessionCookie: []}]
+      parameters:
+        - {$ref: '#/components/parameters/UserId'}
+        - {$ref: '#/components/parameters/Origin'}
+        - {$ref: '#/components/parameters/CsrfToken'}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/PatchAdminUserRequest'}
+      x-abar-errors:
+        '400': [VALIDATION_ERROR]
+        '401': [SESSION_EXPIRED]
+        '403': [PASSWORD_CHANGE_REQUIRED, ORIGIN_INVALID, CSRF_INVALID]
+        '404': [USER_NOT_FOUND]
+        '409': [VERSION_CONFLICT, LAST_ACTIVE_ADMIN]
+        '503': [SERVICE_UNAVAILABLE]
+      responses:
+        '200':
+          description: Sanitized updated user and incremented version.
+          headers:
+            Cache-Control: {$ref: '#/components/headers/NoStore'}
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AdminUserView'}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '404': {$ref: '#/components/responses/NotFound'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '503': {$ref: '#/components/responses/Unavailable'}
+  /api/v1/admin/users/{id}/reset-password:
+    post:
+      tags: [admin]
+      operationId: resetAdminUserPassword
+      summary: Reset temporary password with sanitized audit reason
+      description: |
+        Only temporaryPassword/reason in request, no expectedVersion. Atomically set
+        mustChangePassword true, increment target version and revoke ALL target sessions,
+        including caller's session when targeting self. No account state change.
+        Audit reason is bounded and sanitized; never include supplied password or input values.
+      security: [{AdminSessionCookie: []}]
+      parameters:
+        - {$ref: '#/components/parameters/UserId'}
+        - {$ref: '#/components/parameters/Origin'}
+        - {$ref: '#/components/parameters/CsrfToken'}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/ResetAdminPasswordRequest'}
+      x-abar-errors:
+        '400': [VALIDATION_ERROR, PASSWORD_POLICY]
+        '401': [SESSION_EXPIRED]
+        '403': [PASSWORD_CHANGE_REQUIRED, ORIGIN_INVALID, CSRF_INVALID]
+        '404': [USER_NOT_FOUND]
+        '503': [SERVICE_UNAVAILABLE]
+      responses:
+        '204':
+          description: Target password reset and all target sessions revoked.
+          headers:
+            Cache-Control: {$ref: '#/components/headers/NoStore'}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '404': {$ref: '#/components/responses/NotFound'}
+        '503': {$ref: '#/components/responses/Unavailable'}
 components:
   securitySchemes:
     AdminSessionCookie:
@@ -61,11 +401,127 @@ components:
       in: cookie
       name: abar_admin_session
       description: |
-        Projected revocable server-side administrative session, not implemented in H0.
-        HttpOnly, SameSite=Lax or stricter, Secure in production; Secure may be omitted
-        only for explicitly local HTTP development. Mutations require CSRF protection
-        and origin validation. Never use JWT or localStorage for this session.
+        Frozen H1, runtime pending: opaque CSPRNG 32-byte base64url ID, SHA256 hash only
+        stored in PostgreSQL. Host-only (no Domain), HttpOnly, SameSite=Lax, Path=/api/v1,
+        explicit Expires and Max-Age; Secure on HTTPS, exception only loopback HTTP dev/test.
+        Absolute 8-hour and idle 30-minute default limits. Validate account/session state
+        server-side. Mutations also require exact Origin and stateful CSRF. No JWT/storage.
+    AuthPreauthCookie:
+      type: apiKey
+      in: cookie
+      name: abar_auth_context
+      description: |
+        Separate host-only HttpOnly cookie, Path=/api/v1/auth, SameSite=Lax, Secure on
+        HTTPS (loopback HTTP dev/test exception), explicit Expires/Max-Age, TTL 15 minutes.
+        Random 32-byte context ID hashed in PostgreSQL, independent stored random nonce.
+        Not an authenticated session. Successful login destroys context and clears cookie.
+  parameters:
+    Origin:
+      name: Origin
+      in: header
+      required: true
+      description: |
+        Exact configured allowlist, never derived from request/Forwarded. Missing/null/
+        mismatch is 403 ORIGIN_INVALID, no Referer fallback. Defaults are
+        http://127.0.0.1:4200 and http://localhost:4200. Same-origin proxy expected;
+        no arbitrary credentialed CORS. Tests may inject an explicitly owned local origin.
+      schema: {type: string, minLength: 1}
+    CsrfToken:
+      name: X-CSRF-Token
+      in: header
+      required: true
+      description: Independent stateful nonce bound to context/session, never logged.
+      schema: {$ref: '#/components/schemas/CsrfNonce'}
+    UserId:
+      name: id
+      in: path
+      required: true
+      description: Opaque administrator UUID, never a sequence.
+      schema: {$ref: '#/components/schemas/OpaqueId'}
+  responses:
+    BadRequest:
+      description: 400 VALIDATION_ERROR or PASSWORD_POLICY as listed by the operation; no input values.
+      headers:
+        Cache-Control: {$ref: '#/components/headers/NoStore'}
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/ApiError'}
+    Unauthorized:
+      description: 401 SESSION_EXPIRED or generic INVALID_CREDENTIALS as listed by operation.
+      headers:
+        Cache-Control: {$ref: '#/components/headers/NoStore'}
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/ApiError'}
+          examples:
+            generic: {externalValue: ./examples/auth-error.json}
+    Forbidden:
+      description: 403 ORIGIN_INVALID, CSRF_INVALID or PASSWORD_CHANGE_REQUIRED as listed by operation.
+      headers:
+        Cache-Control: {$ref: '#/components/headers/NoStore'}
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/ApiError'}
+    NotFound:
+      description: 404 USER_NOT_FOUND; only authenticated unrestricted users reach target lookup.
+      headers:
+        Cache-Control: {$ref: '#/components/headers/NoStore'}
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/ApiError'}
+    Conflict:
+      description: 409 EMAIL_IN_USE, VERSION_CONFLICT or LAST_ACTIVE_ADMIN as listed by operation.
+      headers:
+        Cache-Control: {$ref: '#/components/headers/NoStore'}
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/ApiError'}
+    RateLimited:
+      description: 429 RATE_LIMITED; uniform non-enumerating limit response.
+      headers:
+        Cache-Control: {$ref: '#/components/headers/NoStore'}
+        Retry-After: {$ref: '#/components/headers/RetryAfter'}
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/ApiError'}
+    Unavailable:
+      description: 503 SERVICE_UNAVAILABLE; dependency failure is never an absent session.
+      headers:
+        Cache-Control: {$ref: '#/components/headers/NoStore'}
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/ApiError'}
   headers:
+    NoStore:
+      x-required: true
+      description: Required on every H1 response, including errors; no cache of identity/nonce.
+      schema: {type: string, enum: [no-store]}
+    CsrfToken:
+      x-required: true
+      description: Required on me/login 200 and change-password 204; same bound nonce until rotation.
+      schema: {$ref: '#/components/schemas/CsrfNonce'}
+    SessionCookie:
+      x-required: true
+      description: |
+        Required rotated abar_admin_session cookie: host-only (no Domain), Path=/api/v1,
+        HttpOnly, SameSite=Lax, explicit Expires/Max-Age; Secure on HTTPS, exception only
+        loopback HTTP dev/test. Login also clears abar_auth_context using matching attributes.
+        Multiple Set-Cookie headers are separate fields, never comma-joined. No value example.
+      schema: {type: string}
+    PreauthCookie:
+      description: |
+        Anonymous responses only: abar_auth_context, host-only, Path=/api/v1/auth,
+        HttpOnly, SameSite=Lax, explicit Expires/Max-Age bounded by 15-minute TTL;
+        Secure on HTTPS except loopback HTTP dev/test. No authenticated-session cookie here.
+      schema: {type: string}
+    ClearSessionCookie:
+      x-required: true
+      description: Clear abar_admin_session with matching path/attributes, Max-Age=0 and past Expires.
+      schema: {type: string}
+    RetryAfter:
+      x-required: true
+      description: Required nonnegative integer seconds before another attempt, not an HTTP date.
+      schema: {type: integer, minimum: 0}
     IdempotencyKey:
       description: |
         Projected on critical mutation operations. Same key and same request replays the
@@ -81,6 +537,134 @@ components:
         type: string
         format: uuid
   schemas:
+    CsrfNonce:
+      type: string
+      minLength: 43
+      maxLength: 43
+      pattern: '^[A-Za-z0-9_-]{43}$'
+      description: Independent random 32 bytes, base64url without padding; never log or persist client-side.
+    CsrfMetadata:
+      type: object
+      additionalProperties: false
+      required: [csrfToken, headerName]
+      properties:
+        csrfToken: {$ref: '#/components/schemas/CsrfNonce'}
+        headerName: {type: string, enum: [X-CSRF-Token]}
+    AdminName:
+      type: string
+      minLength: 1
+      maxLength: 100
+      description: Length in Unicode code points; no business naming policy implied.
+    AdminEmail:
+      type: string
+      format: email
+      minLength: 1
+      maxLength: 254
+      description: Normalize trim then lowercase before uniqueness checks/storage; public views are normalized.
+    PasswordInput:
+      type: string
+      minLength: 1
+      maxLength: 128
+      writeOnly: true
+      description: Login/current password; NFC before verify, Unicode code points, preserve whitespace, no truncation.
+    NewPassword:
+      type: string
+      minLength: 15
+      maxLength: 128
+      writeOnly: true
+      description: |
+        New/temporary password: NFC before length/hash, Unicode code points, whitespace
+        preserved, no composition rules or truncation. Offline whole-password blocklist
+        required before backend delivery; pinned resource selection remains pending.
+    H1UtcDateTime:
+      type: string
+      format: date-time
+      pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$'
+      description: RFC3339 UTC timestamp with Z; UUID/date handling does not expose session metadata.
+    AdminIdentity:
+      type: object
+      additionalProperties: false
+      required: [id, name, email, mustChangePassword]
+      properties:
+        id: {$ref: '#/components/schemas/OpaqueId'}
+        name: {$ref: '#/components/schemas/AdminName'}
+        email: {$ref: '#/components/schemas/AdminEmail'}
+        mustChangePassword: {type: boolean}
+    AdminSessionView:
+      type: object
+      additionalProperties: false
+      required: [admin, expiresAt]
+      properties:
+        admin: {$ref: '#/components/schemas/AdminIdentity'}
+        expiresAt: {$ref: '#/components/schemas/H1UtcDateTime'}
+    AdminUserView:
+      type: object
+      additionalProperties: false
+      required: [id, name, email, active, mustChangePassword, version, createdAt, updatedAt]
+      properties:
+        id: {$ref: '#/components/schemas/OpaqueId'}
+        name: {$ref: '#/components/schemas/AdminName'}
+        email: {$ref: '#/components/schemas/AdminEmail'}
+        active: {type: boolean}
+        mustChangePassword: {type: boolean}
+        version: {type: integer, minimum: 1}
+        createdAt: {$ref: '#/components/schemas/H1UtcDateTime'}
+        updatedAt: {$ref: '#/components/schemas/H1UtcDateTime'}
+    AdminUserList:
+      type: object
+      additionalProperties: false
+      required: [items, pageInfo]
+      properties:
+        items:
+          type: array
+          maxItems: 100
+          items: {$ref: '#/components/schemas/AdminUserView'}
+        pageInfo: {$ref: '#/components/schemas/PageInfo'}
+    LoginRequest:
+      type: object
+      additionalProperties: false
+      required: [email, password]
+      properties:
+        email: {$ref: '#/components/schemas/AdminEmail'}
+        password: {$ref: '#/components/schemas/PasswordInput'}
+    ChangePasswordRequest:
+      type: object
+      additionalProperties: false
+      required: [currentPassword, newPassword]
+      properties:
+        currentPassword: {$ref: '#/components/schemas/PasswordInput'}
+        newPassword: {$ref: '#/components/schemas/NewPassword'}
+    CreateAdminUserRequest:
+      type: object
+      additionalProperties: false
+      required: [name, email, temporaryPassword]
+      properties:
+        name: {$ref: '#/components/schemas/AdminName'}
+        email: {$ref: '#/components/schemas/AdminEmail'}
+        temporaryPassword: {$ref: '#/components/schemas/NewPassword'}
+    PatchAdminUserRequest:
+      type: object
+      additionalProperties: false
+      required: [expectedVersion]
+      minProperties: 2
+      anyOf:
+        - required: [name]
+        - required: [active]
+      properties:
+        name: {$ref: '#/components/schemas/AdminName'}
+        active: {type: boolean}
+        expectedVersion: {$ref: '#/components/schemas/ExpectedVersion'}
+    ResetAdminPasswordRequest:
+      type: object
+      additionalProperties: false
+      required: [temporaryPassword, reason]
+      properties:
+        temporaryPassword: {$ref: '#/components/schemas/NewPassword'}
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+          description: Bounded audit reason; sanitize controls and never retain secrets/input echoes.
     HealthOk:
       type: object
       additionalProperties: false
