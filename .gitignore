@@ -1,0 +1,27 @@
+# Local agent tracking and runtime state
+odd/
+.atl/
+.pi/
+
+# Operating system files
+.DS_Store
+
+# Dependencies and generated output
+node_modules/
+dist/
+coverage/
+.angular/
+*.tsbuildinfo
+
+# Local secrets and environment overrides
+.env
+.env.*
+!.env.example
+!**/.env.example
+*.pem
+*.key
+
+# Local logs, uploads, and service data
+*.log
+uploads/
+volumes/
