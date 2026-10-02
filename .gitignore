@@ -1,5 +1,6 @@
 # Local agent tracking and runtime state
 odd/
+.codegraph/
 .atl/
 .pi/
 
