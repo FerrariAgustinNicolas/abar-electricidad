@@ -132,10 +132,37 @@ Archivos de H0.3:
 
 La primera comparación live falló ante la brecha metadata-only; la corrección autorizada quedó verificada con equality semántica, sin relajar el contrato ni el comparador. Este handoff global sigue **PARCIAL** por H0.4 y auditoría/revisión global pendientes; no se declara H0 cerrado ni se habilita H1.
 
+## H0.3 validator correctness follow-up — separate work unit
+
+Este seguimiento partió de `chore/h0-base` en el commit ya integrado `529388c922244b1bd410411812bae34b3a329dee`, con árbol limpio. La review nativa de ese commit está aprobada/acknowledged y consumida bajo lineage `review-efcf59ee8e7fb568`; no hay ruta de corrección ni se reabre esa review. Advisory IDs no bloqueantes, sin inferir contenido no provisto: `R3-example-failure-overwritten` en `scripts/h0-contract-validate.mjs:114-138` y `R3-semantic-constraints-dropped` en `scripts/h0-contract-validate.mjs:138-152`.
+
+Cambios de este seguimiento, sin dependencias ni comportamiento backend:
+
+- `validateContractFile` ahora devuelve `valid`/`errors` derivados del resultado de ejemplos; proyecta solo metadatos permitidos y no deja que `shape.valid` sobrescriba un fallo externo.
+- La opción CLI `--contract <file>` permite validar una fixture temporal aislada y comprobar código de salida no cero sin tocar los ejemplos reales.
+- La comparación de schemas incluye constraints de longitudes, arrays, composición, `nullable` y demás restricciones OAS pertinentes. Canonicaliza claves de objetos y conjuntos `required`/`enum`, así como ramas de composición, para evitar diferencias causadas solo por orden.
+- El test copia únicamente el OpenAPI, configuración Redocly y JSON normativos actuales a su directorio temporal bajo `scripts/`; muta allí `amountMinor` a número y limpia ese directorio al terminar.
+
+### RED/GREEN y verificación
+
+- **RED de prueba de regresión:** la primera ejecución de `node --test scripts/h0-contract-validate.test.mjs` terminó exit 1 por `SyntaxError` en la prueba recién escrita; se corrigió antes de considerar evidencia conductual.
+- **RED conductual:** la ejecución válida terminó exit 1 con 5 pases/2 fallos: el ejemplo Money inválido devolvía `valid: true`, y un schema lógicamente equivalente con distinto orden daba falso drift.
+- **GREEN:** `node --test scripts/h0-contract-validate.test.mjs` pasó 7/7 tras preservar la invalidez del ejemplo, implementar canonicalización y habilitar la CLI sobre la fixture.
+
+| Comando exacto | Resultado observado |
+|---|---|
+| `node --test scripts/h0-contract-validate.test.mjs` (RED conductual) | exit 1; detectó los dos defectos descritos, 5 tests pasaron y 2 fallaron. |
+| `node --test scripts/h0-contract-validate.test.mjs` (GREEN) | exit 0; 7 tests pasaron, incluyendo CLI exit 1 ante JSON Money inválido, detección de constraints perdidas y equivalencia con orden distinto. |
+| `npm --prefix backend run contract:validate` | exit 0; contrato y tres ejemplos normales válidos. |
+| `npm --prefix backend run contract:validate:live` | exit 0; Swagger, health PostgreSQL 200 y error safe 503 verificados; script detuvo únicamente sus procesos backend. |
+| `git diff --check` | PASS, exit 0 después de esta edición de informe. |
+
+La review de `529388c...` no fue alterada ni reabierta. Esta unidad no hizo commit ni alteró servicios/Compose, archivos de entorno o dependencias. H0 y H0.3 siguen sujetos a la auditoría/global verification descrita en este informe.
+
 ## Integridad del candidato y verificación previa suministrada
 
 El padre informó que H0.2 fue aprobado/acknowledged bajo lineage `review-4f1a84dd1e036080` y que su autoridad quedó consumida. Independiente verifier `murapcpm-7-1ao6` reprodujo `npm ci` (797 paquetes), backend tests/build/lint/audit 0, Prisma y pruebas reales de PostgreSQL/SMTP. Advisories no bloqueantes conservados: `R3-health-timeout` en `health.service.ts:10` y `R3-smtp-error` en `scripts/h0-backend-smoke.mjs:170`; el proveedor dio solo IDs/ubicaciones y no se inventa el texto de findings. El override transitive deepmerge 7.1.5→8.0.2 fue probado en el CLI ejercitado, sin afirmar compatibilidad universal; advertencias de deprecación siguen como deuda.
 
 El padre informó también que la transición del índice fue su `git add` selectivo explícito, no mutación del worker; el candidato congelado `ccc9a3679269408305be0bf04eb678ed3b43cec2` tuvo el mismo árbol que el commit. En ese momento `git diff --cached --check` pasó y `git diff --exit-code` fue limpio. H0.1 whitespace inicial se corrigió en `1545ab9`; la evidencia previa reporta que el commit previo `1545ab9` está en la rama objetivo. Esta continuación no realizó staging ni commit.
 
-Las horas consumidas siguen sin evidencia y quedan pendientes. No se inventa saldo frente a las 200 horas del plan. No hay commit H0.3 ni candidato Git producido por esta continuación. H0.4, revisión del candidato H0.3, verificación global y cierre siguen pendientes; H1 permanece detenido hasta auditoría/autorización explícita.
+Las horas consumidas siguen sin evidencia y quedan pendientes. No se inventa saldo frente a las 200 horas del plan. H0.3 está en el commit padre `529388c922244b1bd410411812bae34b3a329dee`; este seguimiento queda sin commit. H0.4, verificación global y cierre siguen pendientes; H1 permanece detenido hasta auditoría/autorización explícita.

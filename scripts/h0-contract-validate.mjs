@@ -133,22 +133,66 @@ export async function validateContractFile(file = contractFile) {
     if (!checked.valid) errors.push(`${example.file} against ${example.schema}: ${(checked.errors ?? []).join('; ')}`);
   }
   if (!examples.length) errors.push('No external JSON examples are registered for validation');
-  return result(errors.length === 0, errors, shape);
+  return result(errors.length === 0, errors, {
+    projectedPaths: shape.projectedPaths,
+    idempotencyHeaders: shape.idempotencyHeaders,
+    expectedVersionField: shape.expectedVersionField,
+  });
+}
+
+function canonicalValue(value) {
+  if (Array.isArray(value)) return value.map(canonicalValue);
+  if (!value || typeof value !== 'object') return value;
+  return Object.fromEntries(Object.keys(value).sort().map((key) => [key, canonicalValue(value[key])]));
+}
+
+function canonicalSet(values) {
+  return values.map(canonicalValue).sort((left, right) => JSON.stringify(left).localeCompare(JSON.stringify(right)));
 }
 
 function resolveSchema(document, schema, seen = new Set()) {
+  if (Array.isArray(schema)) return schema.map((entry) => resolveSchema(document, entry, seen));
   if (!schema || typeof schema !== 'object') return schema;
   if (schema.$ref) {
-    if (seen.has(schema.$ref)) return {};
-    const target = schema.$ref.split('/').at(-1);
+    if (seen.has(schema.$ref)) return { $ref: schema.$ref };
+    const target = schema.$ref.split('/').at(-1).replace(/~1/g, '/').replace(/~0/g, '~');
     return resolveSchema(document, document.components?.schemas?.[target], new Set([...seen, schema.$ref]));
   }
+
   const normalized = {};
-  for (const key of ['type', 'format', 'enum', 'required', 'additionalProperties', 'minimum', 'maximum', 'pattern']) {
-    if (schema[key] !== undefined) normalized[key] = schema[key];
+  const semanticKeys = [
+    'type', 'format', 'enum', 'const', 'required', 'additionalProperties', 'nullable',
+    'minimum', 'maximum', 'exclusiveMinimum', 'exclusiveMaximum', 'multipleOf',
+    'minLength', 'maxLength', 'pattern', 'minItems', 'maxItems', 'uniqueItems',
+    'minProperties', 'maxProperties', 'default', 'readOnly', 'writeOnly', 'discriminator',
+  ];
+  for (const key of semanticKeys) {
+    if (schema[key] === undefined) continue;
+    if (key === 'nullable' && schema[key] !== true) continue;
+    if (key === 'additionalProperties' && schema[key] === true) continue;
+    if (key === 'required' || key === 'enum') normalized[key] = canonicalSet(schema[key]);
+    else normalized[key] = canonicalValue(schema[key]);
   }
-  if (schema.properties) normalized.properties = Object.fromEntries(Object.entries(schema.properties).map(([name, value]) => [name, resolveSchema(document, value, seen)]));
-  if (schema.items) normalized.items = resolveSchema(document, schema.items, seen);
+
+  for (const key of ['items', 'not']) {
+    if (schema[key] !== undefined) normalized[key] = resolveSchema(document, schema[key], seen);
+  }
+  if (schema.additionalProperties && typeof schema.additionalProperties === 'object') {
+    normalized.additionalProperties = resolveSchema(document, schema.additionalProperties, seen);
+  }
+  if (schema.properties) {
+    normalized.properties = Object.fromEntries(Object.keys(schema.properties).sort().map((name) => [
+      name,
+      resolveSchema(document, schema.properties[name], seen),
+    ]));
+  }
+  for (const key of ['allOf', 'anyOf', 'oneOf']) {
+    if (schema[key] !== undefined) {
+      normalized[key] = schema[key]
+        .map((entry) => resolveSchema(document, entry, seen))
+        .sort((left, right) => JSON.stringify(left).localeCompare(JSON.stringify(right)));
+    }
+  }
   return normalized;
 }
 
@@ -262,13 +306,20 @@ export async function validateLive() {
 
 async function main() {
   const live = process.argv.includes('--live');
-  const validation = await validateContractFile();
+  const contractArgumentIndex = process.argv.indexOf('--contract');
+  const targetContract = contractArgumentIndex < 0 ? contractFile : process.argv[contractArgumentIndex + 1];
+  if (!targetContract) {
+    console.error('--contract requires a file path');
+    process.exitCode = 1;
+    return;
+  }
+  const validation = await validateContractFile(targetContract);
   if (!validation.valid) {
     console.error(validation.errors.join('\n'));
     process.exitCode = 1;
     return;
   }
-  console.log(`OpenAPI 3.0.3 and ${YAML.parse(await readFile(contractFile, 'utf8')).info['x-abar-examples'].length} external JSON examples validated.`);
+  console.log(`OpenAPI 3.0.3 and ${YAML.parse(await readFile(targetContract, 'utf8')).info['x-abar-examples'].length} external JSON examples validated.`);
   if (live) console.log(await validateLive());
 }
 
