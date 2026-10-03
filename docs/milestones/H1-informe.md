@@ -5,11 +5,11 @@
 ## Identidad y alcance
 
 - Baseline H0 aprobado: `2428f2b918d97c5a48dabc438b0b3bf89030c7fb` (`h0-approved`).
-- Tracker local: `feat/h1-auth`; slice actual: `feat/h1-auth-02-policy`, base/HEAD `7f4df80ceba00dfd495ca6cac25c6c6035168770` (C01 verificado). Estrategia elegida: feature-branch-chain; commit/review/Verify independiente de política pendientes del padre, sin identidad inventada. Prompt autorizado: `1e9cd1e44b919738da8c9d1262b436b8a354af17`. Commit de preparación contractual: `b6eed95359fa4a4ede13d62ced034508f57c1015`, tree `8267b798b01d6171b3cdcaa0f4a5052c59bfac4d`. `main` permanece sin cambios; no push, merge ni tag H1.
+- Tracker local: `feat/h1-auth`; slice actual: `feat/h1-auth-03-blocklist`, base/HEAD `744e05eab1814ddfd2250312fc4abf91e23ff593` (C02 verificado). Estrategia elegida: feature-branch-chain; commit/review/Verify independiente C03 pendientes del padre, sin identidad inventada. Prompt autorizado: `1e9cd1e44b919738da8c9d1262b436b8a354af17`. Commit de preparación contractual: `b6eed95359fa4a4ede13d62ced034508f57c1015`, tree `8267b798b01d6171b3cdcaa0f4a5052c59bfac4d`. `main` permanece sin cambios; no push, merge ni tag H1.
 - Snapshot de bytes de `contracts/openapi.yaml`, SHA256: `94122791de8ce646bcbe342b6bc7d33833ce0b0e9e7121055f6601a22ba80a2f`. Es **digest contractual**, no hash de commit ni target de revisión nativa; recalcular si cambian los bytes.
 - Norma OpenAPI 3.0.3, versión 0.4.0, milestone `H1-contract-freeze`, runtime-stage `h0`, status `candidate`. Nueve operaciones auth/admin más health; solo health corre hoy. [Decisión y fuentes](../decisions/H1-auth.md), [historial](../../contracts/CHANGELOG.md), [uso](../../README.md).
 
-La unidad contractual preservada contiene OpenAPI, validador/test y cuatro ejemplos nuevos saneados (`admin-session`, `admin-user`, `admin-users`, `auth-error`), además de documentación. Esa unidad no cambió backend, Angular, Prisma, migraciones, dependencias ni configuración. C01 agregó parser independiente/tests; el slice actual agrega solo política independiente/tests y actualiza decisión/informe, sin registrar módulos ni cambiar H0. El modelo, bootstrap, login y gestión administrativa son dirección pendiente, no runtime construido.
+La unidad contractual preservada contiene OpenAPI, validador/test y cuatro ejemplos nuevos saneados (`admin-session`, `admin-user`, `admin-users`, `auth-error`), además de documentación. Esa unidad no cambió backend, Angular, Prisma, migraciones, dependencias ni configuración. C01 agregó parser independiente/tests y C02 política independiente/tests; C03 agrega solo generador/resource/notices offline y documentación, sin loader, registro de módulos ni cambios H0. El modelo, bootstrap, login y gestión administrativa son dirección pendiente, no runtime construido.
 
 ## Evidencia disponible y límites
 
@@ -77,6 +77,32 @@ Evidencia observada por este writer, comandos foreground con timeout 180 s:
 
 Triangulación incluida en los 56 tests: pares y surrogates aislados, controles/noncharacters, NFC antes de bounds, case/whitespace privados, claves sin límites de credencial, lookup ausente/throw/getter/no booleano/Promise. No refactor conductual posterior a GREEN; full checks verifican el mismo código. Branch `feat/h1-auth-02-policy` y HEAD C01 preservados; solo cuatro paths autorizados cambiados. Aproximadamente 301 líneas authored (incluidos archivos nuevos y retiros documentales), bajo advisory 400. Commit, review nativa y Verify independiente del **nuevo candidato** pendientes del padre. Asset real, Argon/pool, servidor, PostgreSQL, bootstrap, navegador/full H1 LIVE y auditoría siguen pendientes. Sin nuevas descargas; ambos avisos MIT y probe Argon permanecen evidencia separada.
 
+## Slice 03 — Generador/resource offline preparados; gates pendientes
+
+C02 quedó cerrado en `744e05eab1814ddfd2250312fc4abf91e23ff593`: review `review-60d828965e5a2a1e`, cuatro lentes aprobados y acknowledgement consumido; Verify independiente 56 política/341 configuración/406 unit en5 suites/5 mock e2e/11 tests contractuales/7 ejemplos, tree estable `3bec3ce7d6f14db8cb40ea1a1fda214e4a5e1f69`. Supersede los estados pendientes históricos arriba, **no aprueba C03**.
+
+C03 entrega scripts Node standalone, binario de full SHA256 ordenados/únicos, manifest canónico y ambos avisos MIT completos. Sin cuentas/passwords bootstrap, loader, Argon, runtime fetch, dependencias, package/build/module/HTTP/DB/frontend ni cambios contractuales. Corpus público raw solo en cache ignorado; nunca se versiona plaintext. [Reproducción, procedencia, framing y límites](../decisions/H1-auth.md#generador-offline-independiente-slice-03).
+
+Fuente SHA256 `e9a88f67aafe65496682dc374559ee714e978bee50314767494c3e37a18c9fc8`, 8.755.171 bytes; UTF8 fatal, 1.000.000 LF/filas, cero CR, LF terminal y sin BOM inicial. Filtro key NFC→defaultlower mínimo15, sin límite superior ni NFC posterior. Unicode17 requerido, con fundamento independiente acotado, no afirmación universal. **5.406 elegibles / 5.329 únicos / 170.528 bytes**, medidos con filtro final; igualdad numérica con conteo histórico no lo convierte en autoridad. Resource SHA `7a85af89d0f800cc94cbe81ad5a11de7590da24a5ed33c6a5bc5e7f0abea1eb0`; manifest SHA `581027ae246da0bacf0d71a65a35edad5a20a71c5fcfe2d810513b128bfdb510`.
+
+Avisos verificados completos antes de aceptar artifacts: Pwdb 1069 bytes/SHA `4088d581cba171b1aa6f880ad3fb5327e2d6de415621cf8b80685ac506c0cae1`; SecLists 1072 bytes/SHA `3dbdc93d5f8829de0941744841730a09c106d0732e5ae0e98ca1d77be7ded66c`. Manifest registra URL/commit/copyright/licencia MIT de ambos.
+
+| Comando exacto | Evidencia observada del writer C03 |
+|---|---|
+| `node --test scripts/h1-password-blocklist.test.mjs` | RED exit1, 10failed/0passed sobre stub ejecutable (no import/runner fallido); GREEN exit0, 10/10. Triangulación UTF8/framing/BOM/CR/UTF16/NFC/lower/expansión/bounds/full digests/order/unique/canonical/Unicode. |
+| `node scripts/h1-password-blocklist.mjs --source odd/probes/h1-blocklist/source.txt` | exit0 dos ejecuciones; hashes binario/manifest capturados en variables shell y comparados idénticos, sin archivos temporales. |
+| `npm --prefix backend run build` | exit0; Prisma generate + tsc existente, **no copia resources**. |
+| `npm --prefix backend run lint` | exit0. |
+| `npm --prefix backend test -- --runInBand` | exit0, 406tests/5suites. |
+| `npm --prefix backend run test:e2e -- --runInBand` | exit0, 5tests/1suite mock H0. |
+| `npm --prefix backend run contract:validate` | exit0, 7 ejemplos externos. |
+| `node --test scripts/h0-contract-validate.test.mjs` | exit0, 11/11. |
+| `git diff --check` | exit0, repetido tras documentación final. |
+| `shasum -a 256 contracts/openapi.yaml` | exit0, SHA contractual intacto `94122791de8ce646bcbe342b6bc7d33833ce0b0e9e7121055f6601a22ba80a2f`. |
+| `shasum -a 256 backend/resources/auth/LICENSE.pwdb.txt backend/resources/auth/LICENSE.seclists.txt backend/resources/auth/password-blocklist.bin backend/resources/auth/password-blocklist.manifest.json` | exit0, los cuatro SHA coinciden con evidencia arriba. |
+
+Conteo authored: 373 líneas agregadas/retiradas, incluidos notices completos; binario y manifest generado excluidos. Sin refactor conductual posterior a GREEN. Solo ocho paths fuente autorizados más cache ignorado; branch/HEAD base conservados, sin stage/commit/push. Una separación cohesiva ya aplicada: loader y trust anchor/distribución runtime quedan para otra unidad. Review nativa/Verify independiente/commit de este candidato siguen **pendientes del padre**. No cobertura exhaustiva, certificación NIST, aprobación H1 ni cierre de auditoría.
+
 ## Aceptación parcial y siguiente gate
 
 | Criterios del prompt H1 | Estado |
@@ -90,7 +116,7 @@ Triangulación incluida en los 56 tests: pares y surrogates aislados, controles/
 | 17: H2 no iniciado | Preservado; no alcance comercial nuevo. |
 
 1. Freeze contractual completado y registrado; esta actualización del informe es documental y posterior al commit verificado, no otra certificación funcional. El tamaño >400 líneas es advisory de carga: mantener unidades siguientes coherentes/acotadas, no omitir/minificar salvaguardas.
-2. Backend: configuración C01 completada; revisar/verificar/commitear política preparada. Pin/commit/licencias/digest offline ya resueltos, asset/generador pendientes. Continuar con protección del nonce, Argon/pool, modelos/migraciones y bootstrap seguro. Runbook bootstrap pendiente; manual update del ejemplo de entorno solo si necesario, sin bypass.
+2. Backend: configuración C01 y política C02 completadas; revisar/verificar/commitear C03 offline preparado. Loader, trust anchor y distribución del recurso siguen pendientes. Continuar con protección del nonce, Argon/pool, modelos/migraciones y bootstrap seguro. Runbook bootstrap pendiente; manual update del ejemplo de entorno solo si necesario, sin bypass.
 3. Implementar y verificar H1, incluyendo pruebas reales PostgreSQL y navegador si disponible. Antes de handoff a auditoría, Review + Verify deben cubrir el **mismo candidato final**. El padre registra el resultado, sin inventar aprobación externa.
 
 P01–P10 y horas siguen pendientes; rollout comercial cerrado. No se inicia H2 ni se modifica el informe histórico H0.

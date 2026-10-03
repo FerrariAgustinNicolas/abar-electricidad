@@ -43,7 +43,7 @@ Errores por operación están enumerados en OpenAPI: validación/política 400; 
 
 Argon2id mínimo **m=19456 KiB, t=2, p=1**, salts de biblioteca. Nuevas/temporales: 15–128 puntos de código Unicode después de NFC; preservar whitespace, sin composición arbitraria ni truncamiento. Login/currentPassword acepta 1–128 para verificación incorrecta genérica; aplicar NFC consistentemente. No registrar contraseñas, cookies, identificadores o nonces completos.
 
-**Fuente offline seleccionada y procedencia resuelta; asset y generador no implementados:** [SecLists — Pwdb_top-1000000.txt](https://github.com/danielmiessler/SecLists/blob/913b327317496d062bcc7cace524aaad8a693be2/Passwords/Common-Credentials/Pwdb_top-1000000.txt), pin `913b327317496d062bcc7cace524aaad8a693be2`, SHA256 raw `e9a88f67aafe65496682dc374559ee714e978bee50314767494c3e37a18c9fc8`. La reutilización requiere ambos avisos MIT completos: SecLists (2018 Daniel Miessler) y origen ignis-sec/Pwdb-Public (2020 Ata Hakçıl), pin `9b53917431ed5cd57cd6cbec8c3a19cf9a5cd8dd`. La opción 10k se descartó por cobertura insuficiente del filtro de longitud; no se afirma completitud ni cumplimiento NIST. Actualizar solo mediante revisión explícita de nuevo pin/digest. Comparar contraseña completa y entradas normalizadas NFC, no subcadenas; runtime totalmente offline, sin enviar contraseñas a terceros. Una lista derivada de contexto obvio (p. ej. nombre del comercio) es opcional, justificada y no implementada; políticas nuevas requieren decisión del padre, no cambio silencioso de norma.
+**Fuente offline seleccionada; generador y asset standalone preparados en C03, loader pendiente:** [SecLists — Pwdb_top-1000000.txt](https://github.com/danielmiessler/SecLists/blob/913b327317496d062bcc7cace524aaad8a693be2/Passwords/Common-Credentials/Pwdb_top-1000000.txt), pin `913b327317496d062bcc7cace524aaad8a693be2`, SHA256 raw `e9a88f67aafe65496682dc374559ee714e978bee50314767494c3e37a18c9fc8`. La reutilización requiere ambos avisos MIT completos: SecLists (2018 Daniel Miessler) y origen ignis-sec/Pwdb-Public (2020 Ata Hakçıl), pin `9b53917431ed5cd57cd6cbec8c3a19cf9a5cd8dd`. La opción 10k se descartó por cobertura insuficiente del filtro de longitud; no se afirma completitud ni cumplimiento NIST. Actualizar solo mediante revisión explícita de nuevo pin/digest. Comparar contraseña completa y entradas normalizadas NFC, no subcadenas; runtime totalmente offline, sin enviar contraseñas a terceros. Una lista derivada de contexto obvio (p. ej. nombre del comercio) es opcional, justificada y no implementada; políticas nuevas requieren decisión del padre, no cambio silencioso de norma.
 
 ### Primitiva de política independiente (slice 02)
 
@@ -53,7 +53,27 @@ Argon2id mínimo **m=19456 KiB, t=2, p=1**, salts de biblioteca. Nuevas/temporal
 
 `validateNewPassword` devuelve el string normalizado privado, case-sensitive, de 15–128 puntos de código; exige `PasswordBlocklistLookup.hasDigest` síncrono y consulta una sola vez el digest completo tras validar entrada. Ausencia, acceso/call fallido y resultados no booleanos (incluidas Promises) cierran con error `unavailable`; true es `blocked`, no fallo de dependencia. Conserva receiver del método. `PasswordPolicyError` expone únicamente kind `invalid`, `blocked` o `unavailable` y mensajes fijos, sin entradas, digest ni causas. El futuro adapter mapeará validación/política a 400 y dependencia a 503; aquí no hay códigos HTTP ni cambios de DTO.
 
-Los tests usan lookup sintético, **no prueban cobertura offline real**. Asset/generador/loader con ambos avisos MIT, Argon, servidor y adaptación HTTP siguen pendientes. Estos ejemplos Unicode no prueban no-encogimiento general ni conteo final del corpus; el filtro histórico pre-lower de 5329 claves no es automáticamente el conteo del asset. Evidencia de probes/licencias permanece separada; este slice no obtiene datos ni crea cuentas.
+Los tests usan lookup sintético, **no prueban cobertura offline real**. C03 prepara asset/generador con ambos avisos MIT; loader, Argon, servidor y adaptación HTTP siguen pendientes. Estos ejemplos Unicode no prueban no-encogimiento general ni conteo final del corpus; el filtro histórico pre-lower de 5329 claves no es automáticamente el conteo del asset. Evidencia de probes/licencias permanece separada; este slice no obtiene datos ni crea cuentas.
+
+### Generador offline independiente (slice 03)
+
+[`h1-password-blocklist.mjs`](../../scripts/h1-password-blocklist.mjs) usa solo APIs Node; importar el kernel no accede a filesystem/red. El CLI exige Unicode `17.0`, bytes/SHA/filas del pin fijo y ambos LICENSE íntegros antes de escribir únicamente resource/manifest en rutas fijas del proyecto. `--source` permite ubicación local, **no otra fuente**; sin overrides, repin, env switch ni fetch. Kernel sintético reservado a tests, sin bypass CLI.
+
+Framing medido: 8.755.171 bytes, 1.000.000 LF/filas, cero CR, LF terminal, sin BOM inicial; UTF8 fatal. LF es el único delimitador: se retira solo un LF terminal obligatorio; LFs anteriores representan filas, incluso vacías. CR, U+FEFF (con `ignoreBOM:true`), controles y espacios se conservan como datos; no trim, coerción ni sustitución de Unicode inválido. Framing sin LF terminal se rechaza.
+
+Filtro exclusivo: longitud en puntos de código de **NFC → lowercase por defecto** ≥15; no mínimo de fuente ni máximo128 para fuente/clave, ni NFC posterior. Fixtures protegen fuente14/alias15, entrada128/clave129 y reordenamiento que introduciría NFC posterior. La base independiente Unicode17 cubrió 1.112.064 escalares y 104 reglas raíz SpecialCasing (mínimo1, cero salidas vacías; Final_Sigma produce1). Es fundamento acotado, no prueba de todas las cadenas, conformidad independiente del runtime, otros Unicode/locales o NFC posterior.
+
+Resultado medido nuevo (no heredado del filtro histórico): **5.406 filas elegibles, 5.329 digests únicos, 170.528 bytes**. Binario: registros SHA256 completos de32 bytes, concatenados, orden lexicográfico estricto y sin duplicados/plaintext. SHA256 resource `7a85af89d0f800cc94cbe81ad5a11de7590da24a5ed33c6a5bc5e7f0abea1eb0`; manifest `581027ae246da0bacf0d71a65a35edad5a20a71c5fcfe2d810513b128bfdb510`. JSON canónico versionado con orden fijo/newline, estadísticas derivadas, pin/Unicode/filtro/licencias, sin timestamps ni rutas máquina. Ambos avisos MIT completos, byte-exactos, están en `backend/resources/auth/LICENSE.pwdb.txt` (1069 bytes) y `LICENSE.seclists.txt` (1072 bytes); URLs, commits y SHA quedan en manifest.
+
+Reproducción desde raíz, con cache público ignorado previamente adquirido del URL raw fijado y avisos verificados:
+
+```sh
+node --test scripts/h1-password-blocklist.test.mjs
+node scripts/h1-password-blocklist.mjs --source odd/probes/h1-blocklist/source.txt
+shasum -a 256 backend/resources/auth/password-blocklist.bin backend/resources/auth/password-blocklist.manifest.json
+```
+
+Repetir generación produce los mismos hashes de ambos archivos. No versionar/dumpear corpus plaintext. **Sin loader, trust anchor de integridad runtime ni registro Nest**: el build actual Prisma+`tsc` no copia estos resources; distribución e integración requieren unidad posterior. Los hashes públicos no son secretos ni hashes Argon. No certificación NIST, completitud, legalidad por entrada ni cobertura de todas las contraseñas. Review nativa/Verify independiente/commit C03 pendientes del padre.
 
 ## Configuración independiente preparada; integración futura
 
