@@ -1,6 +1,6 @@
 # H1 — Dirección de autenticación congelada, runtime pendiente
 
-**Estado:** contrato candidato preparado; no implementación ni aprobación externa. [OpenAPI](../../contracts/openapi.yaml) es la única norma de interfaces; esta decisión explica su protocolo y los prerrequisitos operativos. No amplía DTOs, permisos ni alcance comercial. Ver [prompt H1](../milestones/H1-prompt.md) e [informe parcial](../milestones/H1-informe.md).
+**Estado:** contrato congelado; implementación de fundamentos iniciada con parser independiente de configuración. Endpoints auth/admin no implementados; auditoría externa pendiente. [OpenAPI](../../contracts/openapi.yaml) es la única norma de interfaces; esta decisión explica su protocolo y los prerrequisitos operativos. No amplía DTOs, permisos ni alcance comercial. Ver [prompt H1](../milestones/H1-prompt.md) e [informe parcial](../milestones/H1-informe.md).
 
 ## Protocolo e interfaces
 
@@ -43,20 +43,36 @@ Errores por operación están enumerados en OpenAPI: validación/política 400; 
 
 Argon2id mínimo **m=19456 KiB, t=2, p=1**, salts de biblioteca. Nuevas/temporales: 15–128 puntos de código Unicode después de NFC; preservar whitespace, sin composición arbitraria ni truncamiento. Login/currentPassword acepta 1–128 para verificación incorrecta genérica; aplicar NFC consistentemente. No registrar contraseñas, cookies, identificadores o nonces completos.
 
-**Propuesta de fuente offline, no descargada ni implementada:** [SecLists — Passwords/Common-Credentials/10k-most-common.txt](https://github.com/danielmiessler/SecLists/blob/master/Passwords/Common-Credentials/10k-most-common.txt). Antes de entregar backend, el writer debe revisar procedencia/licencia, fijar commit completo y SHA256 del recurso y documentar actualización por revisión explícita de un nuevo pin/digest. **Commit y digest de la lista siguen sin resolver**; el enlace mutable es un localizador, no un pin. Comparar contraseña completa y entradas normalizadas NFC, no subcadenas; runtime totalmente offline, sin enviar contraseñas a terceros. Una lista derivada de contexto obvio (p. ej. nombre del comercio) es opcional, justificada y no implementada; políticas nuevas requieren decisión del padre, no cambio silencioso de norma.
+**Fuente offline seleccionada y procedencia resuelta; asset y generador no implementados:** [SecLists — Pwdb_top-1000000.txt](https://github.com/danielmiessler/SecLists/blob/913b327317496d062bcc7cace524aaad8a693be2/Passwords/Common-Credentials/Pwdb_top-1000000.txt), pin `913b327317496d062bcc7cace524aaad8a693be2`, SHA256 raw `e9a88f67aafe65496682dc374559ee714e978bee50314767494c3e37a18c9fc8`. La reutilización requiere ambos avisos MIT completos: SecLists (2018 Daniel Miessler) y origen ignis-sec/Pwdb-Public (2020 Ata Hakçıl), pin `9b53917431ed5cd57cd6cbec8c3a19cf9a5cd8dd`. La opción 10k se descartó por cobertura insuficiente del filtro de longitud; no se afirma completitud ni cumplimiento NIST. Actualizar solo mediante revisión explícita de nuevo pin/digest. Comparar contraseña completa y entradas normalizadas NFC, no subcadenas; runtime totalmente offline, sin enviar contraseñas a terceros. Una lista derivada de contexto obvio (p. ej. nombre del comercio) es opcional, justificada y no implementada; políticas nuevas requieren decisión del padre, no cambio silencioso de norma.
 
-## Defaults y validación operativa futura
+## Configuración independiente preparada; integración futura
 
-| Parámetro | Default / límite de evidencia |
-|---|---|
-| Sesión | Absoluta 8 h; idle 30 min; pre-auth 15 min. |
-| Login | IP 10/60 s y cuenta normalizada 10/15 min; respuestas no enumerables. |
-| CSRF anónimo | 30/60 s. |
-| Rate limiter | Por proceso, reset al reiniciar; sin lockout permanente ni Redis obligatorio. |
-| Argon concurrente | **Propuesta 4**, benchmark no realizado; validar cola/bounds y carga antes de entrega. |
-| Orígenes locales | `http://localhost:4200`, `http://127.0.0.1:4200`; tests pueden inyectar origen local explícitamente propio. Proxy same-origin; no CORS credentialed arbitrario. |
+[`validateAuthConfig`](../../backend/src/auth/auth.config.ts) valida únicamente su argumento, sin leer `process.env`, registrar módulos ni modificar entradas. Devuelve objeto y lista de orígenes congelados. **Estos settings todavía no están conectados al H0 en ejecución**; no hay hosting productivo ni autenticación desplegada acreditados.
 
-Nombres exactos de variables, límites de configuración, protección del nonce recuperable, limpieza acotada de contextos/sesiones, recursos del limiter y bootstrap seguro se resolverán y validarán en backend; no se inventan variables ni contenido de entorno aquí. `argon2@0.45.1` tiene metadata/native prebuild consultados, **no** prueba de carga nativa o rendimiento. Respetar política de scripts; no scripts forzados ni compilador global. Si hace falta actualizar el ejemplo de entorno, pedir edición manual ficticia acotada: la denegación sensible H0 sigue vigente, sin bypass. Runbook y comando bootstrap aún no existen.
+| Variable | Default | Límites inclusivos / regla |
+|---|---|---|
+| `NODE_ENV` | `development` | Solo `development`, `test`, `production`. |
+| `AUTH_ALLOWED_ORIGINS` | Dev/test: `http://127.0.0.1:4200,http://localhost:4200` | Producción: explícitos HTTPS; 1–16 distintos. |
+| `AUTH_COOKIE_SECURE` | true en producción o con cualquier origen HTTPS; false en otro caso | Booleano o strings exactos `true`/`false`; false solo HTTP loopback dev/test. |
+| `AUTH_SESSION_ABSOLUTE_SECONDS` | 28800 (8 h) | 60–86400 |
+| `AUTH_SESSION_IDLE_SECONDS` | 1800 (30 min) | 30–14400; ≤ absoluta |
+| `AUTH_PREAUTH_SECONDS` | 900 (15 min) | 30–1800 |
+| `AUTH_LOGIN_IP_LIMIT` | 10 | 1–1000 |
+| `AUTH_LOGIN_IP_WINDOW_SECONDS` | 60 | 1–3600 |
+| `AUTH_LOGIN_ACCOUNT_LIMIT` | 10 | 1–1000 |
+| `AUTH_LOGIN_ACCOUNT_WINDOW_SECONDS` | 900 | 1–3600 |
+| `AUTH_CSRF_IP_LIMIT` | 30 | 1–1000 |
+| `AUTH_CSRF_IP_WINDOW_SECONDS` | 60 | 1–3600 |
+| `AUTH_ARGON2_CONCURRENCY` | 1 | 1–4; cargas mayores requieren revisión de recursos |
+| `AUTH_ARGON2_QUEUE_LIMIT` | 16 | 0–64; 0 significa futura ausencia de espera, no pool implementado |
+
+Unset significa `undefined`; null y tipos no admitidos se rechazan. Los números solo aceptan strings decimales sin signo ni whitespace o números enteros seguros; no coerción arbitraria, fracciones ni exponentes textuales. Flags `AUTH_*` desconocidos generan mensaje constante sin eco del nombre ni valor; campos ajenos se ignoran para permitir futura composición con configuración validada. Errores solo exponen nombres públicos conocidos, reglas y bounds, no entradas.
+
+Los orígenes configurados se canonicalizan a `URL.origin`, deduplicados en orden; se rechazan userinfo, rutas salvo raíz, query/fragment incluso vacíos, wildcards, null y entradas vacías. La prohibición de wildcards se verifica tanto en sintaxis raw como en hostname canónico: percent-decoding e IDNA pueden introducir `*`; la regresión determinista confirma rechazo sin eco de URL. HTTP solo para hostname loopback `localhost`, `127.0.0.1` o `[::1]` en dev/test, sin DNS ni llamadas externas. La futura comparación del Origin entrante será **exacta contra el valor canónico configurado**, sin normalizar la petición; este slice no implementa middleware.
+
+HTTPS personalizado exige cookie Secure. Un esquema mixto activa Secure global y puede afectar clientes HTTP; preferir esquemas consistentes. Secure=true en HTTP local es protección superior permitida, **no garantía de flujo de navegador**. No se agregan overrides SameSite/Domain/Path: los atributos del protocolo congelado siguen intactos. Rate limiting futuro por proceso, reinicio resetea límites, sin lockout permanente ni Redis.
+
+El probe nativo previo de `argon2@0.45.1` fue GREEN con 26 hashes (2 warmups + 24 muestras), match/mismatch y salts aleatorios; permite escoger default conservador 1, no afirmar capacidad de aplicación. Fue aislado e ignorado: **no es dependencia del backend**, prueba de autenticación ni pool bajo carga. Protección del nonce, limpieza acotada, persistencia, recursos del limiter y bootstrap siguen pendientes. Respetar política de scripts y denegación sensible H0, sin bypass; no se requiere editar ejemplos de entorno para este helper. Runbook y comando bootstrap aún no existen.
 
 ## Fuentes y gate
 
@@ -68,4 +84,4 @@ El explorer `murf6fch-j-wlly` leyó las siete fuentes requeridas del hito. El ch
 - [OWASP CSRF Prevention](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)
 - [NIST SP 800-63B-4](https://pages.nist.gov/800-63-4/sp800-63b.html)
 
-El digest de norma y evidencia static están en el informe. Falta LIVE transicional H0 y review nativa de la unidad normalizada completa antes de cerrar freeze. Cualquier incompatibilidad de interfaz/seguridad pausa el frente afectado para decisión; no se parchea la norma automáticamente. Review + Verify del mismo candidato final son obligatorios antes de auditoría H1. P01–P10, reglas de comprador y rollout comercial siguen abiertos/cerrado respectivamente; H2 no iniciado.
+El digest de norma y evidencia static están en el informe. El freeze ya recibió LIVE transicional H0 y review nativa de la unidad normalizada completa, según el informe; esa atribución no aprueba este nuevo slice de configuración. Cualquier incompatibilidad de interfaz/seguridad pausa el frente afectado para decisión; no se parchea la norma automáticamente. Review + Verify del mismo candidato final son obligatorios antes de auditoría H1. P01–P10, reglas de comprador y rollout comercial siguen abiertos/cerrado respectivamente; H2 no iniciado.
