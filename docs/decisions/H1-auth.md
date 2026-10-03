@@ -1,6 +1,6 @@
-# H1 — Dirección de autenticación congelada, runtime pendiente
+# H1 — Dirección congelada, fundamentos runtime preparados
 
-**Estado:** contrato congelado; implementación de fundamentos iniciada con parser independiente de configuración. Endpoints auth/admin no implementados; auditoría externa pendiente. [OpenAPI](../../contracts/openapi.yaml) es la única norma de interfaces; esta decisión explica su protocolo y los prerrequisitos operativos. No amplía DTOs, permisos ni alcance comercial. Ver [prompt H1](../milestones/H1-prompt.md) e [informe parcial](../milestones/H1-informe.md).
+**Estado:** contrato congelado; C01–C06 cerrados y composición DI C07 preparada, con gates del padre pendientes. Endpoints auth/admin no implementados; auditoría externa pendiente. [OpenAPI](../../contracts/openapi.yaml) es la única norma de interfaces; esta decisión explica su protocolo y los prerrequisitos operativos. No amplía DTOs, permisos ni alcance comercial. Ver [prompt H1](../milestones/H1-prompt.md) e [informe parcial](../milestones/H1-informe.md).
 
 ## Protocolo e interfaces
 
@@ -83,7 +83,7 @@ Los SHA256 de resource/manifest están compilados, junto con 5329 registros de32
 
 La carga explícita exige cuatro nombres fijos: binario, manifest y ambos LICENSE completos. Abre descriptor, verifica archivo regular/tamaño, asigna buffer acotado, completa lecturas parciales, comprueba EOF y cierra en finally. Caps: resource170528 exactos, manifest32768 máximo, Pwdb1069 y SecLists1072 exactos con sus SHA compilados. Truncamiento, crecimiento detectado, corrupción o falta de cualquier archivo cierran la política. El caller debe proporcionar un directorio confiable; no es sandbox de paths ni defensa contra un propietario hostil del directorio.
 
-La ruta histórica `path.resolve(__dirname, '../../resources/auth')` desde `src/auth` o `dist/auth` carga la fuente, no el artefacto empaquetado. Para el futuro caller en `dist/auth`, C06 prepara `path.resolve(__dirname, '../resources/auth')`; el helper no resuelve ubicaciones por su cuenta. Un probe compilado carga `backend/resources/auth` explícitamente, **no prueba copia/distribución del build**. La integración real con `validateNewPassword` establece primero pertenencia del ejemplo público débil; no crea cuentas/bootstrap ni certifica runtime H1. C04 quedó cerrado en `e65c4d620fd332ec8ffe0d470e7a723901edc5ba`, tree `b946b83a84fbef3534cba4517acac3b83c549cf9`: review histórica `review-2898763254cded6d`, cuatro lentes aprobados/acuse consumido, Verify independiente 80 loader/486 unit/6 suites/15 comandos. Esa evidencia no aprueba C05; distribución, PostgreSQL propio, sesiones/bootstrap/admin, frontend/navegador y full H1 LIVE siguen pendientes.
+La ruta histórica `path.resolve(__dirname, '../../resources/auth')` desde `src/auth` o `dist/auth` carga la fuente, no el artefacto empaquetado. C07 usa la ruta fija al destino compilado descrita abajo; el helper no resuelve ubicaciones por su cuenta. Un probe compilado carga `backend/resources/auth` explícitamente, **no prueba copia/distribución del build**. La integración real con `validateNewPassword` establece primero pertenencia del ejemplo público débil; no crea cuentas/bootstrap ni certifica runtime H1. C04 quedó cerrado en `e65c4d620fd332ec8ffe0d470e7a723901edc5ba`, tree `b946b83a84fbef3534cba4517acac3b83c549cf9`: review histórica `review-2898763254cded6d`, cuatro lentes aprobados/acuse consumido, Verify independiente 80 loader/486 unit/6 suites/15 comandos. Esa evidencia no aprueba C05; distribución, PostgreSQL propio, sesiones/bootstrap/admin, frontend/navegador y full H1 LIVE siguen pendientes.
 
 ### Argon acotado independiente (slice 05)
 
@@ -101,13 +101,23 @@ El build ejecuta [`copy-auth-resources-cli.mjs`](../../backend/scripts/copy-auth
 
 El loader C04 compilado en `backend/dist/auth/password-blocklist.js` autentica la fuente **antes de crear/copiar el destino** y autentica el destino después de las cuatro copias. Pins/counts permanecen exclusivamente en C04. Importar el copier no carga recursos ni el loader; API de cero argumentos, separada del CLI deliberadamente ejecutable (no utility importable). El CLI rechaza argumentos y llama incondicionalmente al copier, sin depender de `import.meta.main`, igualdad argv/realpath ni patch floor de Node24.x. Cualquier fallo expone solo `Auth resource packaging failed.`, sin causa/path/bytes; CLI termina con código1. No hay rollback transaccional: un fallo de copia puede dejar artefacto parcial, nunca certificado como completo.
 
-15 tests con réplicas temporales propias verifican bytes completos, ambos avisos MIT, cwd ajeno/repetición, falta/corrupción de cada archivo, destino corrupto y errores redactados. La regresión elimina y comprueba ausencia de `import.meta.main` solo en una réplica temporal del entry: RED exit1 (1 failed/14 passed, CLI exit0 sin artefacto) → GREEN exit0 (15/15). Node24.0/24.1 no fueron ejecutados: defecto inferido de la política Node24.x y API introducida en24.2; simulación en24.18.1, sin certificar todas las patches. Build y probe real del destino compilado confirman carga síncrona; no es certificado solo con mocks. Review nativa, Verify independiente y commit **C06 pendientes del padre**.
+15 tests con réplicas temporales propias verifican bytes completos, ambos avisos MIT, cwd ajeno/repetición, falta/corrupción de cada archivo, destino corrupto y errores redactados. La regresión elimina y comprueba ausencia de `import.meta.main` solo en una réplica temporal del entry: RED exit1 (1 failed/14 passed, CLI exit0 sin artefacto) → GREEN exit0 (15/15). Node24.0/24.1 no fueron ejecutados: defecto inferido de la política Node24.x y API introducida en24.2; simulación en24.18.1, sin certificar todas las patches. Build y probe real del destino compilado confirman carga síncrona; no es certificado solo con mocks. C06 cerrado en `777dbfac9df307a635e3f91fc9edac9bdb19e09f`: review `review-60c6c78737ad0617`, cuatro lentes APPROVED/acuse consumido; Verify independiente fresco, todos exit0, tree `1a976b69e5d2f39fc6482b51d9daa8270557933d` idéntico al commit y postcommit limpio. Ver detalle histórico en el informe; no transfiere aprobación workspace al rango commiteado ni a runtime completo.
 
-C07 sigue futuro: snapshot raw de env para parser auth (el validador actual devuelve solo DB/HOST/NODE_ENV/PORT y elimina AUTH_*), carga fija empaquetada y singleton compartido durante inicialización antes de listen. C06 no registra DI, runtime ni endpoints. PostgreSQL propio, sesiones/bootstrap/admin, Angular/navegador, carga/RSS y full H1 siguen pendientes.
+### Composición runtime Nest (slice 07)
 
-## Configuración independiente preparada; integración futura
+[`AuthRuntimeModule`](../../backend/src/auth/auth-runtime.module.ts), registrado en AppModule, exporta solo el token `AUTH_RUNTIME` y su singleton cohesivo `{config,blocklist,hasher}` por contenedor. La fábrica captura `{...process.env}` una vez al instanciar, no al importar; entrega el record raw completo a C01, conservando validación de AUTH_* desconocidos y NODE_ENV. No usa el resultado del validador H0, que elimina AUTH_*; ConfigModule conserva `ignoreEnvFile:true`.
 
-[`validateAuthConfig`](../../backend/src/auth/auth.config.ts) valida únicamente su argumento, sin leer `process.env`, registrar módulos ni modificar entradas. Devuelve objeto y lista de orígenes congelados. **Estos settings todavía no están conectados al H0 en ejecución**; no hay hosting productivo ni autenticación desplegada acreditados.
+C04 carga los cuatro archivos autenticados desde `resolve(__dirname, '../../dist/resources/auth')`: tanto `src/auth` en Jest como `dist/auth` compilado resuelven el mismo destino empaquetado. Sin cwd/env switch, override de directorio, fallback a fuente ni pins duplicados. Después construye un único PasswordHasher C05: misma instancia/FIFO para todos los consumidores. Congela el wrapper, no los internos mutables del hasher; config/orígenes ya llegan congelados. Importar el módulo no valida env, carga recursos ni construye hasher.
+
+**Prerrequisito operativo explícito:** ejecutar `npm --prefix backend run build` antes de tests, `start` o `start:dev`. El watch de Nest no ejecuta el packager; no se añade automatización ni fallback para ocultar assets faltantes. Se mantiene Node24.x, sin haber ejecutado24.0/24.1.
+
+Los [26 tests](../../backend/src/auth/auth-runtime.module.spec.ts) incluyen source Jest con carga real empaquetada y rechazo en `NestFactory.create` con `abortOnError:false`. Once casos usan réplicas temporales propias de JS compilado y cuatro archivos públicos, resolución normal de dependencias y cwd ajeno: singleton/lookup booleano positivos; config inválida y falta/corrupción de cada archivo rechazan antes de devolver aplicación. Sin Prisma, PG, socket, hash nativo, override productivo ni mutación del candidato. Los negativos source con loader mock son aislamiento, no esta prueba de integridad compilada.
+
+El flujo main existente `NestFactory.create(AppModule)` → configureApplication → puerto → listen no cambia; un fallo del proveedor rechaza creación antes de avanzar a listen. Los cinco e2e H0 con Prisma mock permanecen GREEN. Esto prueba el artefacto **AuthRuntimeModule standalone**, no arranque completo AppModule con DB ni endpoints H1. Review C07, Verify independiente y commit pendientes del padre; PostgreSQL propio, sesiones/bootstrap/admin, Angular/navegador, carga/RSS y full H1 siguen pendientes.
+
+## Configuración validada; composición DI preparada
+
+[`validateAuthConfig`](../../backend/src/auth/auth.config.ts) valida únicamente su argumento, sin leer `process.env`, registrar módulos ni modificar entradas. Devuelve objeto y lista de orígenes congelados. C07 conecta estos settings al proveedor de fundamentos en AppModule; no implementa sus futuros consumidores HTTP ni acredita hosting productivo o autenticación desplegada.
 
 | Variable | Default | Límites inclusivos / regla |
 |---|---|---|
@@ -124,7 +134,7 @@ C07 sigue futuro: snapshot raw de env para parser auth (el validador actual devu
 | `AUTH_CSRF_IP_LIMIT` | 30 | 1–1000 |
 | `AUTH_CSRF_IP_WINDOW_SECONDS` | 60 | 1–3600 |
 | `AUTH_ARGON2_CONCURRENCY` | 1 | 1–4; cargas mayores requieren revisión de recursos |
-| `AUTH_ARGON2_QUEUE_LIMIT` | 16 | 0–64; 0 sin espera en helper C05, aún sin integración runtime |
+| `AUTH_ARGON2_QUEUE_LIMIT` | 16 | 0–64; 0 sin espera en helper C05, compartido por C07 |
 
 Unset significa `undefined`; null y tipos no admitidos se rechazan. Los números solo aceptan strings decimales sin signo ni whitespace o números enteros seguros; no coerción arbitraria, fracciones ni exponentes textuales. Flags `AUTH_*` desconocidos generan mensaje constante sin eco del nombre ni valor; campos ajenos se ignoran para permitir futura composición con configuración validada. Errores solo exponen nombres públicos conocidos, reglas y bounds, no entradas.
 

@@ -1,11 +1,11 @@
 # H1 — Informe parcial de contrato y fundamentos
 
-**CONTRACT UNIT FROZEN · FOUNDATION IMPLEMENTATION STARTED · AUTH ENDPOINTS NOT IMPLEMENTED · EXTERNAL AUDIT PENDING.** La preparación contractual pasó Review y Verify; la configuración C01 está revisada/verificada/commiteada y la política independiente está preparada, sin integración runtime. La autenticación sigue pendiente. Esto **no declara H1 CUMPLE**, aprobado, cerrado ni listo para auditoría final.
+**CONTRACT UNIT FROZEN · FOUNDATION IMPLEMENTATION STARTED · AUTH ENDPOINTS NOT IMPLEMENTED · EXTERNAL AUDIT PENDING.** La preparación contractual pasó Review y Verify; C01–C06 están cerrados y C07 prepara composición DI, sin endpoints de autenticación. La autenticación sigue pendiente. Esto **no declara H1 CUMPLE**, aprobado, cerrado ni listo para auditoría final.
 
 ## Identidad y alcance
 
 - Baseline H0 aprobado: `2428f2b918d97c5a48dabc438b0b3bf89030c7fb` (`h0-approved`).
-- Tracker local: `feat/h1-auth`; slice actual: `feat/h1-auth-06-resources`, base/HEAD `497648503b8f357c7488dac4e10082dd70420f6b` (C05 cerrado). Estrategia elegida: feature-branch-chain; C06 prepara empaquetado completo, con review nativa/Verify independiente/commit pendientes del padre. Prompt autorizado: `1e9cd1e44b919738da8c9d1262b436b8a354af17`. Commit de preparación contractual: `b6eed95359fa4a4ede13d62ced034508f57c1015`, tree `8267b798b01d6171b3cdcaa0f4a5052c59bfac4d`. `main` permanece sin cambios; no push, merge ni tag H1.
+- Tracker local: `feat/h1-auth`; slice actual: `feat/h1-auth-07-runtime`, base/HEAD `777dbfac9df307a635e3f91fc9edac9bdb19e09f` (C06 cerrado). Estrategia elegida: feature-branch-chain; C07 prepara composición DI, con review nativa/Verify independiente/commit pendientes del padre. Prompt autorizado: `1e9cd1e44b919738da8c9d1262b436b8a354af17`. Commit de preparación contractual: `b6eed95359fa4a4ede13d62ced034508f57c1015`, tree `8267b798b01d6171b3cdcaa0f4a5052c59bfac4d`. `main` permanece sin cambios; no push, merge ni tag H1.
 - Snapshot de bytes de `contracts/openapi.yaml`, SHA256: `94122791de8ce646bcbe342b6bc7d33833ce0b0e9e7121055f6601a22ba80a2f`. Es **digest contractual**, no hash de commit ni target de revisión nativa; recalcular si cambian los bytes.
 - Norma OpenAPI 3.0.3, versión 0.4.0, milestone `H1-contract-freeze`, runtime-stage `h0`, status `candidate`. Nueve operaciones auth/admin más health; solo health corre hoy. [Decisión y fuentes](../decisions/H1-auth.md), [historial](../../contracts/CHANGELOG.md), [uso](../../README.md).
 
@@ -157,7 +157,7 @@ El handoff histórico contó seis hashes combinados, pero sobrestimó el conteo 
 
 Normalización documental antes del freeze nativo; cambia los bytes de ambos documentos respecto de ese snapshot verificado, no los cuatro archivos funcionales protegidos. Edición pasiva sin RED conductual significativo: readback estructural y check focused de continuidad, no replay TDD. C05 cerrado: commit `497648503b8f357c7488dac4e10082dd70420f6b`, branch `feat/h1-auth-05-argon`; review `review-cbe322421715bff4`, cuatro lentes APPROVED y acuse exacto consumido. Verify independiente final y commit comparten tree `96087c61dad61f5d9c077c0cb0d957e44e281aa0`, postcommit limpio. Normalización documental conservó los cuatro SHA funcionales; bridge independiente confirmó continuidad focused86/diff/contrato/tree. Supersede pendientes pre-freeze, sin transferencia automática workspace→rango commiteado ni H1 completo. Helper no conectado al runtime; PostgreSQL propio, sesiones/bootstrap/admin, frontend/navegador/full H1 LIVE y auditoría externa pendientes. FIFO con mocks/deferred no acredita carga nativa productiva; sin prueba de carga/peak/RSS ni permiso de elevar capacidad nativa.
 
-## Slice 06 — Empaquetado offline completo; gates del padre pendientes
+## Slice 06 — Empaquetado offline completo; cierre registrado
 
 Unidad limitada a package/build, biblioteca copier, CLI explícito, tests y estos dos documentos (seis paths). [Rutas, autenticación y límites](../decisions/H1-auth.md#empaquetado-offline-completo-slice-06). Sin lockfile/dependencias, pins/source resources, DI, env, HTTP, Prisma/config ni frontend modificados. Prerrequisitos compilados C04/C05 ya disponibles antes del RED; no build preparatorio ni datos privados. Fixtures bajo prefijo temporal propio `abar-auth-packaging-`, limpiadas únicamente por sus tests.
 
@@ -183,7 +183,34 @@ Triangulación en15, conservando los14 casos anteriores: cada binario/manifest/n
 
 SHA256 de contrato intacto `94122791de8ce646bcbe342b6bc7d33833ce0b0e9e7121055f6601a22ba80a2f`; `shasum -a 256` sobre contrato y cuatro fuentes/cuatro archivos empaquetados terminó exit0: los cuatro pares coinciden con SHA C03 completos arriba. Binario170528 bytes, manifest y ambos MIT1069/1072 bytes íntegros. Probe real `node -e` con C04 compilado y ruta fija `backend/dist/resources/auth`: exit0, solo `{"packagedLoad":true,"synchronous":true}`. Comparación adicional byte a byte confirma cuatro archivos idénticos y avisos completos (exit0). No hash de credencial ni lectura env. `git diff --check` pasó exit0; scope final seis paths: tres tracked modificados y tres scripts nuevos, staged vacío/HEAD base conservado. Conteo authored250 líneas (46 agregadas/8 retiradas tracked +196 nuevas), bajo advisory400.
 
-Review nativa, Verify independiente y commit C06 **PENDING**. C05 aprobado no aprueba C06 ni runtime. C07 futuro requiere snapshot raw auth (validador actual elimina AUTH_*), carga empaquetada antes de listen y singleton; no implementación adelantada. Full H1/PG/sesiones/bootstrap/admin/Angular/navegador/carga-RSS siguen pendientes.
+C06 cerrado en `777dbfac9df307a635e3f91fc9edac9bdb19e09f`: review `review-60c6c78737ad0617`, cuatro lentes APPROVED/acuse exacto consumido. Verify fresco independiente `mushhol4-1w-wrrm`: todos los comandos exit0 explícitos; 15 packaging, 572 unit/7 suites, 5 mock H0, 10 generador, 11 contractuales, 7 ejemplos; tres node--check, build/lint/diff y pins. Cuatro pares fuente/empaquetado byte-idénticos, MIT completos1069/1072 y loader compilado GREEN. Tree verificado/commiteado `1a976b69e5d2f39fc6482b51d9daa8270557933d`, postcommit limpio. Supersede pendientes históricos pre-freeze, sin inventar stage del writer ni transferir aprobación workspace→rango commiteado/fullruntime. C05 permanece cerrado497/four ACK/Verify96087; su aprobación tampoco aprueba C07.
+
+## Slice 07 — Composición DI preparada; gates del padre pendientes
+
+Exactamente cinco paths: módulo runtime, spec, AppModule y estos dos documentos. [Diseño y prerrequisito build](../decisions/H1-auth.md#composición-runtime-nest-slice-07). Una fábrica singleton por contenedor toma snapshot raw env, valida C01, carga C04 desde destino empaquetado fijo y construye un único hasher C05/FIFO compartida. Wrapper/config/orígenes inmutables; hasher no congelado. Sin I/O de recursos ni construcción al importar; ConfigModule conserva ignoreEnvFile:true. No modificaciones de main, e2e, dependencias, recursos, contrato ni HTTP.
+
+Evidencia nueva observada por writer C07, foreground timeout180s:
+
+| Comando exacto | Resultado observado |
+|---|---|
+| `npm --prefix backend run build` | exit0 antes del RED (stub compilable + packager) y después de implementación; Prisma generate + tsc + packager C06. |
+| `npm --prefix backend test -- --runInBand --runTestsByPath src/auth/auth-runtime.module.spec.ts` | RED conductual exit1:24 failed/2 passed,26 total; GREEN exit0:26/26; repetido después de ajuste de layout lint,26/26. Un error inicial TS del tipo de fixture env fue corregido antes del RED:0 tests, no evidencia conductual. |
+| `node --test backend/scripts/copy-auth-resources.test.mjs` | exit0,15/15; sin skips/cancelados. |
+| `node --check backend/scripts/copy-auth-resources.mjs && node --check backend/scripts/copy-auth-resources-cli.mjs && node --check backend/scripts/copy-auth-resources.test.mjs` | exit0. |
+| `npm --prefix backend run lint` | Inicial exit1:dos no-unexpected-multiline en spec; ajuste solo layout, repetido exit0. |
+| `npm --prefix backend test -- --runInBand` | exit0,598/598 tests,8 suites (572 previos +26 C07). |
+| `npm --prefix backend run test:e2e -- --runInBand` | exit0,5/5 mock H0,1 suite. |
+| `node --test scripts/h1-password-blocklist.test.mjs` | exit0,10/10. |
+| `npm --prefix backend run contract:validate` | exit0,7 ejemplos. |
+| `node --test scripts/h0-contract-validate.test.mjs` | exit0,11/11. |
+
+Triangulación dentro de26: import sin efectos; raw AUTH knobs y snapshot defensivo; singleton/hasher compartido, contenedores distintos e inmutabilidad; rechazo de unknownAUTH/NODE_ENV/origen producción/capacidad inválida antes de devolver aplicación. Ocho negativos source de loader mock solo aíslan frontera privada. Once casos del mismo spec ejecutan Node con JS compilado real, módulo AuthRuntimeModule únicamente, cuatro assets públicos y dependencias normales en fixture temporal propio `abar-auth-runtime-`; cwd ajeno y ruta relativa al código, sin public path override ni PG. Positivo comprueba identidad/hasher/lookup booleano; dos config inválidas y falta/corrupción de cada archivo rechazan creación con mensajes seguros. No logs de env, hashes, instancias ni causas. Cleanup solo de fixture propio.
+
+La creación real usa `NestFactory.create(...,{logger:false,abortOnError:false})`: negativos confirman `returned:false,listened:false,rejected:true,safe:true`; positivo `returned:true,listened:false,shared:true,lookupBoolean:true`. El listen no se invoca y los negativos no pueden alcanzarlo porque la creación rechaza. El flujo main existente queda intacto. Esto es prueba genuina del artefacto **AuthRuntimeModule standalone**, no del arranque completo AppModule/DB ni endpoints H1. Build previo obligatorio para test/start/start:dev; watch no empaqueta. Node24.x sin cambio;24.0/24.1 no ejecutados.
+
+Checks finales del writer: `git diff --check` exit0; contrato SHA94122791…ba80a2f intacto, cuatro pins fuente/empaquetado coincidentes y bytes idénticos, MIT completos1069/1072 (asserts Node y shasum/cmp/wc, exit0). Branch/HEAD base777 estables, index vacío; tres tracked modificados y dos módulos/spec nuevos untracked, exactamente cinco paths. Conteo authored287 líneas agregadas/retiradas, sin minificación ni expansión de scope.
+
+Review nativa C07, Verify independiente y commit **PENDING** del padre. PG propio, sesiones/bootstrap/admin, Angular/navegador, carga/RSS, full H1 LIVE y auditoría siguen pendientes.
 
 ## Aceptación parcial y siguiente gate
 
@@ -198,7 +225,7 @@ Review nativa, Verify independiente y commit C06 **PENDING**. C05 aprobado no ap
 | 17: H2 no iniciado | Preservado; no alcance comercial nuevo. |
 
 1. Freeze contractual completado y registrado; esta actualización del informe es documental y posterior al commit verificado, no otra certificación funcional. El tamaño >400 líneas es advisory de carga: mantener unidades siguientes coherentes/acotadas, no omitir/minificar salvaguardas.
-2. Backend: configuración C01, política C02 y generador/resource C03 completados; C04 loader y C05 Argon cerrados; C06 empaquetado completo preparado requiere review/Verify/commit del padre. Integración runtime C07 del recurso/helper sigue pendiente. Continuar con protección del nonce, modelos/migraciones y bootstrap seguro. Runbook bootstrap pendiente; manual update del ejemplo de entorno solo si necesario, sin bypass.
+2. Backend: configuración C01, política C02 y generador/resource C03 completados; C04 loader y C05 Argon cerrados; C06 empaquetado cerrado; C07 composición runtime del recurso/helper preparada requiere review/Verify/commit del padre. Continuar con protección del nonce, modelos/migraciones y bootstrap seguro. Runbook bootstrap pendiente; manual update del ejemplo de entorno solo si necesario, sin bypass.
 3. Implementar y verificar H1, incluyendo pruebas reales PostgreSQL y navegador si disponible. Antes de handoff a auditoría, Review + Verify deben cubrir el **mismo candidato final**. El padre registra el resultado, sin inventar aprobación externa.
 
 P01–P10 y horas siguen pendientes; rollout comercial cerrado. No se inicia H2 ni se modifica el informe histórico H0.
