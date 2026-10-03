@@ -1,6 +1,6 @@
 # H1 — Dirección congelada, fundamentos runtime preparados
 
-**Estado:** contrato congelado; C01–C06 cerrados y composición DI C07 preparada, con gates del padre pendientes. Endpoints auth/admin no implementados; auditoría externa pendiente. [OpenAPI](../../contracts/openapi.yaml) es la única norma de interfaces; esta decisión explica su protocolo y los prerrequisitos operativos. No amplía DTOs, permisos ni alcance comercial. Ver [prompt H1](../milestones/H1-prompt.md) e [informe parcial](../milestones/H1-informe.md).
+**Estado:** contrato congelado; C01–C07 cerrados. C08 prepara la frontera CLI por defecto, con gates del padre pendientes. Endpoints auth/admin no implementados; auditoría externa pendiente. [OpenAPI](../../contracts/openapi.yaml) es la única norma de interfaces; esta decisión explica su protocolo y los prerrequisitos operativos. No amplía DTOs, permisos ni alcance comercial. Ver [prompt H1](../milestones/H1-prompt.md) e [informe parcial](../milestones/H1-informe.md).
 
 ## Protocolo e interfaces
 
@@ -103,7 +103,9 @@ El loader C04 compilado en `backend/dist/auth/password-blocklist.js` autentica l
 
 15 tests con réplicas temporales propias verifican bytes completos, ambos avisos MIT, cwd ajeno/repetición, falta/corrupción de cada archivo, destino corrupto y errores redactados. La regresión elimina y comprueba ausencia de `import.meta.main` solo en una réplica temporal del entry: RED exit1 (1 failed/14 passed, CLI exit0 sin artefacto) → GREEN exit0 (15/15). Node24.0/24.1 no fueron ejecutados: defecto inferido de la política Node24.x y API introducida en24.2; simulación en24.18.1, sin certificar todas las patches. Build y probe real del destino compilado confirman carga síncrona; no es certificado solo con mocks. C06 cerrado en `777dbfac9df307a635e3f91fc9edac9bdb19e09f`: review `review-60c6c78737ad0617`, cuatro lentes APPROVED/acuse consumido; Verify independiente fresco, todos exit0, tree `1a976b69e5d2f39fc6482b51d9daa8270557933d` idéntico al commit y postcommit limpio. Ver detalle histórico en el informe; no transfiere aprobación workspace al rango commiteado ni a runtime completo.
 
-### Composición runtime Nest (slice 07)
+### Composición runtime Nest (slice 07 — snapshot histórico pre-freeze)
+
+El estado pendiente de este snapshot se conserva; el cierre posterior figura abajo.
 
 [`AuthRuntimeModule`](../../backend/src/auth/auth-runtime.module.ts), registrado en AppModule, exporta solo el token `AUTH_RUNTIME` y su singleton cohesivo `{config,blocklist,hasher}` por contenedor. La fábrica captura `{...process.env}` una vez al instanciar, no al importar; entrega el record raw completo a C01, conservando validación de AUTH_* desconocidos y NODE_ENV. No usa el resultado del validador H0, que elimina AUTH_*; ConfigModule conserva `ignoreEnvFile:true`.
 
@@ -114,6 +116,36 @@ C04 carga los cuatro archivos autenticados desde `resolve(__dirname, '../../dist
 Los [26 tests](../../backend/src/auth/auth-runtime.module.spec.ts) incluyen source Jest con carga real empaquetada y rechazo en `NestFactory.create` con `abortOnError:false`. Once casos usan réplicas temporales propias de JS compilado y cuatro archivos públicos, resolución normal de dependencias y cwd ajeno: singleton/lookup booleano positivos; config inválida y falta/corrupción de cada archivo rechazan antes de devolver aplicación. Sin Prisma, PG, socket, hash nativo, override productivo ni mutación del candidato. Los negativos source con loader mock son aislamiento, no esta prueba de integridad compilada.
 
 El flujo main existente `NestFactory.create(AppModule)` → configureApplication → puerto → listen no cambia; un fallo del proveedor rechaza creación antes de avanzar a listen. Los cinco e2e H0 con Prisma mock permanecen GREEN. Esto prueba el artefacto **AuthRuntimeModule standalone**, no arranque completo AppModule con DB ni endpoints H1. Review C07, Verify independiente y commit pendientes del padre; PostgreSQL propio, sesiones/bootstrap/admin, Angular/navegador, carga/RSS y full H1 siguen pendientes.
+
+### C07 cerrado; frontera CLI C08 preparada
+
+C07 quedó cerrado en `71e6abf590721466a6ea8572a948a69174964437`, tree
+`9af840430c1291a22fcef538eb929ddc2bf29f94`. Review nativa
+`review-10051ed7f7701d1d`: cuatro lentes APPROVED, acknowledgement exacto consumido.
+Verify independiente: todos exit0, 26 runtime, 598 unit/ocho suites, 15 packaging,
+cinco mock e2e, 10 generador, 11 contractuales/siete ejemplos, build/lint/tres parses,
+pins y cinco SHA estables. Los once fixtures compilados prueban AuthRuntimeModule,
+**no arranque AppModule/DB completo ni certificación H1**. Supersede solo el pendiente
+histórico C07; no transfiere autoridad a C08.
+
+C08 sustituye la selección accidental de conexión por una denegación incondicional
+en `backend/prisma.config.ts`, sin env, fallback, datasource ni inferencia argv.
+`backend/prisma.schema.config.ts` exporta un objeto de configuración con el mismo
+schema; generación/validación/build lo seleccionan con `--config`. No cambian schema,
+generator, output, dependencias ni kernels C01–C07. Uso y límites en [README](../../README.md#prisma-configuración-explícita-sin-datasource-c08).
+
+La frontera impide uso **accidental por defecto**, no selección deliberada de otro
+`--config`/`--url`. Bare generate/validate/migrate status están intencionalmente
+cerrados. El loader instalado es real; los tests usan solo flags booleanos y error
+fijo. Las negativas CLI seleccionan una copia del config real en fixtures propios,
+con HOME/XDG/TMP/Jiti aislados y env saneado. Prisma escribe commands.json antes de
+cargar config: aislamiento no equivale a ausencia absoluta de I/O o sandbox de red.
+
+ASSESS, review nativa, Verify independiente y commit C08 quedan **PENDING** del padre.
+Guard de propiedad/runner/config confiable de migraciones/provisión y PG real C09+
+quedan separados y pendientes. Se conserva la autorización futura de PostgreSQL
+`17.11-bookworm` nuevo, exclusivo/local, sin tocar Compose/H0/bases existentes ni
+borrado automático; no se ejerce en esta unidad.
 
 ## Configuración validada; composición DI preparada
 

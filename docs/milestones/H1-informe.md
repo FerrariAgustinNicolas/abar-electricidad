@@ -1,8 +1,11 @@
 # H1 — Informe parcial de contrato y fundamentos
 
-**CONTRACT UNIT FROZEN · FOUNDATION IMPLEMENTATION STARTED · AUTH ENDPOINTS NOT IMPLEMENTED · EXTERNAL AUDIT PENDING.** La preparación contractual pasó Review y Verify; C01–C06 están cerrados y C07 prepara composición DI, sin endpoints de autenticación. La autenticación sigue pendiente. Esto **no declara H1 CUMPLE**, aprobado, cerrado ni listo para auditoría final.
+**CONTRACT UNIT FROZEN · FOUNDATION IMPLEMENTATION STARTED · AUTH ENDPOINTS NOT IMPLEMENTED · EXTERNAL AUDIT PENDING.** La preparación contractual pasó Review y Verify; C01–C07 están cerrados y C08 prepara la frontera CLI por defecto, sin endpoints de autenticación. La autenticación sigue pendiente. Esto **no declara H1 CUMPLE**, aprobado, cerrado ni listo para auditoría final.
 
-## Identidad y alcance
+## Identidad y alcance (snapshot histórico pre-freeze C07)
+
+Los estados pendientes y la identidad de este snapshot se conservan; el cierre C07
+y la identidad C08 se registran más abajo, sin enmendar evidencia histórica.
 
 - Baseline H0 aprobado: `2428f2b918d97c5a48dabc438b0b3bf89030c7fb` (`h0-approved`).
 - Tracker local: `feat/h1-auth`; slice actual: `feat/h1-auth-07-runtime`, base/HEAD `777dbfac9df307a635e3f91fc9edac9bdb19e09f` (C06 cerrado). Estrategia elegida: feature-branch-chain; C07 prepara composición DI, con review nativa/Verify independiente/commit pendientes del padre. Prompt autorizado: `1e9cd1e44b919738da8c9d1262b436b8a354af17`. Commit de preparación contractual: `b6eed95359fa4a4ede13d62ced034508f57c1015`, tree `8267b798b01d6171b3cdcaa0f4a5052c59bfac4d`. `main` permanece sin cambios; no push, merge ni tag H1.
@@ -212,7 +215,41 @@ Checks finales del writer: `git diff --check` exit0; contrato SHA94122791…ba80
 
 Review nativa C07, Verify independiente y commit **PENDING** del padre. PG propio, sesiones/bootstrap/admin, Angular/navegador, carga/RSS, full H1 LIVE y auditoría siguen pendientes.
 
-## Aceptación parcial y siguiente gate
+## Slice 08 — Frontera Prisma CLI preparada; gates pendientes
+
+C07 **CLOSED**: commit `71e6abf590721466a6ea8572a948a69174964437`, tree
+`9af840430c1291a22fcef538eb929ddc2bf29f94`; review `review-10051ed7f7701d1d`, cuatro
+lentes APPROVED y ACK exacto BURNED. Target consumido
+`sha256:840ccab527cb3750a75b4f6787d691f26c0de09c6b54bb8dca0fbaa28c013a81`, revisión
+`sha256:1f64263dcc1b58b8e5fa3e2d5814a032a428e7bded6368e257378ca8b9e5dd77`.
+Verify independiente ALL exit0: 26 runtime, 598 unit/ocho suites, 15 packaging,
+cinco mock e2e, 10 generador, 11 contractuales/siete ejemplos, build/lint/tres parses,
+diff/pins/cinco SHA estables. Once fixtures compilados de AuthRuntimeModule no
+certifican arranque productivo AppModule/DB ni full H1. Los snapshots anteriores
+quedan históricos, sin replay de aprobación ni autoridad transferida a C08.
+
+C08: branch `feat/h1-auth-08-cli-guard`, base `71e6abf590721466a6ea8572a948a69174964437`.
+Siete paths fuente: default config, nuevo schema config, package, test CLI y tres
+documentos. [Decisión y límites](../decisions/H1-auth.md#c07-cerrado-frontera-cli-c08-preparada).
+Solo la selección explícita sin datasource permite generación/validación/build;
+la selección por defecto falla con mensaje fijo. No cambia schema/output/deps.
+
+RED observado con loader instalado, sin CLI: exit1, 0 passed/1 failed; el config
+anterior cargaba cuando debía denegar. GREEN loader: exit0, 3/3, incluidas variantes
+sin/con URL heredada sintética no secreta. Un assert inicial exigía ausencia de
+propiedad; defineConfig normaliza datasource omitido a undefined: se corrigió el
+assert, no el contrato ni el config. Después del GREEN, negativas CLI reales:
+exit0, 6/6 totales, generate/validate/migrate status terminan exit1 con solo el error
+fijo envuelto por Prisma y sin dispatch output. HOME/XDG/TMP/Jiti/commands.json
+permanecen en fixtures propios ignorados; no config global ni bypass de checkpoint.
+No certificación de sandbox/red: prueba acotada al orden del CLI instalado.
+
+ASSESS/review nativa/Verify independiente/commit C08 **PENDING**. Provisión,
+guard de propiedad, runner/config confiable de migraciones y certificación PostgreSQL
+real C09+ **PENDING**, sin ejecutar la autorización futura de recurso nuevo/exclusivo
+`postgres:17.11-bookworm`, sin Compose/H0/bases existentes ni borrado automático.
+
+## Aceptación parcial y siguiente gate (snapshot histórico C07)
 
 | Criterios del prompt H1 | Estado |
 |---|---|
