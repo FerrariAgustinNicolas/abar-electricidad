@@ -5,11 +5,11 @@
 ## Identidad y alcance
 
 - Baseline H0 aprobado: `2428f2b918d97c5a48dabc438b0b3bf89030c7fb` (`h0-approved`).
-- Tracker local: `feat/h1-auth`; slice actual: `feat/h1-auth-03-blocklist`, base/HEAD `744e05eab1814ddfd2250312fc4abf91e23ff593` (C02 verificado). Estrategia elegida: feature-branch-chain; commit/review/Verify independiente C03 pendientes del padre, sin identidad inventada. Prompt autorizado: `1e9cd1e44b919738da8c9d1262b436b8a354af17`. Commit de preparación contractual: `b6eed95359fa4a4ede13d62ced034508f57c1015`, tree `8267b798b01d6171b3cdcaa0f4a5052c59bfac4d`. `main` permanece sin cambios; no push, merge ni tag H1.
+- Tracker local: `feat/h1-auth`; slice actual: `feat/h1-auth-04-blocklist-loader`, base/HEAD `2bcb43b94671ac4b4f63790586ae0df2bd789a75` (C03 verificado). Estrategia elegida: feature-branch-chain; commit/review/Verify independiente C04 pendientes del padre, sin identidad inventada. Prompt autorizado: `1e9cd1e44b919738da8c9d1262b436b8a354af17`. Commit de preparación contractual: `b6eed95359fa4a4ede13d62ced034508f57c1015`, tree `8267b798b01d6171b3cdcaa0f4a5052c59bfac4d`. `main` permanece sin cambios; no push, merge ni tag H1.
 - Snapshot de bytes de `contracts/openapi.yaml`, SHA256: `94122791de8ce646bcbe342b6bc7d33833ce0b0e9e7121055f6601a22ba80a2f`. Es **digest contractual**, no hash de commit ni target de revisión nativa; recalcular si cambian los bytes.
 - Norma OpenAPI 3.0.3, versión 0.4.0, milestone `H1-contract-freeze`, runtime-stage `h0`, status `candidate`. Nueve operaciones auth/admin más health; solo health corre hoy. [Decisión y fuentes](../decisions/H1-auth.md), [historial](../../contracts/CHANGELOG.md), [uso](../../README.md).
 
-La unidad contractual preservada contiene OpenAPI, validador/test y cuatro ejemplos nuevos saneados (`admin-session`, `admin-user`, `admin-users`, `auth-error`), además de documentación. Esa unidad no cambió backend, Angular, Prisma, migraciones, dependencias ni configuración. C01 agregó parser independiente/tests y C02 política independiente/tests; C03 agrega solo generador/resource/notices offline y documentación, sin loader, registro de módulos ni cambios H0. El modelo, bootstrap, login y gestión administrativa son dirección pendiente, no runtime construido.
+La unidad contractual preservada contiene OpenAPI, validador/test y cuatro ejemplos nuevos saneados (`admin-session`, `admin-user`, `admin-users`, `auth-error`), además de documentación. Esa unidad no cambió backend, Angular, Prisma, migraciones, dependencias ni configuración. C01 agregó parser independiente/tests y C02 política independiente/tests; C03 agregó solo generador/resource/notices offline y documentación; C04 prepara loader standalone, sin registro de módulos ni cambios H0. El modelo, bootstrap, login y gestión administrativa son dirección pendiente, no runtime construido.
 
 ## Evidencia disponible y límites
 
@@ -103,6 +103,36 @@ Avisos verificados completos antes de aceptar artifacts: Pwdb 1069 bytes/SHA `40
 
 Conteo authored: 373 líneas agregadas/retiradas, incluidos notices completos; binario y manifest generado excluidos. Sin refactor conductual posterior a GREEN. Solo ocho paths fuente autorizados más cache ignorado; branch/HEAD base conservados, sin stage/commit/push. Una separación cohesiva ya aplicada: loader y trust anchor/distribución runtime quedan para otra unidad. Review nativa/Verify independiente/commit de este candidato siguen **pendientes del padre**. No cobertura exhaustiva, certificación NIST, aprobación H1 ni cierre de auditoría.
 
+## Slice 04 — Loader standalone preparado; gates del padre pendientes
+
+C03 histórico quedó cerrado en `2bcb43b94671ac4b4f63790586ae0df2bd789a75`, tree estable `5f217cd8836e7cd5cb4b3217e7d9d51f1bc8cc1d`. Review `review-a8d94eecea756ad2`: cuatro lentes aprobados/acuse consumido. Verify independiente: 10 generador/406 unit/5 mock e2e/11 contractuales/7 ejemplos y full checks; reproducción en memoria íntegra. Supersede estados pendientes históricos C03, **no aprueba C04**. Warning no bloqueante `R3-001` en tests del generador19–21 queda como seguimiento separado; sin corrección ni reapertura aquí.
+
+C04 entrega [loader](../../backend/src/auth/password-blocklist.ts) y [80 tests](../../backend/src/auth/password-blocklist.spec.ts), más documentación en estos dos paths. [Anclas, errores, ruta explícita y distribución pendiente](../decisions/H1-auth.md#loader-offline-independiente-slice-04). Importar no lee assets; lookup no hace I/O. Fábrica pura copia buffers, autentica manifest raw antes de parsear, exige esquema exacto y hash/count/order/unique del recurso. Carga filesystem acotada exige notices íntegros y cierra descriptors incluso ante fallos. Sin env, constructor/bypass, pins configurables ni allow-all.
+
+Evidencia nueva observada por este writer; comandos foreground timeout180 s:
+
+| Comando exacto | Resultado observado C04 |
+|---|---|
+| `npm --prefix backend test -- --runInBand --runTestsByPath src/auth/password-blocklist.spec.ts` | RED exit1, 18 failed/62 passed, stub tipado ejecutable; GREEN exit0, 80/80. Un error TS inicial de overload del mock fue corregido antes del RED, no cuenta como RED conductual. |
+| `npm --prefix backend run build` | exit0, Prisma generate + tsc; no copia resources. |
+| `npm --prefix backend run lint` | exit0. |
+| `npm --prefix backend test -- --runInBand` | exit0, 486/486 tests, 6/6 suites. |
+| `npm --prefix backend run test:e2e -- --runInBand` | exit0, 5/5 mock H0, 1 suite; no auth real. |
+| `node --test scripts/h1-password-blocklist.test.mjs` | exit0, 10/10. |
+| `npm --prefix backend run contract:validate` | exit0, OAS3.0.3/7 ejemplos externos. |
+| `node --test scripts/h0-contract-validate.test.mjs` | exit0, 11/11. |
+
+Triangulación: first/middle/last, no-miembro público reconfirmado por scan; pertenencia del ejemplo público débil establecida antes de rechazo `blocked`, caso sintético no-miembro validado con receiver. Copias corruptas, tipos/longitudes, manifest alterado/self-consistent nuevo hash, digest inválido, inmutabilidad y no-mutación. Order/duplicate negativos cierran en hash guard: **no aíslan independientemente la rama de orden**. Mocks filesystem cubren cuatro archivos faltantes/oversized/nonfile/truncated/grown/changed/read-error, lecturas parciales y stat/close error; restauración automática, sin mutar artifacts ni crear temporales. No refactor conductual posterior a GREEN.
+
+| Comprobación final exacta | Resultado observado C04 |
+|---|---|
+| `git diff --check` | exit0; repetido tras informe final. |
+| `shasum -a 256 contracts/openapi.yaml` | exit0; `94122791de8ce646bcbe342b6bc7d33833ce0b0e9e7121055f6601a22ba80a2f`, intacto. |
+| `shasum -a 256 backend/resources/auth/password-blocklist.bin backend/resources/auth/password-blocklist.manifest.json backend/resources/auth/LICENSE.pwdb.txt backend/resources/auth/LICENSE.seclists.txt` | exit0; los cuatro SHA completos coinciden con las anclas C03 arriba, sin cambios. |
+| `node -e "const {loadPasswordBlocklist}=require('./backend/dist/auth/password-blocklist.js');const path=require('node:path');const lookup=loadPasswordBlocklist(path.resolve('backend/resources/auth'));console.log(JSON.stringify({compiledLoad:true,synchronous:typeof lookup.hasDigest('0'.repeat(64))==='boolean'}));"` | exit0; `{"compiledLoad":true,"synchronous":true}`; carga explícita real, no build-copy claim. |
+
+Conteo final: 395 líneas authored (389 agregadas/6 retiradas), exactamente cuatro paths autorizados, staged vacío y branch/HEAD base conservados. Assets/contrato intactos; sin corpus, env, DB, red, scripts nuevos ni cambios de módulos/dependencias/build. Review nativa, Verify independiente y commit C04 siguen pendientes del padre; no distribución runtime, Argon/dependencia, PG propio, sesiones/bootstrap/admin, frontend/navegador ni full H1 LIVE acreditados.
+
 ## Aceptación parcial y siguiente gate
 
 | Criterios del prompt H1 | Estado |
@@ -116,7 +146,7 @@ Conteo authored: 373 líneas agregadas/retiradas, incluidos notices completos; b
 | 17: H2 no iniciado | Preservado; no alcance comercial nuevo. |
 
 1. Freeze contractual completado y registrado; esta actualización del informe es documental y posterior al commit verificado, no otra certificación funcional. El tamaño >400 líneas es advisory de carga: mantener unidades siguientes coherentes/acotadas, no omitir/minificar salvaguardas.
-2. Backend: configuración C01 y política C02 completadas; revisar/verificar/commitear C03 offline preparado. Loader, trust anchor y distribución del recurso siguen pendientes. Continuar con protección del nonce, Argon/pool, modelos/migraciones y bootstrap seguro. Runbook bootstrap pendiente; manual update del ejemplo de entorno solo si necesario, sin bypass.
+2. Backend: configuración C01, política C02 y generador/resource C03 completados; revisar/verificar/commitear C04 loader standalone preparado. Distribución e integración runtime del recurso siguen pendientes. Continuar con protección del nonce, Argon/pool, modelos/migraciones y bootstrap seguro. Runbook bootstrap pendiente; manual update del ejemplo de entorno solo si necesario, sin bypass.
 3. Implementar y verificar H1, incluyendo pruebas reales PostgreSQL y navegador si disponible. Antes de handoff a auditoría, Review + Verify deben cubrir el **mismo candidato final**. El padre registra el resultado, sin inventar aprobación externa.
 
 P01–P10 y horas siguen pendientes; rollout comercial cerrado. No se inicia H2 ni se modifica el informe histórico H0.
