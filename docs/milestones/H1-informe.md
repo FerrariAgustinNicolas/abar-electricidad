@@ -1,6 +1,6 @@
 # H1 — Informe parcial de contrato y fundamentos
 
-**CONTRACT FROZEN · C01–C08 CLOSED · C09 OFFLINE CONTRACT ONLY · AUTH ENDPOINTS NOT IMPLEMENTED · EXTERNAL AUDIT PENDING.** C09 parent gates remain pending. This partial report does not declare H1 compliant, approved, closed or ready for final audit.
+**CONTRACT FROZEN · C01–C09 CLOSED · C10 OFFLINE v2 ONLY · AUTH ENDPOINTS NOT IMPLEMENTED · EXTERNAL AUDIT PENDING.** C10 parent gates remain pending. This partial report does not declare H1 compliant, approved, closed or ready for final audit.
 
 ## Identidad y alcance (snapshot histórico pre-freeze C07)
 
@@ -299,13 +299,52 @@ with fixture-local HOME/XDG/TMP and no ambient private env/Node options.
 Owner-mismatch, hostile directory races, crash durability, real freshness/roles,
 real image/port isolation and installed Prisma execution are not certified.
 
-Parent ASSESS, independent Verify, native review/ACK and local work-unit commit
-remain **PENDING**. No staging, commit, receipt lifecycle or publication by writer.
-Future real adapters/image digest/version/filesystem/grants/credential transport/
-Prisma 7.10 behavior and real-PG certification remain pending. The persistent
-recovery decision does not authorize automatic stale-lock/resource adoption or
-container/database deletion. H1 authentication, sessions/admin and browser gates
-remain open; consumed C08 authority cannot be reused.
+### C09 CLOSED; incident24 preserved
+
+C09 closed at `4cd1b752db62604aabe441613ef44876985e2bee`, tree
+`2a5b26343507c2d3797cea5caee0095c05aa4d98`. Independent verification: 62 passing
+tests, two parser checks and diff check, all exit 0. Four native reviewers APPROVED;
+exact ACK consumed/BURNED; post-commit Git clean. Historical pending snapshots
+above are superseded, not replayed or amended in earlier commits. Incident24's
+wrong-root writes, initial failures and preserved external entries remain historical
+deviations/nonblocking follow-up. C10 does not access, inventory or clean that
+external namespace; it neither erases the incident nor claims hostile-race safety.
+
+### C10 offline v2 credential/projection evolution
+
+[Current schema/API and recovery decision](../decisions/H1-auth.md#c10-separate-roles-and-raw-password-file-projection-offline-v2).
+Separate internally generated bootstrap image-init superuser and migration role
+have distinct credentials. Only the nonprivileged migration credential reaches
+the dedicated URL. Private retained JSON is separate from code-owned plaintext
+`bootstrap-password.txt`; actual bounded fixture bytes must equal the bootstrap
+password alone. JSON serialization is rejected, never relabeled as valid mount
+evidence. Exact v2 pair/resource/run/projection identities and mount/volume/port
+shapes deny unsupported inputs. Legacy v1 files require separately authorized
+manual recovery; no conversion, overwrite, adoption or lock reclaim.
+
+Containment checks precede fixture writes: script-relative two-parent root equals
+canonical cwd, actual ancestors are directories/non-symlinks, and only fresh unique
+in-repository fixture descendants are used. No real state, environment files,
+Docker/PG/network/Prisma CLI, service, generated assets or package changes.
+
+Observed behavioral RED against the importable C09 API: 62 passed / 2 failed,
+exit 1; failures were v2 generation and fail-closed v1 validation, not setup/import.
+GREEN after implementation and triangulation: 108 passed / 0 failed, exit 0,
+no cancelled/skipped/todo. Regressions retain C09 barriers with explicit v2 version,
+role and mount expectations; new cases cover actual plaintext/private files,
+JSON/equal-credential rejection, cross-version/run binding, unsupported shapes,
+legacy bytes/lock preservation and bootstrap-role/final-projection denial. Final
+foreground regression/parser/diff results and four-file stable SHA256 evidence
+are returned in the writer handoff. No C01–C08 reruns or real-PG certificate.
+
+C10 parent ASSESS, independent Verify, native review/ACK and local work-unit commit
+remain **PENDING**. Writer performs no staging, commit or review lifecycle. Source
+documents and normalized fake evidence do not certify real mounts/UID permissions,
+authentication/grants, image/daemon behavior, ownership or freshness. Actual
+volume-creation/freshness provenance, real adapters, installed Prisma behavior and
+true-service checks remain future gates. No automatic cleanup or resource adoption.
+H1 authentication, sessions/admin and browser gates remain open; consumed C09
+(or earlier) authority cannot be reused.
 
 ## Aceptación parcial y siguiente gate (snapshot histórico C07)
 

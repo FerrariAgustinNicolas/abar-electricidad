@@ -1,6 +1,6 @@
 # H1 — Dirección congelada, fundamentos runtime preparados
 
-**Current status:** contract frozen; C01–C08 closed. C09 implements an offline ownership contract only; parent acceptance, independent verification, native review/ACK and commit remain pending. Auth/admin endpoints and external audit remain pending. [OpenAPI](../../contracts/openapi.yaml) es la única norma de interfaces; esta decisión explica su protocolo y los prerrequisitos operativos. No amplía DTOs, permisos ni alcance comercial. Ver [prompt H1](../milestones/H1-prompt.md) e [informe parcial](../milestones/H1-informe.md).
+**Current status:** contract frozen; C01–C09 closed. C10 evolves the offline credential/projection contract only; parent ASSESS, independent Verify, native review/ACK and local commit remain pending. Auth/admin endpoints and external audit remain pending. [OpenAPI](../../contracts/openapi.yaml) es la única norma de interfaces; esta decisión explica su protocolo y los prerrequisitos operativos. No amplía DTOs, permisos ni alcance comercial. Ver [prompt H1](../milestones/H1-prompt.md) e [informe parcial](../milestones/H1-informe.md).
 
 ## Protocolo e interfaces
 
@@ -165,6 +165,9 @@ opens or creates it. Private helpers execute only against uniquely owned test
 fixtures. A local record is a mutable accidental-misuse control, not cryptographic
 ownership authentication against hostile same-user/root access.
 
+The following table preserves the **historical C09 v1** contract; C10 supersedes
+its credential and mount schemas below, without retroactively certifying v1.
+
 | Contract | Fail-closed rule |
 |---|---|
 | Pair | Exact version-1 record/secret keys, generated run/DB/role/password, cross-file run/version binding, fixed `postgres:17.11-bookworm`. `creating` is recoverable but not migratable; only complete `provisioned` records reach gates. |
@@ -195,10 +198,49 @@ certifies a real fresh owned PostgreSQL resource:
 - [Prisma config](https://www.prisma.io/docs/orm/reference/prisma-config-reference): explicit config/env loading must be deliberate; the dedicated variable alone is not ownership proof.
 - [migrate deploy](https://www.prisma.io/docs/orm/reference/prisma-cli-reference#migrate-deploy): may create a missing database; it does not reset, use a shadow DB or detect drift. Existence/freshness gates must precede it.
 
-Parent ASSESS, independent Verify, native review/ACK and commit of C09 remain
-**PENDING**. Real adapters, immutable image digest/version validation, filesystem
-certification, role/grant provisioning, installed Prisma 7.10 behavior and a real-PG
-certificate remain separate pending gates. No real resource was provisioned here.
+### C09 closure (supersedes historical pending snapshots)
+
+C09 **CLOSED** at `4cd1b752db62604aabe441613ef44876985e2bee`, tree
+`2a5b26343507c2d3797cea5caee0095c05aa4d98`. Independent verification observed
+62 passing tests, two parser checks and diff check, all exit 0. Four native reviewers
+APPROVED; the exact ACK was consumed/BURNED; post-commit Git was clean. No replay
+or authority transfer to C10 or real PostgreSQL. Incident24 remains preserved,
+nonblocking historical follow-up; no external namespace access or cleanup here.
+
+## C10: separate roles and raw password-file projection (offline v2)
+
+**Deliberate compatibility break:** only exact v2 pairs/resources can reach a plan.
+Legacy v1 retained files fail closed and require separately authorized manual
+recovery. No adoption, conversion, overwrite or stale-lock reclaim is provided;
+old bytes and ambiguity locks remain intact. The future state path is policy only.
+
+| Boundary | v2 decision |
+|---|---|
+| Retained pair | Record has version/run/state/image/database/bootstrapRole/migrationRole (plus resource only when provisioned). Private JSON secret has version/run/bootstrapPassword/migrationPassword. Both names and distinct credentials are internally generated and cross-bound; image remains `postgres:17.11-bookworm`. |
+| Bootstrap | Generated `h1_bootstrap_<run>` is the image-init `POSTGRES_USER` superuser, never the migration role. Exact normalized bootstrap evidence contains role and passwordFile only; arbitrary environment/extra fields deny. No init or grant operations execute. |
+| Migration | Generated `h1_migration_<run>` authenticates the expected existing DB with non-superuser/NOCREATEDB/NOCREATEROLE evidence, public-only schema and empty table inventory. Only its credential enters the dedicated URL; no bootstrap credential enters the fixed nonexecuting plan. |
+| Projection | Exclusive private `bootstrap-password.txt` contains exactly the bootstrap password, with no JSON or newline. Retained `secret.json` is not mounted. Exact provenance binds version/run/file, future run-scoped source, `/run/secrets/h1-bootstrap-password` target and readOnly=true. Resource version/run and bind mount must agree. |
+| Fixture API | `writePair` exclusively creates three files under its lock; partial writes retain the ambiguity barrier. `readPair` verifies actual bounded plaintext; `readProjection` exposes that plaintext with code-owned future provenance, not a claim of an actual mount. All private/no-follow/single-link protections apply. |
+| Offline gates | `planOffline` requires exact inspect/authenticate/readProjection functions: inspect → actual-shaped projection check → migration authentication → projection recheck → immediate final inspect → frozen fixed plan. No executor, public runner or real-state API. |
+
+The v2 evidence remains **offline-injected-not-certified**. Labels, an empty
+inventory, an arbitrary caller boolean or a named-volume creation response cannot
+prove ownership or freshness. Fixture provenance does not prove actual daemon
+mounts, authentication, grants, UID permissions or continuity.
+
+Supplied source evidence (no new network research): official image commit
+`2603e26e245e558218728ee14e0a42dcb020dc7f` reads raw `file_env` text, rejects
+env+FILE, skips initialization on PG_VERSION and uses a socket-only temporary
+server; PG17.11 declares UID999/data VOLUME `/var/lib/postgresql/data`. Docker28 /
+API1.48 has exact Id/mount/nullable-port shapes; named volumes can be reused,
+and PublishAllPorts/restarts are not ownership/continuity proof. Future adapters
+must establish actual projection/mount/permissions, immutable image/platform,
+role grants/authentication and complete fresh-existing-DB provenance independently.
+Installed Prisma behavior and real-PG certification remain pending.
+
+C10 parent ASSESS, independent Verify, native review/ACK and local work-unit commit
+remain **PENDING**. No real resource or migration was executed; C01–C08 checks
+were not rerun. This does not certify H1 authentication or final audit readiness.
 
 ## Configuración validada; composición DI preparada
 
