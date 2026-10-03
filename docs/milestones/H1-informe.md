@@ -5,7 +5,7 @@
 ## Identidad y alcance
 
 - Baseline H0 aprobado: `2428f2b918d97c5a48dabc438b0b3bf89030c7fb` (`h0-approved`).
-- Tracker local: `feat/h1-auth`; slice actual: `feat/h1-auth-05-argon`, base/HEAD `e65c4d620fd332ec8ffe0d470e7a723901edc5ba` (C04 verificado). Estrategia elegida: feature-branch-chain; Verify funcional independiente C05 GREEN, documentación normalizada antes del freeze; review nativa y commit pendientes del padre, sin identidad inventada. Prompt autorizado: `1e9cd1e44b919738da8c9d1262b436b8a354af17`. Commit de preparación contractual: `b6eed95359fa4a4ede13d62ced034508f57c1015`, tree `8267b798b01d6171b3cdcaa0f4a5052c59bfac4d`. `main` permanece sin cambios; no push, merge ni tag H1.
+- Tracker local: `feat/h1-auth`; slice actual: `feat/h1-auth-06-resources`, base/HEAD `497648503b8f357c7488dac4e10082dd70420f6b` (C05 cerrado). Estrategia elegida: feature-branch-chain; C06 prepara empaquetado completo, con review nativa/Verify independiente/commit pendientes del padre. Prompt autorizado: `1e9cd1e44b919738da8c9d1262b436b8a354af17`. Commit de preparación contractual: `b6eed95359fa4a4ede13d62ced034508f57c1015`, tree `8267b798b01d6171b3cdcaa0f4a5052c59bfac4d`. `main` permanece sin cambios; no push, merge ni tag H1.
 - Snapshot de bytes de `contracts/openapi.yaml`, SHA256: `94122791de8ce646bcbe342b6bc7d33833ce0b0e9e7121055f6601a22ba80a2f`. Es **digest contractual**, no hash de commit ni target de revisión nativa; recalcular si cambian los bytes.
 - Norma OpenAPI 3.0.3, versión 0.4.0, milestone `H1-contract-freeze`, runtime-stage `h0`, status `candidate`. Nueve operaciones auth/admin más health; solo health corre hoy. [Decisión y fuentes](../decisions/H1-auth.md), [historial](../../contracts/CHANGELOG.md), [uso](../../README.md).
 
@@ -133,7 +133,7 @@ Triangulación: first/middle/last, no-miembro público reconfirmado por scan; pe
 
 Conteo final: 395 líneas authored (389 agregadas/6 retiradas), exactamente cuatro paths autorizados, staged vacío y branch/HEAD base conservados. Assets/contrato intactos; sin corpus, env, DB, red, scripts nuevos ni cambios de módulos/dependencias/build. Review nativa, Verify independiente y commit C04 siguen pendientes del padre; no distribución runtime, Argon/dependencia, PG propio, sesiones/bootstrap/admin, frontend/navegador ni full H1 LIVE acreditados.
 
-## Slice 05 — Argon standalone acotado; gates del padre pendientes
+## Slice 05 — Argon standalone acotado; cierre registrado
 
 C04 histórico cerrado en `e65c4d620fd332ec8ffe0d470e7a723901edc5ba`, tree `b946b83a84fbef3534cba4517acac3b83c549cf9`, review `review-2898763254cded6d` cuatro lentes aprobados/acuse consumido. Verify independiente: 80 loader/486 unit/6 suites/15 comandos y probe compilado explícito. Supersede pendientes históricos C04, **no aprueba C05**. C03 `R3-001` sigue informacional separado, sin fix/reapertura.
 
@@ -155,7 +155,35 @@ Tres tests nativos reales (**cinco hashes exitosos: 2+1+2**) cubren salts distin
 
 El handoff histórico contó seis hashes combinados, pero sobrestimó el conteo focused nativo: son cinco; el probe compilado añade **un hash separado**, con `compiledHash:true`, `match:true`, `mismatch:false`. Verify independiente actual `musb0v7p-1n-cnwe` **GREEN**: 86 focused, 572 unit/7 suites, 5 mock e2e H0, 10 generador, 11 contractuales, 7 ejemplos, build/lint/diff y pins íntegros de contrato/resource/manifest/ambos notices. Todas las invocaciones terminaron sin error de comando reportado; **no se expusieron códigos numéricos de salida**, por lo que los exit0 históricos de la tabla no se atribuyen a esta verificación. Branch `feat/h1-auth-05-argon`, HEAD `e65c4d620fd332ec8ffe0d470e7a723901edc5ba`, cuatro modificaciones tracked y dos archivos hasher untracked, staged vacío y SHA256 de los seis archivos estables antes/después de Verify.
 
-Normalización documental antes del freeze nativo; cambia los bytes de ambos documentos respecto de ese snapshot verificado, no los cuatro archivos funcionales protegidos. Edición pasiva sin RED conductual significativo: readback estructural y check focused de continuidad, no replay TDD. Review nativa y commit C05 **pendientes del padre**; sin transferencia de autoridad C04→C05 ni workspace→rango commiteado. Helper no conectado al runtime; distribución de recursos, PostgreSQL propio, sesiones/bootstrap/admin, frontend/navegador/full H1 LIVE y auditoría externa pendientes. FIFO con mocks/deferred no acredita carga nativa productiva; sin prueba de carga/peak/RSS ni permiso de elevar capacidad nativa.
+Normalización documental antes del freeze nativo; cambia los bytes de ambos documentos respecto de ese snapshot verificado, no los cuatro archivos funcionales protegidos. Edición pasiva sin RED conductual significativo: readback estructural y check focused de continuidad, no replay TDD. C05 cerrado: commit `497648503b8f357c7488dac4e10082dd70420f6b`, branch `feat/h1-auth-05-argon`; review `review-cbe322421715bff4`, cuatro lentes APPROVED y acuse exacto consumido. Verify independiente final y commit comparten tree `96087c61dad61f5d9c077c0cb0d957e44e281aa0`, postcommit limpio. Normalización documental conservó los cuatro SHA funcionales; bridge independiente confirmó continuidad focused86/diff/contrato/tree. Supersede pendientes pre-freeze, sin transferencia automática workspace→rango commiteado ni H1 completo. Helper no conectado al runtime; PostgreSQL propio, sesiones/bootstrap/admin, frontend/navegador/full H1 LIVE y auditoría externa pendientes. FIFO con mocks/deferred no acredita carga nativa productiva; sin prueba de carga/peak/RSS ni permiso de elevar capacidad nativa.
+
+## Slice 06 — Empaquetado offline completo; gates del padre pendientes
+
+Unidad limitada a package/build, biblioteca copier, CLI explícito, tests y estos dos documentos (seis paths). [Rutas, autenticación y límites](../decisions/H1-auth.md#empaquetado-offline-completo-slice-06). Sin lockfile/dependencias, pins/source resources, DI, env, HTTP, Prisma/config ni frontend modificados. Prerrequisitos compilados C04/C05 ya disponibles antes del RED; no build preparatorio ni datos privados. Fixtures bajo prefijo temporal propio `abar-auth-packaging-`, limpiadas únicamente por sus tests.
+
+Historia primera escritura: RED conductual exit1,13 failed/1 passed contra no-op → GREEN14/14 (exit numérico GREEN no expuesto). Error inicial de instrumentación import no cuenta como RED. La igualdad argv/path falló ante symlink macOS; el reemplazo por `import.meta.main` funcionó en24.18.1, pero introdujo dependencia de API disponible desde24.2, incompatible con política Node24.x sin patch floor. No ejecución real de24.0/24.1.
+
+Verify previo independiente `musgneyk-1u-jjry`: todos los comandos exit0 explícitos,572 unit/7 suites,5 mock/1 suite,7 ejemplos, pins/probes y cinco SHA fuente completos estables. Su filtro omitió agregados de tres suites Node: no se atribuyen conteos14/10/11 al independiente. Evidencia previa no certifica candidato corregido.
+
+Corrección: CLI separado llama biblioteca incondicionalmente, rechaza argumentos y redacta fallos; core no tiene branch CLI ni I/O al importar. Regresión sobre copia temporal elimina `import.meta.main` y verifica su ausencia antes de exigir los cuatro artefactos autenticados/byte-exactos. Simula ausencia de API en24.18.1, no certifica otras patches ni reduce soporte.
+
+| Comando exacto (foreground, timeout180s) | Evidencia nueva del writer, candidato corregido C06 |
+|---|---|
+| `node --test backend/scripts/copy-auth-resources.test.mjs` | RED exit1:1 failed/14 passed; old-gated CLI exit0, pero falta artefacto. GREEN exit0:15/15, sin skips/cancelados; agregados Node retenidos. |
+| `node --check backend/scripts/copy-auth-resources.mjs && node --check backend/scripts/copy-auth-resources-cli.mjs && node --check backend/scripts/copy-auth-resources.test.mjs` | exit0, tres parsers. |
+| `npm --prefix backend run build` | exit0; Prisma generate + tsc + nuevo CLI explícito, destino autenticado. |
+| `npm --prefix backend run lint` | exit0; alcance ESLint TS existente, no lint dedicado de mjs. |
+| `npm --prefix backend test -- --runInBand` | exit0,572/572 unit,7 suites; no incremento TS. |
+| `npm --prefix backend run test:e2e -- --runInBand` | exit0,5/5 mock H0,1 suite; no auth/PG real. |
+| `node --test scripts/h1-password-blocklist.test.mjs` | exit0,10/10. |
+| `npm --prefix backend run contract:validate` | exit0,7 ejemplos externos. |
+| `node --test scripts/h0-contract-validate.test.mjs` | exit0,11/11. |
+
+Triangulación en15, conservando los14 casos anteriores: cada binario/manifest/notice faltante o corrupto falla antes de copia; bytes completos de cuatro archivos, cwd ajeno/repetición/archivo ajeno preservado; corrupción de destino inducida en fixture cierra tras copia; import sin assets/loader no lee recursos, API/CLI redactadas y flags rechazados. Sin mutación de fuente real ni candidato generado. Prueba positiva usa loader real compilado, no pins sintéticos ni certificado exclusivamente mock.
+
+SHA256 de contrato intacto `94122791de8ce646bcbe342b6bc7d33833ce0b0e9e7121055f6601a22ba80a2f`; `shasum -a 256` sobre contrato y cuatro fuentes/cuatro archivos empaquetados terminó exit0: los cuatro pares coinciden con SHA C03 completos arriba. Binario170528 bytes, manifest y ambos MIT1069/1072 bytes íntegros. Probe real `node -e` con C04 compilado y ruta fija `backend/dist/resources/auth`: exit0, solo `{"packagedLoad":true,"synchronous":true}`. Comparación adicional byte a byte confirma cuatro archivos idénticos y avisos completos (exit0). No hash de credencial ni lectura env. `git diff --check` pasó exit0; scope final seis paths: tres tracked modificados y tres scripts nuevos, staged vacío/HEAD base conservado. Conteo authored250 líneas (46 agregadas/8 retiradas tracked +196 nuevas), bajo advisory400.
+
+Review nativa, Verify independiente y commit C06 **PENDING**. C05 aprobado no aprueba C06 ni runtime. C07 futuro requiere snapshot raw auth (validador actual elimina AUTH_*), carga empaquetada antes de listen y singleton; no implementación adelantada. Full H1/PG/sesiones/bootstrap/admin/Angular/navegador/carga-RSS siguen pendientes.
 
 ## Aceptación parcial y siguiente gate
 
@@ -170,7 +198,7 @@ Normalización documental antes del freeze nativo; cambia los bytes de ambos doc
 | 17: H2 no iniciado | Preservado; no alcance comercial nuevo. |
 
 1. Freeze contractual completado y registrado; esta actualización del informe es documental y posterior al commit verificado, no otra certificación funcional. El tamaño >400 líneas es advisory de carga: mantener unidades siguientes coherentes/acotadas, no omitir/minificar salvaguardas.
-2. Backend: configuración C01, política C02 y generador/resource C03 completados; C04 loader cerrado históricamente; revisar/verificar/commitear C05 Argon standalone preparado. Distribución e integración runtime del recurso/helper siguen pendientes. Continuar con protección del nonce, modelos/migraciones y bootstrap seguro. Runbook bootstrap pendiente; manual update del ejemplo de entorno solo si necesario, sin bypass.
+2. Backend: configuración C01, política C02 y generador/resource C03 completados; C04 loader y C05 Argon cerrados; C06 empaquetado completo preparado requiere review/Verify/commit del padre. Integración runtime C07 del recurso/helper sigue pendiente. Continuar con protección del nonce, modelos/migraciones y bootstrap seguro. Runbook bootstrap pendiente; manual update del ejemplo de entorno solo si necesario, sin bypass.
 3. Implementar y verificar H1, incluyendo pruebas reales PostgreSQL y navegador si disponible. Antes de handoff a auditoría, Review + Verify deben cubrir el **mismo candidato final**. El padre registra el resultado, sin inventar aprobación externa.
 
 P01–P10 y horas siguen pendientes; rollout comercial cerrado. No se inicia H2 ni se modifica el informe histórico H0.
