@@ -1,6 +1,6 @@
 # H1 — Informe parcial de contrato y fundamentos
 
-**CONTRACT UNIT FROZEN · FOUNDATION IMPLEMENTATION STARTED · AUTH ENDPOINTS NOT IMPLEMENTED · EXTERNAL AUDIT PENDING.** La preparación contractual pasó Review y Verify; C01–C07 están cerrados y C08 prepara la frontera CLI por defecto, sin endpoints de autenticación. La autenticación sigue pendiente. Esto **no declara H1 CUMPLE**, aprobado, cerrado ni listo para auditoría final.
+**CONTRACT FROZEN · C01–C08 CLOSED · C09 OFFLINE CONTRACT ONLY · AUTH ENDPOINTS NOT IMPLEMENTED · EXTERNAL AUDIT PENDING.** C09 parent gates remain pending. This partial report does not declare H1 compliant, approved, closed or ready for final audit.
 
 ## Identidad y alcance (snapshot histórico pre-freeze C07)
 
@@ -215,7 +215,7 @@ Checks finales del writer: `git diff --check` exit0; contrato SHA94122791…ba80
 
 Review nativa C07, Verify independiente y commit **PENDING** del padre. PG propio, sesiones/bootstrap/admin, Angular/navegador, carga/RSS, full H1 LIVE y auditoría siguen pendientes.
 
-## Slice 08 — Frontera Prisma CLI preparada; gates pendientes
+## Slice 08 — Frontera Prisma CLI preparada; gates pendientes (historical snapshot)
 
 C07 **CLOSED**: commit `71e6abf590721466a6ea8572a948a69174964437`, tree
 `9af840430c1291a22fcef538eb929ddc2bf29f94`; review `review-10051ed7f7701d1d`, cuatro
@@ -248,6 +248,64 @@ ASSESS/review nativa/Verify independiente/commit C08 **PENDING**. Provisión,
 guard de propiedad, runner/config confiable de migraciones y certificación PostgreSQL
 real C09+ **PENDING**, sin ejecutar la autorización futura de recurso nuevo/exclusivo
 `postgres:17.11-bookworm`, sin Compose/H0/bases existentes ni borrado automático.
+
+## Slice 08 closed; Slice 09 offline contract candidate
+
+C08 **CLOSED**: commit `80e32a754512011a4c51a42198a55bb56d34a2c4`, tree
+`46cce4da053ee60c902cf0d2ac0d7611c183204b`; seven paths, 238 additions/15 deletions.
+Native `review-ce3c99e320c9a121`: four APPROVED lenses, exact ACK BURNED for target
+`sha256:2359dc60432ca0e101a2eaf2417d2321809e54ddc96f4b18b1ff516c91b4b989`, consumed
+revision `sha256:2a056a368ad2199e53073a9eea0c42a0c5b11cb9912072f3e9f175b77180e1af`.
+Independent verification: 18 functional checks, all exit 0, and exact BASE71
+eight-file generated-client SHA equality, final exit 0. Preserve the late worker
+baseline ordering, failed baseline fixture attempts and public-demo-URL output
+deviation; no actual environment files/private credentials were read. npm update
+notices do not certify network silence. Advisory R3-001 at CLI test lines 98–124
+remains separate, description unavailable; no invented correction or receipt replay.
+Historical pending snapshots above remain unchanged evidence, not current gates.
+
+C09 branch `feat/h1-auth-09-owned-contract`, base C08. Four reviewable paths:
+[offline core](../../backend/scripts/h1-owned-postgres.mjs),
+[Node tests](../../backend/scripts/h1-owned-postgres.test.mjs) and these two documents.
+[Contract, persistent-recovery decision and official constraints](../decisions/H1-auth.md#c08-closed-c09-offline-ownership-contract).
+No public command, Docker/PG adapter, datasource config, real-state access,
+provisioning, child migration/application effects, package/dependency changes or
+C01–C08 reruns. Tests exercise private filesystem fixtures and injected evidence,
+not actual Docker ownership, database freshness or full-H1 behavior.
+
+Observed test-first evidence: nonthrowing importable stub and valid fixture shapes
+preceded RED exit 1 (2 behavioral failures, 0 passed, 51 deferred/skipped). First
+full run: 52 passed/1 failed; child-execution coverage exposed a root-resolution
+mistake that wrote generated fixture pairs one directory above the repository,
+under `/Users/agustin/Repos/personal/odd/probes/h1-owned-postgres/fixtures/`.
+The writer corrected both roots and added a pre-write repository-root assertion;
+out-of-scope fixtures were not inspected or deleted and require parent handling.
+This is a scope deviation, not a claimed clean fixture certificate. Corrected
+GREEN: 53/53, exit 0. Expanded filesystem/invalid-input coverage: 59/59, exit 0;
+an intervening trailing-slash root assertion failure was setup, not behavioral RED.
+Accessor triangulation RED: 1 failed/61 passed, exit 1, before rejecting state
+accessors without invoking them. Uncertain-write lock-retention regression RED:
+1 failed/61 passed, exit 1, before retaining the lock as an ambiguity barrier and
+denying release/read/retry after a failed pair write. Final verification is reported
+in the writer handoff; no future result or parent approval is predicted here.
+
+Offline checks cover strict schemas/binding/lifecycle, private bounded descriptor
+reads, malformed/unknown/oversize/UTF-8/nonfile/mode/hardlink/symlink failures,
+exclusive pair writes preserving uncertain originals, stale/replaced locks,
+generated IDs and exact container/image/labels/storage/mount/loopback identity,
+authenticated role/DB/table inventory, final reinspection/order, rejected env/effect
+hooks, fixed sensitive plan/redacted errors, and silent import/direct execution
+with fixture-local HOME/XDG/TMP and no ambient private env/Node options.
+Owner-mismatch, hostile directory races, crash durability, real freshness/roles,
+real image/port isolation and installed Prisma execution are not certified.
+
+Parent ASSESS, independent Verify, native review/ACK and local work-unit commit
+remain **PENDING**. No staging, commit, receipt lifecycle or publication by writer.
+Future real adapters/image digest/version/filesystem/grants/credential transport/
+Prisma 7.10 behavior and real-PG certification remain pending. The persistent
+recovery decision does not authorize automatic stale-lock/resource adoption or
+container/database deletion. H1 authentication, sessions/admin and browser gates
+remain open; consumed C08 authority cannot be reused.
 
 ## Aceptación parcial y siguiente gate (snapshot histórico C07)
 

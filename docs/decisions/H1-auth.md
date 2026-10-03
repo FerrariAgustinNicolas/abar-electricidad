@@ -1,6 +1,6 @@
 # H1 — Dirección congelada, fundamentos runtime preparados
 
-**Estado:** contrato congelado; C01–C07 cerrados. C08 prepara la frontera CLI por defecto, con gates del padre pendientes. Endpoints auth/admin no implementados; auditoría externa pendiente. [OpenAPI](../../contracts/openapi.yaml) es la única norma de interfaces; esta decisión explica su protocolo y los prerrequisitos operativos. No amplía DTOs, permisos ni alcance comercial. Ver [prompt H1](../milestones/H1-prompt.md) e [informe parcial](../milestones/H1-informe.md).
+**Current status:** contract frozen; C01–C08 closed. C09 implements an offline ownership contract only; parent acceptance, independent verification, native review/ACK and commit remain pending. Auth/admin endpoints and external audit remain pending. [OpenAPI](../../contracts/openapi.yaml) es la única norma de interfaces; esta decisión explica su protocolo y los prerrequisitos operativos. No amplía DTOs, permisos ni alcance comercial. Ver [prompt H1](../milestones/H1-prompt.md) e [informe parcial](../milestones/H1-informe.md).
 
 ## Protocolo e interfaces
 
@@ -117,7 +117,7 @@ Los [26 tests](../../backend/src/auth/auth-runtime.module.spec.ts) incluyen sour
 
 El flujo main existente `NestFactory.create(AppModule)` → configureApplication → puerto → listen no cambia; un fallo del proveedor rechaza creación antes de avanzar a listen. Los cinco e2e H0 con Prisma mock permanecen GREEN. Esto prueba el artefacto **AuthRuntimeModule standalone**, no arranque completo AppModule con DB ni endpoints H1. Review C07, Verify independiente y commit pendientes del padre; PostgreSQL propio, sesiones/bootstrap/admin, Angular/navegador, carga/RSS y full H1 siguen pendientes.
 
-### C07 cerrado; frontera CLI C08 preparada
+### C07 cerrado; frontera CLI C08 preparada (historical pre-freeze snapshot)
 
 C07 quedó cerrado en `71e6abf590721466a6ea8572a948a69174964437`, tree
 `9af840430c1291a22fcef538eb929ddc2bf29f94`. Review nativa
@@ -146,6 +146,59 @@ Guard de propiedad/runner/config confiable de migraciones/provisión y PG real C
 quedan separados y pendientes. Se conserva la autorización futura de PostgreSQL
 `17.11-bookworm` nuevo, exclusivo/local, sin tocar Compose/H0/bases existentes ni
 borrado automático; no se ejerce en esta unidad.
+
+## C08 closed; C09 offline ownership contract
+
+C08 **CLOSED** at `80e32a754512011a4c51a42198a55bb56d34a2c4`, tree
+`46cce4da053ee60c902cf0d2ac0d7611c183204b`. Native review
+`review-ce3c99e320c9a121` returned four APPROVED lenses; the exact ACK was BURNED.
+Independent verification completed 18 checks, all exit 0, plus exact BASE71
+eight-file generated-client SHA equality. This supersedes only C08's historical
+pending status above, not later units. No consumed authority is replayed.
+
+### Decision: persistent recovery, not automatic adoption
+
+C09's [importable contract](../../backend/scripts/h1-owned-postgres.mjs) has no CLI,
+import/direct-execution I/O, Docker/PG adapter, datasource config or child execution.
+The future persistent location is `odd/probes/h1-owned-postgres/state/`; C09 never
+opens or creates it. Private helpers execute only against uniquely owned test
+fixtures. A local record is a mutable accidental-misuse control, not cryptographic
+ownership authentication against hostile same-user/root access.
+
+| Contract | Fail-closed rule |
+|---|---|
+| Pair | Exact version-1 record/secret keys, generated run/DB/role/password, cross-file run/version binding, fixed `postgres:17.11-bookworm`. `creating` is recoverable but not migratable; only complete `provisioned` records reach gates. |
+| Resource | Exact container ID, immutable image ID, generated container/volume identity and labels, explicit PG17 data-volume mount, read-only secret mount, allocated port on `127.0.0.1`, running state. No caller URL/owned flag. |
+| Files | Existing private fixture directory 0700; exclusive new files 0600; descriptor regular-file/owner/mode/single-link checks, actual reads capped at 8192 bytes, fatal UTF-8, final no-follow and component symlink rejection. No chmod repair or overwrite. |
+| Lock/recovery | Exclusive token/inode-bound lock; conflicts and stale locks deny. Release only the acquired inode/token. Two exclusive file writes are not an atomic pair: partial, missing, malformed or mismatched pairs deny; uncertain originals and the acquired ambiguity-barrier lock remain; release/read/retry deny after any failed pair write, including a possible late sync failure. No automatic reclaim, resource cleanup or lifecycle overwrite. |
+| Gates | Snapshot complete pair → inspect exact ID and compare all resource fields → authenticated expected DB/role, existing DB, no superuser/CREATEDB/CREATEROLE, public-only schema and empty table inventory → immediate final reinspection → fixed plan. |
+| Plan | Explicitly `offline-injected-not-certified`; local Node + installed Prisma path, `migrate deploy`, fixed future `backend/prisma.h1-owned.config.ts`. Only generated `H1_OWNED_DATABASE_URL` in child env; no ambient env, npx, arbitrary args/config/URL, or executor. The plan is sensitive and must not be logged. |
+
+Local POSIX filesystem assumptions are explicit: Node has no directory-fd/openat
+path binding here, so ancestor checks do not protect against hostile concurrent
+same-user/root replacements. Network-filesystem semantics, Windows ACLs and crash
+power-loss durability are not certified by fsync or these tests. The JSON secret
+mount is a provenance shape, **not** a PostgreSQL password-file implementation.
+Credential extraction/transport, safe lifecycle updates, role grants, full freshness
+queries, platform isolation and real installed-Prisma behavior need later adapters.
+
+### Official constraints for later adapters
+
+These supplied references constrain design; neither documentation nor fake evidence
+certifies a real fresh owned PostgreSQL resource:
+
+- [Docker port publishing](https://docs.docker.com/engine/network/port-publishing/): loopback publishing has pre-28 same-L2 exposure and bridge/direct-routing caveats; port checks alone are not isolation proof.
+- [Postgres image](https://hub.docker.com/_/postgres): `POSTGRES_USER` is a superuser; PG17 requires an explicit data mount to avoid an anonymous volume. Initialization applies only to an empty data directory; password `*_FILE` handling still needs a safe adapter, not this JSON mount.
+- [pg_isready](https://www.postgresql.org/docs/17/app-pg-isready.html): valid credentials are not required for readiness. Readiness cannot establish authentication or freshness.
+- [CREATE ROLE](https://www.postgresql.org/docs/17/sql-createrole.html): respect role defaults and avoid exposing password SQL in logs; the migration role must lack all three privileged attributes.
+- [Node filesystem](https://nodejs.org/api/fs.html): exclusive `wx`, no-follow and OS/device sync have platform-specific limits; no atomic-pair or universal durability claim.
+- [Prisma config](https://www.prisma.io/docs/orm/reference/prisma-config-reference): explicit config/env loading must be deliberate; the dedicated variable alone is not ownership proof.
+- [migrate deploy](https://www.prisma.io/docs/orm/reference/prisma-cli-reference#migrate-deploy): may create a missing database; it does not reset, use a shadow DB or detect drift. Existence/freshness gates must precede it.
+
+Parent ASSESS, independent Verify, native review/ACK and commit of C09 remain
+**PENDING**. Real adapters, immutable image digest/version validation, filesystem
+certification, role/grant provisioning, installed Prisma 7.10 behavior and a real-PG
+certificate remain separate pending gates. No real resource was provisioned here.
 
 ## Configuración validada; composición DI preparada
 
