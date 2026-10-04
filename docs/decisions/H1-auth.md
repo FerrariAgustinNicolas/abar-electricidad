@@ -359,3 +359,30 @@ El explorer `murf6fch-j-wlly` leyó las siete fuentes requeridas del hito. El ch
 - [NIST SP 800-63B-4](https://pages.nist.gov/800-63-4/sp800-63b.html)
 
 El digest de norma y evidencia static están en el informe. El freeze ya recibió LIVE transicional H0 y review nativa de la unidad normalizada completa, según el informe; esa atribución no aprueba este nuevo slice de configuración. Cualquier incompatibilidad de interfaz/seguridad pausa el frente afectado para decisión; no se parchea la norma automáticamente. Review + Verify del mismo candidato final son obligatorios antes de auditoría H1. P01–P10, reglas de comprador y rollout comercial siguen abiertos/cerrado respectivamente; H2 no iniciado.
+
+## C12.1 — Offline Docker image DTO
+
+[`parseDockerImageResponse`](../../backend/scripts/h1-owned-postgres-docker-image-observations.mjs)
+projects only selected image-response fields into detached, deeply frozen metadata.
+It performs no I/O or integration. The exact success keys are `ok` and `image`; the
+image contains `id`, RepoTags state/count, RepoDigests state/hash suffixes, platform
+strings/variant, and only the Config.User category. Raw tags, repository prefixes,
+configuration, environment, and user text are never retained. Malformed inputs
+produce only the fixed denial `Invalid Docker image response.`
+
+This is a deliberately strict **local DTO policy**, not a statement that Docker
+requires these constraints on every wire response: lowercase exact `sha256:` IDs,
+ASCII-control-free bounded strings, arrays capped at 128 entries, strings capped at
+4096 UTF-16 units, and own-data-only selected fields. Missing, null, and present
+RepoTags/RepoDigests remain distinguishable. Unknown response keys are ignored
+without enumeration; selected accessors are denied without getter invocation.
+Plain/null-prototype records and dense ordinary arrays are accepted; hostile Proxy
+traps are caught where possible but arbitrary proxy code is not sandboxed.
+
+The in-memory tests use synthetic values only. They establish projection behavior,
+redaction, descriptor handling, bounds, detachment and freezing—not real daemon or
+wire compatibility, observed image provenance, ownership, freshness, locality,
+platform/runtime compatibility, PostgreSQL UID/grants, eligibility or H1 readiness.
+The focused TAP run observed 19 tests passed, zero failed/cancelled/skipped/todo,
+zero suites; both MJS syntax checks and `git diff --check` passed. Operational
+observation and real provisioning checks remain separate and pending.

@@ -403,3 +403,28 @@ A future guarded commit requires fresh human permission for identical accepted b
 3. Implementar y verificar H1, incluyendo pruebas reales PostgreSQL y navegador si disponible. Antes de handoff a auditoría, Review + Verify deben cubrir el **mismo candidato final**. El padre registra el resultado, sin inventar aprobación externa.
 
 P01–P10 y horas siguen pendientes; rollout comercial cerrado. No se inicia H2 ni se modifica el informe histórico H0.
+
+## C12.1 — Proyección offline de imagen Docker
+
+Se añade [`parseDockerImageResponse`](../../backend/scripts/h1-owned-postgres-docker-image-observations.mjs)
+y su prueba sintética en memoria. El DTO nuevo no consulta servicios ni realiza I/O:
+conserva un identificador validado, el estado/conteo de tags, únicamente hashes de
+RepoDigests, cadenas de plataforma y una categoría de `Config.User`. La salida se
+separa de la entrada y queda profundamente congelada; los fallos usan un mensaje
+fijo sin datos de entrada.
+
+Los límites y validaciones son política local estricta, no garantías universales del
+esquema de transporte Docker: SHA-256 lowercase exacto, máximo 4096 unidades UTF-16
+por texto y 128 elementos por arreglo, registros plain/null-prototype y descriptores
+propios de datos para campos seleccionados. Las pruebas cubren getters seleccionados
+sin invocarlos, getters desconocidos ignorados, campos heredados/undefined, límites,
+casos inválidos, redacción, inmutabilidad y congelación. Fixtures completamente
+sintéticos; no se consultaron daemon, API, servicios, configuración, secretos ni bases.
+
+Estos resultados no acreditan compatibilidad real de transporte/daemon, procedencia,
+propiedad, frescura, localidad, plataforma en ejecución, UID/grants de PostgreSQL,
+elegibilidad ni preparación completa H1. La corrida TAP enfocada observó 19 pruebas
+aprobadas, cero fallidas/canceladas/omitidas/todo y cero suites; ambos chequeos de
+sintaxis MJS y `git diff --check` pasaron. La observación operativa y el provisioning
+real permanecen pendientes por separado; no se modifican el parser/kernel C11 ni sus
+evidencias históricas.
