@@ -1,6 +1,6 @@
 # H1 — Informe parcial de contrato y fundamentos
 
-**CONTRACT FROZEN · C01–C09 CLOSED · C10 OFFLINE v2 ONLY · AUTH ENDPOINTS NOT IMPLEMENTED · EXTERNAL AUDIT PENDING.** C10 parent gates remain pending. This partial report does not declare H1 compliant, approved, closed or ready for final audit.
+**CONTRACT FROZEN · C01–C10 CLOSED · C11 OFFLINE OBSERVATIONS ONLY · AUTH ENDPOINTS NOT IMPLEMENTED · EXTERNAL AUDIT PENDING.** C11 parent ASSESS, functional Verify, native consent/review and local commit remain pending. This partial report does not declare H1 compliant, approved, closed or ready for final audit.
 
 ## Identidad y alcance (snapshot histórico pre-freeze C07)
 
@@ -345,6 +345,46 @@ volume-creation/freshness provenance, real adapters, installed Prisma behavior a
 true-service checks remain future gates. No automatic cleanup or resource adoption.
 H1 authentication, sessions/admin and browser gates remain open; consumed C09
 (or earlier) authority cannot be reused.
+
+## C10 closed; C11 offline Docker observations prepared
+
+C10 closure supersedes historical pending notes above: commit
+`779db7b062b536190f1518dd3fe7d68c6abbc94f`, tree
+`cb6df8038042157d57042d78a56d9a9ca683aac9`; independent 108/108 tests,
+both Node parser checks and diff check exit 0. Native four reviewers APPROVED,
+exact acknowledgement BURNED, post-commit clean, no push. The initial count-capture
+gap and separately authorized corrective TAP run remain historical evidence,
+without amendments or authority transfer. Parent full textual mirror readback
+completed; remote newline byte-fidelity was not claimed.
+
+C11 adds only the pure [parser](../../backend/scripts/h1-owned-postgres-docker-observations.mjs)
+and [in-memory tests](../../backend/scripts/h1-owned-postgres-docker-observations.test.mjs).
+The [exact contract and local-policy distinctions](../decisions/H1-auth.md#c10-closure-and-c11-observation-only-contract)
+pin Moby v28.0.0 / Engine API v1.48. Expected ten-field comparisons confer no
+authority. Exact `{ container, volume }` output preserves observed labels, literal
+mount sources, configured image reference versus observed image ID, and optional
+timestamp (null when absent). It is detached/deeply frozen, not a current kernel
+resource, URL, command, execution plan or owned/fresh/created/reused decision.
+Unknown raw keys are ignored without evaluating accessors; selected own data fields
+and complete string maps are checked. Faults expose only a fixed redacted Error.
+Strict local warning/mount/loopback-port/volume policies are not universal wire
+requirements or real-daemon compatibility certification; hostile proxies/runtime
+remain outside the threat model. Same-name volumes still provide no allocation proof.
+
+Observed RED: importable neutral stub, 7 tests / 1 pass / 6 behavioral failures,
+0 suites/cancelled/skipped/todo, exit 1. GREEN and triangulation: 96 tests / 96 pass,
+0 failures/suites/cancelled/skipped/todo, exit 0. Only synthetic trusted fixtures
+are serialized in tests; raw runner output is captured in memory and suppressed.
+Final foreground tests, two syntax checks, diff check and four stable SHA256 hashes
+are reported in the writer handoff, not replaced with invented lint evidence.
+
+No C01–C10 suites/reviews rerun, Docker/socket/network/service contact, environment
+files, fixtures on disk, external incident access, dependencies or generated output.
+No kernel integration or live PostgreSQL certificate. Provenance, image/platform,
+mount permissions, authentication/grants, freshness and execution remain future gates.
+Parent ASSESS, functional Verify, native consent/review and local commit are
+**PENDING**; no writer staging/commit/tracker closure and no consumed authority replay.
+A future guarded commit requires fresh human permission for identical accepted bytes.
 
 ## Aceptación parcial y siguiente gate (snapshot histórico C07)
 

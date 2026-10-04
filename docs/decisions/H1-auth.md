@@ -1,6 +1,6 @@
 # H1 — Dirección congelada, fundamentos runtime preparados
 
-**Current status:** contract frozen; C01–C09 closed. C10 evolves the offline credential/projection contract only; parent ASSESS, independent Verify, native review/ACK and local commit remain pending. Auth/admin endpoints and external audit remain pending. [OpenAPI](../../contracts/openapi.yaml) es la única norma de interfaces; esta decisión explica su protocolo y los prerrequisitos operativos. No amplía DTOs, permisos ni alcance comercial. Ver [prompt H1](../milestones/H1-prompt.md) e [informe parcial](../milestones/H1-informe.md).
+**Current status:** contract frozen; C01–C10 closed. C11 prepares offline Docker observations only; parent ASSESS, functional Verify, native consent/review and local commit remain pending. Auth/admin endpoints and external audit remain pending. [OpenAPI](../../contracts/openapi.yaml) es la única norma de interfaces; esta decisión explica su protocolo y los prerrequisitos operativos. No amplía DTOs, permisos ni alcance comercial. Ver [prompt H1](../milestones/H1-prompt.md) e [informe parcial](../milestones/H1-informe.md).
 
 ## Protocolo e interfaces
 
@@ -270,6 +270,83 @@ Los orígenes configurados se canonicalizan a `URL.origin`, deduplicados en orde
 HTTPS personalizado exige cookie Secure. Un esquema mixto activa Secure global y puede afectar clientes HTTP; preferir esquemas consistentes. Secure=true en HTTP local es protección superior permitida, **no garantía de flujo de navegador**. No se agregan overrides SameSite/Domain/Path: los atributos del protocolo congelado siguen intactos. Rate limiting futuro por proceso, reinicio resetea límites, sin lockout permanente ni Redis.
 
 El probe nativo previo de `argon2@0.45.1` fue GREEN con 26 hashes (2 warmups + 24 muestras), match/mismatch y salts aleatorios; permite escoger default conservador 1, no afirmar capacidad de aplicación. Fue aislado e ignorado: no aprobó dependencia backend ni autenticación/pool bajo carga. C05 agrega ahora la dependencia fijada y el helper, sin transferir autoridad del probe. Protección del nonce, limpieza acotada, persistencia, recursos del limiter y bootstrap siguen pendientes. Respetar política de scripts y denegación sensible H0, sin bypass; no se requiere editar ejemplos de entorno para este helper. Runbook y comando bootstrap aún no existen.
+
+## C10 closure and C11 observation-only contract
+
+C10 is **CLOSED** at `779db7b062b536190f1518dd3fe7d68c6abbc94f`, tree
+`cb6df8038042157d57042d78a56d9a9ca683aac9`. Independent evidence: 108/108
+pass, both Node parser checks and diff check exit 0; native four reviewers
+APPROVED, exact acknowledgement BURNED, post-commit clean, no push. Historical
+pending notes and the initial count-capture gap/corrective TAP run remain preserved,
+not amended or replayed as C11 authority. Parent full textual mirror readback
+completed; remote newline byte-fidelity was not certified.
+
+[`parseDockerObservations`](../../backend/scripts/h1-owned-postgres-docker-observations.mjs)
+accepts `{ createResponse, inspectResponse, volumeResponse, expected }` as JSON-like
+plain/null-prototype records. It returns a detached deeply frozen observation or
+throws `Error('Invalid Docker observations.')`, without cause, input echo or logs.
+No import-time IO, environment reads, operational CLI or kernel integration exists.
+
+### Exact comparison and output schemas
+
+`expected` has exactly these ten required fields: `containerId`, `containerName`,
+`imageReference`, `containerLabels`, `volumeName`, `volumeDriver`, `volumeLabels`,
+`dataDestination`, `bindSource`, `bindDestination`. Labels are string maps; other
+fields are nonempty strings. Container names compare literally (including Docker's
+leading slash). Only 64-hex container IDs normalize case to lowercase. Label
+expectations are a subset: every expected pair must match, but **all** observed
+pairs are retained. Expected names, labels and paths are comparisons, not authority.
+
+Output has exactly `{ container, volume }`:
+
+- `container`: `id`, `name`, `imageId`, `imageReference`, `labels`, `dataMount`,
+  `bootstrapMount`, `port`. Data mount: `{ type, name, source, destination, rw }`;
+  bootstrap mount: `{ type, source, destination, rw }`; port: `{ hostIp, hostPort }`.
+- `volume`: `name`, `driver`, `mountpoint`, `labels`, `scope`, `options`, `createdAt`.
+  Absent CreatedAt becomes null; a present value must be calendar-valid RFC3339
+  (1–9 fractional digits, no leap seconds). No timestamp is freshness proof.
+
+### Open wire schema versus strict local acceptance
+
+Source pin: [Moby v28.0.0, Docker Engine API v1.48](https://raw.githubusercontent.com/moby/moby/v28.0.0/docs/api/v1.48.yaml).
+Docker response objects are OPEN. Unknown raw keys, including getters, are ignored;
+known accessed fields and all string-map entries require own data descriptors.
+Arrays must be dense ordinary arrays; accessed records must be plain or
+null-prototype. Accessors, missing required fields, null and malformed types fail
+closed. Bounds are local policy: 4096 UTF-16 units per selected string/key and
+128 entries per selected map/array. Hostile proxies/runtime are outside the threat
+model; this does not guarantee arbitrary JavaScript objects cannot execute code.
+
+Create Id and Warnings are required; [] is valid. Nonempty warnings are rejected
+as local ambiguity policy, not a wire mandate. Inspect Image is retained separately
+from Config.Image: neither a manifest digest claim nor proof of tag immutability.
+Selected mounts require unique data-volume and bootstrap-bind destinations,
+matching volume name and fixed RW true/false respectively. Both destinations and
+the bootstrap source are literal absolute POSIX comparison paths, without
+normalization or filesystem certification. Volume source and Mountpoint are retained
+independently, not treated as canonical filesystem equivalence. Other mount
+Destinations/Types are validated then omitted; their irrelevant optional fields
+are not accessed. Driver/Mode/Propagation are not selected mount fields; no mount
+labels are invented. Required selected mount fields are **our** narrower policy,
+not universal wire requirements.
+
+Ports `5432/tcp` must contain exactly one binding with HostIp `127.0.0.1` and a
+canonical decimal HostPort string 1–65535. Nullable/empty/multiple bindings fail;
+no arbitrary binding selection or actual reachability/daemon-isolation claim.
+Volume requires Name, Driver, Mountpoint, Labels, Scope and Options. Scope must be
+local. Options nullability is unspecified in the pin; this strict slice rejects
+null without promising real-daemon compatibility. The source's null-Labels
+system-df example conflicts with explicit non-null schema: this is a selected
+strict response policy, not a universal Docker response certificate.
+
+VolumeCreate/Inspect share Volume and expose no created-versus-reused discriminator.
+Same-name/label observations never establish ownership, allocation or freshness.
+No URL, command, normalized current resource, planOffline result or ownership flags
+are returned. Future gates must establish live provenance, mounts/UID permissions,
+image/platform, authentication/grants, freshness and execution separately.
+C11 parent ASSESS, functional Verify, native consent/review and guarded commit are
+**PENDING**; a commit requires fresh human permission. No provisioning, state-ledger,
+recovery, adoption, cleanup or live PostgreSQL certification is included.
 
 ## Fuentes y gate
 
