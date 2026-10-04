@@ -428,3 +428,143 @@ aprobadas, cero fallidas/canceladas/omitidas/todo y cero suites; ambos chequeos 
 sintaxis MJS y `git diff --check` pasaron. La observación operativa y el provisioning
 real permanecen pendientes por separado; no se modifican el parser/kernel C11 ni sus
 evidencias históricas.
+
+## C13.1 — Transporte de observación de imagen por Unix HTTP
+
+`backend/scripts/h1-owned-postgres-docker-transport.mjs` exporta únicamente
+`observeDockerImage(input)`: un GET fijo al endpoint ImageInspect `v1.48` de
+`postgres:17.11-bookworm` sobre un `socketPath` Unix absoluto explícito. La entrada
+usa registros plain/null-prototype y descriptores propios de datos; accesores
+seleccionados, `undefined` presente, límites enteros inválidos y otros errores se
+redactan como la denegación congelada. Cada operación válida crea un Agent privado
+nuevo, sin keep-alive, y envía `Host: localhost`, `Accept: application/json` y
+`Connection: close`; no selecciona TCP/proxy, lee env/config, reintenta ni sigue
+redirecciones.
+
+La aceptación local requiere status 200, tipo JSON acotado, encoding ausente o
+identity, y framing único por Content-Length exacto o chunked. Rechaza duplicados,
+framing ambiguo, headers sobre el límite, trailers no vacíos, truncamiento,
+UTF-8/JSON/BOM inválidos y exceso de bytes. Reserva un único buffer binario después
+de validar headers, con límite configurable solo a la baja. El JSON pasa al proyector
+C12 sin modificaciones; se devuelve solo su DTO congelado y separado, nunca el body
+ni campos privados. Deadline monotónico cooperativo más timer; no puede interrumpir
+CPU síncrona ni un event loop detenido y no limita todos los buffers/asignaciones de
+Node. Se destruyen los recursos propios y se absorben errores tardíos hasta `close`,
+sin afirmar cierre OS síncrono.
+
+**TDD/evidencia del writer:** el stub async importable devolvía la denegación fija.
+La primera corrida conductual de 9 tests observó 3 aprobados/6 fallidos, exit 1;
+la ausencia de transporte no podía satisfacer la observación/redacción/request
+esperados. Esa corrida también contenía una expectativa inválida que clasificaba un
+campo desconocido ignorado como denegación; se corrigió y no se usa como prueba
+individual de ese caso. Una corrida ampliada terminó exit 137 con una excepción de
+fixture `ERR_HTTP_TRAILER_INVALID` al construir trailers incompatibles con
+Content-Length; no fue RED de producción. Una corrida posterior de 13 tests produjo
+12 aprobados/1 fallido por el mismo tipo de construcción inválida (`writeHead` con
+Content-Length y Trailer). Se sustituyeron por framing/raw HTTP Unix controlados; no
+se alteró producción para satisfacer fixtures defectuosos. **GREEN final:**
+`node --test --test-reporter=tap backend/scripts/h1-owned-postgres-docker-transport.test.mjs`,
+Node v24.18.1, exit 0, 13 tests aprobados, 0 fallidos/cancelados/omitidos/todo,
+0 suites. Cubren entradas/accesores, request exacto y sin reintento/redirect, status,
+headers/encoding/framing/trailers, Content-Length/chunked/multibyte/caps,
+UTF-8/BOM/JSON/proyector, truncamiento/refusal, deadlines sin respuesta y trickle,
+peer-close observado antes del teardown y llamadas/conexiones independientes.
+
+En esa GREEN se registraron 32 directorios privados nuevos y 32 sockets Unix
+autopropios (`/tmp/h1-c13-*`), cada uno con identidad `dev/ino`; los 32 recibos de
+cleanup marcaron `removed`, incluidos los directorios con múltiples conexiones.
+Las pruebas esperaron el evento de cierre de cada peer del servidor antes del
+teardown; esa corrida no atribuía en todos los casos qué lado inició el cierre. El
+hook final destruye solo recursos de fixture aún propios y usa límites finitos.
+PID/PPID del runner: 22830/22829. Esta evidencia refiere solo a recursos de esta
+corrida; los recursos históricos no registrados permanecen desconocidos y no fueron
+inventariados, adoptados ni limpiados.
+
+La documentación preserva los bytes anteriores mediante append-only. El alcance no
+integra kernel/C12, provisioning, Docker/PG, H0, Compose, configuración ni recursos
+persistentes. No certifica compatibilidad universal de daemon/Node, heap total,
+preempción CPU, propiedad/frescura, PostgreSQL o H1 completo. Syntax-checks, diff
+check, prefijos documentales y SHA de límites protegidos se reportan en el handoff
+final del writer; Verify independiente y revisión nativa permanecen pendientes del
+padre. No hubo stage, commit, push ni acción nativa.
+
+### C13.1 — Correcciones de evidencia y ciclo de fixtures
+
+Se mantuvo la implementación de transporte sin cambios. La expectativa de control
+path que primero representaba backslash-plus-`0` como si fuera NUL falló como error
+de la prueba, no de producción; se reemplazó por codepoints U+0000/U+0001/U+001F/
+U+007F y una ruta hija sobrelímite. Una instrumentación inicial de peer-close también
+falló porque Node marca `socket.writableEnded` al cerrar el socket destruido. Se
+sustituyó por evidencia directa: los casos sin respuesta/trickle observan exactamente
+una llamada a `ClientRequest.destroy()` del cliente y que el fixture no había emitido
+`finish` antes del cierre del peer. Ambos casos pasan dentro del límite; el resto de
+los casos solo exige peer close observado antes del teardown, sin atribuir iniciador.
+
+El helper ahora registra el hook antes de crear recursos, rastrea y drena operaciones,
+usa gates controlados para cancelación pre-creación, pre-listen y post-listen, aborta
+un Unix listen en vuelo, y cerca continuaciones antes de lanzar acciones tardías.
+El cleanup acotado verifica identidad/entradas, no invoca sus operaciones explícitas
+`unlink`/`rmdir` ante metadatos inyectados distintos ni entradas imprevistas, y solo
+demuestra la retirada después de restaurar la vista de sus recursos propios. Se ejercitaron errores controlados de
+setup/handler y drenaje/close del servidor. El caso in-flight listen registró
+`identity-unavailable`, close observado y eliminación del directorio vacío: no se
+presenta como identidad de socket capturada.
+
+**RED de corrección:** el assert transitorio de `writableEnded === false` falló en los
+casos no-response/trickle (Node observó `true` al cerrar); no fue un fallo del
+transporte. **GREEN final:** `node --test --test-reporter=tap
+backend/scripts/h1-owned-postgres-docker-transport.test.mjs`, Node v24.18.1, PID/PPID
+36784/36783, exit 0: 21 aprobadas, 0 fallidas/canceladas/omitidas/todo, 0 suites.
+Se ejecutaron 43 directorios fixture nuevos; 40 identidades socket `dev/ino` fueron
+capturadas, dos directorios fueron cancelados/fallaron antes de listen y un intento
+de listen se abortó antes de capturar identidad. Los 43 directorios tuvieron retirada
+confirmada; cada servidor iniciado cerró, y los cierres finales no dejaron peers u
+operaciones pendientes. Recursos son solo los creados por ese PID/corrida; ningún
+recurso histórico fue adoptado, enumerado ni limpiado. `node --check` para ambos
+MJS y `git diff --check` se reportan tras esta actualización. La revisión
+independiente y gates del padre continúan pendientes; sin commit ni acción nativa.
+
+### C13.1 — Registro histórico: rerun del writer tras acotar fixtures
+
+La corrida enfocada que entonces se calificó final posterior a los límites de
+filesystem/cleanup se conserva como evidencia histórica: mismo comando TAP, exit 0,
+13/13 aprobados, cero fallidos/cancelados/omitidos/todo, cero suites; PID/PPID
+24462/24461. Sus 32 recibos de directorio/socket cerraron como `removed` tras observar
+peers cerrados antes del teardown. `node --check` pasó en ambos archivos nuevos y
+`git diff --check` terminó sin errores. Luego fue supersedida por 21/21 del writer
+(PID 36784) y la verificación independiente recibida (PID 39085), ambas anteriores a
+las correcciones adicionales documentadas debajo; ninguna inspeccionó recursos
+históricos desconocidos ni cambió los gates de lifecycle, revisión o commit.
+
+### C13.1 — Continuación: límites explícitos y fence post-chmod
+
+Se añadió cobertura positiva explícita para `timeoutMs` 1/12000 y
+`maxResponseBytes` 1/262144. Cada caso alcanzó exactamente una construcción de
+`http.request` a través del observer de prueba y fue interceptado antes de red; la
+denegación devuelta por el sentinel solo prueba aceptación de entrada y paso al
+constructor, no éxito HTTP, deadline de 1 ms ni rendimiento. Las pruebas Unix
+existentes siguen cubriendo la interacción real con el fixture propio.
+
+La regresión controlada mantiene pendiente la finalización observada del `chmod`
+real en el directorio propio hasta que la prueba cancela setup. **RED de fixture:**
+sin el fence, la continuación antigua despachó exactamente un `private mode check`
+`lstat` después de cancelar. El directorio propio se drenó y eliminó; no hubo listen,
+peer ni operación pendiente. **GREEN:** `ensureSetupOpen(state)` ahora sigue al
+`await` del `chmod` y precede al nuevo `lstat`; la misma prueba observó cero despachos
+tardíos y cleanup `removed`, sin API ni seam de producción.
+
+**Verificación final de este writer:**
+`node --test --test-reporter=tap backend/scripts/h1-owned-postgres-docker-transport.test.mjs`,
+Node v24.18.1, PID/PPID 41815/41814, exit 0: 23 aprobadas, cero
+fallidas/canceladas/omitidas/todo, cero suites. Se crearon 45 directorios fixture
+nuevos: 41 identidades Unix socket `dev/ino` capturadas; tres directorios no llegaron
+a listen y un listen abortado cerró antes de capturar identidad. Los 45 directorios
+propios se retiraron con identidad comprobada; todos los servidores iniciados
+cerraron y las recepciones terminales observaron cero peers/operaciones pendientes.
+Hubo además una cancelación pre-creación sin directorio. Estas cifras cubren solo
+esta corrida, no recursos históricos o externos. Se preservan los límites conocidos:
+el cap del buffer no es un límite de heap total y el deadline cooperativo no preempta
+CPU síncrona/event-loop detenido. Los prefijos C12 y el checkpoint canónico permanecen
+byte-idénticos. La corrida independiente PID 39085 precede estas correcciones; se
+requiere una nueva verificación independiente. No se declara cierre nativo ni hubo
+commit.

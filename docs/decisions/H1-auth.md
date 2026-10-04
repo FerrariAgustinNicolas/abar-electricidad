@@ -386,3 +386,46 @@ platform/runtime compatibility, PostgreSQL UID/grants, eligibility or H1 readine
 The focused TAP run observed 19 tests passed, zero failed/cancelled/skipped/todo,
 zero suites; both MJS syntax checks and `git diff --check` passed. Operational
 observation and real provisioning checks remain separate and pending.
+
+## C13.1 — Bounded Unix image observation transport
+
+`backend/scripts/h1-owned-postgres-docker-transport.mjs` exports only
+`observeDockerImage(input)`. It accepts plain/null-prototype records with own data
+fields `socketPath`, `timeoutMs?` and `maxResponseBytes?`; selected accessors,
+present-undefined options, malformed values and out-of-range limits return the fixed
+frozen denial without I/O. It selects one explicit absolute POSIX Unix socket path,
+never discovers or canonicalizes paths, reads configuration, or selects TCP/proxy.
+The caller may lower the 12,000 ms and 262,144-byte ceilings.
+
+Each valid operation creates a private non-keepalive Agent and issues one GET for
+`/v1.48/images/postgres:17.11-bookworm/json`, with only the fixed `Host: localhost`,
+`Accept: application/json` and `Connection: close` headers. It sets an 8,192-byte
+header limit and strict HTTP parsing. Only status 200, the narrow JSON/optional
+UTF-8 content type, absent/identity content encoding, and one exact Content-Length
+or chunked framing are accepted. Duplicate selected headers, mixed/unsupported
+framing, malformed UTF-8/JSON, a BOM, nonempty trailers, truncation and body overflow
+fail closed. One binary body buffer is allocated after accepted headers; the byte
+cap does not bound Node's incoming chunks, decoding, JSON/projection allocations,
+queues or total heap. Successful JSON passes through unchanged
+`parseDockerImageResponse`; only its detached frozen DTO is returned. Errors expose
+only `{ok:false,error:'Unable to observe Docker image.'}`.
+
+A monotonic whole-operation deadline is checked around asynchronous and synchronous
+processing boundaries and enforced by a timer. This is cooperative: it cannot
+preempt event-loop stalls or synchronous CPU work. The operation settles once,
+clears its timer/body reference and destroys its own request, response, socket and
+private Agent. Late error handlers remain guarded until close; destruction is
+requested, not claimed to synchronously close the OS socket. The transport is not a
+Docker-wide compatibility certificate or an ownership/freshness/provisioning gate.
+
+Tests use only fresh private `mkdtemp('/tmp/h1-c13-*')` directories, their own short
+Unix HTTP sockets, and nonexistent children of those directories. Receipts include
+process and exact directory/socket identities when captured. The no-response and
+trickle deadline cases instrument exactly one client `ClientRequest.destroy()` and
+confirm the fixture response had not emitted `finish` before its peer closed; other
+fixtures require observed peer close before teardown without inferring which side
+initiated it. Setup registers cleanup first, tracks async operations, gates delayed
+continuations, and aborts in-flight Unix listen. Bounded cleanup drains operations,
+server close and peers before identity/empty-directory checks; any mismatch preserves
+the directory. No TCP, daemon, PostgreSQL, existing service, external fixture,
+configuration or persistent resource is contacted or inspected.
