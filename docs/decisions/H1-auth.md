@@ -429,3 +429,21 @@ continuations, and aborts in-flight Unix listen. Bounded cleanup drains operatio
 server close and peers before identity/empty-directory checks; any mismatch preserves
 the directory. No TCP, daemon, PostgreSQL, existing service, external fixture,
 configuration or persistent resource is contacted or inspected.
+
+## C14.1 — Observación aislada de versión Docker por socket Unix
+
+C14.1 agrega `observeDockerDaemonVersion(input)` como exportación asíncrona autónoma. Solo hace un `GET /v1.48/version` a través del `socketPath` Unix elegido por quien llama; no descubre sockets, ejecutables, configuración ni variables de entorno, no reintenta, no sigue redirecciones y no participa en coordinación de imágenes, bootstrap o aprovisionamiento.
+
+La respuesta pública es un DTO nuevo y profundamente congelado con `version`, `apiVersion`, `minimumApiVersion`, `os` y `architecture`. La ausencia upstream de `MinAPIVersion` se representa como `{kind:'absent'}`, sin fabricar un mínimo. Se eliminan campos desconocidos y datos de `Platform`, `Components`, `Details`, Git, Go, kernel y build. Todos los rechazos comparten el mensaje fijo `Unable to observe Docker daemon version.`; no se exponen ruta, cabeceras, cuerpo, errores ni stack.
+
+### Restricciones locales y evidencia upstream
+
+La política local exige `Version`, `ApiVersion`, `Os` y `Arch` como cadenas propias no vacías, ASCII y acotadas; la API y el mínimo presente deben tener forma numérica `major.minor`. Son restricciones del observador, no garantías de presencia o límites definidos por Docker. No se valida semver, sistema/arquitectura permitidos ni compatibilidad de rangos: una versión legacy, plataforma desconocida o par de rangos contradictorio sigue siendo un reporte observable, no una decisión de elegibilidad.
+
+La definición fijada de Moby v28.0.0 en [SystemVersion OpenAPI](https://github.com/moby/moby/blob/v28.0.0/docs/api/v1.48.yaml#L6312) declara las cinco propiedades raíz como cadenas sin lista `required`, ni reglas explícitas de patrón/longitud, ni anotaciones explícitas `deprecated`. La estructura `Platform` y `Components` contiene requisitos anidados, no raíz. [El tipo Go](https://github.com/moby/moby/blob/v28.0.0/api/types/types.go#L48) comenta que los campos legacy del Engine están deprecados para compatibilidad hacia atrás; en el tipo Go solo `MinAPIVersion` lleva `omitempty`. El comentario de Go y la ausencia de anotación Swagger son hechos distintos. Ni una estructura Go ni el OpenAPI convierten por sí solos estas observaciones en prueba de disponibilidad o compatibilidad.
+
+### Transporte y límites
+
+La petición usa un Agent privado y efímero, cabeceras fijas `Host: localhost`, `Accept: application/json`, `Connection: close`, parser HTTP estricto y cabecera máxima de 8192 bytes. Se acepta únicamente HTTP 200, JSON UTF-8 válido y framing no ambiguo soportado (longitud, chunked o cierre); se rechazan codificación no identity, cabeceras seleccionadas duplicadas, trailers anunciados/reales, discrepancias de longitud, cuerpos incompletos, BOM, JSON inválido/no objeto y exceso del cap. Un solo Buffer binario cuenta el límite configurado (máximo 262144 bytes); esto no limita el heap total del proceso.
+
+Socket Unix absoluto de 2–4096 unidades UTF-16 sin controles; timeout entero 1–12000 ms y cuerpo 1–262144 bytes, con defaults solo cuando los campos opcionales no existen. Un deadline monotónico cooperativo abarca la operación y destruye únicamente request/response/Agent propios al vencer; no preempta trabajo síncrono ni demuestra cierre instantáneo del socket. El resultado no demuestra frescura, identidad, procedencia, soporte de API, disponibilidad de imagen, propiedad ni readiness.
