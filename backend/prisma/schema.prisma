@@ -7,3 +7,47 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model AdminUser {
+  id                  String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                String   @db.VarChar(100)
+  email               String   @unique(map: "AdminUser_email_key") @db.VarChar(254)
+  passwordHash        String   @db.VarChar(256)
+  active              Boolean  @default(true)
+  mustChangePassword  Boolean  @default(true)
+  version             Int      @default(1)
+  createdAt           DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt           DateTime @updatedAt @db.Timestamptz(3)
+  sessions            AuthSession[]
+}
+
+model AuthSession {
+  id                    String    @id @db.Char(64)
+  adminUserId           String    @db.Uuid
+  nonceCiphertext       Bytes
+  nonceIv               Bytes     @db.ByteA
+  nonceTag              Bytes     @db.ByteA
+  nonceVersion          Int       @default(1)
+  createdAt             DateTime  @default(now()) @db.Timestamptz(3)
+  lastActivityAt        DateTime  @db.Timestamptz(3)
+  absoluteExpiresAt      DateTime  @db.Timestamptz(3)
+  idleExpiresAt          DateTime  @db.Timestamptz(3)
+  revokedAt              DateTime? @db.Timestamptz(3)
+  adminUser              AdminUser @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+
+  @@index([adminUserId])
+  @@index([absoluteExpiresAt])
+  @@index([idleExpiresAt])
+}
+
+model AuthPreAuthContext {
+  id               String   @id @db.Char(64)
+  nonceCiphertext  Bytes
+  nonceIv          Bytes    @db.ByteA
+  nonceTag         Bytes    @db.ByteA
+  nonceVersion     Int      @default(1)
+  createdAt        DateTime @default(now()) @db.Timestamptz(3)
+  expiresAt        DateTime @db.Timestamptz(3)
+
+  @@index([expiresAt])
+}
