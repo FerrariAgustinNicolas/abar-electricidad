@@ -1,3 +1,4 @@
+import { HttpException, InternalServerErrorException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import request from 'supertest';
@@ -91,4 +92,35 @@ describe('admin users HTTP contract', () => {
     expect(response.body).toEqual({ code: 'EMAIL_IN_USE', message: 'El correo electrónico ya está en uso', requestId: response.headers['x-request-id'] });
     expect(response.text).not.toContain('synthetic-private-password');
   });
+
+  for (const [operation, method, path] of [
+    ['list', 'get', '/api/v1/admin/users'], ['create', 'post', '/api/v1/admin/users'],
+    ['patch', 'patch', `/api/v1/admin/users/${id}`], ['resetPassword', 'post', `/api/v1/admin/users/${id}/reset-password`],
+  ] as const) {
+    for (const failureType of ['unclassified', 'framework', 'owned'] as const) {
+      it(`returns documented 503 for ${operation} ${failureType} dependency failure`, async () => {
+        const handler = { list, create, patch, resetPassword }[operation];
+        handler.mockRejectedValueOnce(failureType === 'owned' ? new AdminUsersRouteException('SERVICE_UNAVAILABLE') :
+          failureType === 'framework' ? new InternalServerErrorException('PRIVATE_BACKEND_FAILURE') : new Error('PRIVATE_BACKEND_FAILURE'));
+        let pending = request(url)[method](path).set('Cookie', cookie).set('Origin', origin).set('X-CSRF-Token', token);
+        if (method !== 'get') pending = pending.send({});
+        const response = await pending;
+        expect(response.status).toBe(503);
+        expect(response.headers['cache-control']).toBe('no-store');
+        expect(response.body.code).toBe('SERVICE_UNAVAILABLE');
+        expect(Object.keys(response.body).sort()).toEqual(['code', 'message', 'requestId']);
+        expect(response.body.requestId).toBe(response.headers['x-request-id']);
+        expect(response.text).not.toContain('PRIVATE_BACKEND_FAILURE');
+      });
+    }
+  }
+
+  it.each([400, 404])('preserves framework client-error status %i', async (status) => {
+    list.mockRejectedValueOnce(new HttpException('PRIVATE_BACKEND_FAILURE', status));
+    const response = await request(url).get('/api/v1/admin/users').set('Cookie', cookie);
+    expect(response.status).toBe(status);
+    expect(response.headers['cache-control']).toBe('no-store');
+    expect(response.text).not.toContain('PRIVATE_BACKEND_FAILURE');
+  });
+
 });

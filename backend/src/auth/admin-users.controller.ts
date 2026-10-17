@@ -41,7 +41,8 @@ export class AdminUsersExceptionFilter implements ExceptionFilter {
     const request = http.getRequest<RequestWithId>();
     const response = http.getResponse<Response>();
     const owned = getAdminUsersErrorMetadata(exception);
-    const status = owned?.status ?? (exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR);
+    const fallbackStatus = exception instanceof HttpException ? exception.getStatus() : HttpStatus.SERVICE_UNAVAILABLE;
+    const status = owned?.status ?? (fallbackStatus >= 500 ? HttpStatus.SERVICE_UNAVAILABLE : fallbackStatus);
     const code = owned?.code ?? (status === 400 ? 'VALIDATION_ERROR' : status === 404 ? 'USER_NOT_FOUND' : 'SERVICE_UNAVAILABLE');
     response.setHeader('Cache-Control', 'no-store');
     response.status(status).json({
