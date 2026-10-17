@@ -275,8 +275,7 @@ export class AdminUsersService {
     try {
       const result = await this.prisma.$transaction(async (tx: any) => {
         await tx.$queryRaw`SELECT 1 AS locked FROM pg_advisory_xact_lock(1868787565)`;
-        await this.assertStillAuthorized(tx, auth, now, true);
-        if (active === false) await tx.$queryRaw`SELECT "id" FROM "AdminUser" WHERE "active" = TRUE ORDER BY "id" FOR UPDATE`;
+        await this.assertStillAuthorized(tx, auth, now, true, active === false);
         const current = await tx.adminUser.findUnique({ where: { id: request.id }, select: USER_SELECT });
         if (!current) fail('USER_NOT_FOUND');
         validateUserRow(current);
@@ -335,7 +334,7 @@ export class AdminUsersService {
           actorAdminUserId: auth.adminUserId, targetAdminUserId: request.id, action: 'PASSWORD_RESET', reason,
         } });
       });
-    } catch (error) { this.mapDatabaseError(error); }
+    } catch (error) { return this.mapDatabaseError(error); }
   }
 
   private async authenticate(request: AdminUsersRequest, mutation: boolean): Promise<Authenticated> {
@@ -394,11 +393,12 @@ export class AdminUsersService {
     } finally { nonce?.fill(0); supplied?.fill(0); }
   }
 
-  private async assertStillAuthorized(tx: any, auth: Authenticated, now: number, mutation: boolean): Promise<void> {
+  private async assertStillAuthorized(tx: any, auth: Authenticated, now: number, mutation: boolean, lockActiveAdmins = false): Promise<void> {
     if (mutation) {
       try {
         await tx.$queryRaw`SELECT "id" FROM "AdminUser" WHERE "id" = ${auth.adminUserId} FOR UPDATE`;
         await tx.$queryRaw`SELECT "id" FROM "AuthSession" WHERE "id" = ${auth.sessionId} FOR UPDATE`;
+        if (lockActiveAdmins) await tx.$queryRaw`SELECT "id" FROM "AdminUser" WHERE "active" = TRUE ORDER BY "id" FOR UPDATE`;
       } catch { return fail('SERVICE_UNAVAILABLE'); }
     }
     let row: any;
@@ -418,12 +418,13 @@ export class AdminUsersService {
         !validDate(row.absoluteExpiresAt) || !validDate(row.idleExpiresAt) ||
         (row.revokedAt !== null && !validDate(row.revokedAt)) ||
         typeof row.adminUser?.active !== 'boolean' || typeof row.adminUser?.mustChangePassword !== 'boolean') fail('SERVICE_UNAVAILABLE');
-    if (row.revokedAt !== null || row.absoluteExpiresAt.getTime() <= now || row.idleExpiresAt.getTime() <= now ||
+    const checkedAt = mutation ? this.readNow() : now;
+    if (row.revokedAt !== null || row.absoluteExpiresAt.getTime() <= checkedAt || row.idleExpiresAt.getTime() <= checkedAt ||
         row.adminUser.id !== auth.adminUserId || !row.adminUser.active) fail('SESSION_EXPIRED');
     if (row.adminUser.mustChangePassword) fail('PASSWORD_CHANGE_REQUIRED');
     if (row.nonceVersion !== auth.nonceVersion || !ciphertext.equals(auth.nonceCiphertext) ||
         !iv.equals(auth.nonceIv) || !tag.equals(auth.nonceTag)) fail('CSRF_INVALID');
-    if (mutation) this.assertCsrf(auth, now);
+    if (mutation) this.assertCsrf(auth, checkedAt);
   }
 
   private async hashPassword(password: string): Promise<string> {

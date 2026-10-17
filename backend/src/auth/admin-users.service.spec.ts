@@ -20,7 +20,7 @@ const validUser = {
   ...owner, createdAt: timestamp, updatedAt: timestamp,
 };
 
-function fixture(overrides: Record<string, unknown> = {}) {
+function fixture(overrides: Record<string, unknown> = {}, clock: () => number = () => timestamp.getTime()) {
   const findUnique = jest.fn(async () => sessionRow);
   const findMany = jest.fn(async () => [validUser]);
   const count = jest.fn(async () => 1);
@@ -37,7 +37,7 @@ function fixture(overrides: Record<string, unknown> = {}) {
   const cipher = { available: true, decrypt: jest.fn(() => Buffer.from(nonce)) } as any;
   const hasher = { hash: jest.fn(async () => 'synthetic-hash') } as any;
   const blocklist = { hasDigest: jest.fn(() => false) } as any;
-  const service = new AdminUsersService(prisma, cipher, config, hasher, blocklist, () => timestamp.getTime());
+  const service = new AdminUsersService(prisma, cipher, config, hasher, blocklist, clock);
   const proof = { cookieHeader: `abar_admin_session=${sessionToken}`, csrfToken, origin: config.allowedOrigins[0] };
   return { service, prisma, cipher, hasher, blocklist, proof, findMany, create };
 }
@@ -214,4 +214,68 @@ describe('AdminUsersService public operations', () => {
     expect(auditCreate).toHaveBeenCalledWith(expect.objectContaining({ data: expect.objectContaining({ reason: 'Support request verified' }) }));
     expect(tx.authSession.updateMany).toHaveBeenCalledWith(expect.objectContaining({ where: { adminUserId: adminId, revokedAt: null } }));
   });
+});
+
+
+describe('native U2 correction regressions', () => {
+  for (const [error, status] of [[new Error('private transaction failure'), 503], [{ code: 'P2002' }, 409]] as const) {
+    it(`rejects a failed reset transaction with status ${status} instead of reporting success`, async () => {
+      const f = fixture();
+      const originalMapper = (f.service as any).mapDatabaseError.bind(f.service);
+      jest.spyOn(f.service as any, 'mapDatabaseError').mockImplementation((failure) => {
+        const rejection = originalMapper(failure);
+        // Observe the old detached promise without changing the public reset result.
+        void rejection.catch(() => undefined);
+        return rejection;
+      });
+      (f.prisma.$transaction as jest.Mock).mockRejectedValueOnce(error);
+      await expect(f.service.resetPassword({ ...f.proof, id: adminId, body: {
+        temporaryPassword: 'a sufficiently long phrase', reason: 'Requested reset',
+      } })).rejects.toMatchObject({ status });
+      expect(f.prisma.adminUser.updateMany).not.toHaveBeenCalled();
+      expect(f.prisma.authSession.updateMany).not.toHaveBeenCalled();
+      expect(f.prisma.adminUserAudit.create).not.toHaveBeenCalled();
+    });
+  }
+
+  for (const operation of ['create', 'patch', 'resetPassword'] as const) {
+    for (const expiry of ['idle', 'absolute'] as const) {
+      for (const barrier of ['global lock', 'actor lock', 'session lock', 'session read', ...(operation === 'patch' ? ['active admins lock'] : [])]) {
+        it(`rejects ${operation} when ${expiry} expiry is reached during ${barrier}`, async () => {
+          let now = timestamp.getTime();
+          const f = fixture({}, () => now);
+          const expiresAt = now + 30_000;
+          const row = { ...sessionRow, idleExpiresAt: new Date(expiry === 'idle' ? expiresAt : expiresAt + 30_000),
+            absoluteExpiresAt: new Date(expiry === 'absolute' ? expiresAt : expiresAt + 60_000) };
+          (f.prisma.adminUser.count as jest.Mock).mockResolvedValue(2);
+          let queries = 0;
+          let reads = 0;
+          (f.prisma as any).$queryRaw = jest.fn(async () => {
+            queries++;
+            if (queries === ['global lock', 'actor lock', 'session lock', 'active admins lock'].indexOf(barrier) + 1) now = expiresAt;
+            return [{ id: adminId }];
+          });
+          (f.prisma.authSession.findUnique as jest.Mock).mockImplementation(async () => {
+            if (++reads === 2 && barrier === 'session read') now = expiresAt;
+            return row;
+          });
+          const request = operation === 'create'
+            ? { ...f.proof, body: { name: 'New operator', email: 'new@example.invalid', temporaryPassword: 'a sufficiently long phrase' } }
+            : operation === 'patch'
+              ? { ...f.proof, id: adminId, body: { expectedVersion: 1, active: false } }
+              : { ...f.proof, id: adminId, body: { temporaryPassword: 'a sufficiently long phrase', reason: 'Requested reset' } };
+          // The pre-fix reset loses the rejection; observe it without hiding the public failure.
+          const originalMapper = (f.service as any).mapDatabaseError.bind(f.service);
+          jest.spyOn(f.service as any, 'mapDatabaseError').mockImplementation((failure) => {
+            const rejection = originalMapper(failure); void rejection.catch(() => undefined); return rejection;
+          });
+          await expect(f.service[operation](request)).rejects.toMatchObject({ status: 401 });
+          expect(f.prisma.adminUser.create).not.toHaveBeenCalled();
+          expect(f.prisma.adminUser.updateMany).not.toHaveBeenCalled();
+          expect(f.prisma.authSession.updateMany).not.toHaveBeenCalled();
+          expect(f.prisma.adminUserAudit.create).not.toHaveBeenCalled();
+        });
+      }
+    }
+  }
 });
