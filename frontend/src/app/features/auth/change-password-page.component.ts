@@ -1,15 +1,20 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthSessionService } from '../../core/auth/auth-session.service';
 
 @Component({
   selector: 'abar-change-password-page',
   standalone: true,
+  imports: [RouterLink],
   template: `
     <section class="auth-card" aria-labelledby="change-title">
       <p class="eyebrow">Seguridad de la cuenta</p>
       <h1 id="change-title">{{ mandatory() ? 'Actualizá tu contraseña' : 'Cambiar contraseña' }}</h1>
       @if (mandatory()) { <p>Para continuar, elegí una contraseña nueva para tu cuenta.</p> }
+      @if (reauthenticationRequired()) {
+        <p class="form-success" role="status">{{ notice() }}</p>
+        <a class="button-secondary" routerLink="/admin/login">Iniciar sesión</a>
+      } @else {
       <form (submit)="$event.preventDefault(); submit()" #passwordForm novalidate>
         <label for="current-password">Contraseña actual</label>
         <input id="current-password" name="currentPassword" type="password" autocomplete="current-password" required maxlength="256"
@@ -28,6 +33,7 @@ import { AuthSessionService } from '../../core/auth/auth-session.service';
           {{ busy() ? 'Guardando…' : 'Actualizar contraseña' }}
         </button>
       </form>
+      }
       <button type="button" class="button-secondary" (click)="logout()" [disabled]="busy()">Cerrar sesión</button>
     </section>
   `,
@@ -42,6 +48,7 @@ export class ChangePasswordPageComponent {
   readonly notice = signal('');
   readonly staleCsrf = signal(false);
   readonly refreshing = signal(false);
+  readonly reauthenticationRequired = signal(false);
   currentPassword = '';
   newPassword = '';
   confirmation = '';
@@ -57,17 +64,22 @@ export class ChangePasswordPageComponent {
   }
 
   async submit(): Promise<void> {
-    if (this.busy() || !this.passwordsValid() || this.newPassword !== this.confirmation) return;
+    if (this.busy() || this.reauthenticationRequired() || !this.passwordsValid() || this.newPassword !== this.confirmation) return;
     this.busy.set(true);
     this.error.set('');
     this.notice.set('');
     this.staleCsrf.set(false);
     try {
-      await this.auth.changePassword(this.currentPassword, this.newPassword);
+      const result = await this.auth.changePassword(this.currentPassword, this.newPassword);
       this.currentPassword = '';
       this.newPassword = '';
       this.confirmation = '';
       this.mandatory.set(false);
+      if (result === 'reauthenticate') {
+        this.reauthenticationRequired.set(true);
+        this.notice.set('La contraseña se actualizó. Inicia sesión con la nueva contraseña para continuar.');
+        return;
+      }
       this.notice.set('La contraseña se actualizó correctamente.');
       await this.router.navigateByUrl('/admin/usuarios');
     } catch (error: unknown) {

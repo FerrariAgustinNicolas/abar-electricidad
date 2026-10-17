@@ -49,4 +49,61 @@ describe('ChangePasswordPage', () => {
     expect(component.mandatory()).toBe(false);
     expect(navigate).toHaveBeenCalledWith('/admin/usuarios');
   });
+
+  it.each([503, 401, 0])('keeps a committed password change distinct from a failed session read (%s)', async (status) => {
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
+    const restored = auth.restore();
+    http.expectOne('/api/v1/auth/me').flush({ admin: { id: 'admin', mustChangePassword: true } }, { headers: { 'X-CSRF-Token': 'R'.repeat(43) } });
+    await restored;
+    const fixture = TestBed.createComponent(ChangePasswordPageComponent);
+    const component = fixture.componentInstance;
+    component.currentPassword = 'temporary-password';
+    component.newPassword = component.confirmation = 'a-long-enough-new-password';
+    const pending = component.submit();
+    http.expectOne('/api/v1/auth/change-password').flush(null, { status: 204, statusText: 'No Content', headers: { 'X-CSRF-Token': 'S'.repeat(43) } });
+    await Promise.resolve();
+    const read = http.expectOne('/api/v1/auth/me');
+    if (status === 0) read.error(new ProgressEvent('error'));
+    else read.flush(null, { status, statusText: 'Session read failed' });
+    await pending;
+    fixture.detectChanges();
+    const view = fixture.nativeElement as HTMLElement;
+    expect(view.querySelector('[role="status"]')?.textContent).toContain('La contraseña se actualizó.');
+    expect(view.querySelector('[role="status"]')?.textContent).toContain('nueva contraseña');
+    expect(view.querySelector('form')).toBeNull();
+    expect(view.querySelector('a')?.getAttribute('href')).toBe('/admin/login');
+    expect(component.error()).toBe('');
+    expect(component.currentPassword + component.newPassword + component.confirmation).toBe('');
+    expect(component.mandatory()).toBe(false);
+    expect(component.busy()).toBe(false);
+    expect(auth.tokenForWrite()).toBeNull();
+    expect(auth.session()).toBeNull();
+    expect(auth.status()).toBe('anonymous');
+    await component.submit();
+    http.expectNone('/api/v1/auth/change-password');
+    expect(navigate).not.toHaveBeenCalled();
+  });
+
+  it('keeps rejected password writes on the explicit retry path without reading the session', async () => {
+    const restored = auth.restore();
+    http.expectOne('/api/v1/auth/me').flush({ admin: { id: 'admin', mustChangePassword: true } }, { headers: { 'X-CSRF-Token': 'R'.repeat(43) } });
+    await restored;
+    const fixture = TestBed.createComponent(ChangePasswordPageComponent);
+    const component = fixture.componentInstance;
+    component.currentPassword = 'temporary-password';
+    component.newPassword = component.confirmation = 'a-long-enough-new-password';
+    const pending = component.submit();
+    http.expectOne('/api/v1/auth/change-password').flush({ code: 'CSRF_INVALID' }, { status: 403, statusText: 'Forbidden' });
+    await pending;
+    fixture.detectChanges();
+    expect(component.staleCsrf()).toBe(true);
+    expect(component.error()).toContain('Actualizá la sesión');
+    expect(component.notice()).toBe('');
+    expect(component.currentPassword + component.newPassword + component.confirmation).toBe('');
+    expect(auth.tokenForWrite()).toBe('R'.repeat(43));
+    expect((fixture.nativeElement as HTMLElement).querySelector('form')).not.toBeNull();
+    http.expectNone('/api/v1/auth/me');
+    http.expectNone('/api/v1/auth/change-password');
+  });
+
 });

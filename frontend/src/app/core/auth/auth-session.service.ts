@@ -55,12 +55,18 @@ export class AuthSessionService {
     }
   }
 
-  async changePassword(currentPassword: string, newPassword: string): Promise<void> {
+  async changePassword(currentPassword: string, newPassword: string): Promise<'refreshed' | 'reauthenticate'> {
     const token = this.csrfToken;
     if (!token) throw new Error('La sesión venció. Iniciá sesión nuevamente.');
     await firstValueFrom(this.api.changePassword(currentPassword, newPassword, token));
-    const restored = await firstValueFrom(this.api.me());
-    this.setSession(restored.session, restored.csrfToken);
+    try {
+      const restored = await firstValueFrom(this.api.me());
+      this.setSession(restored.session, restored.csrfToken);
+      return 'refreshed';
+    } catch {
+      this.clearSession();
+      return 'reauthenticate';
+    }
   }
 
   expire(): void { this.clearSession(); }
