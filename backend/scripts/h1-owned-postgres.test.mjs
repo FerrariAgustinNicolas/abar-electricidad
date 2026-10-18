@@ -26,7 +26,7 @@ function containment(directory, create = false) {
 }
 containment(root);
 // Missing fixture components may be created only below the validated repository.
-containment(path.join(root, 'odd'));
+containment(path.join(root, 'odd'), true);
 // All credentials remain in memory or fresh ignored fixture files; assertions use booleans.
 function fixture() {
   containment(namespace, true);
