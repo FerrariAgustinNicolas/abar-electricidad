@@ -4,7 +4,7 @@
 
 **H1 permanece abierto: existen resultados funcionales y de contraste acotados aprobados; la revisión nativa continúa bloqueada y la entrega restante está pendiente.** Este bloque consolida evidencias retenidas; no representa una nueva ejecución ni una aprobación global.
 
-Referencia de código: commit local `2cabc1f` (corrección de contraste). La aceptación real E1 corresponde a `3e509d3d96539483db0024a0d47a910cf327bbfe` más los tres archivos de administración verificados por separado en E3. Los dos commits de lint conservan el comportamiento según E4/E5. La corrección posterior de contraste se verificó por separado en E6, con parches idénticos a los del commit; no se repitió el E2E sobre este commit.
+Referencias de entrega local: `2cabc1f` (contraste), `50c97f9` (consolidación documental), `eec3830` (U6: interfaz de usuarios y navegación administrativa, E7) y `0751819` (runner de captura y sus pruebas, E8/E9). La aceptación real E1 corresponde a `3e509d3d96539483db0024a0d47a910cf327bbfe` más los tres archivos de administración verificados por separado en E3. Los dos commits de lint conservan el comportamiento según E4/E5. La corrección posterior de contraste se verificó por separado en E6, con parches idénticos a los del commit; no se repitió el E2E sobre esos commits. Las seis pruebas unitarias del runner se ejecutaron después en una copia temporal con Node; los dos archivos comprometidos coinciden con los hashes probados (E8/E9). No se repitieron pruebas para crear los commits ni para esta actualización.
 
 | Criterio | Estado y evidencia observada | Alcance y límite |
 |---|---|---|
@@ -15,8 +15,16 @@ Referencia de código: commit local `2cabc1f` (corrección de contraste). La ace
 | Administración UI aislada | **PASS acotado**, 3 pruebas focalizadas, 24 pruebas en 7 archivos, build/lint y 7 comprobaciones finales independientes (E3). | Copia temporal con los tres archivos de administración identificados en `overlays`; las comprobaciones aisladas no sustituyen la integración real de E1. |
 | Backend y correcciones de lint | **PASS acotado**, lint completo con 0 errores y 0 advertencias; compilación y 1127 pruebas aprobadas, 1 omitida (E4). | La prueba PostgreSQL omitida en esta suite no se declara ejecutada allí. Se preserva por separado la evidencia real de E1. |
 | Contraste de combinaciones principales | **PASS acotado**, 11 estados observados en login, cambio de contraseña, layout admin y usuarios (E6). | Bordes 8,868:1 y foco mínimo 8,171:1; cabecera 8,868:1. Incluye 2 pruebas de contraste RED→GREEN, 24 pruebas frontend, lint/builds y verificación independiente. No certifica todos los estados de error, éxito o hover ni accesibilidad integral. |
+| Runner de captura: pruebas unitarias | **PASS acotado**, 6/6, exit 0, sin omisiones; copia temporal con Node 24.18.1 (E8). | Commit local `0751819`: dos archivos y 227 líneas agregadas, idénticos a los bytes probados (E9). No ejecutó Python, Docker ni E2E y no acredita la portabilidad del CLI completo. |
 | Revisión nativa de U5 | **BLOCKED**, según la continuación registrada. | No hay continuación nativa utilizable registrada tras `recover`. Esta edición no consulta ni modifica su estado y no transfiere aprobación desde otros candidatos. |
-| Cierre y entrega restante | **PENDING**. | Permanecen unidades UI/harness/documentación sin entregar y fronteras de procedencia por confirmar. No se declara H1 completo. |
+| Cierre y entrega restante | **PENDING**. | U6 y el runner ya están en commits locales. Restan delimitar las unidades de harness/configuración/documentación y sus dependencias y evidencias; no todo archivo sin seguimiento es un entregable obligatorio. No se declara H1 completo. |
+
+### Dependencias y límites de la entrega pendiente
+
+- **Runtime real:** los bytes actuales de `backend/prisma.h1-e2e.config.ts`, `backend/scripts/h1-product-e2e.mjs`, `backend/scripts/h1-real-e2e.mjs` y `backend/scripts/h1-real-e2e.py` coinciden por SHA-256 con las copias del manifiesto de E6. Esa coincidencia vincula el snapshot, no demuestra autoría ni aprobación integral. El CLI del runner conserva una ruta absoluta a Python de Homebrew y depende del fixture Python aún sin seguimiento.
+- **Pruebas restantes:** en la auditoría acotada no se acreditó la correspondencia entre los bytes actuales de las cuatro pruebas de producto/fixture/regresiones y sus resultados históricos. Además, `backend/scripts/h1-acceptance-regressions.test.mjs` lee y evalúa `odd/checks/h1-browser-real.mjs`, ignorado por Git; no es una unidad autónoma para incorporar. La guía de navegador depende del mismo probe.
+- **Auxiliares separados:** el controlador y probe POSIX se declaran de autoría solamente, sin ejecución ni calificación acreditadas; la guía SDK conserva evidencia fake y queda fuera del camino crítico de aceptación del producto. No se atribuye su autoría ni se los convierte en requisitos de cierre.
+- **Documentación y procedencia:** las guías de navegador y E2E conservan referencias S12 históricas. Los archivos sin seguimiento no se consideran propios o ajenos sólo por su estado Git. La clasificación y cualquier entrega posterior requieren conservar esas fronteras; los 17 renglones previos pendientes del informe quedan fuera de esta edición.
 
 ### Referencias locales de evidencia
 
@@ -29,7 +37,11 @@ Los siguientes informes son archivos temporales retenidos, no artefactos version
 - **E5:** `/private/tmp/h1-lint-commits-xrlxdowb/report.json` — commits locales `57a832a850442cb1accdcb641dcd31f80de4fd33` y `6be7acbc79af270a5668da3179298ef39303e7d0`; parches idénticos a los verificados, índice vacío y trabajo previo preservado.
 - **E6:** `/private/tmp/h1-contrast-fixed-auth-n601xrzc/report.json` — corrección de bordes y foco limitada a los hosts auth/admin; reglas y tokens del sitio público preservados. Se conserva el FAIL anterior en `/private/tmp/h1-contrast-auth-ia7qg_d1/report.json`; no se reescribe como aprobado. La repetición focal utiliza otra base temporal, sin repetir el E2E completo.
 
-La corrección de contraste y esta consolidación documental se organizan en commits locales separados. Esta edición sólo modifica el presente bloque: no ejecuta pruebas, E2E, SQL ni operaciones de revisión y no autoriza push, PR o merge. Se preservan el bloqueo de la revisión y los pendientes de entrega; no se declara H1 cerrado.
+- **E7:** `/private/tmp/h1-u6-local-commit-6gcz4so1/report.json` — commit local U6 `eec383072615e2042d994d62227940412ad69c6e`, exclusivamente los tres archivos de usuarios/pruebas/layout; contenido verificado preservado.
+- **E8:** `/private/tmp/h1-runner-unit-b7qsmr/report.json` y `hashes.json` del mismo directorio — seis pruebas unitarias aprobadas; stdout/stderr y hashes SHA-256 de ambos archivos retenidos.
+- **E9:** `/private/tmp/h1-runner-local-commit-lX3c3n/report.json` — commit local `07518195aa66504072169e956c9970803e6c5444`, exclusivamente runner y pruebas; hashes y parche comprometido coincidentes con la evidencia previa, sin repetir pruebas.
+
+La corrección de contraste, la consolidación documental, U6 y el runner están en commits locales separados; esta actualización del informe permanece sin commit. Esta edición sólo modifica el presente bloque: no ejecuta pruebas, E2E, SQL ni operaciones de revisión y no autoriza push, PR o merge. Se preservan el bloqueo de la revisión y los pendientes de entrega; no se declara H1 cerrado.
 
 > **Contenido previo preservado:** todo lo que sigue conserva los estados, fallos y afirmaciones de sus snapshots históricos, incluidos los encabezados que entonces se denominaban “actuales”. No debe interpretarse como el estado consolidado del 2026-10-18.
 
