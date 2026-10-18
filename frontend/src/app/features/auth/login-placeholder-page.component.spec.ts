@@ -17,6 +17,46 @@ describe('LoginPage', () => {
 
   afterEach(() => http.verify());
 
+  it('allows an NFC-normalizable password without changing the submitted credential', async () => {
+    await router.navigateByUrl('/admin/login');
+    const fixture = TestBed.createComponent(LoginPlaceholderPageComponent);
+    fixture.detectChanges();
+    const email = fixture.nativeElement.querySelector('#email') as HTMLInputElement;
+    const password = fixture.nativeElement.querySelector('#password') as HTMLInputElement;
+    const credential = 'e\u0301'.repeat(70) + '-Safe-123!';
+    email.value = 'admin@example.test'; email.dispatchEvent(new Event('input'));
+    password.value = credential; password.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    const button = fixture.nativeElement.querySelector('button[type="submit"]') as HTMLButtonElement;
+    expect(Array.from(credential).length).toBeGreaterThan(128);
+    expect(Array.from(credential.normalize('NFC')).length).toBeLessThanOrEqual(128);
+    expect(button.disabled).toBe(false);
+    button.click();
+    http.expectOne('/api/v1/auth/csrf').flush({ csrfToken: 'N'.repeat(43), headerName: 'X-CSRF-Token' });
+    await Promise.resolve();
+    const request = http.expectOne('/api/v1/auth/login');
+    expect(request.request.body.password).toBe(credential);
+    request.flush({ admin: { id: 'admin', mustChangePassword: true }, expiresAt: '2026-10-02T15:04:05Z' }, { headers: { 'X-CSRF-Token': 'O'.repeat(43) } });
+    await fixture.whenStable();
+    expect(router.url).toBe('/admin/change-password');
+  });
+
+  it('preserves the 128-code-point login limit for ordinary credentials', () => {
+    const fixture = TestBed.createComponent(LoginPlaceholderPageComponent);
+    fixture.detectChanges();
+    const email = fixture.nativeElement.querySelector('#email') as HTMLInputElement;
+    const password = fixture.nativeElement.querySelector('#password') as HTMLInputElement;
+    email.value = 'admin@example.test'; email.dispatchEvent(new Event('input'));
+    password.value = 'A'.repeat(128); password.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    const button = fixture.nativeElement.querySelector('button[type="submit"]') as HTMLButtonElement;
+    expect(button.disabled).toBe(false);
+    password.value = 'A'.repeat(129); password.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    expect(button.disabled).toBe(true);
+    http.expectNone('/api/v1/auth/login');
+  });
+
   it('shows a generic credential error and clears the password after a rejected login', async () => {
     await router.navigateByUrl('/admin/login?returnUrl=%2Fadmin%2Fusuarios');
     const fixture = TestBed.createComponent(LoginPlaceholderPageComponent);
