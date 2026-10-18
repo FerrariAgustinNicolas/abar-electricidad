@@ -20,6 +20,7 @@ import signal
 import socket
 import stat
 import subprocess
+import sys
 import tarfile
 import time
 from contextlib import contextmanager
@@ -42,6 +43,8 @@ SPEC_RELATIVE = "backend/src/auth/change-password.service.spec.ts"
 WORK_SECONDS = 45.0
 CLEANUP_SECONDS = 15.0
 TOTAL_SECONDS = 60.0
+SIDECAR_WRITE_SECONDS = 0.25
+SIDECAR_STOP_SECONDS = 0.1
 QUALIFICATION_KEYS = frozenset(("version", "image", "uid", "gid", "dataPath", "socketPath"))
 RESULT_KEYS = frozenset(("version", "runId", "checks", "passed", "productChecks", "productPassed"))
 CHECK_NAMES = (
@@ -1773,7 +1776,51 @@ def _valid_summary(value: Any, state: dict[str, Any]) -> bool:
     return value["passed"] is (result is not None and result["passed"] and value["cleanupComplete"] and value["auditComplete"] and value["failure"] is None)
 
 
-def supervise(args: Any, boundary: Any | None = None, clock: Any = time, memory_sink: Callable[[dict[str, Any]], None] | None = None) -> int:
+_SIDECAR_WRITER_SOURCE = (
+    "import base64, importlib.util, json, sys\n"
+    "spec = importlib.util.spec_from_file_location('h1_sidecar_writer', sys.argv[1])\n"
+    "module = importlib.util.module_from_spec(spec)\n"
+    "sys.modules[spec.name] = module\n"
+    "spec.loader.exec_module(module)\n"
+    "request = json.load(sys.stdin)\n"
+    "module.HostFilesystem(request['root']).write_private("
+    "request['target'], base64.b64decode(request['data'], validate=True))\n"
+)
+
+
+def _sidecar_process(root: str, target: str, data: bytes) -> subprocess.Popen[bytes]:
+    return subprocess.Popen(
+        [sys.executable, "-I", "-S", "-B", "-c", _SIDECAR_WRITER_SOURCE,
+         str(pathlib.Path(__file__).resolve())],
+        stdin=subprocess.PIPE, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+        close_fds=True)
+
+
+def _persist_sidecar_bounded(root: str, target: str, data: bytes,
+                             process_factory: Callable[[str, str, bytes], Any] | None = None) -> str:
+    """Best-effort private sidecar write isolated from the supervisor's deadline."""
+    process = (process_factory or _sidecar_process)(root, target, data)
+    request = json.dumps({"root": root, "target": target,
+                          "data": base64.b64encode(data).decode("ascii")},
+                         sort_keys=True, separators=(",", ":")).encode()
+    try:
+        process.communicate(request, timeout=SIDECAR_WRITE_SECONDS)
+        return "written" if process.returncode == 0 else "failed"
+    except subprocess.TimeoutExpired:
+        process.kill()
+        try:
+            process.wait(timeout=SIDECAR_STOP_SECONDS)
+        except subprocess.TimeoutExpired:
+            return "stalled_unreaped"
+        return "stalled_reaped"
+    finally:
+        if process.stdin is not None and not process.stdin.closed:
+            process.stdin.close()
+
+
+def supervise(args: Any, boundary: Any | None = None, clock: Any = time,
+              memory_sink: Callable[[dict[str, Any]], None] | None = None,
+              sidecar_process_factory: Callable[[str, str, bytes], Any] | None = None) -> int:
     """Independent parent timer: it never performs filesystem or Docker work."""
     if getattr(args, "execute", False) is not True or getattr(args, "cleanup_owned", False) is not True:
         return 1
@@ -1979,7 +2026,8 @@ def supervise(args: Any, boundary: Any | None = None, clock: Any = time, memory_
                 elif isinstance(guard, PosixGuardBoundary):
                     root = pathlib.Path(__file__).resolve().parents[2]
                     target = root / "odd/probes/h1-real-e2e" / state["run_id"] / "supervisor-diagnostic.json"
-                    HostFilesystem(str(root)).write_private(str(target), json.dumps(sidecar, sort_keys=True, separators=(",", ":")).encode())
+                    payload = json.dumps(sidecar, sort_keys=True, separators=(",", ":")).encode()
+                    _persist_sidecar_bounded(str(root), str(target), payload, sidecar_process_factory)
             except Exception:
                 pass
         try:

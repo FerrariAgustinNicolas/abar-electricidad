@@ -27,6 +27,36 @@ export function closeProxyBounded(server, { setTimer = setTimeout, clearTimer = 
     catch { finish(false); }
   });
 }
+export function waitForProcessReady(child, probe, { timeout = 20000, interval = 100,
+  setTimer = setTimeout, clearTimer = clearTimeout, now = Date.now } = {}) {
+  return new Promise((resolvePromise, reject) => {
+    const deadline = now() + timeout;
+    let settled = false;
+    let timer;
+    const cleanupTimer = () => { if (timer !== undefined) { clearTimer(timer); timer = undefined; } };
+    const onError = () => {
+      if (settled) return;
+      settled = true; cleanupTimer(); reject(new Error('process failed to launch'));
+    };
+    const onClose = () => child.removeListener('error', onError);
+    const finish = (error) => {
+      if (settled) return;
+      settled = true; cleanupTimer();
+      if (error) reject(error); else resolvePromise();
+    };
+    child.on('error', onError);
+    child.once('close', onClose);
+    const check = async () => {
+      if (settled) return;
+      if (child.exitCode !== null) { finish(new Error('process exited before ready')); return; }
+      try { if (await probe()) { finish(); return; } } catch { /* Readiness probes are retried until the bounded deadline. */ }
+      if (settled) return;
+      if (now() >= deadline) { finish(new Error('process readiness timed out')); return; }
+      timer = setTimer(check, Math.min(interval, Math.max(1, deadline - now())));
+    };
+    void check();
+  });
+}
 export async function observeBrowserZoom(client, sample, pause = () => new Promise(resolvePause => setTimeout(resolvePause, 150))) {
   const key = async (key, code, virtualKey) => {
     for (const type of ['rawKeyDown', 'keyUp']) await client.call('Input.dispatchKeyEvent', {
@@ -261,16 +291,13 @@ async function startBackend(database, origin) {
   backend = child;
   child.stdout.on('data', (chunk) => evidenceStdout.push(`[backend] stdoutBytes=${chunk.length}\n`));
   child.stderr.on('data', (chunk) => evidenceStderr.push(`[backend] stderrBytes=${chunk.length}\n`));
-  const until = Date.now() + 20000;
-  while (Date.now() < until) {
-    if (child.exitCode !== null) throw new Error('backend exited before ready');
-    try {
-      const response = await fetch(`http://127.0.0.1:${selected}/health`, { signal: AbortSignal.timeout(500) });
-      if (response.status === 200) { backendPort = selected; return selected; }
-    } catch {}
-    await new Promise((r) => setTimeout(r, 100));
-  }
-  throw new Error('backend readiness timeout');
+  await waitForProcessReady(child, async () => {
+    const response = await fetch(`http://127.0.0.1:${selected}/health`, { signal: AbortSignal.timeout(500) });
+    if (response.status !== 200) return false;
+    backendPort = selected;
+    return true;
+  });
+  return selected;
 }
 
 function startFrontend() {
@@ -290,17 +317,20 @@ function startFrontend() {
   return new Promise((resolvePromise, reject) => proxy.listen(0, '127.0.0.1', () => { uiPort = proxy.address().port; appOrigin = `http://127.0.0.1:${uiPort}`; resolvePromise(appOrigin); }).once('error', reject));
 }
 
-async function startChrome() {
-  const remotePort = await listenPort();
-  chrome = spawn(CHROME, ['--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check', '--password-store=basic', '--use-mock-keychain',
+export async function startChrome({ spawnProcess = spawn, listenPortFn = listenPort, fetchTargets = fetch, connect = connectCdp } = {}) {
+  const remotePort = await listenPortFn();
+  chrome = spawnProcess(CHROME, ['--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check', '--password-store=basic', '--use-mock-keychain',
     '--disable-background-networking', '--disable-sync', '--disable-extensions', '--disable-component-update', '--disable-domain-reliability',
     '--proxy-server=http://127.0.0.1:9', '--proxy-bypass-list=127.0.0.1;localhost', '--disable-features=Translate,MediaRouter,Gcm',
     '--no-default-browser-check', '--remote-debugging-address=127.0.0.1', `--remote-debugging-port=${remotePort}`, `--user-data-dir=${USER_DATA}`, 'about:blank'], { shell: false, stdio: ['ignore', 'pipe', 'pipe'], env: { PATH: process.env.PATH, HOME: RUN_DIR, LANG: 'en_US.UTF-8' } });
   chrome.stdout.on('data', (chunk) => evidenceStdout.push(`[chrome] stdoutBytes=${chunk.length}\n`)); chrome.stderr.on('data', (chunk) => evidenceStderr.push(`[chrome] stderrBytes=${chunk.length}\n`));
-  const until = Date.now() + 15000;
-  while (Date.now() < until) { try { const targets = await (await fetch(`http://127.0.0.1:${remotePort}/json/list`)).json(); browserTarget = targets.find((target) => target.type === 'page'); if (browserTarget) break; } catch {} await new Promise((r) => setTimeout(r, 100)); }
+  await waitForProcessReady(chrome, async () => {
+    const targets = await (await fetchTargets(`http://127.0.0.1:${remotePort}/json/list`, { signal: AbortSignal.timeout(500) })).json();
+    browserTarget = targets.find((target) => target.type === 'page');
+    return Boolean(browserTarget);
+  }, { timeout: 15000 });
   fixed(browserTarget?.webSocketDebuggerUrl, 'Chrome DevTools did not become ready');
-  cdp = await connectCdp(browserTarget.webSocketDebuggerUrl);
+  cdp = await connect(browserTarget.webSocketDebuggerUrl);
   await cdp.call('Network.enable');
   cdp.on('Network.responseReceived', (event) => {
     let url; try { url = new URL(event.response.url); } catch { return; }
@@ -313,14 +343,60 @@ async function startChrome() {
   });
   evidence.scopes['browser.real-chrome'] = true;
 }
-function connectCdp(url) {
+export function connectCdp(url, { WebSocketImpl = WebSocket, connectionTimeout = 10000, commandTimeout = 10000,
+  setTimer = setTimeout, clearTimer = clearTimeout } = {}) {
   return new Promise((resolvePromise, reject) => {
-    const ws = new WebSocket(url); const waiters = new Map(); const listeners = new Map(); let id = 0;
-    ws.addEventListener('open', () => resolvePromise({ ws, call(method, params = {}) {
-      const callId = ++id; ws.send(JSON.stringify({ id: callId, method, params })); return new Promise((res, rej) => waiters.set(callId, { res, rej }));
-    }, on(method, callback) { const list = listeners.get(method) ?? []; list.push(callback); listeners.set(method, list); return () => listeners.set(method, (listeners.get(method) ?? []).filter((item) => item !== callback)); }, close() { ws.close(); } }));
-    ws.addEventListener('message', (event) => { const msg = JSON.parse(event.data); if (!msg.id) { for (const callback of listeners.get(msg.method) ?? []) callback(msg.params); return; } const waiter = waiters.get(msg.id); if (!waiter) return; waiters.delete(msg.id); msg.error ? waiter.rej(new Error('CDP command failed')) : waiter.res(msg.result); });
-    ws.addEventListener('error', () => reject(new Error('CDP connection failed')));
+    let ws;
+    try { ws = new WebSocketImpl(url); } catch { reject(new Error('CDP connection failed')); return; }
+    const waiters = new Map(); const listeners = new Map(); let id = 0; let connectionError; let opened = false;
+    const clearWaiter = (waiter) => clearTimer(waiter.timer);
+    const failConnection = (message) => {
+      if (connectionError) return;
+      connectionError = new Error(message);
+      clearTimer(openTimer);
+      for (const [callId, waiter] of waiters) { waiters.delete(callId); clearWaiter(waiter); waiter.rej(connectionError); }
+      if (!opened) reject(connectionError);
+    };
+    const openTimer = setTimer(() => {
+      failConnection('CDP connection timed out');
+      try { ws.close(); } catch {}
+    }, connectionTimeout);
+    ws.addEventListener('open', () => {
+      if (connectionError) return;
+      opened = true;
+      clearTimer(openTimer);
+      resolvePromise({ ws, call(method, params = {}) {
+        if (connectionError) return Promise.reject(connectionError);
+        const callId = ++id;
+        return new Promise((res, rej) => {
+          const waiter = { res, rej, timer: undefined };
+          waiter.timer = setTimer(() => {
+            if (!waiters.delete(callId)) return;
+            rej(new Error('CDP command timed out'));
+          }, commandTimeout);
+          waiters.set(callId, waiter);
+          try { ws.send(JSON.stringify({ id: callId, method, params })); }
+          catch { failConnection('CDP connection failed'); }
+        });
+      }, on(method, callback) { const list = listeners.get(method) ?? []; list.push(callback); listeners.set(method, list); return () => listeners.set(method, (listeners.get(method) ?? []).filter((item) => item !== callback)); }, close() {
+        failConnection('CDP connection closed');
+        try { ws.close(); } catch {}
+      } });
+    });
+    ws.addEventListener('message', (event) => {
+      let msg;
+      try { msg = JSON.parse(event.data); } catch { failConnection('CDP connection failed'); return; }
+      if (!msg.id) { for (const callback of listeners.get(msg.method) ?? []) callback(msg.params); return; }
+      const waiter = waiters.get(msg.id); if (!waiter) return;
+      waiters.delete(msg.id); clearWaiter(waiter);
+      msg.error ? waiter.rej(new Error('CDP command failed')) : waiter.res(msg.result);
+    });
+    ws.addEventListener('close', () => {
+      failConnection(connectionError?.message ?? 'CDP connection closed');
+    });
+    ws.addEventListener('error', () => {
+      failConnection('CDP connection failed');
+    });
   });
 }
 async function evaluate(expression, awaitPromise = true) {
