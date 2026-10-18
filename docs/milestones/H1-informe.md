@@ -1,5 +1,40 @@
 # H1 — Informe parcial de contrato y fundamentos
 
+## Estado consolidado — 2026-10-18
+
+**H1 permanece abierto: existen resultados funcionales y de contraste acotados aprobados; la revisión nativa continúa bloqueada y la entrega restante está pendiente.** Este bloque consolida evidencias retenidas; no representa una nueva ejecución ni una aprobación global.
+
+Referencia de código: commit local `2cabc1f` (corrección de contraste). La aceptación real E1 corresponde a `3e509d3d96539483db0024a0d47a910cf327bbfe` más los tres archivos de administración verificados por separado en E3. Los dos commits de lint conservan el comportamiento según E4/E5. La corrección posterior de contraste se verificó por separado en E6, con parches idénticos a los del commit; no se repitió el E2E sobre este commit.
+
+| Criterio | Estado y evidencia observada | Alcance y límite |
+|---|---|---|
+| HTTP/SQL y administración | **PASS acotado**, 24/24, exit 0; auditoría y limpieza completas (E1). | PostgreSQL nuevo y temporal. No acredita automáticamente todos los casos del contrato. |
+| Concurrencia PostgreSQL | **PASS acotado**, 1/1, exit 0 (E1). | Prueba directa de servicio sobre otra base vacía; no equivale a una prueba HTTP. |
+| Flujos de navegador, tamaños y teclado/foco | **PASS acotado**, 11 comprobaciones; responsive 360/768/1440 y teclado/foco incluidos (E1). | La corrida original conservó su resultado PARTIAL, exit 1, por el zoom omitido. No se reescribe ese resultado. |
+| Zoom nativo al 200 % | **PASS acotado**, observación posterior autenticada en `/admin/usuarios` (E2). | Indicador nativo 200 %, DPR 2→4, ancho de layout 761→380, escala visual 1; sin desbordamiento horizontal del documento. La tabla conserva desplazamiento local. Pestaña temporal controlada, no perfil descartable. |
+| Administración UI aislada | **PASS acotado**, 3 pruebas focalizadas, 24 pruebas en 7 archivos, build/lint y 7 comprobaciones finales independientes (E3). | Copia temporal con los tres archivos de administración identificados en `overlays`; las comprobaciones aisladas no sustituyen la integración real de E1. |
+| Backend y correcciones de lint | **PASS acotado**, lint completo con 0 errores y 0 advertencias; compilación y 1127 pruebas aprobadas, 1 omitida (E4). | La prueba PostgreSQL omitida en esta suite no se declara ejecutada allí. Se preserva por separado la evidencia real de E1. |
+| Contraste de combinaciones principales | **PASS acotado**, 11 estados observados en login, cambio de contraseña, layout admin y usuarios (E6). | Bordes 8,868:1 y foco mínimo 8,171:1; cabecera 8,868:1. Incluye 2 pruebas de contraste RED→GREEN, 24 pruebas frontend, lint/builds y verificación independiente. No certifica todos los estados de error, éxito o hover ni accesibilidad integral. |
+| Revisión nativa de U5 | **BLOCKED**, según la continuación registrada. | No hay continuación nativa utilizable registrada tras `recover`. Esta edición no consulta ni modifica su estado y no transfiere aprobación desde otros candidatos. |
+| Cierre y entrega restante | **PENDING**. | Permanecen unidades UI/harness/documentación sin entregar y fronteras de procedencia por confirmar. No se declara H1 completo. |
+
+### Referencias locales de evidencia
+
+Los siguientes informes son archivos temporales retenidos, no artefactos versionados ni una garantía de conservación fuera de este equipo:
+
+- **E1:** `/private/tmp/h1-real-audited-evidence-83er6wpt/report.json` — HTTP/SQL, concurrencia, navegador y auditorías de aislamiento de la repetición controlada.
+- **E2:** `/private/tmp/h1-zoom-auth-mwlh8cnd/report.json` — zoom nativo autenticado; restauración al 100 %, cierre de sesión y pestaña, y limpieza de recursos temporales.
+- **E3:** `/private/tmp/h1-admin-ui-evidence-zfj4kcke/report.json` — archivos de administración superpuestos, pruebas frontend y comprobaciones aisladas finales.
+- **E4:** `/private/tmp/h1-frozen-lint-evidence-wsq45x2y/report.json` — lint backend completo, compilación, suite y verificación independiente. Servicio equivalente byte a byte al emitir sin comentarios; spec con AST equivalente y diferencias sólo de formato.
+- **E5:** `/private/tmp/h1-lint-commits-xrlxdowb/report.json` — commits locales `57a832a850442cb1accdcb641dcd31f80de4fd33` y `6be7acbc79af270a5668da3179298ef39303e7d0`; parches idénticos a los verificados, índice vacío y trabajo previo preservado.
+- **E6:** `/private/tmp/h1-contrast-fixed-auth-n601xrzc/report.json` — corrección de bordes y foco limitada a los hosts auth/admin; reglas y tokens del sitio público preservados. Se conserva el FAIL anterior en `/private/tmp/h1-contrast-auth-ia7qg_d1/report.json`; no se reescribe como aprobado. La repetición focal utiliza otra base temporal, sin repetir el E2E completo.
+
+La corrección de contraste y esta consolidación documental se organizan en commits locales separados. Esta edición sólo modifica el presente bloque: no ejecuta pruebas, E2E, SQL ni operaciones de revisión y no autoriza push, PR o merge. Se preservan el bloqueo de la revisión y los pendientes de entrega; no se declara H1 cerrado.
+
+> **Contenido previo preservado:** todo lo que sigue conserva los estados, fallos y afirmaciones de sus snapshots históricos, incluidos los encabezados que entonces se denominaban “actuales”. No debe interpretarse como el estado consolidado del 2026-10-18.
+
+---
+
 **CONTRACT FROZEN · C01–C10 CLOSED · C11 OFFLINE OBSERVATIONS ONLY · AUTH ENDPOINTS NOT IMPLEMENTED · EXTERNAL AUDIT PENDING.** C11 parent ASSESS, functional Verify, native consent/review and local commit remain pending. This partial report does not declare H1 compliant, approved, closed or ready for final audit.
 
 ## Identidad y alcance (snapshot histórico pre-freeze C07)
