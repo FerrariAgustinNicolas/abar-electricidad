@@ -1433,7 +1433,9 @@ describe('integrity and accepted-buffer controls', () => {
             rows.writes === before.writes + 1);
           f.cipherMethods.encrypt('session', hashId(token(7)), 1, Buffer.alloc(32, 9));
         });
-      } catch {}
+      } catch {
+        // Intentionally let the transaction report the callback failure and verify rollback below.
+      }
     }));
     expect(accepted && f.cipherMethods.encrypt.mock.calls.length === 1 &&
       result instanceof Error && copies.equal(f.root, before)).toBe(true);
