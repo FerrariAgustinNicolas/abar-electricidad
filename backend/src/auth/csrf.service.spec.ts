@@ -43,10 +43,18 @@ describe('GET /api/v1/auth/csrf integrated unit', () => {
         create: jest.fn(async ({ data }: any) => { const row = { ...data, createdAt: new Date(now) }; preauth.set(data.id, row); return row; }),
       },
       authSession: {
-        findUnique: jest.fn(async ({ where }: any) => sessions.get(where.id) ?? null),
+        findUnique: jest.fn(async ({ where }: any) => {
+          const row = sessions.get(where.id);
+          return row ? { ...row, adminUser: { ...row.adminUser } } : null;
+        }),
         updateMany: jest.fn(async ({ where, data }: any) => {
           const row = sessions.get(where.id);
-          if (!row || row.revokedAt || row.absoluteExpiresAt.getTime() <= now || row.idleExpiresAt.getTime() <= now || !row.adminUser.active) {
+          if (!row || row.revokedAt ||
+              row.absoluteExpiresAt.getTime() <= where.absoluteExpiresAt.gt.getTime() ||
+              row.idleExpiresAt.getTime() <= where.idleExpiresAt.gt.getTime() ||
+              (where.idleExpiresAt.lte && row.idleExpiresAt.getTime() > where.idleExpiresAt.lte.getTime()) ||
+              (where.lastActivityAt?.lte && row.lastActivityAt.getTime() > where.lastActivityAt.lte.getTime()) ||
+              row.nonceVersion !== where.nonceVersion || !row.adminUser.active || row.adminUser.mustChangePassword) {
             return { count: 0 };
           }
           Object.assign(row, data);
@@ -88,10 +96,10 @@ describe('GET /api/v1/auth/csrf integrated unit', () => {
     return { response, headers, error };
   }
 
-  async function invokeWithFilter(cookie?: string, ip = '127.0.0.1') {
+  async function invokeWithFilter(cookie?: string, ip = '127.0.0.1', endpoint = controller) {
     const { response, headers } = responseDouble();
     try {
-      await controller.getCsrf({ headers: cookie ? { cookie } : {}, socket: { remoteAddress: ip } } as never, response as never);
+      await endpoint.getCsrf({ headers: cookie ? { cookie } : {}, socket: { remoteAddress: ip } } as never, response as never);
     } catch (error) {
       const context = { switchToHttp: () => ({
         getRequest: () => ({ path: '/api/v1/auth/csrf', requestId: '00000000-0000-4000-8000-000000000002' }),
@@ -153,6 +161,58 @@ describe('GET /api/v1/auth/csrf integrated unit', () => {
     expect(prisma.authSession.update).not.toHaveBeenCalled();
   });
 
+  it('does not let a delayed older refresh overwrite newer session activity', async () => {
+    const raceConfig = validateAuthConfig({ NODE_ENV: 'test', AUTH_SESSION_IDLE_SECONDS: 30 });
+    const raceModule = await Test.createTestingModule({ imports: [AuthModule] })
+      .overrideProvider(PrismaService).useValue(prisma)
+      .overrideProvider(AUTH_RUNTIME).useValue({ config: raceConfig, blocklist: {}, hasher: {} })
+      .overrideProvider(CSRF_NONCE_CIPHER).useValue(new CsrfNonceCipher(key))
+      .compile();
+    const endpoint = raceModule.get(AuthController);
+    const startedAt = now;
+    const token = Buffer.alloc(32, 15).toString('base64url');
+    const row = activeSession(token);
+    row.absoluteExpiresAt = new Date(startedAt + 120000);
+    row.idleExpiresAt = new Date(startedAt + 30000);
+    sessions.set(row.id, row);
+    const original = { ...row };
+    let release!: () => void;
+    let entered!: () => void;
+    const gate = new Promise<void>((resolve) => { release = resolve; });
+    const waiting = new Promise<void>((resolve) => { entered = resolve; });
+    const applyUpdate = prisma.authSession.updateMany.getMockImplementation();
+    prisma.authSession.updateMany.mockImplementationOnce(async (args: any) => {
+      entered();
+      await gate;
+      return applyUpdate(args);
+    });
+    const older = invokeWithFilter(`abar_admin_session=${token}`, '127.0.0.1', endpoint);
+    try {
+      await waiting;
+      now = startedAt + 20000;
+      const newer = await invokeWithFilter(`abar_admin_session=${token}`, '127.0.0.1', endpoint);
+      expect(newer.response.statusCode).toBe(200);
+      expect(newer.headers['set-cookie']).toBeUndefined();
+      expect(row.lastActivityAt.getTime()).toBe(startedAt + 20000);
+      expect(row.idleExpiresAt.getTime()).toBe(startedAt + 50000);
+      release();
+      const stale = await older;
+      expect(stale.response.statusCode).toBe(503);
+      expect(stale.response.body).toMatchObject({ code: 'SERVICE_UNAVAILABLE' });
+      expect(stale.headers['set-cookie']).toBeUndefined();
+      expect(stale.headers['cache-control']).toBe('no-store');
+      expect(row).toEqual({ ...original,
+        lastActivityAt: new Date(startedAt + 20000), idleExpiresAt: new Date(startedAt + 50000),
+      });
+      expect(prisma.authSession.updateMany).toHaveBeenCalledTimes(2);
+      expect(prisma.authPreAuthContext.create).not.toHaveBeenCalled();
+    } finally {
+      release();
+      await older;
+      await raceModule.close();
+    }
+  });
+
   it.each(['revoked', 'restricted'] as const)(
     'does not return a stale nonce after an activity guard loses a race and fresh state is %s', async (state) => {
       const token = Buffer.alloc(32, 12).toString('base64url');
@@ -186,7 +246,7 @@ describe('GET /api/v1/auth/csrf integrated unit', () => {
     const envelope = new CsrfNonceCipher(key).encrypt('session', id, 1, Buffer.alloc(32, 14));
     return {
       id, nonceCiphertext: envelope.ciphertext, nonceIv: envelope.iv, nonceTag: envelope.tag, nonceVersion: 1,
-      absoluteExpiresAt: new Date(now + 10000), idleExpiresAt: new Date(now + 10000), revokedAt: null,
+      absoluteExpiresAt: new Date(now + 10000), idleExpiresAt: new Date(now + 10000), lastActivityAt: new Date(now), revokedAt: null,
       adminUser: { active: true, mustChangePassword: false },
     };
   }
