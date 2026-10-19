@@ -207,7 +207,7 @@ describe('SessionService behavioral contract (neutral RED scaffold)', () => {
   );
 
   it.each([
-    ['no cookie', () => sessionFixture(), (f: ReturnType<typeof sessionFixture>) => ({ cookieHeader: undefined })],
+    ['no cookie', () => sessionFixture(), (_f: ReturnType<typeof sessionFixture>) => ({ cookieHeader: undefined })],
     ['unknown session', () => sessionFixture({ missingRow: true }), (f: ReturnType<typeof sessionFixture>) => f.request],
     ['revoked session', () => sessionFixture({ revokedAt: new Date(NOW - 1) }), (f: ReturnType<typeof sessionFixture>) => f.request],
     ['absolute expiry boundary', () => sessionFixture({ absoluteExpiresAt: new Date(NOW) }), (f: ReturnType<typeof sessionFixture>) => f.request],

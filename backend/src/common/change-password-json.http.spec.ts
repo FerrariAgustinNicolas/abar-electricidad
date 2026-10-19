@@ -137,6 +137,11 @@ describe('change-password JSON parser public HTTP boundary', () => {
     ['suffixed path', () => request(url).post(`${changePasswordPath}/extra`)],
     ['prefix lookalike', () => request(url).post(`${changePasswordPath}-extra`)],
     ['raw URL query spoof', () => request(url).post(`/unmatched?originalUrl=${encodeURIComponent(changePasswordPath)}`)],
+    ['admin wrong method', () => request(url).get('/api/v1/admin/users')],
+    ['admin patch suffix', () => request(url).patch('/api/v1/admin/users/example/extra')],
+    ['admin reset suffix', () => request(url).post('/api/v1/admin/users/example/reset-password/extra')],
+    ['admin prefix lookalike', () => request(url).post('/api/v1/admin/users-extra')],
+    ['admin raw URL query spoof', () => request(url).post(`/unmatched?originalUrl=${encodeURIComponent('/api/v1/admin/users')}`)],
   ])('does not classify parser failures for %s as change-password failures', async (_label, makeRequest) => {
     const response = await makeRequest()
       .set('Content-Type', 'application/json')
