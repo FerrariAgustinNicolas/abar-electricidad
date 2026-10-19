@@ -435,6 +435,14 @@ describe('POST /api/v1/auth/login operation contract', () => {
     expect(Number.isSafeInteger(results[10].metadata?.retryAfter) && results[10].metadata!.retryAfter! > 0).toBe(true);
   });
 
+  it('verifies producer PHC parameter order without treating valid metadata as unavailable', async () => {
+    const emitted = PHC.replace('m=19456,t=2,p=1', 'm=19456,p=1,t=2');
+    const f = fixture({ user: { passwordHash: emitted }, verify: false });
+    const result = await capture(() => f.service.login(f.request));
+    expect(metadata(result.error)).toMatchObject({ status: 401, code: 'INVALID_CREDENTIALS' });
+    expect(f.hasher.verify).toHaveBeenCalledWith(emitted, expect.any(String));
+  });
+
   it('validates exact shape, email normalization, password NFC and preserved whitespace before verification', async () => {
     const f = fixture({ verify: false });
     const result = await capture(() => f.service.login({
