@@ -1,5 +1,5 @@
 import { createHash, randomBytes } from 'node:crypto';
-import { ForbiddenException, HttpException, HttpStatus, Injectable, ServiceUnavailableException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, ServiceUnavailableException } from '@nestjs/common';
 import { AuthConfig } from './auth.config';
 import { CsrfNonceCipher } from './csrf-nonce.cipher';
 import { PrismaService } from '../prisma/prisma.service';
