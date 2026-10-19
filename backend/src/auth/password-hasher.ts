@@ -15,7 +15,7 @@ function canonicalBase64(value: string, bytes: number): boolean {
 }
 
 /** Reject corrupt metadata before queue admission or native memory allocation. */
-function validatePhc(value: unknown): string {
+export function validatePasswordPhc(value: unknown): string {
   if (typeof value !== 'string' || value.length > 256 || [...value].some((character) => character.charCodeAt(0) > 127)) {
     throw new PasswordPolicyError('unavailable');
   }
@@ -55,12 +55,12 @@ export class PasswordHasher {
 
   async hash(input: unknown): Promise<string> {
     const password = normalizeCredentialPassword(input);
-    return this.#schedule(async () => validatePhc(await argon2.hash(password, options)));
+    return this.#schedule(async () => validatePasswordPhc(await argon2.hash(password, options)));
   }
 
   async verify(phc: unknown, input: unknown): Promise<boolean> {
     const password = normalizeCredentialPassword(input);
-    const encoded = validatePhc(phc);
+    const encoded = validatePasswordPhc(phc);
     return this.#schedule(async () => {
       const result: unknown = await argon2.verify(encoded, password);
       if (typeof result !== 'boolean') throw new PasswordPolicyError('unavailable');

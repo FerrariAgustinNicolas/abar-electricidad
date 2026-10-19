@@ -82,6 +82,26 @@ describe('AuthRuntimeModule source DI (build prerequisite)', () => {
     }
   });
 
+  it('keeps H0 runtime construction independent of a missing or synthetic CSRF key and never serializes it', async () => {
+    const missing = await Test.createTestingModule({ imports: [AuthRuntimeModule] }).compile();
+    try {
+      expect(missing.get<AuthRuntime>(AUTH_RUNTIME).config).not.toHaveProperty('csrfEncryptionKey');
+    } finally {
+      await missing.close();
+    }
+
+    process.env.AUTH_CSRF_ENCRYPTION_KEY = Buffer.alloc(32, 6).toString('base64url');
+    const configured = await Test.createTestingModule({ imports: [AuthRuntimeModule] }).compile();
+    try {
+      const runtime = configured.get<AuthRuntime>(AUTH_RUNTIME);
+      expect(runtime.config).not.toHaveProperty('AUTH_CSRF_ENCRYPTION_KEY');
+      expect(runtime.config).not.toHaveProperty('csrfEncryptionKey');
+      expect(JSON.stringify(runtime)).not.toContain(process.env.AUTH_CSRF_ENCRYPTION_KEY);
+    } finally {
+      await configured.close();
+    }
+  });
+
   it('creates a separate runtime and hasher per container', async () => {
     const first = await Test.createTestingModule({ imports: [AuthRuntimeModule] }).compile();
     const second = await Test.createTestingModule({ imports: [AuthRuntimeModule] }).compile();
