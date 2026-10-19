@@ -79,6 +79,8 @@ describe('ChangePasswordPage', () => {
     expect(auth.tokenForWrite()).toBeNull();
     expect(auth.session()).toBeNull();
     expect(auth.status()).toBe('anonymous');
+    expect(Array.from(view.querySelectorAll('button')).some((button) => button.textContent?.trim() === 'Cerrar sesión')).toBe(false);
+    http.expectNone('/api/v1/auth/logout');
     await component.submit();
     http.expectNone('/api/v1/auth/change-password');
     expect(navigate).not.toHaveBeenCalled();
@@ -104,6 +106,26 @@ describe('ChangePasswordPage', () => {
     expect((fixture.nativeElement as HTMLElement).querySelector('form')).not.toBeNull();
     http.expectNone('/api/v1/auth/me');
     http.expectNone('/api/v1/auth/change-password');
+  });
+
+  it('preserves server logout with the active session nonce before reauthentication is required', async () => {
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
+    const restored = auth.restore();
+    http.expectOne('/api/v1/auth/me').flush({ admin: { id: 'admin', mustChangePassword: true } }, { headers: { 'X-CSRF-Token': 'L'.repeat(43) } });
+    await restored;
+    const fixture = TestBed.createComponent(ChangePasswordPageComponent);
+    fixture.detectChanges();
+    const button = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('button')).find((candidate) => candidate.textContent?.trim() === 'Cerrar sesión');
+    expect(button).toBeDefined();
+    button!.click();
+    const request = http.expectOne('/api/v1/auth/logout');
+    expect(request.request.method).toBe('POST');
+    expect(request.request.headers.get('X-CSRF-Token')).toBe('L'.repeat(43));
+    request.flush(null, { status: 204, statusText: 'No Content' });
+    await fixture.whenStable();
+    expect(auth.session()).toBeNull();
+    expect(auth.tokenForWrite()).toBeNull();
+    expect(navigate).toHaveBeenCalledWith('/admin/login');
   });
 
 });
