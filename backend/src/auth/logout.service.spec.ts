@@ -513,7 +513,7 @@ describe('LogoutService behavior (neutral RED scaffold)', () => {
   });
 
   const proofCases = [
-    ['missing proof', (f: LogoutFixture) => undefined, (f: LogoutFixture) => f.cookieHeader],
+    ['missing proof', (_f: LogoutFixture) => undefined, (f: LogoutFixture) => f.cookieHeader],
     ['wrong active-session proof', (f: LogoutFixture) => f.wrongNonceToken, (f: LogoutFixture) => f.cookieHeader],
     ['pre-auth-only proof with an active session', (f: LogoutFixture) => f.preauthNonceToken,
       (f: LogoutFixture) => `${f.cookieHeader}; abar_auth_context=${f.preauthToken}`],
