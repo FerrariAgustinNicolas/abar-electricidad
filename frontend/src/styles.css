@@ -9,6 +9,11 @@ button { color: #fff; background: var(--color-blue-dark); border: 0; border-radi
 button:disabled { cursor: not-allowed; opacity: .65; }
 :focus-visible { outline: 3px solid var(--color-orange); outline-offset: 3px; }
 input, textarea { width: 100%; min-height: 2.75rem; padding: .55rem .7rem; border: 1px solid var(--color-border); border-radius: .25rem; color: var(--color-text); background: #fff; font: inherit; }
+abar-auth-layout :focus-visible,
+abar-admin-layout :focus-visible { outline-color: var(--color-blue-dark); }
+abar-admin-layout .admin-header :focus-visible { outline-color: var(--color-surface); }
+abar-auth-layout input, abar-auth-layout textarea,
+abar-admin-layout input, abar-admin-layout textarea { border-color: var(--color-blue-dark); }
 textarea { min-height: 5rem; resize: vertical; }
 label { display: block; margin-top: .85rem; font-weight: 600; }
 .site-header, .site-footer, .site-main, .admin-header, .admin-shell, .auth-shell { padding: 1rem max(1rem, calc((100vw - 72rem) / 2)); }
