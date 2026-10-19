@@ -251,34 +251,43 @@ test('default pg client receives explicit target settings with connect poisoned 
   const pg = await import('pg');
   const originalConnect = pg.Client.prototype.connect;
   const originalEnd = pg.Client.prototype.end;
+  const pair = makePair();
   let connects = 0;
   let ends = 0;
+  let reachedPoison = false;
+  let observed;
   pg.Client.prototype.connect = function () {
     connects++;
-    assert.equal(this.host, '127.0.0.1');
-    assert.equal(this.port, this.config.port);
-    assert.equal(this.database, this.config.database);
-    assert.equal(this.user, this.config.user);
-    assert.equal(this.password === this.config.password, true);
-    assert.equal(this.ssl, false);
-    assert.equal(this.connectionParameters.application_name, 'h1-pg-evidence');
-    assert.equal(this.connectionParameters.client_encoding, 'UTF8');
-    assert.equal(this.connectionParameters.options, '-c default_transaction_read_only=on');
-    assert.equal(this.connectionParameters.replication, 'false');
-    assert.equal(this.replication, 'false');
-    assert.equal(this.connectionParameters.sslnegotiation, 'postgres');
-    assert.equal(this.sslNegotiation, 'postgres');
-    assert.equal(this.connectionParameters.binary, true);
-    assert.equal(this.binary, false);
-    assert.equal(this.connectionParameters.statement_timeout, 2500);
-    assert.equal(this.connectionParameters.query_timeout, 2500);
-    assert.equal(this.connectionParameters.connect_timeout, 3);
+    // Capture only; assertions must escape the observer's error-redaction boundary.
+    observed = {
+      host: this.host, port: this.port, database: this.database, user: this.user,
+      passwordMatches: this.password === pair.secret.migrationPassword,
+      ssl: this.ssl,
+      applicationName: this.connectionParameters.application_name,
+      clientEncoding: this.connectionParameters.client_encoding,
+      options: this.connectionParameters.options,
+      replication: this.connectionParameters.replication, clientReplication: this.replication,
+      sslNegotiation: this.connectionParameters.sslnegotiation, clientSslNegotiation: this.sslNegotiation,
+      binary: this.connectionParameters.binary, clientBinary: this.binary,
+      statementTimeout: this.connectionParameters.statement_timeout,
+      queryTimeout: this.connectionParameters.query_timeout,
+      connectTimeout: this.connectionParameters.connect_timeout,
+    };
+    reachedPoison = true;
     throw new Error('poisoned before socket creation');
   };
   pg.Client.prototype.end = async function () { ends++; };
   try {
-    const pair = makePair();
     await assert.rejects(observePostgresEvidence(pair), error => error.message === PG_EVIDENCE_DENIED);
+    assert.equal(reachedPoison, true);
+    assert.deepEqual(observed, {
+      host: '127.0.0.1', port: pair.record.resource.endpoint.port,
+      database: pair.record.database, user: pair.record.migrationRole, passwordMatches: true,
+      ssl: false, applicationName: 'h1-pg-evidence', clientEncoding: 'UTF8',
+      options: '-c default_transaction_read_only=on', replication: 'false', clientReplication: 'false',
+      sslNegotiation: 'postgres', clientSslNegotiation: 'postgres', binary: true, clientBinary: false,
+      statementTimeout: 2500, queryTimeout: 2500, connectTimeout: 3,
+    });
     assert.equal(connects, 1);
     assert.equal(ends, 1);
   } finally {
