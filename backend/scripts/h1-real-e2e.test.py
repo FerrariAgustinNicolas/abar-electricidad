@@ -11,6 +11,7 @@ import subprocess
 import tarfile
 import sys
 import tempfile
+import time
 import unittest
 from unittest.mock import patch
 
@@ -1160,9 +1161,19 @@ class IndependentGuardContractTests(unittest.TestCase):
             clock = FakeClock()
             boundary = ProductionFakeBoundary(clock, packets)
             writes.clear()
+            class CompletedSidecarProcess:
+                def __init__(self, root, target, data): self.args = (root, target, data)
+                stdin = None
+                returncode = 0
+                def communicate(self, _request, timeout):
+                    self.assert_timeout = timeout
+                    FakeFilesystem(self.args[0]).write_private(self.args[1], self.args[2])
+                    return None, None
             with patch.object(harness, "HostFilesystem", FakeFilesystem), \
                  patch.object(harness.signal, "signal", return_value=None):
-                code = harness.supervise(self.options(), boundary=boundary, clock=clock)
+                code = harness.supervise(self.options(), boundary=boundary, clock=clock,
+                                         sidecar_process_factory=lambda root, target, data:
+                                         CompletedSidecarProcess(root, target, data))
             self.assertEqual(len(writes), 1)
             self.assertTrue(writes[0][0].endswith("/supervisor-diagnostic.json"))
             return code, boundary, writes[0][1]
@@ -1226,6 +1237,100 @@ class IndependentGuardContractTests(unittest.TestCase):
             code = harness.supervise(self.options(), boundary=boundary, clock=clock, memory_sink=captured.append)
         self.assertEqual(code, 1)
         self.assertEqual(captured, [])
+
+    def test_parent_sidecar_persistence_is_bounded_before_report_emission(self):
+        clock = FakeClock()
+        class ProductionFakeBoundary(FakeGuardBoundary, harness.PosixGuardBoundary):
+            pass
+        boundary = ProductionFakeBoundary(clock, self.events())
+        class SlowWorker:
+            stdin = None
+            returncode = None
+            def __init__(self): self.terminated = False; self.timeouts = []
+            def communicate(self, _request, timeout):
+                self.timeouts.append(timeout)
+                clock.sleep(timeout)
+                raise subprocess.TimeoutExpired("synthetic-sidecar", timeout)
+            def kill(self): self.terminated = True; self.returncode = -9
+            def wait(self, timeout):
+                self.timeouts.append(timeout)
+                clock.sleep(timeout)
+                return self.returncode
+        worker = SlowWorker()
+        persistence_started = []
+        def factory(_root, _target, _data):
+            persistence_started.append(clock.now)
+            return worker
+        with patch.object(harness.signal, "signal", return_value=None):
+            code = harness.supervise(self.options(), boundary=boundary, clock=clock,
+                                     sidecar_process_factory=factory)
+        self.assertEqual(code, 0)
+        self.assertEqual(len(boundary.reports), 1)
+        self.assertTrue(worker.terminated)
+        self.assertEqual(worker.timeouts, [harness.SIDECAR_WRITE_SECONDS, harness.SIDECAR_STOP_SECONDS])
+        self.assertLessEqual(clock.now - persistence_started[0],
+                             harness.SIDECAR_WRITE_SECONDS + harness.SIDECAR_STOP_SECONDS)
+
+    def test_sidecar_stall_kills_and_reaps_only_its_helper_and_parent_exits_bounded(self):
+        with tempfile.TemporaryDirectory(prefix="h1-sidecar-stall-") as temp:
+            root = pathlib.Path(temp)
+            run_id = "a" * 32
+            target = root / "odd/probes/h1-real-e2e" / run_id / "supervisor-diagnostic.json"
+            target.parent.mkdir(parents=True)
+            marker = target.with_name("fsync-entered")
+            parent_code = r'''import importlib.util, json, pathlib, subprocess, sys, time
+source, root, target, marker = sys.argv[1:]
+spec = importlib.util.spec_from_file_location("h1_real_e2e_test_parent", source)
+harness = importlib.util.module_from_spec(spec); sys.modules[spec.name] = harness; spec.loader.exec_module(harness)
+worker_code = r"""import base64, importlib.util, json, os, pathlib, signal, sys, time
+spec=importlib.util.spec_from_file_location("h1_real_e2e_test_child",sys.argv[1])
+module=importlib.util.module_from_spec(spec); sys.modules[spec.name]=module; spec.loader.exec_module(module)
+request=json.load(sys.stdin)
+def blocked_fsync(_descriptor):
+ pathlib.Path(sys.argv[2]).write_text("entered")
+ signal.signal(signal.SIGTERM,signal.SIG_IGN)
+ while True: time.sleep(0.05)
+os.fsync=blocked_fsync
+module.HostFilesystem(request["root"]).write_private(request["target"],base64.b64decode(request["data"],validate=True))
+"""
+helper = None
+def factory(_root, _target, _data):
+ global helper
+ helper = subprocess.Popen([sys.executable,"-I","-S","-B","-c",worker_code,source,marker],
+                           stdin=subprocess.PIPE,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,close_fds=True)
+ return helper
+started=time.monotonic()
+result=harness._persist_sidecar_bounded(root,target,b"safe",factory)
+print(json.dumps({"result":result,"pid":helper.pid,"returncode":helper.returncode,
+                  "elapsed":time.monotonic()-started}),flush=True)
+'''
+            started = time.monotonic()
+            parent = subprocess.Popen(
+                [sys.executable, "-I", "-S", "-B", "-c", parent_code,
+                 str(pathlib.Path(harness.__file__).resolve()), str(root), str(target), str(marker)],
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=True)
+            stdout, stderr = parent.communicate(timeout=2)
+            elapsed = time.monotonic() - started
+            self.assertEqual(parent.returncode, 0, stderr.decode())
+            result = json.loads(stdout)
+            self.assertTrue(marker.is_file(), "child never reached the private-write fsync boundary")
+            self.assertEqual(target.read_bytes(), b"safe")
+            self.assertEqual(result["result"], "stalled_reaped")
+            self.assertEqual(result["returncode"], -9)
+            self.assertLess(elapsed, 2)
+            self.assertLess(result["elapsed"], 1)
+            self.assertEqual(target.stat().st_mode & 0o777, 0o600)
+
+    def test_spawned_sidecar_helper_preserves_private_exclusive_write(self):
+        with tempfile.TemporaryDirectory(prefix="h1-sidecar-write-") as temp:
+            root = pathlib.Path(temp)
+            target = root / "odd/probes/h1-real-e2e" / ("a" * 32) / "supervisor-diagnostic.json"
+            target.parent.mkdir(parents=True)
+            self.assertEqual(harness._persist_sidecar_bounded(str(root), str(target), b"safe"), "written")
+            self.assertEqual(target.read_bytes(), b"safe")
+            self.assertEqual(target.stat().st_mode & 0o777, 0o600)
+            self.assertEqual(harness._persist_sidecar_bounded(str(root), str(target), b"replacement"), "failed")
+            self.assertEqual(target.read_bytes(), b"safe")
 
     def test_valid_completed_pipeline_emits_exact_report_and_reaps_without_filesystem_or_daemon_in_parent(self):
         # These boundaries must never be called by the timer process, even for admission.
@@ -1524,6 +1629,10 @@ class PosixBoundaryFakeSyscallTests(unittest.TestCase):
         writes = []
         def read(_fd, _size): return packets.pop(0) if packets else b""
         boundary = harness.PosixGuardBoundary(clock)
+        class CompletedSidecarProcess:
+            stdin = None
+            returncode = 0
+            def communicate(self, _request, timeout): self.timeout = timeout; return None, None
         with patch.object(harness.socket, "socketpair", return_value=(self.FakeSocket(31), self.FakeSocket(32))), \
              patch.object(harness.os, "set_blocking"), patch.object(harness.os, "fork", return_value=777), \
              patch.object(harness.os, "close"), patch.object(harness.os, "fstat"), \
@@ -1532,7 +1641,9 @@ class PosixBoundaryFakeSyscallTests(unittest.TestCase):
              patch.object(harness.os, "waitpid", return_value=(777, 0)), \
              patch.object(harness.os, "write", side_effect=lambda _fd, data: writes.append(bytes(data)) or len(data)):
             with patch.object(harness.os, "get_blocking", return_value=True):
-                code = harness.supervise(IndependentGuardContractTests().options(), boundary=boundary, clock=clock)
+                code = harness.supervise(IndependentGuardContractTests().options(), boundary=boundary, clock=clock,
+                                         sidecar_process_factory=lambda _root, _target, _data:
+                                         CompletedSidecarProcess())
         self.assertEqual(code, 0)
         self.assertTrue(boundary.output_safe)
         self.assertTrue(writes)

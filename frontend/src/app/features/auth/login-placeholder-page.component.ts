@@ -37,7 +37,7 @@ export class LoginPlaceholderPageComponent {
   readonly error = signal('');
 
   inputValue(event: Event): string { return (event.target as HTMLInputElement).value; }
-  passwordTooLong(): boolean { return Array.from(this.password).length > 128; }
+  passwordTooLong(): boolean { return Array.from(this.password.normalize('NFC')).length > 128; }
 
   async submit(): Promise<void> {
     if (this.busy()) return;
