@@ -33,8 +33,8 @@ import { AuthSessionService } from '../../core/auth/auth-session.service';
           {{ busy() ? 'Guardando…' : 'Actualizar contraseña' }}
         </button>
       </form>
-      }
       <button type="button" class="button-secondary" (click)="logout()" [disabled]="busy()">Cerrar sesión</button>
+      }
     </section>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
