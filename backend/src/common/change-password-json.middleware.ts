@@ -1,5 +1,5 @@
 import { types } from 'node:util';
-import { json, Router } from 'express';
+import { json, Router, type RequestHandler } from 'express';
 
 export type ChangePasswordParserError = Readonly<{
   status: 400;
@@ -12,6 +12,7 @@ const CHANGE_PASSWORD_PARSER_ERROR: ChangePasswordParserError = Object.freeze({
 });
 const ownedParserErrors = new WeakMap<object, ChangePasswordParserError>();
 const CHANGE_PASSWORD_PATH = '/api/v1/auth/change-password';
+const ADMIN_USERS_PATH = '/api/v1/admin/users';
 
 /** Return public metadata only for parser failures minted by this router. */
 export function readChangePasswordParserError(value: unknown): ChangePasswordParserError | undefined {
@@ -19,12 +20,12 @@ export function readChangePasswordParserError(value: unknown): ChangePasswordPar
   return ownedParserErrors.get(value as object);
 }
 
-/** Parse JSON only on the real change-password POST route before Nest's parser. */
+/** Parse JSON only on allowlisted write routes before Nest's parser. */
 export function createChangePasswordJsonRouter(): ReturnType<typeof Router> {
   const router = Router();
   const parseJson = json();
 
-  router.post(CHANGE_PASSWORD_PATH, (request, response, next) => {
+  const parseOwnedJson: RequestHandler = (request, response, next) => {
     parseJson(request, response, (error?: unknown) => {
       if (error === undefined) {
         next();
@@ -41,7 +42,12 @@ export function createChangePasswordJsonRouter(): ReturnType<typeof Router> {
       ownedParserErrors.set(publicError, CHANGE_PASSWORD_PARSER_ERROR);
       next(publicError);
     });
-  });
+  };
+
+  router.post([
+    CHANGE_PASSWORD_PATH, ADMIN_USERS_PATH, `${ADMIN_USERS_PATH}/:id/reset-password`,
+  ], parseOwnedJson);
+  router.patch(`${ADMIN_USERS_PATH}/:id`, parseOwnedJson);
 
   return router;
 }

@@ -34,8 +34,8 @@ describe('CSRF nonce envelope', () => {
     }
   });
 
-  it.each([undefined, '', 'A'.repeat(42), 'A'.repeat(44), 'A'.repeat(42) + '*', 'A'.repeat(42) + 'B'])
-    ('fails safely for absent, malformed or noncanonical keys: %s', (key) => {
+  it.each([undefined, '', 'A'.repeat(42), 'A'.repeat(44), 'A'.repeat(42) + '*', 'A'.repeat(42) + 'B'])(
+    'fails safely for absent, malformed or noncanonical keys: %s', (key) => {
       const cipher = new CsrfNonceCipher(key);
       expect(cipher.available).toBe(false);
       expect(() => cipher.encrypt('preauth', id, 1, Buffer.alloc(32))).toThrow('CSRF protection unavailable');
