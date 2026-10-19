@@ -10,10 +10,12 @@ import { CsrfNonceCipher, createCsrfNonceCipher } from './csrf-nonce.cipher';
 import { CSRF_NONCE_CIPHER, CsrfService } from './csrf.service';
 import { SessionService } from './session.service';
 import { ChangePasswordService } from './change-password.service';
+import { AdminUsersController } from './admin-users.controller';
+import { AdminUsersService } from './admin-users.service';
 
 @Module({
   imports: [AuthRuntimeModule, PrismaModule],
-  controllers: [AuthController],
+  controllers: [AuthController, AdminUsersController],
   providers: [
     {
       provide: CSRF_NONCE_CIPHER,
@@ -39,6 +41,13 @@ import { ChangePasswordService } from './change-password.service';
     {
       provide: LogoutService,
       useFactory: (prisma, cipher, runtime) => new LogoutService(prisma, cipher, runtime.config),
+      inject: [PrismaService, CSRF_NONCE_CIPHER, AUTH_RUNTIME],
+    },
+    {
+      provide: AdminUsersService,
+      useFactory: (prisma, cipher, runtime) => new AdminUsersService(
+        prisma, cipher, runtime.config, runtime.hasher, runtime.blocklist,
+      ),
       inject: [PrismaService, CSRF_NONCE_CIPHER, AUTH_RUNTIME],
     },
     {
