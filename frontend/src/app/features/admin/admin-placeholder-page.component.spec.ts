@@ -1,6 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { vi } from 'vitest';
 import { AdminUserView } from '../../core/auth/auth.models';
@@ -77,5 +77,111 @@ describe('AdminUsersPage', () => {
     expect(fixture.componentInstance.staleCsrf()).toBe(true);
     http.expectNone('/api/v1/auth/me');
     expect(fixture.componentInstance.error()).toContain('No se repitió la acción');
+  });
+
+  const listUrl = (page: number) => `/api/v1/admin/users?page=${page}&pageSize=20&sort=-createdAt`;
+  const pageResult = (page: number) => ({
+    items: Array.from({ length: page === 1 ? 20 : 1 }, (_, index) => ({
+      ...admin, id: `e7777777-e777-4777-8777-${String(page * 100 + index).padStart(12, '0')}`,
+      name: `Page ${page} user ${index}`, email: `page${page}-${index}@example.test`,
+    })),
+    pageInfo: { page, pageSize: 20, totalItems: 21, totalPages: 2 },
+  });
+
+  async function loadedPage() {
+    const fixture = TestBed.createComponent(AdminPlaceholderPageComponent);
+    http.expectOne(listUrl(1)).flush(pageResult(1));
+    await Promise.resolve();
+    fixture.detectChanges();
+    return fixture;
+  }
+
+  function expectPage(fixture: ComponentFixture<AdminPlaceholderPageComponent>, page: number) {
+    fixture.detectChanges();
+    const component = fixture.componentInstance;
+    expect(component.page()).toBe(page);
+    expect(component.users()).toEqual(pageResult(page));
+    expect(fixture.nativeElement.querySelector('.user-email').textContent).toContain(`page${page}-0@example.test`);
+    expect(fixture.nativeElement.querySelector('.pagination span').textContent).toContain(`Página ${page} de 2`);
+    const buttons = fixture.nativeElement.querySelectorAll('.pagination button');
+    expect(buttons[0].disabled).toBe(component.loading() || page === 1);
+    expect(buttons[1].disabled).toBe(component.loading() || page === 2);
+  }
+
+  it('commits pagination rows and indicator only after the requested page succeeds', async () => {
+    const fixture = await loadedPage();
+    const pending = fixture.componentInstance.changePage(2);
+    const request = http.expectOne(listUrl(2));
+    expect(request.request.method).toBe('GET');
+    expectPage(fixture, 1);
+    request.flush(pageResult(2));
+    await pending;
+    expectPage(fixture, 2);
+    expect(fixture.componentInstance.loadFailed()).toBe(false);
+  });
+
+  it('preserves the confirmed pagination on failure and explicitly retries the requested page', async () => {
+    const fixture = await loadedPage();
+    const component = fixture.componentInstance;
+    const pending = component.changePage(2);
+    http.expectOne(listUrl(2)).flush({}, { status: 503, statusText: 'Unavailable' });
+    await pending;
+    expectPage(fixture, 1);
+    expect(component.loadFailed()).toBe(true);
+    expect(component.error()).toContain('No se pudo cargar el listado');
+    const retry = component.load();
+    http.expectOne(listUrl(2)).flush(pageResult(2));
+    await retry;
+    expectPage(fixture, 2);
+    expect(component.loadFailed()).toBe(false);
+    expect(component.error()).toBe('');
+  });
+
+  it('ignores invalid and overlapping pagination requests without changing the confirmed page', async () => {
+    const fixture = await loadedPage();
+    const component = fixture.componentInstance;
+    for (const page of [0, 1, 3]) await component.changePage(page);
+    http.expectNone((request) => request.url === '/api/v1/admin/users');
+    expectPage(fixture, 1);
+    const pending = component.changePage(2);
+    const request = http.expectOne(listUrl(2));
+    await component.changePage(2);
+    await component.changePage(1);
+    await component.load();
+    http.expectNone((request) => request.url === '/api/v1/admin/users');
+    expectPage(fixture, 1);
+    request.flush(pageResult(2));
+    await pending;
+    expectPage(fixture, 2);
+  });
+
+  it('preserves pagination after a committed create with failed reload and retries only the read', async () => {
+    await login();
+    const fixture = await loadedPage();
+    const component = fixture.componentInstance;
+    const next = component.changePage(2);
+    http.expectOne(listUrl(2)).flush(pageResult(2));
+    await next;
+    component.newName = 'New account'; component.newEmail = 'new@example.test';
+    component.newPassword = 'a-long-enough-password';
+    const created = component.createUser();
+    const write = http.expectOne('/api/v1/admin/users');
+    expect(write.request.method).toBe('POST');
+    expect(write.request.body.email).toBe('new@example.test');
+    write.flush({ ...admin, email: 'new@example.test' });
+    await Promise.resolve();
+    http.expectOne(listUrl(1)).flush({}, { status: 503, statusText: 'Unavailable' });
+    await created;
+    expectPage(fixture, 2);
+    expect(component.newPassword).toBe('');
+    expect(component.busy()).toBe(false);
+    expect(component.loadFailed()).toBe(true);
+    const retry = component.load();
+    const read = http.expectOne(listUrl(1));
+    expect(read.request.method).toBe('GET');
+    read.flush(pageResult(1));
+    await retry;
+    expectPage(fixture, 1);
+    http.expectNone((request) => request.method !== 'GET');
   });
 });

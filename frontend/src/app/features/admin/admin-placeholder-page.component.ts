@@ -96,6 +96,7 @@ export class AdminPlaceholderPageComponent {
   readonly loadFailed = signal(false);
   readonly createOpen = signal(false);
   readonly page = signal(1);
+  private requestedPage = 1;
   newName = '';
   newEmail = '';
   newPassword = '';
@@ -129,14 +130,17 @@ export class AdminPlaceholderPageComponent {
     return draft.name !== user.name || draft.active !== user.active;
   }
 
-  async load(): Promise<void> {
+  async load(page = this.requestedPage): Promise<void> {
     if (this.loading()) return;
+    this.requestedPage = page;
     this.loading.set(true);
     this.error.set('');
     this.loadFailed.set(false);
     try {
-      const result = await firstValueFrom(this.api.listUsers(this.page(), 20, '-createdAt'));
+      const result = await firstValueFrom(this.api.listUsers(page, 20, '-createdAt'));
       this.users.set(result);
+      this.page.set(result.pageInfo.page);
+      this.requestedPage = result.pageInfo.page;
       for (const user of result.items) {
         this.drafts[user.id] = { name: user.name, active: user.active };
         this.resetDrafts[user.id] ??= { password: '', reason: '' };
@@ -156,8 +160,7 @@ export class AdminPlaceholderPageComponent {
       await firstValueFrom(this.api.createUser({ name: this.newName, email: this.newEmail.trim(), temporaryPassword: this.newPassword }, this.auth.getTokenOrThrow()));
       this.newName = ''; this.newEmail = ''; this.newPassword = '';
       this.createOpen.set(false);
-      this.page.set(1);
-      await this.load();
+      await this.load(1);
     } catch (error: unknown) { await this.reportError(error); }
     finally { this.busy.set(false); }
   }
@@ -202,9 +205,8 @@ export class AdminPlaceholderPageComponent {
 
   async changePage(page: number): Promise<void> {
     const max = this.users()?.pageInfo.totalPages ?? 1;
-    if (page < 1 || page > max || page === this.page()) return;
-    this.page.set(page);
-    await this.load();
+    if (this.loading() || page < 1 || page > max || page === this.page()) return;
+    await this.load(page);
   }
 
   async refreshSession(): Promise<void> {
