@@ -12,20 +12,27 @@ export class AuthSessionService {
   readonly status = signal<AuthStatus>('unknown');
   private csrfToken: string | null = null;
   private restoration: Promise<AdminSessionView | null> | null = null;
+  private restorationVersion = 0;
   private readonly api = inject(AuthApiService);
   private readonly router = inject(Router);
 
   async restore(): Promise<AdminSessionView | null> {
     if (this.status() === 'authenticated') return this.session();
     if (!this.restoration) {
+      const version = this.restorationVersion;
       this.status.set('loading');
-      this.restoration = firstValueFrom(this.api.me()).then(({ session, csrfToken }) => {
+      const pending = firstValueFrom(this.api.me()).then(({ session, csrfToken }) => {
+        if (version !== this.restorationVersion) return this.session();
         this.setSession(session, csrfToken);
         return session;
       }).catch(() => {
+        if (version !== this.restorationVersion) return this.session();
         this.clearSession();
         return null;
-      }).finally(() => this.restoration = null);
+      }).finally(() => {
+        if (this.restoration === pending) this.restoration = null;
+      });
+      this.restoration = pending;
     }
     return this.restoration;
   }
@@ -80,15 +87,22 @@ export class AuthSessionService {
   }
 
   private setSession(session: AdminSessionView, token: string): void {
+    this.invalidateRestoration();
     this.session.set(session);
     this.csrfToken = token;
     this.status.set('authenticated');
   }
 
   private clearSession(): void {
+    this.invalidateRestoration();
     this.session.set(null);
     this.csrfToken = null;
     this.status.set('anonymous');
+  }
+
+  private invalidateRestoration(): void {
+    this.restorationVersion++;
+    this.restoration = null;
   }
 }
 
