@@ -74,6 +74,30 @@ describe('admin users HTTP contract', () => {
     expect(resetPassword).toHaveBeenCalledWith({ id, body: resetBody, cookieHeader: cookie, origin, csrfToken: token });
   });
 
+  it.each([
+    ['post', '/api/v1/admin/users'],
+    ['patch', `/api/v1/admin/users/${id}`],
+    ['post', `/api/v1/admin/users/${id}/reset-password`],
+  ] as const)('normalizes malformed JSON before %s %s reaches any service', async (method, path) => {
+    const privateContent = 'synthetic-parser-private-content';
+    const response = await request(url)[method](path)
+      .set('Cookie', cookie).set('Origin', origin).set('X-CSRF-Token', token)
+      .set('Content-Type', 'application/json')
+      .send(`{"temporaryPassword":"${privateContent}",`)
+      .timeout({ response: 2000, deadline: 3000 });
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      code: 'VALIDATION_ERROR', message: 'Los datos enviados no son válidos',
+      requestId: response.headers['x-request-id'],
+    });
+    expect(response.headers['x-request-id']).toMatch(/^[0-9a-f-]{36}$/i);
+    expect(response.headers['cache-control']).toBe('no-store');
+    expect(response.headers['set-cookie']).toBeUndefined();
+    expect(response.headers['x-csrf-token']).toBeUndefined();
+    expect(response.text).not.toContain(privateContent);
+    for (const handler of [list, create, patch, resetPassword]) expect(handler).not.toHaveBeenCalled();
+  });
+
   it('declares the frozen session-cookie security requirement on every admin operation', () => {
     const document = SwaggerModule.createDocument(app, new DocumentBuilder().setTitle('test').setVersion('test').build());
     const operations = document.paths['/api/v1/admin/users'];
