@@ -183,6 +183,7 @@ function positiveVersion(value: unknown): number {
 }
 function sanitizedReason(value: unknown, password: string): string {
   if (typeof value !== 'string' || [...value].length < 1 || [...value].length > 500) return fail('VALIDATION_ERROR');
+  const containsPassword = value.normalize('NFC').includes(password);
   let result = '';
   for (const character of value) {
     const code = character.charCodeAt(0);
@@ -190,7 +191,7 @@ function sanitizedReason(value: unknown, password: string): string {
   }
   result = result.trim();
   if ([...result].length < 1 || [...result].length > 500) return fail('VALIDATION_ERROR');
-  return result.normalize('NFC').includes(password) ? 'Redacted audit reason' : result;
+  return (containsPassword || result.normalize('NFC').includes(password)) ? 'Redacted audit reason' : result;
 }
 
 @Injectable()

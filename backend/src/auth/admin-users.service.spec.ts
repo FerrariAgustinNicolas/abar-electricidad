@@ -197,6 +197,25 @@ describe('AdminUsersService public operations', () => {
     expect(auditCreate).toHaveBeenCalledWith(expect.objectContaining({ data: expect.objectContaining({ reason: 'Redacted audit reason' }) }));
   });
 
+  it.each([
+    ['embedded tab', 'a sufficiently\tlong phrase', 'Password reset: a sufficiently\tlong phrase'],
+    ['boundary spaces', '  a sufficiently long phrase  ', '  a sufficiently long phrase  '],
+    ['canonical Unicode with a tab', 'a sufficiently\tlong café phrase', 'Password reset: a sufficiently\tlong cafe\u0301 phrase'],
+    ['password revealed by sanitization', 'a sufficiently long phrase', 'Password reset: a sufficiently\tlong phrase'],
+  ])('redacts audit credentials for %s without changing the hashed password', async (_label, temporaryPassword, reason) => {
+    const f = fixture();
+    await expect(f.service.resetPassword({ ...f.proof, id: adminId, body: {
+      temporaryPassword, reason,
+    } })).resolves.toBeUndefined();
+    expect(f.hasher.hash).toHaveBeenCalledTimes(1);
+    expect(f.hasher.hash).toHaveBeenCalledWith(temporaryPassword.normalize('NFC'));
+    expect(f.prisma.adminUserAudit.create).toHaveBeenCalledTimes(1);
+    expect(f.prisma.adminUserAudit.create).toHaveBeenCalledWith({ data: {
+      actorAdminUserId: adminId, targetAdminUserId: adminId,
+      action: 'PASSWORD_RESET', reason: 'Redacted audit reason',
+    } });
+  });
+
   it('resets credentials, increments version, revokes all target sessions and audits a sanitized reason in one transaction', async () => {
     const f = fixture();
     const auditCreate = jest.fn(async () => ({}));
