@@ -29,6 +29,7 @@ type SessionState = Readonly<{
 const SESSION_COOKIE = 'abar_admin_session';
 const OPAQUE_TOKEN = /^[A-Za-z0-9_-]{43}$/;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+// eslint-disable-next-line no-control-regex -- Intentionally reject HTTP control characters while allowing horizontal tabs.
 const FORBIDDEN_CONTROLS = /[\u0000-\u0008\u000a-\u001f\u007f]/;
 
 function routeError(status: number, code: 'ORIGIN_INVALID' | 'CSRF_INVALID' | 'SERVICE_UNAVAILABLE'): LoginRouteException {
