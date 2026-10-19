@@ -7,8 +7,10 @@ import { LogoutService } from './logout.service';
 import { SessionService } from './session.service';
 import { ChangePasswordService } from './change-password.service';
 
+const requiredResponseHeader = { 'x-required': true };
 const noStoreHeader = {
   description: 'Prevents storage of authentication metadata.',
+  'x-required': true,
   schema: { type: 'string', enum: ['no-store'] },
 };
 const csrfErrorSchema = {
@@ -91,7 +93,7 @@ export class AuthController {
   @ApiExtension('x-abar-errors', { '401': ['SESSION_EXPIRED'], '503': ['SERVICE_UNAVAILABLE'] })
   @ApiOkResponse({ schema: sessionViewSchema, headers: {
     'Cache-Control': noStoreHeader,
-    'X-CSRF-Token': { description: 'Existing session-bound CSRF nonce; not part of the identity DTO.', schema: { type: 'string', minLength: 43, maxLength: 43, pattern: '^[A-Za-z0-9_-]{43}$' } },
+    'X-CSRF-Token': { description: 'Existing session-bound CSRF nonce; not part of the identity DTO.', ...requiredResponseHeader, schema: { type: 'string', minLength: 43, maxLength: 43, pattern: '^[A-Za-z0-9_-]{43}$' } },
   } })
   @ApiResponse({ status: 401, description: 'SESSION_EXPIRED.', headers: { 'Cache-Control': noStoreHeader }, schema: loginErrorSchema })
   @ApiResponse({ status: 503, description: 'SERVICE_UNAVAILABLE.', headers: { 'Cache-Control': noStoreHeader }, schema: loginErrorSchema })
@@ -103,11 +105,12 @@ export class AuthController {
   }
 
   @Get('csrf')
-  @ApiOperation({ operationId: 'getAuthCsrf', summary: 'Obtain stateful CSRF metadata' })
+  @ApiOperation({ operationId: 'getAuthCsrf', summary: 'Obtain stateful CSRF metadata', security: [{}, { AdminSessionCookie: [] }] })
+  @ApiExtension('x-abar-errors', { '403': ['PASSWORD_CHANGE_REQUIRED'], '429': ['RATE_LIMITED'], '503': ['SERVICE_UNAVAILABLE'] })
   @ApiOkResponse({ schema: {
     type: 'object', additionalProperties: false, required: ['csrfToken', 'headerName'],
     properties: {
-      csrfToken: { type: 'string', minLength: 43, maxLength: 43 },
+      csrfToken: { type: 'string', minLength: 43, maxLength: 43, pattern: '^[A-Za-z0-9_-]{43}$' },
       headerName: { type: 'string', enum: ['X-CSRF-Token'] },
     },
   }, headers: {
@@ -120,7 +123,7 @@ export class AuthController {
   @ApiResponse({ status: 403, description: 'PASSWORD_CHANGE_REQUIRED.', headers: { 'Cache-Control': noStoreHeader }, schema: csrfErrorSchema })
   @ApiResponse({ status: 429, description: 'RATE_LIMITED.', headers: {
     'Cache-Control': noStoreHeader,
-    'Retry-After': { description: 'Seconds until the request window expires.', schema: { type: 'integer', minimum: 1 } },
+    'Retry-After': { description: 'Seconds until the request window expires.', ...requiredResponseHeader, schema: { type: 'integer', minimum: 0 } },
   }, schema: csrfErrorSchema })
   @ApiResponse({ status: 503, description: 'SERVICE_UNAVAILABLE.', headers: { 'Cache-Control': noStoreHeader }, schema: csrfErrorSchema })
   async getCsrf(@Req() request: Request, @Res() response: Response): Promise<void> {
@@ -154,6 +157,11 @@ export class AuthController {
   @Post('login')
   @HttpCode(200)
   @ApiOperation({ operationId: 'loginAdmin', summary: 'Authenticate and rotate session' })
+  @ApiExtension('x-abar-errors', {
+    '400': ['VALIDATION_ERROR'], '401': ['INVALID_CREDENTIALS'],
+    '403': ['ORIGIN_INVALID', 'CSRF_INVALID', 'PASSWORD_CHANGE_REQUIRED'],
+    '429': ['RATE_LIMITED'], '503': ['SERVICE_UNAVAILABLE'],
+  })
   @ApiBody({ required: true, schema: {
     type: 'object', additionalProperties: false, required: ['email', 'password'],
     properties: {
@@ -163,15 +171,15 @@ export class AuthController {
   } })
   @ApiOkResponse({ schema: loginSessionSchema, headers: {
     'Cache-Control': noStoreHeader,
-    'Set-Cookie': { description: 'Rotated session and cleared pre-auth cookies as separate fields.', schema: { type: 'string' } },
-    'X-CSRF-Token': { description: 'Fresh session-bound CSRF nonce.', schema: { type: 'string', minLength: 43, maxLength: 43 } },
+    'Set-Cookie': { description: 'Rotated session and cleared pre-auth cookies as separate fields.', ...requiredResponseHeader, schema: { type: 'string' } },
+    'X-CSRF-Token': { description: 'Fresh session-bound CSRF nonce.', ...requiredResponseHeader, schema: { type: 'string', minLength: 43, maxLength: 43, pattern: '^[A-Za-z0-9_-]{43}$' } },
   } })
   @ApiResponse({ status: 400, description: 'VALIDATION_ERROR.', headers: { 'Cache-Control': noStoreHeader }, schema: loginErrorSchema })
   @ApiResponse({ status: 401, description: 'INVALID_CREDENTIALS.', headers: { 'Cache-Control': noStoreHeader }, schema: loginErrorSchema })
   @ApiResponse({ status: 403, description: 'ORIGIN_INVALID, CSRF_INVALID, or PASSWORD_CHANGE_REQUIRED.', headers: { 'Cache-Control': noStoreHeader }, schema: loginErrorSchema })
   @ApiResponse({ status: 429, description: 'RATE_LIMITED.', headers: {
     'Cache-Control': noStoreHeader,
-    'Retry-After': { description: 'Seconds until the login window expires.', schema: { type: 'integer', minimum: 1, maximum: 3600 } },
+    'Retry-After': { description: 'Seconds until the login window expires.', ...requiredResponseHeader, schema: { type: 'integer', minimum: 0 } },
   }, schema: loginErrorSchema })
   @ApiResponse({ status: 503, description: 'SERVICE_UNAVAILABLE.', headers: { 'Cache-Control': noStoreHeader }, schema: loginErrorSchema })
   async login(@Req() request: Request, @Res() response: Response): Promise<void> {
@@ -207,7 +215,7 @@ export class AuthController {
   @ApiExtension('x-abar-errors', { '403': ['ORIGIN_INVALID', 'CSRF_INVALID'], '503': ['SERVICE_UNAVAILABLE'] })
   @ApiResponse({ status: 204, description: 'No content. Clears abar_admin_session with its matching Path, HttpOnly, SameSite and optional Secure attributes, Max-Age=0 and a past Expires value.', headers: {
     'Cache-Control': noStoreHeader,
-    'Set-Cookie': { description: 'Clears abar_admin_session with matching path/attributes, Max-Age=0 and past Expires.', schema: { type: 'string' } },
+    'Set-Cookie': { description: 'Clears abar_admin_session with matching path/attributes, Max-Age=0 and past Expires.', ...requiredResponseHeader, schema: { type: 'string' } },
   } })
   @ApiResponse({ status: 403, description: 'ORIGIN_INVALID or CSRF_INVALID.', headers: { 'Cache-Control': noStoreHeader }, schema: loginErrorSchema })
   @ApiResponse({ status: 503, description: 'SERVICE_UNAVAILABLE.', headers: { 'Cache-Control': noStoreHeader }, schema: loginErrorSchema })
@@ -243,8 +251,8 @@ export class AuthController {
   })
   @ApiResponse({ status: 204, description: 'Password changed; other sessions revoked and current session rotated without extending expiry. No response body.', headers: {
     'Cache-Control': noStoreHeader,
-    'Set-Cookie': { description: 'Rotated abar_admin_session cookie.', schema: { type: 'string' } },
-    'X-CSRF-Token': { description: 'Fresh session-bound CSRF nonce.', schema: { type: 'string', minLength: 43, maxLength: 43 } },
+    'Set-Cookie': { description: 'Rotated abar_admin_session cookie.', ...requiredResponseHeader, schema: { type: 'string' } },
+    'X-CSRF-Token': { description: 'Fresh session-bound CSRF nonce.', ...requiredResponseHeader, schema: { type: 'string', minLength: 43, maxLength: 43, pattern: '^[A-Za-z0-9_-]{43}$' } },
   } })
   @ApiResponse({ status: 400, description: 'VALIDATION_ERROR or PASSWORD_POLICY.', headers: { 'Cache-Control': noStoreHeader }, schema: loginErrorSchema })
   @ApiResponse({ status: 401, description: 'SESSION_EXPIRED or INVALID_CREDENTIALS.', headers: { 'Cache-Control': noStoreHeader }, schema: loginErrorSchema })
