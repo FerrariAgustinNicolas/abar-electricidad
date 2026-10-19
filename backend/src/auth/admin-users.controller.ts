@@ -10,11 +10,20 @@ import {
 } from './admin-users.service';
 import { AdminUsersService } from './admin-users.service';
 
-const noStore = { description: 'No H1 identity or credential data is stored by intermediaries.', schema: { type: 'string', enum: ['no-store'] } };
+const noStore = { 'x-required': true, description: 'No H1 identity or credential data is stored by intermediaries.', schema: { type: 'string', enum: ['no-store'] } };
 const errorSchema = {
   type: 'object', additionalProperties: false, required: ['code', 'message', 'requestId'],
   properties: {
     code: { type: 'string', minLength: 1 }, message: { type: 'string', minLength: 1 },
+    fieldErrors: {
+      type: 'array', items: {
+        type: 'object', additionalProperties: false, required: ['field', 'code', 'message'],
+        properties: {
+          field: { type: 'string', minLength: 1 }, code: { type: 'string', minLength: 1 },
+          message: { type: 'string', minLength: 1 },
+        },
+      },
+    },
     requestId: { type: 'string', format: 'uuid' },
   },
 };
@@ -25,7 +34,7 @@ const userSchema = {
     id: { type: 'string', format: 'uuid' }, name: { type: 'string', minLength: 1, maxLength: 100 },
     email: { type: 'string', format: 'email', minLength: 1, maxLength: 254 }, active: { type: 'boolean' },
     mustChangePassword: { type: 'boolean' }, version: { type: 'integer', minimum: 1 },
-    createdAt: { type: 'string', format: 'date-time' }, updatedAt: { type: 'string', format: 'date-time' },
+    createdAt: { type: 'string', format: 'date-time', pattern: '^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$' }, updatedAt: { type: 'string', format: 'date-time', pattern: '^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$' },
   },
 };
 const passwordSchema = { type: 'string', minLength: 15, maxLength: 128, writeOnly: true };
@@ -71,7 +80,7 @@ export class AdminUsersController {
     properties: {
       items: { type: 'array', maxItems: 100, items: userSchema },
       pageInfo: { type: 'object', additionalProperties: false, required: ['page', 'pageSize', 'totalItems', 'totalPages'],
-        properties: { page: { type: 'integer' }, pageSize: { type: 'integer' }, totalItems: { type: 'integer' }, totalPages: { type: 'integer' } } },
+        properties: { page: { type: 'integer', minimum: 1 }, pageSize: { type: 'integer', minimum: 1, maximum: 100 }, totalItems: { type: 'integer', minimum: 0 }, totalPages: { type: 'integer', minimum: 0 } } },
     },
   } })
   @ApiResponse({ status: 400, headers: { 'Cache-Control': noStore }, schema: errorSchema })
