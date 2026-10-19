@@ -62,6 +62,7 @@ function canonicalToken(value: unknown): value is string {
 
 function parseSessionCookie(header: unknown): string | undefined {
   if (header === undefined || header === '') return undefined;
+  // eslint-disable-next-line no-control-regex -- Intentionally reject HTTP control characters while allowing horizontal tabs.
   if (typeof header !== 'string' || header.length > 16_384 || /[\u0000-\u0008\u000a-\u001f\u007f]/.test(header)) return undefined;
   let token: string | undefined;
   for (const part of header.split(';')) {
