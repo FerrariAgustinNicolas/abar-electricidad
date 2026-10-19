@@ -40,6 +40,18 @@ model AuthSession {
   @@index([idleExpiresAt])
 }
 
+model AdminUserAudit {
+  id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  actorAdminUserId   String   @db.Uuid
+  targetAdminUserId  String   @db.Uuid
+  action             String   @db.VarChar(32)
+  reason             String?  @db.VarChar(500)
+  createdAt          DateTime @default(now()) @db.Timestamptz(3)
+
+  @@index([targetAdminUserId, createdAt])
+  @@index([actorAdminUserId, createdAt])
+}
+
 model AuthPreAuthContext {
   id               String   @id @db.Char(64)
   nonceCiphertext  Bytes

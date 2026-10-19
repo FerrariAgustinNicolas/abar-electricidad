@@ -110,6 +110,7 @@ function canonicalToken(value: unknown): value is string {
   return decoded.length === 32 && decoded.toString('base64url') === value;
 }
 function cookieToken(header: unknown): string | undefined {
+  // eslint-disable-next-line no-control-regex -- Intentionally reject HTTP control characters while allowing horizontal tabs.
   if (typeof header !== 'string' || header.length > 16384 || /[\u0000-\u0008\u000a-\u001f\u007f]/.test(header)) {
     return undefined;
   }
