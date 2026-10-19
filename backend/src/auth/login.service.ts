@@ -4,6 +4,7 @@ import type { AuthConfig } from './auth.config';
 import type { CsrfNonceCipher } from './csrf-nonce.cipher';
 import type { PrismaService } from '../prisma/prisma.service';
 import { normalizeCredentialPassword, PasswordPolicyError } from './password-policy';
+import { validatePasswordPhc } from './password-hasher';
 
 export type LoginErrorCode =
   | 'VALIDATION_ERROR'
@@ -127,15 +128,8 @@ function canonicalToken(value: unknown): value is string {
 }
 
 function validPhc(value: unknown): value is string {
-  if (typeof value !== 'string' || value.length > 256 || [...value].some((ch) => ch.charCodeAt(0) > 0x7f)) return false;
-  const parts = value.split('$');
-  if (parts.length !== 6 || parts[0] !== '' || parts[1] !== 'argon2id' || parts[2] !== 'v=19' || parts[3] !== 'm=19456,t=2,p=1') return false;
-  const validPart = (part: string, bytes: number): boolean => {
-    if (!/^[A-Za-z0-9+/]+$/.test(part)) return false;
-    const decoded = Buffer.from(part, 'base64');
-    return decoded.length === bytes && decoded.toString('base64').replace(/=+$/, '') === part;
-  };
-  return validPart(parts[4], 16) && validPart(parts[5], 32);
+  try { validatePasswordPhc(value); return true; }
+  catch { return false; }
 }
 
 function hashToken(token: string): string {

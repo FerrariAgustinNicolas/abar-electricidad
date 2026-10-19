@@ -30,7 +30,7 @@ const numericSettings = {
 
 type NumericField = keyof typeof numericSettings;
 const knownSettings = new Set<string>([
-  'AUTH_ALLOWED_ORIGINS', 'AUTH_COOKIE_SECURE',
+  'AUTH_ALLOWED_ORIGINS', 'AUTH_COOKIE_SECURE', 'AUTH_CSRF_ENCRYPTION_KEY',
   ...Object.values(numericSettings).map(([name]) => name),
 ]);
 const localOrigins = ['http://127.0.0.1:4200', 'http://localhost:4200'];
