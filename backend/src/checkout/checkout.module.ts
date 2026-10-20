@@ -8,5 +8,6 @@ import { PublicCheckoutRateLimiter } from './public-checkout-rate-limiter';
   imports: [PrismaModule],
   controllers: [CheckoutController],
   providers: [CheckoutService, { provide: PublicCheckoutRateLimiter, useFactory: () => new PublicCheckoutRateLimiter() }],
+  exports: [CheckoutService, PublicCheckoutRateLimiter],
 })
 export class CheckoutModule {}

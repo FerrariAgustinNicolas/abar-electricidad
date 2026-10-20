@@ -22,6 +22,8 @@ import { CatalogController } from './catalog/catalog.controller';
 import { CatalogService } from './catalog/catalog.service';
 import { StockController } from './stock/stock.controller';
 import { StockService } from './stock/stock.service';
+import { OrdersController } from './orders/orders.controller';
+import { OrdersService } from './orders/orders.service';
 
 type JsonObject = Record<string, unknown>;
 type InterfaceDocument = {
@@ -55,15 +57,15 @@ function semantics(value: unknown, document: InterfaceDocument): unknown {
     .map((key) => [key, semantics(object[key], document)]));
 }
 
-describe('production Swagger projection of the frozen H1, H2 and H3 interface', () => {
+describe('production Swagger projection of the frozen H1-H4 interface', () => {
   let app: NestExpressApplication;
   let document: InterfaceDocument;
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      controllers: [AuthController, AdminUsersController, HealthController, CatalogController, StockController, CheckoutController],
+      controllers: [AuthController, AdminUsersController, HealthController, CatalogController, StockController, CheckoutController, OrdersController],
       providers: [CsrfService, LoginService, SessionService, LogoutService,
-        ChangePasswordService, AdminUsersService, HealthService, CatalogService, StockService, CheckoutService, PublicCheckoutRateLimiter]
+        ChangePasswordService, AdminUsersService, HealthService, CatalogService, StockService, CheckoutService, OrdersService, PublicCheckoutRateLimiter]
         .map((provide) => ({ provide, useValue: {} })),
     }).compile();
     app = module.createNestApplication<NestExpressApplication>();
@@ -76,7 +78,7 @@ describe('production Swagger projection of the frozen H1, H2 and H3 interface', 
 
   afterAll(async () => { if (app) await app.close(); });
 
-  it('keeps exactly the implemented H1, H2 and H3 routes and both cookie schemes', () => {
+  it('keeps exactly the implemented H1-H4 routes and all three security schemes', () => {
     expect(Object.keys(document.paths).sort()).toEqual(Object.keys(contract.paths).sort());
     expect(semantics(document.components.securitySchemes, document))
       .toEqual(semantics(contract.components.securitySchemes, contract));

@@ -47,7 +47,7 @@ export interface CatalogHome {
 export interface StockRow {
   presentationId: string; productId: string; productName: string; unit: PresentationUnit;
   rollLengthMeters: number | null; active: boolean; availableQuantity: number;
-  lowStockThreshold: number; version: number; availability: Availability;
+  lowStockThreshold: number; version: number; availability: Availability; requestedUnpaidQuantity?: number;
 }
 export interface StockEntryView { presentationId: string; delta: number; resultingQuantity: number; version: number }
 export interface StockOperationView {

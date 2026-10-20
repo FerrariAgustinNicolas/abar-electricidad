@@ -33,6 +33,17 @@ describe('AdminStockPageComponent', () => {
     expect(component.projected()).toEqual({ roll: 2, meter: 95 });
   });
 
+  it('shows requested unpaid demand separately from available stock in the admin table', async () => {
+    const fixture = TestBed.createComponent(AdminStockPageComponent);
+    await fixture.whenStable();
+    fixture.componentInstance.stock.set({ items: [{ presentationId: 'p-1', productId: 'product-1', productName: 'Cable', unit: 'METER', rollLengthMeters: null, active: true, availableQuantity: 3, requestedUnpaidQuantity: 7, lowStockThreshold: 1, version: 2, availability: 'AVAILABLE' }], pageInfo: { page: 1, pageSize: 20, totalItems: 1, totalPages: 1 } });
+    fixture.detectChanges();
+    const cells = [...fixture.nativeElement.querySelectorAll('tbody tr')][0].querySelectorAll('td');
+    expect(cells[2].textContent.trim()).toBe('3');
+    expect(cells[3].textContent.trim()).toBe('7');
+    expect(fixture.nativeElement.textContent).toContain('informativa');
+  });
+
   it('reuses the same idempotency key only for an explicit retry of the unchanged request', async () => {
     const fixture = TestBed.createComponent(AdminStockPageComponent);
     await fixture.whenStable();

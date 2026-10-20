@@ -1,4 +1,5 @@
 import { createHash, randomUUID } from 'node:crypto';
+import { isDeepStrictEqual } from 'node:util';
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '../generated/prisma/client';
 import { CatalogException } from '../catalog-shared/catalog-error';
@@ -30,6 +31,9 @@ const DEMO_ONLY = 'DEMO_PAYMENT_METHODS_ONLY';
 const unavailable = () => new CatalogException(503, 'SERVICE_UNAVAILABLE');
 const money = (amountMinor: bigint): Money => ({ amountMinor: amountMinor.toString(), currency: 'ARS' });
 const isObject = (value: unknown): value is Record<string, unknown> => value !== null && typeof value === 'object' && !Array.isArray(value);
+export function checkoutStateFingerprint(reference: object): string {
+  return createHash('sha256').update(JSON.stringify(reference)).digest('hex');
+}
 
 @Injectable()
 export class CheckoutService {
@@ -54,6 +58,13 @@ export class CheckoutService {
     const mode = deliveryMode as DeliveryMode;
     if (!policy.enabledDeliveryModes.includes(mode)) return { items: [] as DemoPaymentMethod[] };
     return { items: policy.paymentMethods.filter((method) => method.deliveryModes.includes(mode) && policy.enabledDeliveryModes.includes(mode)) };
+  }
+
+  async getOrderPaymentMethods(tx: Prisma.TransactionClient, deliveryMode: unknown, methodCode: unknown): Promise<boolean> {
+    if (typeof deliveryMode !== 'string' || !DELIVERY_MODES.has(deliveryMode) || typeof methodCode !== 'string' || !METHOD_CODES.has(methodCode)) return false;
+    const policy = await this.readPolicy(tx);
+    return policy.enabledDeliveryModes.includes(deliveryMode as DeliveryMode) &&
+      policy.paymentMethods.some((method) => method.code === methodCode && method.deliveryModes.includes(deliveryMode as DeliveryMode));
   }
 
   async createQuote(input: unknown): Promise<QuoteResponse> {
@@ -119,7 +130,7 @@ export class CheckoutService {
           deliveryFeeMinor: deliveryFeeMinor.toString(),
           items: items.map(({ _reference }) => _reference),
         };
-        const fingerprint = createHash('sha256').update(JSON.stringify(reference)).digest('hex');
+        const fingerprint = checkoutStateFingerprint(reference);
         const createdAt = new Date();
         const expiresAt = new Date(createdAt.getTime() + policy.quoteTtlSeconds * 1000);
         const response = {
@@ -139,6 +150,63 @@ export class CheckoutService {
       if (error instanceof CatalogException) throw error;
       throw unavailable();
     }
+  }
+
+  /** Revalidates a stored H3 quote inside the caller's order transaction without creating a quote. */
+  async revalidateOrderQuote(tx: Prisma.TransactionClient, raw: unknown): Promise<QuoteResponse> {
+    if (!isObject(raw) || !Array.isArray(raw.items) || raw.items.length < 1 || raw.items.length > MAX_LINES ||
+        (raw.deliveryMode !== 'PICKUP' && raw.deliveryMode !== 'COORDINATED') || !isObject(raw.paymentMethod) ||
+        typeof raw.stateFingerprint !== 'string') throw new CatalogException(409, 'QUOTE_CHANGED');
+    const policy = await this.readPolicy(tx);
+    const mode = raw.deliveryMode as DeliveryMode;
+    const methodCode = raw.paymentMethod.code;
+    if (!policy.enabledDeliveryModes.includes(mode)) throw new CatalogException(409, 'DELIVERY_UNAVAILABLE');
+    const method = policy.paymentMethods.find((entry) => entry.code === methodCode && entry.deliveryModes.includes(mode));
+    if (!method) throw new CatalogException(409, 'METHOD_UNAVAILABLE');
+    const ids: string[] = [];
+    const quantities = new Map<string, number>();
+    for (const item of raw.items) {
+      if (!isObject(item) || typeof item.presentationId !== 'string' || !/^[0-9a-f-]{36}$/i.test(item.presentationId) ||
+          !Number.isSafeInteger(item.quantity) || (item.quantity as number) < 1 || (item.quantity as number) > MAX_QUANTITY ||
+          quantities.has(item.presentationId.toLowerCase())) throw new CatalogException(409, 'QUOTE_CHANGED');
+      const id = item.presentationId.toLowerCase();
+      ids.push(id);
+      quantities.set(id, item.quantity as number);
+    }
+    if (ids.join(',') !== [...ids].sort().join(',')) throw new CatalogException(409, 'QUOTE_CHANGED');
+    const rows = await tx.productPresentation.findMany({ where: { id: { in: ids } }, include: { product: { include: { category: true } }, balance: true } });
+    const byId = new Map(rows.map((row) => [row.id, row]));
+    const items: QuoteItemView[] = [];
+    const refItems: object[] = [];
+    let subtotal = 0n;
+    for (const id of ids) {
+      const row = byId.get(id);
+      const quantity = quantities.get(id)!;
+      if (!row || !row.active || !row.product.active || !row.product.category.active) throw new CatalogException(409, 'PRODUCT_UNAVAILABLE');
+      if ((row.balance?.availableQuantity ?? 0) < quantity) throw new CatalogException(409, 'INSUFFICIENT_STOCK');
+      if (row.amountMinor < 0n || row.amountMinor > MAX_MINOR ||
+          (row.unit === 'ROLL' && (!Number.isSafeInteger(row.rollLengthMeters) || (row.rollLengthMeters ?? 0) < 1)) ||
+          (row.unit !== 'ROLL' && row.rollLengthMeters !== null)) throw unavailable();
+      const line = row.amountMinor * BigInt(quantity);
+      subtotal += line;
+      const item = { presentationId: row.id, productId: row.product.id, productSlug: row.product.slug, productName: row.product.name,
+        unit: row.unit, rollLengthMeters: row.rollLengthMeters, quantity, unitPrice: money(row.amountMinor), lineTotal: money(line) };
+      const saved = raw.items[items.length];
+      if (!isObject(saved) || !isDeepStrictEqual(saved, item)) throw new CatalogException(409, 'QUOTE_CHANGED');
+      items.push(item);
+      refItems.push({ presentationId: row.id, presentationVersion: row.version, unit: row.unit,
+        rollLengthMeters: row.rollLengthMeters, unitPriceMinor: row.amountMinor.toString(), productId: row.product.id,
+        productVersion: row.product.version, productSlug: row.product.slug, productName: row.product.name,
+        categoryId: row.product.category.id, categoryVersion: row.product.category.version });
+    }
+    const fee = mode === 'PICKUP' ? 0n : policy.feeMinor;
+    const reference = { policyVersion: policy.version, deliveryMode: mode, paymentMethodCode: method.code,
+      deliveryFeeMinor: fee.toString(), items: refItems };
+    if (checkoutStateFingerprint(reference) !== raw.stateFingerprint || raw.policyVersion !== policy.version ||
+        !isObject(raw.subtotal) || raw.subtotal.amountMinor !== subtotal.toString() ||
+        !isObject(raw.deliveryFee) || raw.deliveryFee.amountMinor !== fee.toString() ||
+        !isObject(raw.total) || raw.total.amountMinor !== (subtotal + fee).toString()) throw new CatalogException(409, 'QUOTE_CHANGED');
+    return raw as unknown as QuoteResponse;
   }
 
   private async readPolicy(tx: Prisma.TransactionClient | PrismaService = this.prisma): Promise<Policy> {

@@ -9,6 +9,7 @@ describe('StockService adjustment contract', () => {
     const presentationId = '00000000-0000-4000-8000-000000000002';
     const authPolicy = { authorizeCatalog: jest.fn().mockResolvedValue(auth) };
     const prisma = {
+      orderItem: { groupBy: jest.fn().mockResolvedValue([{ presentationId, _sum: { quantity: 5 } }]) },
       productPresentation: {
         findMany: jest.fn().mockResolvedValue([{ id: presentationId, productId: 'product', unit: 'METER', rollLengthMeters: null, active: true, lowStockThreshold: 2, balance: null, product: { name: 'Cable' } }]),
         count: jest.fn().mockResolvedValue(1),
@@ -19,9 +20,14 @@ describe('StockService adjustment contract', () => {
     expect(response.items).toEqual([{
       presentationId, productId: 'product', productName: 'Cable', unit: 'METER', rollLengthMeters: null,
       active: true, availableQuantity: 0, lowStockThreshold: 2, version: 1, availability: 'OUT_OF_STOCK',
+      requestedUnpaidQuantity: 5,
     }]);
     expect(prisma.productPresentation.findMany).toHaveBeenCalledTimes(1);
     expect(prisma.productPresentation.count).toHaveBeenCalledTimes(1);
+    expect(prisma.orderItem.groupBy).toHaveBeenCalledWith(expect.objectContaining({
+      by: ['presentationId'],
+      where: expect.objectContaining({ order: { is: { payment: { is: { status: { in: ['PENDING', 'REJECTED'] } } } } } }),
+    }));
     expect(prisma).not.toHaveProperty('stockBalance');
   });
 

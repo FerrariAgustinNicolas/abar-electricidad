@@ -3,7 +3,7 @@ info:
   title: ABAR Electricidad API — transversal candidate
   version: 0.7.0
   x-abar-h4-freeze: orders-demo-v1
-  x-abar-h4-runtime-stage: contract-frozen-runtime-pending
+  x-abar-h4-runtime-stage: implemented-local-verification-pending
   x-abar-h4-decisions:
     P02: user-confirmed-academic-no-commercial-expiry
     P03: user-confirmed-academic-buyer-and-versioned-demo-terms
@@ -16,14 +16,14 @@ info:
   x-abar-integrated-runtime-stage: h1
   x-abar-integrated-commit: 18c39e9b86b7b7bf45263fe5bad4fe77125a6386
   description: |
-    Single normative candidate contract, version 0.6.0. H3 cart/quote is frozen additively. H2 catalog/stock schemas are frozen;
+    Single normative candidate contract, version 0.7.0. H4 guest orders/demo attempts extend H3 additively. H2 catalog/stock schemas are frozen;
     local H2 implementation and bounded independent checks are recorded in H2-informe.md.
     External milestone audit remains pending; this metadata is not production approval. H1 authentication and
     administrative-user operations are integrated alongside GET /health at the
     commit identified above. No external approval or production readiness is implied.
     The h0 runtime marker and projected-area list are historical freeze metadata,
     retained for validator compatibility, not current runtime availability claims.
-    Later-milestone components, P01–P10 and buyer-field rules remain projected; H2 catalog/stock is implemented locally.
+    Historical H0 projected metadata below is retained; scoped H4 P02/P03 academic confirmations are explicit in x-abar-h4-decisions. H4 runtime awaits independent verification and external audit.
     All H1 responses use Cache-Control: no-store. No passwords, cookie values or runtime
     nonces are provided as examples. Required response headers use x-required: true.
     Cookie authentication does not replace Origin/CSRF checks. See docs/decisions/H1-auth.md.
