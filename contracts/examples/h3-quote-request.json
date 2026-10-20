@@ -1,0 +1,10 @@
+{
+  "items": [
+    {
+      "presentationId": "10000000-0000-4000-8000-000000000001",
+      "quantity": 2
+    }
+  ],
+  "deliveryMode": "PICKUP",
+  "paymentMethodCode": "DEMO_PAY_ON_PICKUP"
+}

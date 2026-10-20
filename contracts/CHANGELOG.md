@@ -27,3 +27,7 @@
 ## H0 — Base contractual anterior
 
 Según [H0-contract](../docs/decisions/H0-contract.md) y [H0-base](../docs/decisions/H0-base.md): OpenAPI 3.0.3, única operación `GET /health`, 200 tras SELECT 1 y 503 seguro; Swagger en `/api/docs`. Ejemplos health-ok, health-unavailable y money-ars; convenciones comerciales/áreas `/api/v1` proyectadas, no endpoints implementados. Dinero en minor units como string ARS, IDs opacos, errores uniformes y salvaguardas de inventario/pago candidatas. Rollout cerrado, reglas comerciales pendientes. No se inventa número de versión previo.
+
+## 0.6.0 — H3 cart/quote freeze
+
+Adds public demo settings, compatible payment-method discovery, and authoritative quote creation. Closed DTOs, exact ARS minor units, bounded quantities, snapshots/expiry and sanitized conflicts are frozen before parallel implementation. H1/H2 unchanged. No order/payment/reservation; external H3 audit pending.
