@@ -2,6 +2,14 @@
 
 [OpenAPI](openapi.yaml) es la única norma; las entradas documentan alcance, no aprobación externa ni disponibilidad productiva. No se asignan fechas o versiones históricas sin evidencia.
 
+## 0.5.0 — H2 catálogo/stock: contrato congelado, runtime pendiente
+
+- Extensión aditiva de 21 operaciones: catálogo público, administración de categorías/productos/galería, ajustes y apertura manual de rollos, más lecturas de imagen con control de visibilidad y sesión.
+- Presentaciones UNIT/METER/ROLL con saldos independientes, DTO público sin cantidades exactas, precios ARS en centavos como strings; edición de catálogo sin stock libre.
+- Idempotencia de movimientos, versiones esperadas, errores, filtros sobre la misma presentación, paginación y PNG local (5 MiB, 4096 px por eje, ocho imágenes) definidos antes del paralelismo.
+- Tres ejemplos ficticios nuevos, incluyendo apertura 3 ROLL/20 METER → 2 ROLL/120 METER. No se implementan H3–H5 ni se modifica el protocolo H1.
+- [Decisiones y límites de verificación](../docs/decisions/H2-contract.md). El validador conserva el cierre H1 y solo permite el allowlist H2 con su marcador explícito; runtime e integración todavía pendientes.
+
 ## Regularización post-merge H1 — 2026-10-19 (sin cambio de versión)
 
 - H1 integrado en main `18c39e9`: health y nueve operaciones auth/admin, con frontend administrativo y tres migraciones. La implementación no implica aprobación externa ni disponibilidad productiva.

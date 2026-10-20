@@ -1,14 +1,17 @@
 openapi: 3.0.3
 info:
   title: ABAR Electricidad API — transversal candidate
-  version: 0.4.0
+  version: 0.5.0
+  x-abar-h2-freeze: catalog-stock-v1
+  x-abar-h2-runtime-stage: pending
   x-abar-milestone: H1-contract-freeze
   x-abar-runtime-stage: h0
   # Legacy freeze markers above remain required by the integrated static validator.
   x-abar-integrated-runtime-stage: h1
   x-abar-integrated-commit: 18c39e9b86b7b7bf45263fe5bad4fe77125a6386
   description: |
-    Single normative candidate contract, version 0.4.0. H1 authentication and
+    Single normative candidate contract, version 0.5.0. H2 catalog/stock schemas are frozen;
+    implementation and independent verification remain pending. H1 authentication and
     administrative-user operations are integrated alongside GET /health at the
     commit identified above. No external approval or production readiness is implied.
     The h0 runtime marker and projected-area list are historical freeze metadata,
@@ -23,6 +26,12 @@ info:
     - /api/v1/auth
     - /api/v1/admin
   x-abar-examples:
+    - file: examples/h2-product.json
+      schema: ProductDetail
+    - file: examples/h2-product-write.json
+      schema: ProductWrite
+    - file: examples/h2-roll-opening.json
+      schema: StockOperationView
     - file: examples/health-ok.json
       schema: HealthOk
     - file: examples/health-unavailable.json
@@ -42,6 +51,10 @@ servers:
     description: Local development only; production transport must use HTTPS.
 security: []
 tags:
+  - name: catalog-public
+    description: Frozen H2 public catalog; no exact stock balances.
+  - name: catalog-admin
+    description: Frozen H2 catalog and stock; H1 session and CSRF.
   - name: operational
     description: Implemented operational endpoint, outside the commercial /api/v1 prefix.
   - name: projected
@@ -399,6 +412,1950 @@ paths:
         '403': {$ref: '#/components/responses/Forbidden'}
         '404': {$ref: '#/components/responses/NotFound'}
         '503': {$ref: '#/components/responses/Unavailable'}
+  /api/v1/public/home:
+    get:
+      tags:
+        - catalog-public
+      operationId: getPublicHome
+      summary: GET public/home
+      security: []
+      parameters: []
+      responses:
+        "200":
+          description: Frozen H2 response; no H3-H5 behavior.
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CatalogHome"
+        "400":
+          description: "400: VALIDATION_ERROR"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: "503: SERVICE_UNAVAILABLE"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "503":
+          - SERVICE_UNAVAILABLE
+  /api/v1/public/categories:
+    get:
+      tags:
+        - catalog-public
+      operationId: getPublicCategories
+      summary: GET public/categories
+      security: []
+      parameters: []
+      responses:
+        "200":
+          description: Frozen H2 response; no H3-H5 behavior.
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicCategoryList"
+        "400":
+          description: "400: VALIDATION_ERROR"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: "503: SERVICE_UNAVAILABLE"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "503":
+          - SERVICE_UNAVAILABLE
+  /api/v1/public/products:
+    get:
+      tags:
+        - catalog-public
+      operationId: getPublicProducts
+      summary: GET public/products
+      security: []
+      parameters:
+        - name: q
+          in: query
+          required: false
+          description: Case-insensitive literal substring in product name, brand, SKU, descriptions or attribute
+            keys/values. No regex or wildcard execution.
+          schema:
+            type: string
+            maxLength: 200
+        - name: categoryId
+          in: query
+          required: false
+          description: Exact category.
+          schema:
+            $ref: "#/components/schemas/OpaqueId"
+        - name: availability
+          in: query
+          required: false
+          description: Presentation-specific state.
+          schema:
+            $ref: "#/components/schemas/Availability"
+        - name: unit
+          in: query
+          required: false
+          description: Match the same presentation as price and availability.
+          schema:
+            $ref: "#/components/schemas/PresentationUnit"
+        - name: minPriceMinor
+          in: query
+          required: false
+          description: Inclusive ARS minor units, signed-bigint bound.
+          schema:
+            type: string
+            pattern: ^(0|[1-9][0-9]*)$
+        - name: maxPriceMinor
+          in: query
+          required: false
+          description: Inclusive upper bound; must be >= minimum.
+          schema:
+            type: string
+            pattern: ^(0|[1-9][0-9]*)$
+        - name: sort
+          in: query
+          required: false
+          description: Sort by display presentation price, or product name; ID is the stable tiebreaker.
+          schema:
+            type: string
+            enum:
+              - name-asc
+              - name-desc
+              - price-asc
+              - price-desc
+            default: name-asc
+        - name: page
+          in: query
+          required: false
+          description: Page number.
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: pageSize
+          in: query
+          required: false
+          description: Page size.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        "200":
+          description: Frozen H2 response; no H3-H5 behavior.
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductList"
+        "400":
+          description: "400: VALIDATION_ERROR"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: "503: SERVICE_UNAVAILABLE"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "503":
+          - SERVICE_UNAVAILABLE
+  /api/v1/public/products/{slug}:
+    get:
+      tags:
+        - catalog-public
+      operationId: getPublicProductsSlug
+      summary: GET public/products/{slug}
+      security: []
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          description: Opaque resource selector.
+          schema:
+            type: string
+            pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
+            maxLength: 120
+      responses:
+        "200":
+          description: Frozen H2 response; no H3-H5 behavior.
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductDetail"
+        "400":
+          description: "400: VALIDATION_ERROR"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: "404: RESOURCE_NOT_FOUND"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: "503: SERVICE_UNAVAILABLE"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "404":
+          - RESOURCE_NOT_FOUND
+        "503":
+          - SERVICE_UNAVAILABLE
+  /api/v1/public/products/{slug}/images/{imageId}:
+    get:
+      tags:
+        - catalog-public
+      operationId: getPublicProductsSlugImagesImageId
+      summary: GET public/products/{slug}/images/{imageId}
+      security: []
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          description: Opaque resource selector.
+          schema:
+            type: string
+            pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
+            maxLength: 120
+        - name: imageId
+          in: path
+          required: true
+          description: Opaque resource selector.
+          schema:
+            $ref: "#/components/schemas/OpaqueId"
+      responses:
+        "200":
+          description: Validated visible PNG bytes; no host path disclosure.
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+        "400":
+          description: "400: VALIDATION_ERROR"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: "404: RESOURCE_NOT_FOUND"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: "503: SERVICE_UNAVAILABLE"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "404":
+          - RESOURCE_NOT_FOUND
+        "503":
+          - SERVICE_UNAVAILABLE
+  /api/v1/admin/categories:
+    get:
+      tags:
+        - catalog-admin
+      operationId: getAdminCategories
+      summary: GET admin/categories
+      security:
+        - AdminSessionCookie: []
+      parameters:
+        - name: q
+          in: query
+          required: false
+          description: Name or slug literal substring.
+          schema:
+            type: string
+            maxLength: 200
+        - name: active
+          in: query
+          required: false
+          description: Filter logical state.
+          schema:
+            type: string
+            enum:
+              - "true"
+              - "false"
+      responses:
+        "200":
+          description: Frozen H2 response; no H3-H5 behavior.
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CategoryList"
+        "400":
+          description: "400: VALIDATION_ERROR"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: "401: SESSION_EXPIRED"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: "403: PASSWORD_CHANGE_REQUIRED"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: "503: SERVICE_UNAVAILABLE"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+        "503":
+          - SERVICE_UNAVAILABLE
+    post:
+      tags:
+        - catalog-admin
+      operationId: postAdminCategories
+      summary: POST admin/categories
+      security:
+        - AdminSessionCookie: []
+      parameters:
+        - $ref: "#/components/parameters/Origin"
+        - $ref: "#/components/parameters/CsrfToken"
+      responses:
+        "201":
+          description: Frozen H2 response; no H3-H5 behavior.
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+        "400":
+          description: "400: VALIDATION_ERROR"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: "401: SESSION_EXPIRED"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: "403: PASSWORD_CHANGE_REQUIRED, ORIGIN_INVALID, CSRF_INVALID"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: "409: SLUG_IN_USE"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: "503: SERVICE_UNAVAILABLE"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+          - ORIGIN_INVALID
+          - CSRF_INVALID
+        "409":
+          - SLUG_IN_USE
+        "503":
+          - SERVICE_UNAVAILABLE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoryWrite"
+  /api/v1/admin/categories/{id}:
+    patch:
+      tags:
+        - catalog-admin
+      operationId: patchAdminCategoriesId
+      summary: PATCH admin/categories/{id}
+      security:
+        - AdminSessionCookie: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Opaque resource selector.
+          schema:
+            $ref: "#/components/schemas/OpaqueId"
+        - $ref: "#/components/parameters/Origin"
+        - $ref: "#/components/parameters/CsrfToken"
+      responses:
+        "200":
+          description: Frozen H2 response; no H3-H5 behavior.
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+        "400":
+          description: "400: VALIDATION_ERROR"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: "401: SESSION_EXPIRED"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: "403: PASSWORD_CHANGE_REQUIRED, ORIGIN_INVALID, CSRF_INVALID"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: "404: RESOURCE_NOT_FOUND"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: "409: SLUG_IN_USE, CATEGORY_HAS_ACTIVE_PRODUCTS, VERSION_CONFLICT"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: "503: SERVICE_UNAVAILABLE"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+          - ORIGIN_INVALID
+          - CSRF_INVALID
+        "404":
+          - RESOURCE_NOT_FOUND
+        "409":
+          - SLUG_IN_USE
+          - CATEGORY_HAS_ACTIVE_PRODUCTS
+          - VERSION_CONFLICT
+        "503":
+          - SERVICE_UNAVAILABLE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoryPatch"
+  /api/v1/admin/categories/order:
+    patch:
+      tags:
+        - catalog-admin
+      operationId: patchAdminCategoriesOrder
+      summary: PATCH admin/categories/order
+      security:
+        - AdminSessionCookie: []
+      parameters:
+        - $ref: "#/components/parameters/Origin"
+        - $ref: "#/components/parameters/CsrfToken"
+      responses:
+        "200":
+          description: Frozen H2 response; no H3-H5 behavior.
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CategoryList"
+        "400":
+          description: "400: VALIDATION_ERROR"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: "401: SESSION_EXPIRED"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: "403: PASSWORD_CHANGE_REQUIRED, ORIGIN_INVALID, CSRF_INVALID"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: "409: CATEGORY_SET_CHANGED, VERSION_CONFLICT"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: "503: SERVICE_UNAVAILABLE"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+          - ORIGIN_INVALID
+          - CSRF_INVALID
+        "409":
+          - CATEGORY_SET_CHANGED
+          - VERSION_CONFLICT
+        "503":
+          - SERVICE_UNAVAILABLE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoryOrderRequest"
+  /api/v1/admin/products:
+    get:
+      tags:
+        - catalog-admin
+      operationId: getAdminProducts
+      summary: GET admin/products
+      security:
+        - AdminSessionCookie: []
+      parameters:
+        - name: q
+          in: query
+          required: false
+          description: Case-insensitive literal substring in product name, brand, SKU, descriptions or attribute
+            keys/values. No regex or wildcard execution.
+          schema:
+            type: string
+            maxLength: 200
+        - name: categoryId
+          in: query
+          required: false
+          description: Exact category.
+          schema:
+            $ref: "#/components/schemas/OpaqueId"
+        - name: availability
+          in: query
+          required: false
+          description: Presentation-specific state.
+          schema:
+            $ref: "#/components/schemas/Availability"
+        - name: unit
+          in: query
+          required: false
+          description: Match the same presentation as price and availability.
+          schema:
+            $ref: "#/components/schemas/PresentationUnit"
+        - name: minPriceMinor
+          in: query
+          required: false
+          description: Inclusive ARS minor units, signed-bigint bound.
+          schema:
+            type: string
+            pattern: ^(0|[1-9][0-9]*)$
+        - name: maxPriceMinor
+          in: query
+          required: false
+          description: Inclusive upper bound; must be >= minimum.
+          schema:
+            type: string
+            pattern: ^(0|[1-9][0-9]*)$
+        - name: sort
+          in: query
+          required: false
+          description: Sort by display presentation price, or product name; ID is the stable tiebreaker.
+          schema:
+            type: string
+            enum:
+              - name-asc
+              - name-desc
+              - price-asc
+              - price-desc
+            default: name-asc
+        - name: page
+          in: query
+          required: false
+          description: Page number.
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: pageSize
+          in: query
+          required: false
+          description: Page size.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: active
+          in: query
+          required: false
+          description: Filter logical state.
+          schema:
+            type: string
+            enum:
+              - "true"
+              - "false"
+      responses:
+        "200":
+          description: Frozen H2 response; no H3-H5 behavior.
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminProductList"
+        "400":
+          description: "400: VALIDATION_ERROR"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: "401: SESSION_EXPIRED"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: "403: PASSWORD_CHANGE_REQUIRED"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: "503: SERVICE_UNAVAILABLE"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+        "503":
+          - SERVICE_UNAVAILABLE
+    post:
+      tags:
+        - catalog-admin
+      operationId: postAdminProducts
+      summary: POST admin/products
+      security:
+        - AdminSessionCookie: []
+      parameters:
+        - $ref: "#/components/parameters/Origin"
+        - $ref: "#/components/parameters/CsrfToken"
+      responses:
+        "201":
+          description: Frozen H2 response; no H3-H5 behavior.
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminProduct"
+        "400":
+          description: "400: VALIDATION_ERROR, INVALID_PRESENTATION"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: "401: SESSION_EXPIRED"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: "403: PASSWORD_CHANGE_REQUIRED, ORIGIN_INVALID, CSRF_INVALID"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: "409: SKU_IN_USE, SLUG_IN_USE"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: "503: SERVICE_UNAVAILABLE"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+          - INVALID_PRESENTATION
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+          - ORIGIN_INVALID
+          - CSRF_INVALID
+        "409":
+          - SKU_IN_USE
+          - SLUG_IN_USE
+        "503":
+          - SERVICE_UNAVAILABLE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductWrite"
+  /api/v1/admin/products/{id}:
+    get:
+      tags:
+        - catalog-admin
+      operationId: getAdminProductsId
+      summary: GET admin/products/{id}
+      security:
+        - AdminSessionCookie: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Opaque resource selector.
+          schema:
+            $ref: "#/components/schemas/OpaqueId"
+      responses:
+        "200":
+          description: Frozen H2 response; no H3-H5 behavior.
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminProduct"
+        "400":
+          description: "400: VALIDATION_ERROR"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: "401: SESSION_EXPIRED"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: "403: PASSWORD_CHANGE_REQUIRED"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: "404: RESOURCE_NOT_FOUND"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: "503: SERVICE_UNAVAILABLE"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+        "404":
+          - RESOURCE_NOT_FOUND
+        "503":
+          - SERVICE_UNAVAILABLE
+    patch:
+      tags:
+        - catalog-admin
+      operationId: patchAdminProductsId
+      summary: PATCH admin/products/{id}
+      security:
+        - AdminSessionCookie: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Opaque resource selector.
+          schema:
+            $ref: "#/components/schemas/OpaqueId"
+        - $ref: "#/components/parameters/Origin"
+        - $ref: "#/components/parameters/CsrfToken"
+      responses:
+        "200":
+          description: Frozen H2 response; no H3-H5 behavior.
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminProduct"
+        "400":
+          description: "400: VALIDATION_ERROR, INVALID_PRESENTATION"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: "401: SESSION_EXPIRED"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: "403: PASSWORD_CHANGE_REQUIRED, ORIGIN_INVALID, CSRF_INVALID"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: "404: RESOURCE_NOT_FOUND"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: "409: SKU_IN_USE, SLUG_IN_USE, PRESENTATION_IMMUTABLE, VERSION_CONFLICT"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: "503: SERVICE_UNAVAILABLE"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+          - INVALID_PRESENTATION
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+          - ORIGIN_INVALID
+          - CSRF_INVALID
+        "404":
+          - RESOURCE_NOT_FOUND
+        "409":
+          - SKU_IN_USE
+          - SLUG_IN_USE
+          - PRESENTATION_IMMUTABLE
+          - VERSION_CONFLICT
+        "503":
+          - SERVICE_UNAVAILABLE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductPatch"
+  /api/v1/admin/products/{id}/images:
+    post:
+      tags:
+        - catalog-admin
+      operationId: postAdminProductsIdImages
+      summary: POST admin/products/{id}/images
+      security:
+        - AdminSessionCookie: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Opaque resource selector.
+          schema:
+            $ref: "#/components/schemas/OpaqueId"
+        - $ref: "#/components/parameters/Origin"
+        - $ref: "#/components/parameters/CsrfToken"
+      responses:
+        "201":
+          description: Frozen H2 response; no H3-H5 behavior.
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminProduct"
+        "400":
+          description: "400: VALIDATION_ERROR, INVALID_IMAGE"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: "401: SESSION_EXPIRED"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: "403: PASSWORD_CHANGE_REQUIRED, ORIGIN_INVALID, CSRF_INVALID"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: "404: RESOURCE_NOT_FOUND"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: "409: VERSION_CONFLICT, IMAGE_LIMIT_REACHED"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "413":
+          description: "413: IMAGE_TOO_LARGE"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "415":
+          description: "415: UNSUPPORTED_IMAGE_TYPE"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: "503: SERVICE_UNAVAILABLE"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+          - INVALID_IMAGE
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+          - ORIGIN_INVALID
+          - CSRF_INVALID
+        "404":
+          - RESOURCE_NOT_FOUND
+        "409":
+          - VERSION_CONFLICT
+          - IMAGE_LIMIT_REACHED
+        "413":
+          - IMAGE_TOO_LARGE
+        "415":
+          - UNSUPPORTED_IMAGE_TYPE
+        "503":
+          - SERVICE_UNAVAILABLE
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/ImageUpload"
+  /api/v1/admin/products/{id}/images/{imageId}:
+    get:
+      tags:
+        - catalog-admin
+      operationId: getAdminProductsIdImagesImageId
+      summary: GET admin/products/{id}/images/{imageId}
+      security:
+        - AdminSessionCookie: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Opaque resource selector.
+          schema:
+            $ref: "#/components/schemas/OpaqueId"
+        - name: imageId
+          in: path
+          required: true
+          description: Opaque resource selector.
+          schema:
+            $ref: "#/components/schemas/OpaqueId"
+      responses:
+        "200":
+          description: Validated visible PNG bytes; no host path disclosure.
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+        "400":
+          description: "400: VALIDATION_ERROR"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: "401: SESSION_EXPIRED"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: "403: PASSWORD_CHANGE_REQUIRED"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: "404: RESOURCE_NOT_FOUND"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: "503: SERVICE_UNAVAILABLE"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+        "404":
+          - RESOURCE_NOT_FOUND
+        "503":
+          - SERVICE_UNAVAILABLE
+    patch:
+      tags:
+        - catalog-admin
+      operationId: patchAdminProductsIdImagesImageId
+      summary: PATCH admin/products/{id}/images/{imageId}
+      security:
+        - AdminSessionCookie: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Opaque resource selector.
+          schema:
+            $ref: "#/components/schemas/OpaqueId"
+        - name: imageId
+          in: path
+          required: true
+          description: Opaque resource selector.
+          schema:
+            $ref: "#/components/schemas/OpaqueId"
+        - $ref: "#/components/parameters/Origin"
+        - $ref: "#/components/parameters/CsrfToken"
+      responses:
+        "200":
+          description: Frozen H2 response; no H3-H5 behavior.
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminProduct"
+        "400":
+          description: "400: VALIDATION_ERROR, INVALID_PRESENTATION"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: "401: SESSION_EXPIRED"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: "403: PASSWORD_CHANGE_REQUIRED, ORIGIN_INVALID, CSRF_INVALID"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: "404: RESOURCE_NOT_FOUND"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: "409: VERSION_CONFLICT, IMAGE_LIMIT_REACHED"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: "503: SERVICE_UNAVAILABLE"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+          - INVALID_PRESENTATION
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+          - ORIGIN_INVALID
+          - CSRF_INVALID
+        "404":
+          - RESOURCE_NOT_FOUND
+        "409":
+          - VERSION_CONFLICT
+          - IMAGE_LIMIT_REACHED
+        "503":
+          - SERVICE_UNAVAILABLE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ImagePatch"
+    delete:
+      tags:
+        - catalog-admin
+      operationId: deleteAdminProductsIdImagesImageId
+      summary: DELETE admin/products/{id}/images/{imageId}
+      security:
+        - AdminSessionCookie: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Opaque resource selector.
+          schema:
+            $ref: "#/components/schemas/OpaqueId"
+        - name: imageId
+          in: path
+          required: true
+          description: Opaque resource selector.
+          schema:
+            $ref: "#/components/schemas/OpaqueId"
+        - $ref: "#/components/parameters/Origin"
+        - $ref: "#/components/parameters/CsrfToken"
+        - name: expectedVersion
+          in: query
+          required: true
+          description: Current product version.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+      responses:
+        "200":
+          description: Frozen H2 response; no H3-H5 behavior.
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminProduct"
+        "400":
+          description: "400: VALIDATION_ERROR, INVALID_PRESENTATION"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: "401: SESSION_EXPIRED"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: "403: PASSWORD_CHANGE_REQUIRED, ORIGIN_INVALID, CSRF_INVALID"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: "404: RESOURCE_NOT_FOUND"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: "409: VERSION_CONFLICT, IMAGE_LIMIT_REACHED"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: "503: SERVICE_UNAVAILABLE"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+          - INVALID_PRESENTATION
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+          - ORIGIN_INVALID
+          - CSRF_INVALID
+        "404":
+          - RESOURCE_NOT_FOUND
+        "409":
+          - VERSION_CONFLICT
+          - IMAGE_LIMIT_REACHED
+        "503":
+          - SERVICE_UNAVAILABLE
+  /api/v1/admin/stock:
+    get:
+      tags:
+        - catalog-admin
+      operationId: getAdminStock
+      summary: GET admin/stock
+      security:
+        - AdminSessionCookie: []
+      parameters:
+        - name: page
+          in: query
+          required: false
+          description: Page number.
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: pageSize
+          in: query
+          required: false
+          description: Page size.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: q
+          in: query
+          required: false
+          description: Product name, SKU or brand.
+          schema:
+            type: string
+            maxLength: 200
+        - name: productId
+          in: query
+          required: false
+          description: Product filter.
+          schema:
+            $ref: "#/components/schemas/OpaqueId"
+        - name: unit
+          in: query
+          required: false
+          description: Presentation unit.
+          schema:
+            $ref: "#/components/schemas/PresentationUnit"
+        - name: availability
+          in: query
+          required: false
+          description: Presentation state.
+          schema:
+            $ref: "#/components/schemas/Availability"
+      responses:
+        "200":
+          description: Frozen H2 response; no H3-H5 behavior.
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockList"
+        "400":
+          description: "400: VALIDATION_ERROR"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: "401: SESSION_EXPIRED"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: "403: PASSWORD_CHANGE_REQUIRED"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: "503: SERVICE_UNAVAILABLE"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+        "503":
+          - SERVICE_UNAVAILABLE
+  /api/v1/admin/stock/movements:
+    get:
+      tags:
+        - catalog-admin
+      operationId: getAdminStockMovements
+      summary: GET admin/stock/movements
+      security:
+        - AdminSessionCookie: []
+      parameters:
+        - name: page
+          in: query
+          required: false
+          description: Page number.
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: pageSize
+          in: query
+          required: false
+          description: Page size.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: presentationId
+          in: query
+          required: false
+          description: Includes operations affecting this presentation.
+          schema:
+            $ref: "#/components/schemas/OpaqueId"
+        - name: productId
+          in: query
+          required: false
+          description: Operations for this product.
+          schema:
+            $ref: "#/components/schemas/OpaqueId"
+        - name: type
+          in: query
+          required: false
+          description: Operation type.
+          schema:
+            type: string
+            enum:
+              - ADJUSTMENT
+              - ROLL_OPENING
+        - name: actorAdminUserId
+          in: query
+          required: false
+          description: Administrator filter.
+          schema:
+            $ref: "#/components/schemas/OpaqueId"
+        - name: from
+          in: query
+          required: false
+          description: Inclusive UTC start.
+          schema:
+            $ref: "#/components/schemas/UtcDateTime"
+        - name: to
+          in: query
+          required: false
+          description: Inclusive UTC end.
+          schema:
+            $ref: "#/components/schemas/UtcDateTime"
+      responses:
+        "200":
+          description: Frozen H2 response; no H3-H5 behavior.
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockOperationList"
+        "400":
+          description: "400: VALIDATION_ERROR"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: "401: SESSION_EXPIRED"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: "403: PASSWORD_CHANGE_REQUIRED"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: "503: SERVICE_UNAVAILABLE"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+        "503":
+          - SERVICE_UNAVAILABLE
+  /api/v1/admin/stock/adjustments:
+    post:
+      tags:
+        - catalog-admin
+      operationId: postAdminStockAdjustments
+      summary: POST admin/stock/adjustments
+      security:
+        - AdminSessionCookie: []
+      parameters:
+        - $ref: "#/components/parameters/Origin"
+        - $ref: "#/components/parameters/CsrfToken"
+        - name: Idempotency-Key
+          in: header
+          required: true
+          description: Scoped to authenticated administrator across both stock operations. Same canonical request
+            replays original response including versions, before stale-version checking. Different request/type
+            conflicts with 409. Retained with audit indefinitely in H2.
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 200
+            pattern: ^[A-Za-z0-9._:-]+$
+      responses:
+        "201":
+          description: Frozen H2 response; no H3-H5 behavior.
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockOperationView"
+        "400":
+          description: "400: VALIDATION_ERROR"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: "401: SESSION_EXPIRED"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: "403: PASSWORD_CHANGE_REQUIRED, ORIGIN_INVALID, CSRF_INVALID"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: "409: INSUFFICIENT_STOCK, VERSION_CONFLICT, IDEMPOTENCY_CONFLICT"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: "503: SERVICE_UNAVAILABLE"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+          - ORIGIN_INVALID
+          - CSRF_INVALID
+        "409":
+          - INSUFFICIENT_STOCK
+          - VERSION_CONFLICT
+          - IDEMPOTENCY_CONFLICT
+        "503":
+          - SERVICE_UNAVAILABLE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StockAdjustmentRequest"
+  /api/v1/admin/stock/roll-openings:
+    post:
+      tags:
+        - catalog-admin
+      operationId: postAdminStockRollopenings
+      summary: POST admin/stock/roll-openings
+      security:
+        - AdminSessionCookie: []
+      parameters:
+        - $ref: "#/components/parameters/Origin"
+        - $ref: "#/components/parameters/CsrfToken"
+        - name: Idempotency-Key
+          in: header
+          required: true
+          description: Scoped to authenticated administrator across both stock operations. Same canonical request
+            replays original response including versions, before stale-version checking. Different request/type
+            conflicts with 409. Retained with audit indefinitely in H2.
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 200
+            pattern: ^[A-Za-z0-9._:-]+$
+      responses:
+        "201":
+          description: Frozen H2 response; no H3-H5 behavior.
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockOperationView"
+        "400":
+          description: "400: VALIDATION_ERROR, INVALID_ROLL_CONFIGURATION"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: "401: SESSION_EXPIRED"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: "403: PASSWORD_CHANGE_REQUIRED, ORIGIN_INVALID, CSRF_INVALID"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: "409: INSUFFICIENT_ROLLS, VERSION_CONFLICT, IDEMPOTENCY_CONFLICT"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: "503: SERVICE_UNAVAILABLE"
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/NoStore"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+          - INVALID_ROLL_CONFIGURATION
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+          - ORIGIN_INVALID
+          - CSRF_INVALID
+        "409":
+          - INSUFFICIENT_ROLLS
+          - VERSION_CONFLICT
+          - IDEMPOTENCY_CONFLICT
+        "503":
+          - SERVICE_UNAVAILABLE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RollOpeningRequest"
 components:
   securitySchemes:
     AdminSessionCookie:
@@ -815,6 +2772,1022 @@ components:
         changes and simulated outcomes never debit. No such operation is implemented in H0.
       properties: {}
       additionalProperties: false
+    Availability:
+      type: string
+      enum:
+        - AVAILABLE
+        - LOW_STOCK
+        - OUT_OF_STOCK
+      description: "Derived per presentation: zero => OUT_OF_STOCK; 1..threshold => LOW_STOCK; otherwise AVAILABLE.
+        Public responses never include an exact balance."
+    PublicCategory:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - slug
+        - description
+        - order
+      properties:
+        id:
+          $ref: "#/components/schemas/OpaqueId"
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        slug:
+          type: string
+          pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
+          maxLength: 120
+        description:
+          type: string
+          maxLength: 1000
+        order:
+          type: integer
+          minimum: 0
+          maximum: 2147483647
+    Category:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - slug
+        - description
+        - order
+        - active
+        - version
+      properties:
+        id:
+          $ref: "#/components/schemas/OpaqueId"
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        slug:
+          type: string
+          pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
+          maxLength: 120
+        description:
+          type: string
+          maxLength: 1000
+        order:
+          type: integer
+          minimum: 0
+          maximum: 2147483647
+        active:
+          type: boolean
+        version:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+    CategoryWrite:
+      type: object
+      additionalProperties: false
+      required:
+        - name
+        - slug
+        - description
+        - active
+        - order
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        slug:
+          type: string
+          pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
+          maxLength: 120
+        description:
+          type: string
+          maxLength: 1000
+        active:
+          type: boolean
+        order:
+          type: integer
+          minimum: 0
+          maximum: 2147483647
+    CategoryPatch:
+      type: object
+      additionalProperties: false
+      required:
+        - expectedVersion
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        slug:
+          type: string
+          pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
+          maxLength: 120
+        description:
+          type: string
+          maxLength: 1000
+        active:
+          type: boolean
+        order:
+          type: integer
+          minimum: 0
+          maximum: 2147483647
+        expectedVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+      minProperties: 2
+    CategoryOrderRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          maxItems: 1000
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - id
+              - expectedVersion
+            properties:
+              id:
+                $ref: "#/components/schemas/OpaqueId"
+              expectedVersion:
+                type: integer
+                minimum: 1
+                maximum: 2147483647
+          minItems: 1
+    PublicCategoryList:
+      type: object
+      additionalProperties: false
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          maxItems: 1000
+          items:
+            $ref: "#/components/schemas/PublicCategory"
+    CategoryList:
+      type: object
+      additionalProperties: false
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          maxItems: 1000
+          items:
+            $ref: "#/components/schemas/Category"
+    ProductImageView:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - url
+        - alt
+        - order
+        - isPrimary
+      properties:
+        id:
+          $ref: "#/components/schemas/OpaqueId"
+        url:
+          type: string
+          pattern: ^/api/v1/(public|admin)/products/
+          maxLength: 500
+        alt:
+          type: string
+          minLength: 1
+          maxLength: 200
+        order:
+          type: integer
+          minimum: 0
+          maximum: 7
+        isPrimary:
+          type: boolean
+    PublicPresentation:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - unit
+        - rollLengthMeters
+        - price
+        - availability
+        - sellable
+      properties:
+        id:
+          $ref: "#/components/schemas/OpaqueId"
+        unit:
+          $ref: "#/components/schemas/PresentationUnit"
+        rollLengthMeters:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+          nullable: true
+        price:
+          $ref: "#/components/schemas/Money"
+        availability:
+          $ref: "#/components/schemas/Availability"
+        sellable:
+          type: boolean
+    AdminPresentation:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - unit
+        - rollLengthMeters
+        - price
+        - availability
+        - sellable
+        - lowStockThreshold
+        - active
+        - isDefault
+        - version
+        - availableQuantity
+        - stockVersion
+      properties:
+        id:
+          $ref: "#/components/schemas/OpaqueId"
+        unit:
+          $ref: "#/components/schemas/PresentationUnit"
+        rollLengthMeters:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+          nullable: true
+        price:
+          $ref: "#/components/schemas/Money"
+        availability:
+          $ref: "#/components/schemas/Availability"
+        sellable:
+          type: boolean
+        lowStockThreshold:
+          type: integer
+          minimum: 0
+          maximum: 2147483647
+        active:
+          type: boolean
+        isDefault:
+          type: boolean
+        version:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        availableQuantity:
+          type: integer
+          minimum: 0
+          maximum: 2147483647
+        stockVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+    PresentationWrite:
+      oneOf:
+        - type: object
+          additionalProperties: false
+          required:
+            - unit
+            - price
+            - lowStockThreshold
+            - active
+            - isDefault
+          properties:
+            id:
+              $ref: "#/components/schemas/OpaqueId"
+            unit:
+              type: string
+              enum:
+                - UNIT
+            price:
+              $ref: "#/components/schemas/Money"
+            lowStockThreshold:
+              type: integer
+              minimum: 0
+              maximum: 2147483647
+            active:
+              type: boolean
+            isDefault:
+              type: boolean
+        - type: object
+          additionalProperties: false
+          required:
+            - unit
+            - price
+            - lowStockThreshold
+            - active
+            - isDefault
+          properties:
+            id:
+              $ref: "#/components/schemas/OpaqueId"
+            unit:
+              type: string
+              enum:
+                - METER
+            price:
+              $ref: "#/components/schemas/Money"
+            lowStockThreshold:
+              type: integer
+              minimum: 0
+              maximum: 2147483647
+            active:
+              type: boolean
+            isDefault:
+              type: boolean
+        - type: object
+          additionalProperties: false
+          required:
+            - unit
+            - price
+            - lowStockThreshold
+            - active
+            - isDefault
+            - rollLengthMeters
+          properties:
+            id:
+              $ref: "#/components/schemas/OpaqueId"
+            unit:
+              type: string
+              enum:
+                - ROLL
+            price:
+              $ref: "#/components/schemas/Money"
+            lowStockThreshold:
+              type: integer
+              minimum: 0
+              maximum: 2147483647
+            active:
+              type: boolean
+            isDefault:
+              type: boolean
+            rollLengthMeters:
+              type: integer
+              minimum: 1
+              maximum: 2147483647
+    ProductWrite:
+      type: object
+      additionalProperties: false
+      required:
+        - name
+        - slug
+        - categoryId
+        - brand
+        - sku
+        - shortDescription
+        - description
+        - attributes
+        - active
+        - featured
+        - presentations
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+        slug:
+          type: string
+          pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
+          maxLength: 120
+        categoryId:
+          $ref: "#/components/schemas/OpaqueId"
+        brand:
+          type: string
+          maxLength: 100
+          nullable: true
+        sku:
+          type: string
+          minLength: 1
+          maxLength: 100
+          nullable: true
+        shortDescription:
+          type: string
+          maxLength: 500
+        description:
+          type: string
+          maxLength: 10000
+        attributes:
+          type: array
+          maxItems: 40
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - key
+              - value
+            properties:
+              key:
+                type: string
+                minLength: 1
+                maxLength: 80
+              value:
+                type: string
+                minLength: 1
+                maxLength: 500
+        active:
+          type: boolean
+        featured:
+          type: boolean
+        presentations:
+          type: array
+          maxItems: 3
+          items:
+            $ref: "#/components/schemas/PresentationWrite"
+          minItems: 1
+      description: Creates zero balances. Exactly one presentation per unit, at most three, exactly one active
+        default. ROLL requires its own positive integer length. Prices are independent ARS minor-unit strings
+        within PostgreSQL signed bigint. Unknown fields, stock fields and duplicate units are rejected.
+    ProductPatch:
+      type: object
+      additionalProperties: false
+      required:
+        - name
+        - slug
+        - categoryId
+        - brand
+        - sku
+        - shortDescription
+        - description
+        - attributes
+        - active
+        - featured
+        - presentations
+        - expectedVersion
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+        slug:
+          type: string
+          pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
+          maxLength: 120
+        categoryId:
+          $ref: "#/components/schemas/OpaqueId"
+        brand:
+          type: string
+          maxLength: 100
+          nullable: true
+        sku:
+          type: string
+          minLength: 1
+          maxLength: 100
+          nullable: true
+        shortDescription:
+          type: string
+          maxLength: 500
+        description:
+          type: string
+          maxLength: 10000
+        attributes:
+          type: array
+          maxItems: 40
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - key
+              - value
+            properties:
+              key:
+                type: string
+                minLength: 1
+                maxLength: 80
+              value:
+                type: string
+                minLength: 1
+                maxLength: 500
+        active:
+          type: boolean
+        featured:
+          type: boolean
+        presentations:
+          type: array
+          maxItems: 3
+          items:
+            $ref: "#/components/schemas/PresentationWrite"
+          minItems: 1
+        expectedVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+      description: Full editable catalog payload plus expected product version. Existing presentation IDs must
+        remain present (deactivate rather than delete). New presentations omit ID. Existing ID must belong to this
+        product. No balance is accepted. With any movement, unit/roll length is immutable. Product version
+        coordinates catalog/image updates; balances use separate versions.
+    ProductSummary:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - slug
+        - name
+        - brand
+        - category
+        - primaryImage
+        - defaultPresentationId
+        - displayPresentationId
+        - presentations
+      properties:
+        id:
+          $ref: "#/components/schemas/OpaqueId"
+        slug:
+          type: string
+          pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
+          maxLength: 120
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+        brand:
+          type: string
+          maxLength: 100
+          nullable: true
+        category:
+          $ref: "#/components/schemas/PublicCategory"
+        primaryImage:
+          oneOf:
+            - $ref: "#/components/schemas/ProductImageView"
+            - type: object
+              nullable: true
+              enum:
+                - null
+        defaultPresentationId:
+          $ref: "#/components/schemas/OpaqueId"
+        displayPresentationId:
+          $ref: "#/components/schemas/OpaqueId"
+        presentations:
+          type: array
+          maxItems: 3
+          items:
+            $ref: "#/components/schemas/PublicPresentation"
+          minItems: 1
+    ProductDetail:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - slug
+        - name
+        - brand
+        - category
+        - primaryImage
+        - defaultPresentationId
+        - displayPresentationId
+        - presentations
+        - shortDescription
+        - description
+        - attributes
+        - images
+      properties:
+        id:
+          $ref: "#/components/schemas/OpaqueId"
+        slug:
+          type: string
+          pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
+          maxLength: 120
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+        brand:
+          type: string
+          maxLength: 100
+          nullable: true
+        category:
+          $ref: "#/components/schemas/PublicCategory"
+        primaryImage:
+          oneOf:
+            - $ref: "#/components/schemas/ProductImageView"
+            - type: object
+              nullable: true
+              enum:
+                - null
+        defaultPresentationId:
+          $ref: "#/components/schemas/OpaqueId"
+        displayPresentationId:
+          $ref: "#/components/schemas/OpaqueId"
+        presentations:
+          type: array
+          maxItems: 3
+          items:
+            $ref: "#/components/schemas/PublicPresentation"
+          minItems: 1
+        shortDescription:
+          type: string
+          maxLength: 500
+        description:
+          type: string
+          maxLength: 10000
+        attributes:
+          type: array
+          maxItems: 40
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - key
+              - value
+            properties:
+              key:
+                type: string
+                minLength: 1
+                maxLength: 80
+              value:
+                type: string
+                minLength: 1
+                maxLength: 500
+        images:
+          type: array
+          maxItems: 8
+          items:
+            $ref: "#/components/schemas/ProductImageView"
+    AdminProduct:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - slug
+        - categoryId
+        - brand
+        - sku
+        - shortDescription
+        - description
+        - attributes
+        - active
+        - featured
+        - presentations
+        - version
+        - images
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          $ref: "#/components/schemas/OpaqueId"
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+        slug:
+          type: string
+          pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
+          maxLength: 120
+        categoryId:
+          $ref: "#/components/schemas/OpaqueId"
+        brand:
+          type: string
+          maxLength: 100
+          nullable: true
+        sku:
+          type: string
+          minLength: 1
+          maxLength: 100
+          nullable: true
+        shortDescription:
+          type: string
+          maxLength: 500
+        description:
+          type: string
+          maxLength: 10000
+        attributes:
+          type: array
+          maxItems: 40
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - key
+              - value
+            properties:
+              key:
+                type: string
+                minLength: 1
+                maxLength: 80
+              value:
+                type: string
+                minLength: 1
+                maxLength: 500
+        active:
+          type: boolean
+        featured:
+          type: boolean
+        presentations:
+          type: array
+          maxItems: 3
+          items:
+            $ref: "#/components/schemas/AdminPresentation"
+          minItems: 1
+        version:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        images:
+          type: array
+          maxItems: 8
+          items:
+            $ref: "#/components/schemas/ProductImageView"
+        createdAt:
+          $ref: "#/components/schemas/UtcDateTime"
+        updatedAt:
+          $ref: "#/components/schemas/UtcDateTime"
+    ProductList:
+      type: object
+      additionalProperties: false
+      required:
+        - items
+        - pageInfo
+      properties:
+        items:
+          type: array
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/ProductSummary"
+        pageInfo:
+          $ref: "#/components/schemas/PageInfo"
+    AdminProductList:
+      type: object
+      additionalProperties: false
+      required:
+        - items
+        - pageInfo
+      properties:
+        items:
+          type: array
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/AdminProduct"
+        pageInfo:
+          $ref: "#/components/schemas/PageInfo"
+    CatalogHome:
+      type: object
+      additionalProperties: false
+      required:
+        - categories
+        - featuredProducts
+        - lowStockProducts
+      properties:
+        categories:
+          type: array
+          maxItems: 1000
+          items:
+            $ref: "#/components/schemas/PublicCategory"
+        featuredProducts:
+          type: array
+          maxItems: 12
+          items:
+            $ref: "#/components/schemas/ProductSummary"
+        lowStockProducts:
+          type: array
+          maxItems: 12
+          items:
+            $ref: "#/components/schemas/ProductSummary"
+    StockRow:
+      type: object
+      additionalProperties: false
+      required:
+        - presentationId
+        - productId
+        - productName
+        - unit
+        - rollLengthMeters
+        - active
+        - availableQuantity
+        - lowStockThreshold
+        - version
+        - availability
+      properties:
+        presentationId:
+          $ref: "#/components/schemas/OpaqueId"
+        productId:
+          $ref: "#/components/schemas/OpaqueId"
+        productName:
+          type: string
+          minLength: 1
+          maxLength: 200
+        unit:
+          $ref: "#/components/schemas/PresentationUnit"
+        rollLengthMeters:
+          type: integer
+          minimum: 1
+          nullable: true
+        active:
+          type: boolean
+        availableQuantity:
+          type: integer
+          minimum: 0
+          maximum: 2147483647
+        lowStockThreshold:
+          type: integer
+          minimum: 0
+          maximum: 2147483647
+        version:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        availability:
+          $ref: "#/components/schemas/Availability"
+    StockList:
+      type: object
+      additionalProperties: false
+      required:
+        - items
+        - pageInfo
+      properties:
+        items:
+          type: array
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/StockRow"
+        pageInfo:
+          $ref: "#/components/schemas/PageInfo"
+    StockEntryView:
+      type: object
+      additionalProperties: false
+      required:
+        - presentationId
+        - delta
+        - resultingQuantity
+        - version
+      properties:
+        presentationId:
+          $ref: "#/components/schemas/OpaqueId"
+        delta:
+          type: integer
+          minimum: -2147483647
+          maximum: 2147483647
+          not:
+            enum:
+              - 0
+        resultingQuantity:
+          type: integer
+          minimum: 0
+          maximum: 2147483647
+        version:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+    StockOperationView:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - type
+        - reason
+        - actorAdminUserId
+        - createdAt
+        - entries
+      properties:
+        id:
+          $ref: "#/components/schemas/OpaqueId"
+        type:
+          type: string
+          enum:
+            - ADJUSTMENT
+            - ROLL_OPENING
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+        actorAdminUserId:
+          $ref: "#/components/schemas/OpaqueId"
+        createdAt:
+          $ref: "#/components/schemas/UtcDateTime"
+        entries:
+          type: array
+          maxItems: 2
+          items:
+            $ref: "#/components/schemas/StockEntryView"
+          minItems: 1
+    StockOperationList:
+      type: object
+      additionalProperties: false
+      required:
+        - items
+        - pageInfo
+      properties:
+        items:
+          type: array
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/StockOperationView"
+        pageInfo:
+          $ref: "#/components/schemas/PageInfo"
+    StockAdjustmentRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - presentationId
+        - delta
+        - reason
+        - expectedVersion
+      properties:
+        presentationId:
+          $ref: "#/components/schemas/OpaqueId"
+        delta:
+          type: integer
+          minimum: -2147483647
+          maximum: 2147483647
+          not:
+            enum:
+              - 0
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+        expectedVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+    RollOpeningRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - productId
+        - rollQuantity
+        - reason
+        - expectedVersions
+      properties:
+        productId:
+          $ref: "#/components/schemas/OpaqueId"
+        rollQuantity:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+        expectedVersions:
+          type: object
+          additionalProperties: false
+          required:
+            - roll
+            - meter
+          properties:
+            roll:
+              type: integer
+              minimum: 1
+              maximum: 2147483647
+            meter:
+              type: integer
+              minimum: 1
+              maximum: 2147483647
+    ImageUpload:
+      type: object
+      additionalProperties: false
+      required:
+        - file
+        - alt
+        - order
+        - isPrimary
+        - expectedVersion
+      properties:
+        file:
+          type: string
+          format: binary
+        alt:
+          type: string
+          minLength: 1
+          maxLength: 200
+        order:
+          type: integer
+          minimum: 0
+          maximum: 7
+        isPrimary:
+          type: boolean
+        expectedVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+      description: "Multipart fields: file is a single PNG; text fields are parsed strictly (base10 integers,
+        true/false booleans). Maximum 5 MiB per file, 4096x4096 pixels, eight images per product. Validate
+        complete PNG structure/CRC, decoded raster and dimensions, not browser MIME or extension. No remote
+        URLs/SVG/JPEG accepted in H2. Product version coordinates gallery changes."
+    ImagePatch:
+      type: object
+      additionalProperties: false
+      required:
+        - expectedVersion
+      properties:
+        alt:
+          type: string
+          minLength: 1
+          maxLength: 200
+        order:
+          type: integer
+          minimum: 0
+          maximum: 7
+        isPrimary:
+          type: boolean
+        expectedVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+      minProperties: 2
 x-abar-review-boundaries:
   unresolved: [P01, P02, P03, P04, P05, P06, P07, P08, P09, P10]
   buyerFieldRules: unresolved; do not treat projected DTO examples as finalized requirements.

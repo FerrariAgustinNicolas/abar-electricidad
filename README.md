@@ -4,6 +4,17 @@
 
 Esta sección describe la base local del backend y sus dependencias: NestJS, PostgreSQL y Mailpit. El frontend Angular mínimo de H0.2 se documenta más abajo. H1 integra autenticación por sesión y administración de usuarios; los endpoints comerciales de H2 no están implementados. El entorno es para desarrollo local; no es una configuración de producción.
 
+### Contrato H2 en preparación
+
+El contrato candidato 0.5.0 agrega catálogo/stock de H2, con DTOs y ejemplos
+validados antes del desarrollo paralelo. Esto no declara funcionalidad H2 ni
+paridad Swagger/runtime: la implementación sigue pendiente. Ver
+[decisiones H2](docs/decisions/H2-contract.md) y
+[prompt revisado](docs/milestones/H2-prompt.md). La validación estática se mantiene
+con `npm --prefix backend run contract:validate`; las pruebas de contrato son
+`node --test scripts/h0-contract-validate.test.mjs scripts/h2-contract.test.mjs`.
+No ejecutar el verificador LIVE suponiendo que H2 ya está implementado.
+
 ### Requisitos
 
 - Node.js 24.x y npm 11.x.

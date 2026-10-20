@@ -350,7 +350,7 @@ The complete revised input below is normative. The user's latest approved Git st
 ## Tasks
 
 - T0 | S1 | inline + delegated read-only mapping (mandatory full reference reading exceeds bounded inline evidence) | COMPLETE | approved base verified, full-read handoff received; no remote operations.
-- T1 | S4–S7,S10–S11 | inline shared integration owner | PENDING | freeze OpenAPI/examples/image strategy, schema/migrations and contract checks before parallel implementation; Risk items 1,3,5.
+- T1 | S4–S7,S10–S11 | inline shared integration owner | IN PROGRESS | freeze OpenAPI/examples/image strategy, schema/migrations and contract checks before parallel implementation; Risk items 1,3,5.
 - T2 | S2–S4,S6–S9,S11 | delegated parallel backend catalog unit, after T1; disjoint catalog surface | PENDING | categories/products/images, deterministic non-destructive seeds; Risk items 1,2.
 - T3 | S3–S6,S10–S11 | delegated parallel backend stock unit, after T1; disjoint stock surface | PENDING | audit/idempotency/atomic openings/real PostgreSQL races; Risk items 1,2,4.
 - T4 | S2–S3,S6–S8,S11 | delegated parallel public frontend unit, after T1; disjoint public pages | PENDING | API Home/catalog/detail, URL state and presentation availability; Risk item 3 (shared routes owned by parent).
@@ -426,3 +426,12 @@ Si aparece un cambio incompatible de arquitectura, contrato o reglas de negocio,
 - Existing CodeGraph was synced before structural queries; original agent/reviewer/Verify configuration unchanged. Native review mode reads ON (global); candidate consent remains separate.
 - Default RED→GREEN applies when deterministic runnable behavior tests exist. Initial prompt/tracking is documentary; structural readback is the proportional check. Future functionality needs real PostgreSQL evidence for migrations and races, not mock substitution.
 - Single integration owner holds contracts, Prisma, scripts/root config and shared Angular routes. No front/backend writer starts before T1 freeze. Parallel writers will receive narrow disjoint surfaces, immutable requirements, skills and tests; parent owns Git.
+
+### L3 — Local work-unit 1 and contract checks
+
+- `1d264ef`: selectively versioned unchanged H2 prompt and this logbook (747 lines). Standard whitespace check reported the source prompt's three original Markdown hard-break lines; preserved original input bytes and reran with blank-at-eol excluded (exit 0). No source implementation in this commit.
+- Native assessment of that committed range: medium/executable-change (prompt), `review_due: false`, `under_budget`; no review transaction/consent was started. The open review slice retains approved-main base until the next assessment.
+- Created the additive contract candidate 0.5.0 and decision H2-contract. Contract/schema owner is the parent; schema/migrations are still PENDING, no implementation worker started.
+- Both offline npm ci commands exited 0, Node24.18.1/npm11.16.0. npm withheld lifecycle scripts; no automatic enabling or config changes. Dependency worker only wrote ignored node_modules.
+- RED: focused contract test exited1 before implementation. GREEN: new tests6/6; full contract tests17/17 exit0; static OpenAPI ten examples exit0. Fixed test-helper signature usage and OpenAPI nullable image encoding without changing H1 assertion behavior.
+- Product/image DTOs and PNG-only strategy are documented. No live Swagger/DB/UI claims; all remain pending. H2 contract candidate is one coherent larger work unit, not artificial schema-only/endpoint-only slices. No PR is created; later publication/topology remains a human decision.

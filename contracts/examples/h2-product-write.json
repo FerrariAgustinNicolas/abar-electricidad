@@ -1,0 +1,40 @@
+{
+  "name": "Cable ficticio",
+  "slug": "demo-cable",
+  "categoryId": "22222222-2222-4222-8222-222222222222",
+  "brand": null,
+  "sku": "DEMO-CABLE",
+  "shortDescription": "Producto ficticio de aceptación",
+  "description": "Saldos independientes por presentación.",
+  "attributes": [
+    {
+      "key": "Color",
+      "value": "Rojo"
+    }
+  ],
+  "active": true,
+  "featured": true,
+  "presentations": [
+    {
+      "unit": "METER",
+      "price": {
+        "amountMinor": "1500",
+        "currency": "ARS"
+      },
+      "lowStockThreshold": 20,
+      "active": true,
+      "isDefault": true
+    },
+    {
+      "unit": "ROLL",
+      "price": {
+        "amountMinor": "120000",
+        "currency": "ARS"
+      },
+      "lowStockThreshold": 20,
+      "active": true,
+      "isDefault": false,
+      "rollLengthMeters": 100
+    }
+  ]
+}
