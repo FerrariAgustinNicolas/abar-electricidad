@@ -2,7 +2,14 @@
 
 [OpenAPI](openapi.yaml) es la única norma; las entradas documentan alcance, no aprobación externa ni disponibilidad productiva. No se asignan fechas o versiones históricas sin evidencia.
 
-## 0.4.0 — H1 contract-freeze (candidato sin implementación)
+## Regularización post-merge H1 — 2026-10-19 (sin cambio de versión)
+
+- H1 integrado en main `18c39e9`: health y nueve operaciones auth/admin, con frontend administrativo y tres migraciones. La implementación no implica aprobación externa ni disponibilidad productiva.
+- README y decisión distinguen runtime actual de snapshots históricos; procedimiento manual de primer administrador limitado a PostgreSQL local nuevo, sin credenciales versionadas.
+- Solo metadatos descriptivos de OpenAPI: integración H1 explícita. Marcadores del freeze exigidos por el validador permanecen históricos; rutas, DTOs, headers, seguridad, errores y versión 0.4.0 no cambian.
+- [Resultados post-merge y deuda pendiente](../docs/milestones/H1-postmerge-validation.md). No se trasladan PASS históricos al candidato final ni se implementa H2.
+
+## 0.4.0 — H1 contract-freeze (snapshot histórico previo a implementación)
 
 - Nueve operaciones auth/admin, además de health; DTOs saneados, headers, cookies, Origin/CSRF, errores, paginación y concurrencia explícitos. `x-abar-runtime-stage: h0`: solo health funciona actualmente.
 - Sesión y nonce aleatorios independientes; cambio obligatorio limitado a me/change-password/logout; revocación, rotación y protección de última cuenta activa según [decisión H1](../docs/decisions/H1-auth.md).

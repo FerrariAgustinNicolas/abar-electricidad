@@ -1,6 +1,10 @@
 # H1 — Dirección congelada, fundamentos runtime preparados
 
-**Current status:** contract frozen; C01–C10 closed. C11 prepares offline Docker observations only; parent ASSESS, functional Verify, native consent/review and local commit remain pending. Auth/admin endpoints and external audit remain pending. [OpenAPI](../../contracts/openapi.yaml) es la única norma de interfaces; esta decisión explica su protocolo y los prerrequisitos operativos. No amplía DTOs, permisos ni alcance comercial. Ver [prompt H1](../milestones/H1-prompt.md) e [informe parcial](../milestones/H1-informe.md).
+**Estado post-merge — 2026-10-19:** main `18c39e9` integra autenticación, sesiones persistentes, Origin/CSRF, cambio obligatorio/rotación/revocación, administración y UI. No hay CLI de bootstrap: el [procedimiento manual local](../../README.md#primer-administrador-local-procedimiento-manual-no-seed-de-producto) reutiliza política, blocklist y hasher reales; crea solo la primera cuenta sobre una base nueva y rechaza cuentas preexistentes. No amplía permisos ni contratos.
+
+[OpenAPI](../../contracts/openapi.yaml) mantiene la norma candidata 0.4.0; sus marcadores históricos de freeze se conservan por compatibilidad del validador y la integración se identifica por separado. [Validación post-merge](../milestones/H1-postmerge-validation.md) es la referencia para comprobaciones nuevas y pendientes. El [informe anterior](../milestones/H1-informe.md) conserva evidencia histórica, incluidos bloqueos Review/Verify; no acredita automáticamente el commit integrado ni aprobación nativa. H2 y producción siguen fuera de alcance.
+
+Las referencias de slices y sus estados pendientes en las secciones siguientes describen sus snapshots históricos, no ausencia actual de endpoints. Se preservan para trazabilidad. Ver también [prompt H1](../milestones/H1-prompt.md).
 
 ## Protocolo e interfaces
 

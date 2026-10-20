@@ -1273,7 +1273,8 @@ class IndependentGuardContractTests(unittest.TestCase):
 
     def test_sidecar_stall_kills_and_reaps_only_its_helper_and_parent_exits_bounded(self):
         with tempfile.TemporaryDirectory(prefix="h1-sidecar-stall-") as temp:
-            root = pathlib.Path(temp)
+            # Match the canonical project root used by the production filesystem guard.
+            root = pathlib.Path(temp).resolve(strict=True)
             run_id = "a" * 32
             target = root / "odd/probes/h1-real-e2e" / run_id / "supervisor-diagnostic.json"
             target.parent.mkdir(parents=True)
@@ -1323,7 +1324,8 @@ print(json.dumps({"result":result,"pid":helper.pid,"returncode":helper.returncod
 
     def test_spawned_sidecar_helper_preserves_private_exclusive_write(self):
         with tempfile.TemporaryDirectory(prefix="h1-sidecar-write-") as temp:
-            root = pathlib.Path(temp)
+            # Match the canonical project root used by the production filesystem guard.
+            root = pathlib.Path(temp).resolve(strict=True)
             target = root / "odd/probes/h1-real-e2e" / ("a" * 32) / "supervisor-diagnostic.json"
             target.parent.mkdir(parents=True)
             self.assertEqual(harness._persist_sidecar_bounded(str(root), str(target), b"safe"), "written")

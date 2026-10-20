@@ -292,15 +292,15 @@ describe('production-configured login OpenAPI metadata', () => {
     await closeApplication?.();
   });
 
-  it('retains production H0 document identity and existing login response contract', () => {
+  it('retains integrated H1 document identity and existing login response contract', () => {
     expect(document?.info).toMatchObject({
-      title: 'ABAR Backend',
-      description: 'Endpoints operativos implementados para el entorno local H0.2.',
-      version: '0.1.0',
+      title: 'ABAR Electricidad API — transversal candidate',
+      description: 'H1 authentication and administrative-user endpoints for local verification. The frozen contract remains a candidate; no external approval or production readiness is implied.',
+      version: '0.4.0',
     });
     expect(document?.openapi).toBe('3.0.3');
     expect(document?.security).toBeUndefined();
-    expect(document?.paths['/api/v1/auth/csrf']?.get?.security).toBeUndefined();
+    expect(document?.paths['/api/v1/auth/csrf']?.get?.security).toEqual([{}, { AdminSessionCookie: [] }]);
     const operation = document?.paths['/api/v1/auth/login']?.post;
     expect(operation?.operationId).toBe('loginAdmin');
     expect(Object.keys(operation?.responses ?? {}).sort()).toEqual(['200', '400', '401', '403', '429', '503']);
