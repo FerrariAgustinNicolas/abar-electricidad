@@ -202,6 +202,7 @@ import { formatMoney } from './format-money';
 }
 .stepper button {
 
+  color:var(--color-text);
   width:2.75rem;
   height:2.75rem;
   border:1px solid var(--color-border);

@@ -7,7 +7,7 @@ import { AuthSessionService } from '../core/auth/auth-session.service';
   standalone: true,
   imports: [RouterLink, RouterOutlet],
   template: `
-    <a class="skip-link" href="#admin-content">Saltar al contenido</a>
+    <a class="skip-link" href="#admin-content" (click)="$event.preventDefault(); content.focus()">Saltar al contenido</a>
     <header class="admin-header">
       <a routerLink="/admin/usuarios" class="admin-brand">ABAR Electricidad · Administración</a>
       <div class="admin-account">
@@ -23,7 +23,7 @@ import { AuthSessionService } from '../core/auth/auth-session.service';
         <a routerLink="/admin/stock">Stock y movimientos</a>
         <a routerLink="/admin/change-password" routerLinkActive="active" ariaCurrentWhenActive="page">Cambiar contraseña</a>
       </nav>
-      <main id="admin-content" class="admin-content"><router-outlet /></main>
+      <main #content id="admin-content" tabindex="-1" class="admin-content"><router-outlet /></main>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -194,6 +194,7 @@ export class ProductSectionComponent {
 }
 .hero h1 {
 
+  color:inherit;
   margin:.3rem 0;
   font-size:clamp(2rem,5vw,3.5rem);
   line-height:1.05
