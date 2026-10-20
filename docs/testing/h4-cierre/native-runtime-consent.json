@@ -1,0 +1,37 @@
+{
+  "schema": "gentle-ai.review-integration.consent/v3",
+  "contract": "gentle-ai.review-integration/v2",
+  "operation": "review.start",
+  "action": "consent_required",
+  "agent": "codex",
+  "blocking": true,
+  "target_identity": "sha256:b7c85ad37b9ff6e3bcb33f95d13aedf67dc12e177323fca33acec9c92b1d6ecd",
+  "projection": "workspace",
+  "risk_level": "high",
+  "changed_files": 90,
+  "changed_lines": 3472,
+  "headline": "Gentle AI can review this change before you call it done.",
+  "reason": "Review can help detect execution issues in these changes.",
+  "value": "Reviewing takes a little longer and makes the result safer.",
+  "risk_evidence": [
+    "code that starts other processes in backend/test/h4-orders.e2e-spec.ts"
+  ],
+  "choices": [
+    {
+      "answer": "granted",
+      "label": "Review this change",
+      "effect": "Reviews only this change; later medium- or high-risk changes ask again, and delivery needs separate approval.",
+      "invocation": "gentle-ai review start --contract gentle-ai.review-integration/v2 --cwd /Users/agustin/Repos/personal/abar-electricidad-worktrees/h4-orders-demo-payments --target sha256:b7c85ad37b9ff6e3bcb33f95d13aedf67dc12e177323fca33acec9c92b1d6ecd --target-evidence v1:base-diff:workspace:7110d27e7d3b45b1145df4288092baa327054adb:dfb3f33287d0f99908985d244da2baf98c64d8df:sha256:b626ddc8bdd973f624d8e180c36220c3f918ed9bac7d986e2fd56596716edee2 --projection workspace --agent codex --lineage review-51f374dc90e1bb9d --base-ref 7110d27e7d3b45b1145df4288092baa327054adb --committed-only --lenses review-risk,review-resilience,review-readability,review-reliability --lenses-reason 'H4 runtime persists personal orders, guards private access and idempotent retries, and changes public observable payment behavior' --consent granted"
+    },
+    {
+      "answer": "declined",
+      "label": "Skip this time",
+      "effect": "Skips only this change; no review record is created, and future reviews stay enabled.",
+      "invocation": "gentle-ai review start --contract gentle-ai.review-integration/v2 --cwd /Users/agustin/Repos/personal/abar-electricidad-worktrees/h4-orders-demo-payments --target sha256:b7c85ad37b9ff6e3bcb33f95d13aedf67dc12e177323fca33acec9c92b1d6ecd --target-evidence v1:base-diff:workspace:7110d27e7d3b45b1145df4288092baa327054adb:dfb3f33287d0f99908985d244da2baf98c64d8df:sha256:b626ddc8bdd973f624d8e180c36220c3f918ed9bac7d986e2fd56596716edee2 --projection workspace --agent codex --lineage review-51f374dc90e1bb9d --base-ref 7110d27e7d3b45b1145df4288092baa327054adb --committed-only --lenses review-risk,review-resilience,review-readability,review-reliability --lenses-reason 'H4 runtime persists personal orders, guards private access and idempotent retries, and changes public observable payment behavior' --consent declined"
+    }
+  ],
+  "off_path": {
+    "note": "To turn reviews off for good, run 'gentle-ai review mode disable'.",
+    "command": "gentle-ai review mode disable"
+  }
+}

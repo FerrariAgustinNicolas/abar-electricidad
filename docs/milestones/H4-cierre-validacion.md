@@ -1,6 +1,6 @@
 # H4 — Cierre complementario de validación
 
-**Estado:** R3 corregido y comprobado; recuperación incierta segura dentro de sus límites. Review/Verify independientes favorables. **Review nativo del runtime pendiente de consentimiento propio; no hay aprobación nativa del runtime ni autorización de integración.**
+**Dictamen complementario: PARCIAL.** R3 corregido y comprobado; recuperación incierta segura dentro de sus límites. Review/Verify independientes favorables. **Review nativo del runtime bloqueado por lens_context_budget_exceeded después del consentimiento propio. No hay aprobación nativa del runtime ni autorización de integración. Se detiene para auditoría externa.**
 
 ## Candidatos y alcance
 
@@ -79,7 +79,30 @@ Risk: item4 (orden de respuestas asíncronas y congelamiento de intención de re
 
 Modo nativo ON/global, sin cambios. La evaluación R3 fue high/item4. Primer intento dentro del sandbox falló al crear índice Git temporal (operation not permitted); misma evaluación con permisos apropiados exit0. Esto no es una aprobación.
 
-El ACK anterior corresponde exclusivamente al contrato2fc9ceef8b67081d0a8b6904ea541995a35962df y no se reutiliza. La revisión del runtime debe cubrir desde ese límite contractual hasta el candidato técnico final, mediante los comandos exactos emitidos por el proveedor y consentimiento de ese candidato. Estado actual: pendiente de preflight/consentimiento propio. No se afirma START, captura, ACK ni aprobación inexistentes. Este apartado se actualizará únicamente con el resultado realmente emitido.
+El ACK anterior corresponde exclusivamente al contrato2fc9ceef8b67081d0a8b6904ea541995a35962df y no se reutilizó. La evaluación y preflight cubrieron desde ese límite contractual hasta432c6430d5faccaf40a3b18034c6db2d85ff4c20, árbol dfb3f33287d0f99908985d244da2baf98c64d8df. Este commit conserva el mismo código técnico0a1d296; agrega únicamente informe/evidencias (ff0131322b45416c9127af9159777c6a17bcbd99 y432c6430d5faccaf40a3b18034c6db2d85ff4c20).
+
+Preflight exit0 emitió el START exacto para target sha256:b7c85ad37b9ff6e3bcb33f95d13aedf67dc12e177323fca33acec9c92b1d6ecd, lineage review-51f374dc90e1bb9d. START relay exit0 solicitó consentimiento/v3; el usuario respondió literalmente granted. Se ejecutó una sola vez la invocación granted exacta de ese envelope, sin reconstruir argumentos.
+
+**Resultado real: exit1, gentle-ai.review-integration.failure/v2.**
+
+| Campo | Valor exacto |
+|---|---|
+| operation | review.start |
+| phase | preflight |
+| code | lens_context_budget_exceeded |
+| mutation_outcome | not_started |
+| authority_applicability | not_evaluated |
+| retry_safe | true |
+| replayability | not_replayable |
+| next_action | stop |
+
+Mensaje literal del proveedor:
+
+> The candidate's complete reviewer evidence exceeds the native context budget, so no review authority was created; review this change as smaller candidates that each fit under it.
+
+La causa detallada indica que no se produjo el contexto de reviewer, no se creó autoridad, no hay nada que abandonar/reparar, la evidencia inmutable no se trunca y repetir este mismo candidato no puede tener éxito. Sugiere candidatos menores en secuencia. Aunque retry_safe es true, no se lo interpretó como permiso para repetir frente a esa prohibición específica y next_action stop.
+
+**No hubo capturas de reviewers nativos, ACK ni aprobación del runtime.** No se fraccionó la revisión, reescribió historia, inició otra lineage, reparó estado ni deshabilitó la herramienta. Se conserva el impedimento exacto y se detiene conforme a la autorización del usuario. Los cuatro JSON native-runtime-* contienen evaluación, preflight, consentimiento e impedimento; no se atribuye a Review/Verify independiente autoridad nativa.
 
 ## Preservación y limpieza
 
@@ -89,9 +112,9 @@ Se cerró la pestaña propia, terminaron PIDs5517/5518 y se detuvo/eliminó úni
 
 ## Deuda y siguiente barrera
 
-- Consentimiento y resultado del Review nativo del runtime; no sustituibles por Review/Verify independientes ni ACK contractual.
+- Review nativo del runtime bloqueado por presupuesto de contexto aun con consentimiento propio. Una futura revisión fraccionada requiere una nueva decisión de alcance; no se ejecutó como workaround. Review/Verify independientes y ACK contractual no sustituyen esa aprobación.
 - Límites de recuperación descritos arriba, sin persistencia sensible añadida.
 - Deuda y exclusiones previas siguen vigentes: confirmación administrativa de pago, descuento de existencias, gestión completa de pedidos y H5 fuera de alcance.
-- Sin autorización de integración. Detenerse para nueva auditoría externa después de completar o documentar el bloqueo nativo.
+- Sin autorización de integración. Bloqueo nativo documentado; trabajo detenido para nueva auditoría externa.
 
 Evidencias: ../testing/h4-cierre/SHA256SUMS. Los archivos de configuración privada, cabeceras/tokens y cuerpos con contactos no se incorporaron.
