@@ -4,12 +4,12 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "prisma generate --config prisma.schema.config.ts && tsc -p tsconfig.build.json && node scripts/copy-auth-resources-cli.mjs",
+    "build": "prisma generate --config prisma.schema.config.ts && tsc -p tsconfig.build.json && node scripts/copy-auth-resources-cli.mjs && node scripts/copy-catalog-contract.mjs",
     "lint": "eslint \"{src,test}/**/*.ts\"",
     "start": "node dist/main.js",
-    "start:dev": "nest start --watch",
-    "test": "jest",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "start:dev": "node scripts/copy-catalog-contract.mjs && nest start --watch",
+    "test": "node scripts/copy-catalog-contract.mjs && jest",
+    "test:e2e": "node scripts/copy-catalog-contract.mjs && jest --config ./test/jest-e2e.json",
     "prisma:validate": "prisma validate --config prisma.schema.config.ts",
     "prisma:generate": "prisma generate --config prisma.schema.config.ts",
     "contract:validate": "node ../scripts/h0-contract-validate.mjs",
@@ -28,7 +28,8 @@
     "class-validator": "0.14.2",
     "pg": "8.23.1",
     "reflect-metadata": "0.2.2",
-    "rxjs": "7.8.2"
+    "rxjs": "7.8.2",
+    "ajv": "8.18.0"
   },
   "devDependencies": {
     "@eslint/js": "9.39.5",
@@ -42,7 +43,6 @@
     "@types/supertest": "7.2.1",
     "@typescript-eslint/eslint-plugin": "8.71.0",
     "@typescript-eslint/parser": "8.71.0",
-    "ajv": "8.18.0",
     "eslint": "9.39.5",
     "jest": "30.5.2",
     "prisma": "7.10.0",
