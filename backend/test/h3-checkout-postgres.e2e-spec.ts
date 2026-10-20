@@ -98,7 +98,7 @@ describeOwned('H3 checkout on an explicitly owned PostgreSQL fixture', () => {
     await upgradeClient.connect();
     try {
       await upgradeClient.query(`INSERT INTO "Category" ("id", "name", "slug") VALUES ('51000000-0000-4000-8000-000000000001', 'Existing upgrade category', 'existing-upgrade-category')`);
-      await upgradeClient.query(`INSERT INTO "Product" ("id", "categoryId", "name", "slug") VALUES ('52000000-0000-4000-8000-000000000001', '51000000-0000-4000-8000-000000000001', 'Existing upgrade product', 'existing-upgrade-product')`);
+      await upgradeClient.query(`INSERT INTO "Product" ("id", "categoryId", "name", "slug", "updatedAt") VALUES ('52000000-0000-4000-8000-000000000001', '51000000-0000-4000-8000-000000000001', 'Existing upgrade product', 'existing-upgrade-product', CURRENT_TIMESTAMP)`);
       await upgradeClient.query(`INSERT INTO "ProductPresentation" ("id", "productId", "unit", "amountMinor") VALUES ('53000000-0000-4000-8000-000000000001', '52000000-0000-4000-8000-000000000001', 'UNIT', 4321)`);
       await upgradeClient.query(`INSERT INTO "StockBalance" ("presentationId", "availableQuantity") VALUES ('53000000-0000-4000-8000-000000000001', 7)`);
     } finally { await upgradeClient.end(); }
@@ -170,9 +170,9 @@ describeOwned('H3 checkout on an explicitly owned PostgreSQL fixture', () => {
   }, 20_000);
 
   it('rejects invalid configuration and hidden or insufficient catalog items without leaking details or mutating stock', async () => {
-    await prisma.checkoutPolicy.update({ where: { id: 'default' }, data: { quoteTtlSeconds: 3, version: { increment: 1 } } });
+    await prisma.checkoutPolicy.update({ where: { id: 'default' }, data: { enabledDeliveryModes: [], version: { increment: 1 } } });
     await expect(service.createQuote(quoteRequest(presentationId))).rejects.toMatchObject({ status: 503 });
-    await prisma.checkoutPolicy.update({ where: { id: 'default' }, data: { quoteTtlSeconds: 600, version: { increment: 1 } } });
+    await prisma.checkoutPolicy.update({ where: { id: 'default' }, data: { enabledDeliveryModes: ['PICKUP', 'COORDINATED'], version: { increment: 1 } } });
     await prisma.product.update({ where: { id: productId }, data: { active: false, version: { increment: 1 } } });
     const beforeHidden = await stockFingerprint();
     let error: unknown;

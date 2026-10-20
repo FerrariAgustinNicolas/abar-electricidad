@@ -153,7 +153,8 @@ export class CartPageComponent {
   });
   readonly expired = computed(() => {
     const current = this.quote();
-    return !current || Date.parse(current.expiresAt) <= this.now();
+    this.now(); // Recompute on timer ticks; a newly arrived response uses the current clock.
+    return !current || Date.parse(current.expiresAt) <= Date.now();
   });
   readonly deliveryMode = signal<DeliveryMode>('PICKUP');
   readonly paymentMethodCode = signal<DemoPaymentMethod['code']>('DEMO_PAY_ON_PICKUP');

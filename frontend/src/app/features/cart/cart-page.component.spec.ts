@@ -66,9 +66,13 @@ describe('CartPageComponent', () => {
 
   it('does not accept an expired authoritative quote', () => {
     vi.stubGlobal('localStorage', storage);
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-10-20T12:00:00Z'));
     const quote = vi.fn().mockImplementation(() => of(authoritativeQuote()));
     const fixture = createFixture(quote);
     const component = fixture.componentInstance;
+    // A response can arrive after construction but before the next clock tick.
+    vi.setSystemTime(new Date('2026-10-20T12:00:00.010Z'));
     component.quote.set({ ...authoritativeQuote(), expiresAt: new Date(Date.now() - 1).toISOString() });
     component.acceptQuote();
     expect(component.expired()).toBe(true);
