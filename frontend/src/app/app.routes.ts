@@ -12,6 +12,8 @@ export const appRoutes: Routes = [
     component: PublicLayoutComponent,
     children: [
       { path: '', pathMatch: 'full', loadComponent: () => import('./features/home/home-page.component').then((module) => module.HomePageComponent) },
+      { path: 'productos', loadComponent: () => import('./features/catalog/catalog-page.component').then((module) => module.CatalogPageComponent) },
+      { path: 'productos/:slug', loadComponent: () => import('./features/catalog/product-detail-page.component').then((module) => module.ProductDetailPageComponent) },
       { path: 'estado', loadComponent: () => import('./features/status/status-page.component').then((module) => module.StatusPageComponent) },
     ],
   },

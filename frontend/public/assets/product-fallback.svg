@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480" role="img" aria-labelledby="title desc">
+  <title id="title">Imagen de producto no disponible</title>
+  <desc id="desc">Ilustración de una caja eléctrica sobre fondo claro</desc>
+  <rect width="640" height="480" rx="24" fill="#f3f6f8"/>
+  <path d="M210 165h220l48 48v126H162V213z" fill="#c7d0d8" stroke="#56616b" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M210 165v48h268" fill="none" stroke="#56616b" stroke-width="10"/>
+  <path d="M294 240h52l-25 42h31l-58 62 17-47h-31z" fill="#F7931E"/>
+  <text x="320" y="392" text-anchor="middle" fill="#56616b" font-family="Arial,sans-serif" font-size="22">Imagen no disponible</text>
+</svg>

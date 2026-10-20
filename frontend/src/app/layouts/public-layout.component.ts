@@ -9,12 +9,12 @@ import { RouterLink, RouterOutlet } from '@angular/router';
     <a class="skip-link" href="#contenido">Saltar al contenido</a>
     <header class="site-header">
       <a class="brand" routerLink="/" aria-label="ABAR Electricidad, inicio">ABAR Electricidad</a>
-      <nav aria-label="Navegación principal"><a routerLink="/">Inicio</a></nav>
+      <nav aria-label="Navegación principal"><a routerLink="/">Inicio</a><a routerLink="/productos">Productos</a></nav>
     </header>
     <main id="contenido" class="site-main"><router-outlet /></main>
     <footer class="site-footer">
-      <p>Base H0 · referencia documental: Home CORREGIDA (17:256); no es acceso ni reproducción directa de Figma.</p>
-      <p>ABAR Electricidad · Interfaz inicial sin funciones comerciales.</p>
+      <p>Referencia de diseño documentada: Home CORREGIDA (17:256); sin nueva inspección de Figma.</p>
+      <p>ABAR Electricidad · Catálogo y disponibilidad. Compras próximamente.</p>
     </footer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
