@@ -1,19 +1,24 @@
 # ABAR Electricidad
 
-## Backend y servicios locales (H1 integrado)
+## Backend y servicios locales (H1 integrado y H2 local)
 
-Esta sección describe la base local del backend y sus dependencias: NestJS, PostgreSQL y Mailpit. El frontend Angular mínimo de H0.2 se documenta más abajo. H1 integra autenticación por sesión y administración de usuarios; los endpoints comerciales de H2 no están implementados. El entorno es para desarrollo local; no es una configuración de producción.
+Esta sección describe la base local del backend y sus dependencias: NestJS, PostgreSQL y Mailpit. El frontend Angular se documenta más abajo. H1 mantiene autenticación por sesión y administración de usuarios; H2 agrega catálogo, presentaciones, galería y stock auditado en una rama local pendiente de auditoría externa. El entorno es para desarrollo local; no es una configuración de producción.
 
-### Contrato H2 en preparación
+### H2 local: catálogo y stock, pendiente de auditoría externa
 
-El contrato candidato 0.5.0 agrega catálogo/stock de H2, con DTOs y ejemplos
-validados antes del desarrollo paralelo. Esto no declara funcionalidad H2 ni
-paridad Swagger/runtime: la implementación sigue pendiente. Ver
-[decisiones H2](docs/decisions/H2-contract.md) y
-[prompt revisado](docs/milestones/H2-prompt.md). La validación estática se mantiene
-con `npm --prefix backend run contract:validate`; las pruebas de contrato son
+OpenAPI candidato **0.5.0** se congeló antes del desarrollo paralelo. Home,
+`/productos`, `/productos/:slug`, `/admin/productos`, `/admin/categorias` y
+`/admin/stock` consumen la API real. UNIT/METER/ROLL usan precios y saldos
+independientes; la apertura manual auditada convierte rollos cerrados en metros.
+No hay carrito, checkout, pedidos, pagos ni reservas.
+
+Consultar [informe H2](docs/milestones/H2-informe.md), [contrato y límites](docs/decisions/H2-contract.md)
+y [prompt revisado](docs/milestones/H2-prompt.md). Las pruebas y revisiones por
+unidad no equivalen a aprobación global ni productiva. Validación estática:
+`npm --prefix backend run contract:validate`; tests:
 `node --test scripts/h0-contract-validate.test.mjs scripts/h2-contract.test.mjs`.
-No ejecutar el verificador LIVE suponiendo que H2 ya está implementado.
+El runner LIVE histórico usa un target fijo: no ejecutarlo contra una base
+existente suponiendo que es un fixture descartable.
 
 ### Requisitos
 
@@ -74,13 +79,13 @@ Tampoco habilita `generate --sql`, que requiere datasource.
 
 La configuración schema-only no migra ni provisiona recursos. Para migraciones, usá una configuración explícita revisada que apunte únicamente a una base nueva y descartable; nunca elimines el guard de `prisma.config.ts`. El harness H1 implementa sus propias verificaciones de propiedad y limpieza. Los pendientes históricos de C08 no describen el código integrado actual.
 
-El esquema Prisma contiene `AdminUser`, `AuthSession`, `AuthPreAuthContext` y `AdminUserAudit`, con tres migraciones H1. No incluye modelos comerciales ni seed automático. El cliente generado se escribe explícitamente en `backend/src/generated/prisma`; vuelve a generarlo con el script de Prisma al instalar o actualizar dependencias. La configuración de Nest no carga archivos `.env`; define la conexión local explícitamente al iniciar:
+El esquema Prisma contiene `AdminUser`, `AuthSession`, `AuthPreAuthContext` y `AdminUserAudit`, con tres migraciones H1. H2 agrega siete modelos comerciales/auditables y una cuarta migración aditiva. No hay seed automático al iniciar la aplicación. El cliente generado se escribe explícitamente en `backend/src/generated/prisma`; vuelve a generarlo con el script de Prisma al instalar o actualizar dependencias. La configuración de Nest no carga archivos `.env`; define la conexión local explícitamente al iniciar:
 
 ```sh
 DATABASE_URL='postgresql://abar_local:abar_local_demo_only@127.0.0.1:5432/abar_local?schema=public' npm --prefix backend run start:dev
 ```
 
-La API escucha solo en `127.0.0.1:3000`. `GET /health` ejecuta `SELECT 1` antes de responder `200 {"status":"ok"}`. Si PostgreSQL no está disponible, devuelve `503` con un error seguro y un `requestId` UUID. Swagger está en `/api/docs` y `/api/docs-json`; OpenAPI 3.0.3 describe health y las nueve operaciones auth/admin integradas. Para iniciar H1, además de `DATABASE_URL`, exportá una `AUTH_CSRF_ENCRYPTION_KEY` aleatoria de 32 bytes en base64url (por ejemplo, generada con `node -e "console.log(require('node:crypto').randomBytes(32).toString('base64url'))"`); mantenela privada y estable durante la sesión local. No la versiones. Desarrollo admite HTTP únicamente en loopback; producción requiere Secure y orígenes HTTPS explícitos.
+La API escucha solo en `127.0.0.1:3000`. `GET /health` ejecuta `SELECT 1` antes de responder `200 {"status":"ok"}`. Si PostgreSQL no está disponible, devuelve `503` con un error seguro y un `requestId` UUID. Swagger está en `/api/docs` y `/api/docs-json`; OpenAPI 3.0.3 conserva health y nueve operaciones H1 y agrega las 21 operaciones H2. Para iniciar H1, además de `DATABASE_URL`, exportá una `AUTH_CSRF_ENCRYPTION_KEY` aleatoria de 32 bytes en base64url (por ejemplo, generada con `node -e "console.log(require('node:crypto').randomBytes(32).toString('base64url'))"`); mantenela privada y estable durante la sesión local. No la versiones. Desarrollo admite HTTP únicamente en loopback; producción requiere Secure y orígenes HTTPS explícitos.
 
 Con PostgreSQL y Mailpit en ejecución, verifica conexión real, OpenAPI, errores seguros, el 503 al probar una base local no disponible y captura SMTP local:
 
@@ -92,14 +97,14 @@ El script usa una API local ya disponible o inicia el backend compilado con conf
 
 ## H1 integrado: contrato y verificaciones
 
-`main` integró H1 en `18c39e9b86b7b7bf45263fe5bad4fe77125a6386`. `contracts/openapi.yaml` conserva la versión 0.4.0 candidata: nueve operaciones auth/admin más health, sin aprobación externa ni promesa productiva. P01–P10 y las reglas comerciales siguen fuera de alcance. Ver [decisión H1](docs/decisions/H1-auth.md), [validación post-merge](docs/milestones/H1-postmerge-validation.md) e [historial contractual](contracts/CHANGELOG.md).
+`main` integró H1 en `18c39e9b86b7b7bf45263fe5bad4fe77125a6386`. La base aprobada para H2 es `5c0e0fc200c1c22eaa2731298eb7e8bf968a8466`, con H1 y su cierre correctivo integrados. `contracts/openapi.yaml` es ahora 0.5.0 candidata; conserva las nueve operaciones auth/admin más health y añade H2, sin promesa productiva. P01–P10 y las reglas comerciales siguen fuera de alcance. Ver [decisión H1](docs/decisions/H1-auth.md), [validación post-merge](docs/milestones/H1-postmerge-validation.md) e [historial contractual](contracts/CHANGELOG.md).
 
 ```sh
 npm --prefix backend run contract:validate
 node --test scripts/h0-contract-validate.test.mjs
 ```
 
-Los marcadores Info `x-abar-milestone`, `x-abar-runtime-stage: h0` y `x-abar-projected-areas` se preservan como **marcadores históricos del freeze**, porque el validador integrado los exige literalmente. No describen la disponibilidad actual: `x-abar-integrated-runtime-stage: h1` y `x-abar-integrated-commit` identifican la integración. No se cambiaron rutas, esquemas, errores, seguridad ni versión. Su futura unificación con Swagger requiere una actualización coordinada del validador, no una alteración funcional incidental en esta regularización.
+Los marcadores Info `x-abar-milestone`, `x-abar-runtime-stage: h0` y `x-abar-projected-areas` se preservan como **marcadores históricos del freeze**, porque el validador integrado los exige literalmente. No describen la disponibilidad actual: `x-abar-integrated-runtime-stage: h1` y `x-abar-integrated-commit` identifican la integración. Los marcadores históricos no sustituyen al marcador H2 ni al informe actual; la extensión H2 mantiene las rutas, esquemas, errores y seguridad H1. Su futura unificación con Swagger requiere una actualización coordinada del validador, no una alteración funcional incidental en esta regularización.
 
 `npm --prefix backend run contract:validate:live` compara semántica H1 con procesos locales; `-- --stage=h0` verifica únicamente el subset health y NO certifica H1. El runner histórico `python3 backend/scripts/h1-real-e2e.py --execute --cleanup-owned --qualification <archivo-local>` exige su calificación estricta, imágenes y recursos fijados; no se deben fabricar esos prerrequisitos ni trasladar aprobaciones de otra corrida. La nueva evidencia y sus omisiones se registran en el informe post-merge.
 
@@ -165,7 +170,7 @@ La contraseña temporal debe tener 15–128 puntos Unicode tras NFC y superar la
 
 Iniciá la API con esa misma base y su clave CSRF privada; abrí `/admin/login`, ingresá `admin@example.test`, cambiá la contraseña obligatoria y comprobá `/admin/usuarios`. Antes del cambio, users debe responder 403 `PASSWORD_CHANGE_REQUIRED`; luego verificá logout e imposibilidad de reutilizar la sesión anterior. No conserves la contraseña temporal. Para otra base local, creá un nuevo contenedor/base descartable en vez de borrar datos existentes. Los resultados efectivamente ejecutados están en el informe, no se deducen de estos pasos.
 
-## Frontend Angular (H1 integrado)
+## Frontend Angular (H1 y H2)
 
 El frontend es una aplicación Angular standalone/zoneless con dependencias fijadas en `frontend/package.json` y lockfile separado. Requiere Node.js 24.x y npm 11.x. No se añadió gestor de monorepo.
 
@@ -181,7 +186,7 @@ npm --prefix frontend start
 
 Abrí `http://127.0.0.1:4200`. El servidor Angular se liga solo a loopback y el proxy conserva `GET /health` fuera de `/api/v1`; también pasa `/api` sin reescribirlo. El estado visible consulta la respuesta normativa `{"status":"ok"}` y muestra carga, disponibilidad, error o reintento. El endpoint solo responde saludable cuando PostgreSQL contestó `SELECT 1`.
 
-El shell público toma como referencia documental Home CORREGIDA (`17:256`), sin afirmar acceso o reproducción directa de Figma. H1 incorpora login, cambio obligatorio de contraseña y administración de usuarios; catálogo, carrito y checkout permanecen fuera de alcance. Las pruebas con Vitest/jsdom verifican DOM, rutas y HTTP, no son pruebas de navegador real ni certifican responsive/contraste.
+El shell público toma como referencia documental Home CORREGIDA (`17:256`), sin afirmar acceso o reproducción directa de Figma. H1 incorpora login, cambio obligatorio de contraseña y administración de usuarios; H2 agrega catálogo público y administración de catálogo/stock. Carrito y checkout permanecen fuera de alcance. Las pruebas con Vitest/jsdom verifican DOM, rutas y HTTP, no son pruebas de navegador real ni certifican responsive/contraste.
 
 Para iniciar procesos backend y frontend propios, comprobar que el landing se sirve y que el proxy recibe el health real de PostgreSQL:
 
@@ -201,3 +206,22 @@ La migración H2 es aditiva; no ejecutar reset sobre una base existente.
 `h2_schema` y usuario `h2_runner` de un fixture nuevo y propio. Sin fixture,
 reporta SKIPPED; no usa `DATABASE_URL`. Ver los resultados y pendientes en
 [decisiones de persistencia H2](docs/decisions/H2-persistence.md).
+
+
+### Fixtures e imágenes H2
+
+Después del build, `node backend/scripts/h2-seed.mjs` exige
+`H2_SEED_OWNED=1`, `H2_SEED_DATABASE_URL` explícita hacia una base **nueva y
+propia** `h2_seed` o `h2_catalog` en loopback, y `CATALOG_IMAGE_DIRECTORY`
+absoluto y exclusivo del fixture. Esos guards no prueban propiedad: verificar
+el recurso antes de aportar los valores. No usar credenciales/base existente ni
+resetear datos para satisfacerlos. Crea demostraciones ficticias sin actualizar
+precios/stock/cuentas existentes; no provisiona un administrador.
+
+La API usa `CATALOG_IMAGE_DIRECTORY` o, por defecto, `.local/catalog-images`
+relativo al proceso backend. PNG: 5 MiB, 4096 píxeles por eje, ocho imágenes.
+`node backend/scripts/h2-image-cleanup.mjs` exige su propia autorización de
+fixture (`H2_IMAGE_CLEANUP_OWNED=1`, URL explícita e imagen directory) y coordina
+la eliminación de hasta cien archivos huérfanos con las publicaciones. Consultar
+[política de imágenes](docs/decisions/H2-images.md); no ejecutar limpieza sobre
+archivos ajenos ni interpretar un fallo de transacción como rollback confirmado.

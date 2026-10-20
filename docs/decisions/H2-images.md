@@ -7,7 +7,7 @@ The image storage unit validates and publishes local PNG files behind a small in
 - PNG only, at most 5 MiB, dimensions 1–4096 pixels, bounded decoded raster size.
 - Validate chunk ordering, critical/reserved bits, CRCs, palette indices, row filters and complete consumption of exactly one zlib stream. Reject APNG and trailing content.
 - Server-generated UUID keys, exclusive temporary writes, private file permissions and atomic rename. Read/delete reject non-key paths; reads validate stored content again.
-- Publication is not a database transaction. The catalog caller must hold `lockCatalogImages` across file publication and metadata commit, and remove unpublished files after rollback without removing already committed images.
+- Publication is not a database transaction. The catalog caller must hold `lockCatalogImages` across file publication and metadata commit, and retain published bytes when commit acknowledgement is ambiguous. Metadata visibility plus coordinated orphan cleanup avoids removing already committed images.
 
 ## Cleanup contract
 

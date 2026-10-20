@@ -3,7 +3,7 @@ info:
   title: ABAR Electricidad API — transversal candidate
   version: 0.5.0
   x-abar-h2-freeze: catalog-stock-v1
-  x-abar-h2-runtime-stage: pending
+  x-abar-h2-runtime-stage: implemented-audit-pending
   x-abar-milestone: H1-contract-freeze
   x-abar-runtime-stage: h0
   # Legacy freeze markers above remain required by the integrated static validator.
@@ -11,12 +11,13 @@ info:
   x-abar-integrated-commit: 18c39e9b86b7b7bf45263fe5bad4fe77125a6386
   description: |
     Single normative candidate contract, version 0.5.0. H2 catalog/stock schemas are frozen;
-    implementation and independent verification remain pending. H1 authentication and
+    local H2 implementation and bounded independent checks are recorded in H2-informe.md.
+    External milestone audit remains pending; this metadata is not production approval. H1 authentication and
     administrative-user operations are integrated alongside GET /health at the
     commit identified above. No external approval or production readiness is implied.
     The h0 runtime marker and projected-area list are historical freeze metadata,
     retained for validator compatibility, not current runtime availability claims.
-    Public/business components, P01–P10 and buyer-field rules remain projected.
+    Later-milestone components, P01–P10 and buyer-field rules remain projected; H2 catalog/stock is implemented locally.
     All H1 responses use Cache-Control: no-store. No passwords, cookie values or runtime
     nonces are provided as examples. Required response headers use x-required: true.
     Cookie authentication does not replace Origin/CSRF checks. See docs/decisions/H1-auth.md.

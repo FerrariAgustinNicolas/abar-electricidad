@@ -1,12 +1,12 @@
 # H2: additive catalog and stock contract
 
-OpenAPI candidate **0.5.0** freezes catalog/stock DTOs before implementation fronts start. Runtime H2 is **pending**, not verified. H1 operations, response constraints, session cookies, CSRF, existing migrations and unresolved later-milestone decisions remain unchanged.
+OpenAPI candidate **0.5.0** freezes catalog/stock DTOs before implementation fronts start. At freeze time runtime H2 was **pending**; local implementation/checks now appear in [the H2 report](../milestones/H2-informe.md), with external audit pending. H1 operations, response constraints, session cookies, CSRF, existing migrations and unresolved later-milestone decisions remain unchanged.
 
 ## Scope and review boundary
 
 - Normative input: [H2 prompt](../milestones/H2-prompt.md), sections 3–8 and 11–14.
 - Single API source: [OpenAPI](../../contracts/openapi.yaml). The additive surface contains 21 operations: 19 business endpoints requested by H2 and two necessary authenticated/visibility-controlled image reads.
-- H1 historical freeze markers remain present for compatibility. Version 0.5.0 and `x-abar-h2-freeze: catalog-stock-v1` select the closed H2 allowlist in the existing validator. `x-abar-h2-runtime-stage: pending` prevents a contract freeze from being mistaken for delivered functionality.
+- H1 historical freeze markers remain present for compatibility. Version 0.5.0 and `x-abar-h2-freeze: catalog-stock-v1` select the closed H2 allowlist in the existing validator. `x-abar-h2-runtime-stage: implemented-audit-pending` now distinguishes locally implemented H2 from external audit/production approval. The earlier pending marker belonged to the freeze snapshot.
 - No checkout, carts, reservations, orders or payments. The existing projected H0/H1 schemas for later milestones are not implementation authority.
 - This coherent contract candidate exceeds the advisory 400-line work-unit heuristic: schemas, endpoints, examples and tests must agree at the same boundary. No code golfing or arbitrary DTO/endpoint PR fragmentation. Only local commits; a future PR size exception/topology remains an external-audit decision, not permission to publish.
 
@@ -43,9 +43,9 @@ The `sellable` flag is an informational stock/visibility control, NOT an impleme
 
 **PNG only** for H2 uploads: maximum 5 MiB encoded, dimensions 1..4096 per axis, maximum eight images per product. This intentionally trades JPEG convenience for a smaller decoding/security surface without introducing an imaging dependency. Accept file contents only after complete PNG structure/CRC, decompression and decoded-raster/dimension validation, with bounded decoded allocation (at most 64 MiB raster plus filter bytes). Signature-only or browser-MIME-only validation is insufficient. Reject SVG, GIF, JPEG, animation, arbitrary remote URLs and malformed/truncated PNGs.
 
-Use a small local-storage interface, server-generated opaque names, no caller path concatenation, no remote download and no host paths in JSON. Store metadata only after a validated temporary file is durably published; compensate file creation on DB failure. If deletion succeeds in DB but file removal fails, leave an inaccessible orphan and perform idempotent bounded cleanup; never serve files just because their disk key exists. Upload and main-image selection must serialize through the product version/lock. Keep exactly one primary when images remain, choose the first ordered remaining image after primary deletion. Verify these policies in implementation; they are not yet proven here.
+Use a small local-storage interface, server-generated opaque names, no caller path concatenation, no remote download and no host paths in JSON. Store metadata only after a validated temporary file is durably published; retain published bytes on an ambiguous transaction failure; a rejected commit acknowledgement cannot prove rollback. Coordinated orphan cleanup removes only metadata-unreferenced bytes. If deletion succeeds in DB but file removal fails, leave an inaccessible orphan and perform idempotent bounded cleanup; never serve files just because their disk key exists. Upload and main-image selection must serialize through the product version/lock. Keep exactly one primary when images remain, choose the first ordered remaining image after primary deletion. The initial freeze did not prove these policies; later independent runtime evidence and the commit-ambiguity correction are recorded in the H2 report.
 
-## Verification status for this contract candidate
+## Verification at the initial contract freeze (historical)
 
 - Node 24.18.1 / npm 11.16.0. Both backend/frontend `npm ci --offline --no-audit --no-fund` exited 0. npm withheld unapproved lifecycle scripts; install success does not imply Prisma generation, native-module readiness or builds.
 - RED observed before adding schemas/routes; focused contract tests then GREEN, 6/6.
@@ -53,3 +53,7 @@ Use a small local-storage interface, server-generated opaque names, no caller pa
 - `npm --prefix backend run contract:validate`: exit 0; OpenAPI 3.0.3 and ten JSON examples validate.
 - Independent Verify and native Review are separate pending checks on the exact committed candidate.
 - Runtime Swagger parity, migrations, PostgreSQL transactions/races, uploads, API, UI/browser and all functional H1 regressions remain pending implementation. No runtime or visual PASS is claimed.
+
+## Final evidence boundary
+
+The initial contract native review was declined, not approved. Subsequent persistence/runtime/UI slices have their own independent Verify and native Review outcomes. Final informational metadata does not change any DTO, endpoint, example or business rule; all frozen paths/components/security remain byte-equivalent as parsed objects. See the H2 report for final commands, omissions, advisories and exact slice commits.

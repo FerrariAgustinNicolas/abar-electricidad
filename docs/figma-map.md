@@ -1,4 +1,20 @@
-# ABAR — mapa de UI y brechas H0.4
+# ABAR — mapa de UI y brechas H0.4, con checkpoint H2
+
+## Checkpoint H2 (2026-10-20)
+
+H1 ya implementa login/sesión/usuarios. H2 local implementa Home `17:256`,
+catálogo `6:182`, detalle `6:324`, productos admin `9:412`, alta/edición
+`9:539`, categorías `9:844` y stock derivado en `/admin/stock`. Estos IDs
+proceden de la documentación existente: **no se inspeccionó nuevamente Figma**.
+Se observó navegador real/API/PG para catálogo, precios, galería, categorías y
+apertura manual. No se certificaron 360/768/1440 px, teclado completo, foco,
+contraste ni pixel-perfect. Evidencias y omisiones: [informe H2](milestones/H2-informe.md).
+
+Lo siguiente es el **snapshot histórico H0.4**, no el inventario actual de
+funcionalidades. Sus estados pendientes de H1/H2 quedan supersedidos únicamente
+por el informe de cada hito; H3–H5 siguen sin implementar. No hay demanda impaga
+simulada en la nueva pantalla de stock.
+
 
 Este mapa convierte la referencia documental del plan en una base de rutas verificable; no declara que las pantallas comerciales estén construidas ni que se haya validado visualmente el archivo Figma. La única UI real es el subconjunto H0 señalado abajo. La auditoría visual y responsive permanece pendiente.
 
