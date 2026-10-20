@@ -4,11 +4,16 @@ info:
   version: 0.4.0
   x-abar-milestone: H1-contract-freeze
   x-abar-runtime-stage: h0
+  # Legacy freeze markers above remain required by the integrated static validator.
+  x-abar-integrated-runtime-stage: h1
+  x-abar-integrated-commit: 18c39e9b86b7b7bf45263fe5bad4fe77125a6386
   description: |
-    Single normative contract: H1 authentication direction frozen, NOT implemented or
-    externally approved. Only GET /health currently runs. Nine H1 operations below
-    are normative for future implementation; public/business components remain projected.
-    P01–P10 and buyer-field rules remain unresolved. No production readiness is implied.
+    Single normative candidate contract, version 0.4.0. H1 authentication and
+    administrative-user operations are integrated alongside GET /health at the
+    commit identified above. No external approval or production readiness is implied.
+    The h0 runtime marker and projected-area list are historical freeze metadata,
+    retained for validator compatibility, not current runtime availability claims.
+    Public/business components, P01–P10 and buyer-field rules remain projected.
     All H1 responses use Cache-Control: no-store. No passwords, cookie values or runtime
     nonces are provided as examples. Required response headers use x-required: true.
     Cookie authentication does not replace Origin/CSRF checks. See docs/decisions/H1-auth.md.
@@ -42,7 +47,7 @@ tags:
   - name: projected
     description: Candidate components and conventions only; no business operations are implemented.
   - name: auth
-    description: Frozen H1 session protocol; runtime pending.
+    description: Integrated H1 session protocol; validation evidence is tracked separately.
   - name: admin
     description: Frozen H1 administrative users; equal capabilities, no roles.
 paths:
