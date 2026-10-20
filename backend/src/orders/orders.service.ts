@@ -134,16 +134,17 @@ export class OrdersService {
 
   async createAttempt(orderId: string, token: unknown, key: unknown, input: unknown) {
     if (!UUID_PATTERN.test(orderId) || typeof token !== 'string' || typeof key !== 'string' || !KEY_PATTERN.test(key)) fail(400, 'VALIDATION_ERROR');
+    const canonicalOrderId = orderId.toLowerCase();
     const body = validateCatalogBody<AttemptInput>('AttemptRequest', input);
     if (body.methodCode === 'DEMO_SIMULATION' && !this.config.get<boolean>('H4_DEMO_SIMULATION_ENABLED', false)) fail(403, 'DEMO_DISABLED');
     if (body.methodCode !== 'DEMO_SIMULATION' && body.scenario !== undefined) fail(400, 'VALIDATION_ERROR');
-    const requestFingerprint = fingerprint({ orderId, body });
+    const requestFingerprint = fingerprint({ orderId: canonicalOrderId, body });
     const keyBytes = this.replayKey();
-    const scope = `attempt:${orderId}`;
+    const scope = `attempt:${canonicalOrderId}`;
     try {
       return await this.prisma.$transaction(async (tx) => {
-        await tx.$queryRaw`SELECT id FROM "Order" WHERE id = ${orderId}::uuid FOR UPDATE`;
-        const order = await tx.order.findUnique({ where: { id: orderId }, include: { payment: { include: { currentAttempt: true } } } });
+        await tx.$queryRaw`SELECT id FROM "Order" WHERE id = ${canonicalOrderId}::uuid FOR UPDATE`;
+        const order = await tx.order.findUnique({ where: { id: canonicalOrderId }, include: { payment: { include: { currentAttempt: true } } } });
         if (!this.validAccess(order, token)) fail(403, 'ORDER_ACCESS_INVALID');
         await this.lockKey(tx, scope, key);
         const existing = await tx.orderIdempotencyKey.findUnique({ where: { scope_key: { scope, key } } });
@@ -157,11 +158,11 @@ export class OrdersService {
           sequence: (order!.payment!.currentAttempt?.sequence ?? 0) + 1, createdAt: new Date(), updatedAt: new Date() } });
         const paymentStatus = scenario === 'REJECTED' ? 'REJECTED' : 'PENDING';
         await tx.payment.update({ where: { id: order!.payment!.id }, data: { currentAttemptId: attempt.id, status: paymentStatus } });
-        await tx.orderEvent.create({ data: { orderId, attemptId: attempt.id, eventType: 'PAYMENT_ATTEMPT_CREATED', details: { sequence: attempt.sequence, methodCode: body.methodCode } } });
-        const response = { orderId, orderStatus: 'RECEIVED', paymentStatus, currentAttempt: this.attemptView(attempt),
+        await tx.orderEvent.create({ data: { orderId: canonicalOrderId, attemptId: attempt.id, eventType: 'PAYMENT_ATTEMPT_CREATED', details: { sequence: attempt.sequence, methodCode: body.methodCode } } });
+        const response = { orderId: canonicalOrderId, orderStatus: 'RECEIVED', paymentStatus, currentAttempt: this.attemptView(attempt),
           nextActions: ['VIEW_ORDER', 'RETRY_PAYMENT', 'LOOKUP_ORDER'], demoMode: true };
         await this.storeReplay(tx, { kind: 'PAYMENT_ATTEMPT', scope, key, fingerprint: requestFingerprint,
-          responseStatus: 201, orderId, attemptId: attempt.id, response }, keyBytes);
+          responseStatus: 201, orderId: canonicalOrderId, attemptId: attempt.id, response }, keyBytes);
         return response;
       }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable, maxWait: 5000, timeout: 10000 });
     } catch (error) {

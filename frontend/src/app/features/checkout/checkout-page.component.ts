@@ -117,12 +117,12 @@ export class CheckoutPageComponent {
     effect(() => {
       const current = this.quote();
       const lines = this.cart.lines();
-      if (!this.unknownOutcome() && current && this.handoff.current(lines)?.quoteId !== current.quoteId) this.invalidateQuote();
+      if (!this.submitting() && !this.unknownOutcome() && current && this.handoff.current(lines)?.quoteId !== current.quoteId) this.invalidateQuote();
     });
     const expiryTimer = setInterval(() => {
       const current = this.quote();
       this.now.set(Date.now());
-      if (!this.unknownOutcome() && current && !this.handoff.current(this.cart.lines())) this.invalidateQuote();
+      if (!this.submitting() && !this.unknownOutcome() && current && !this.handoff.current(this.cart.lines())) this.invalidateQuote();
     }, 1000);
     this.destroyRef.onDestroy(() => { this.handoff.clear(); clearInterval(expiryTimer); });
     void this.loadTerms();

@@ -3,7 +3,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { vi } from 'vitest';
 import { CartStateService } from '../../core/cart/cart-state.service';
 import { CartLine } from '../../core/cart/cart-state.service';
@@ -146,6 +146,28 @@ describe('CheckoutPageComponent', () => {
     expect(resumed.nativeElement.textContent).toContain('Ir a consulta mínima del pedido');
     await resumed.componentInstance.submit();
     expect(api.createOrder).toHaveBeenCalledOnce();
+  });
+
+  it('preserves reconciliation when the quote expires while the create response is pending', async () => {
+    vi.useFakeTimers();
+    const now = new Date('2026-10-20T12:00:00Z'); vi.setSystemTime(now);
+    TestBed.inject(CheckoutHandoffService).accept({ ...quote, expiresAt: new Date(now.getTime() + 1000).toISOString() }, lines);
+    const response = new Subject<HttpResponse<CreateOrderResponse>>();
+    api.createOrder.mockReset().mockReturnValueOnce(response).mockReturnValueOnce(of(new HttpResponse({ status: 201, body: created })));
+    const fixture = TestBed.createComponent(CheckoutPageComponent); const component = fixture.componentInstance;
+    await Promise.resolve(); await Promise.resolve(); setupForm(component); component.form.controls.accepted.setValue(true);
+    const sending = component.submit();
+    await vi.advanceTimersByTimeAsync(1500); fixture.detectChanges();
+    response.error({ status: 0 }); await sending;
+
+    expect(component.unknownOutcome()).toBe(true);
+    expect(component.quote()).not.toBeNull();
+    expect(component.canSubmit()).toBe(true);
+    await component.submit();
+    expect(api.createOrder).toHaveBeenCalledTimes(2);
+    expect(api.createOrder.mock.calls[0]).toEqual(api.createOrder.mock.calls[1]);
+    expect(cart.clear).toHaveBeenCalledOnce();
+    vi.useRealTimers();
   });
 
   it('requires coordinated address and locality while leaving pickup address optional', async () => {
