@@ -158,11 +158,79 @@ Si aparece una **decisión comercial no definida que bloquee la implementación*
 
 **Detenerse al finalizar para la auditoría de H3 en este chat.**
 
+### S11 — External-audit bounded closure authorization (2026-10-20)
+
+H3 fue auditado externamente.
+
+**Dictamen: PARCIAL, con implementación funcional conforme y dos pendientes de cierre.**
+
+Autorizo una corrección acotada y la recuperación controlada de Review nativo.
+
+**Estado inicial:**
+
+- Rama: `codex/h3-cart-quote`.
+- Candidato técnico: `f2277c5331c178bac465097dd1651ebcafe0f55c`.
+- Base H2 aprobada: `c91ccd4b436ecb2e4585d7c33e12b7b1a45d16ff`.
+- Informe: `docs/milestones/H3-informe.md`.
+
+### 1. Corregir contraste visual
+
+Corregí exclusivamente el bajo contraste de los botones `+` y `−` del stepper en el carrito.
+
+- Utilizá un color de texto compatible con los tokens existentes.
+- Comprobá contraste legible, incluyendo estados habilitado, deshabilitado y foco.
+- Verificá que los controles sigan funcionando con teclado.
+- Ejecutá tests afectados, frontend build y lint.
+- Obtené evidencia visual real, priorizando 360 px.
+- No modifiques reglas del carrito, presupuestos, backend ni contratos.
+
+### 2. Revisar bloqueo de Gentle-AI
+
+El Review nativo no comenzó porque el preflight devolvió `intended_untracked_selection_required`, con assessment `high_risk`.
+
+Investigá el alcance exacto de los archivos no versionados que exige seleccionar y utilizá únicamente el procedimiento nativo documentado para declararlos explícitamente, si corresponde.
+
+No limpiar ni incorporar archivos ajenos.
+No reconstruir tokens.
+No forzar herramientas.
+No deshabilitar Review.
+No reutilizar autoridades consumidas.
+
+Intentá una reentrada controlada con el candidato actualizado. Si sigue bloqueado, registrá el error exacto y detené ese frente, sin inventar aprobación.
+
+### 3. Verificación del candidato final
+
+- Review independiente del delta visual.
+- Verify independiente de las verificaciones afectadas.
+- Confirmar que el cambio no altera H1/H2 ni las invariantes monetarias y de stock.
+- Verificar que la documentación posterior al candidato sea pasiva.
+- No repetir suites extensas de backend ya verificadas si esos archivos permanecen idénticos.
+
+### 4. Entrega
+
+Generá `docs/milestones/H3-cierre-validacion.md` con:
+
+- Causa y corrección del contraste.
+- Capturas y mediciones.
+- Tests y exit codes.
+- Resultado del Review nativo o bloqueo preservado.
+- Review y Verify independientes.
+- Commit técnico final y árbol Git.
+- Deuda restante.
+
+No hacer push, PR, merge, tags ni comenzar H4.
+
+Detenete después de entregar el informe para auditoría externa.
+
 ## Tasks
 - T1 / S5: inline, contract freeze and decision; completed; commit 15ebb00; static validator exit 0, contract regression tests 20/20; no runtime claim.
 - T2 / S4,S7: delegated backend, independent from frontend after T1 freeze; implemented commit 4b2a0bf, own H3 checks 13 tests PASS; real PostgreSQL pending independent Verify.
 - T3 / S6,S8: delegated frontend, disjoint edit surface from T2 after T1 freeze; implemented commit 09a532d, 94 tests/build/lint PASS.
 - T4 / S9,S10: independent Review and Verify of assembled candidate 09a532d, executed; original Verify blockers resolved by f2277c5; report created; Needs audit decision (visual contrast/native preflight/omissions).
+
+- T5 / S11.1: inline visual-only CSS correction, affected tests/build/lint; completed technical97ae485, parent+Verify9tests/build/lint0, parentreal360evidence independentlyadjudicated. Risk: none (stepper-scoped styles only).
+- T6 / S11.2: inline native documented inventory/re-entry, parent owns provider tokens; attempted STATUSexit0collect, exact5ownpaths; blocked schema unavailable, no selection/START/ACK.
+- T7 / S11.3–4: independent Review/Verify and passive closure report; completedcodechecks/evidence, reportPARCIALnativepending, documentationpassivity confirmedbyh3_review, nativefrontstopped and finalreportPARCIALforauditor.
 
 ## Log
 L1 — Original authorized milestone prompt quoted verbatim above; current user instruction: “Autorizo ejecutar **únicamente H3.1–H3.3** conforme a docs/milestones/H3-prompt.md.” “Sin push, merge a main, tags ni acciones destructivas.” Full original request retained by chat and H3-prompt.
@@ -209,3 +277,10 @@ Sin push, merge a main, tags ni acciones destructivas.
 L8 — Independent Review09a532d and supplementf2277c5: no concrete P1/P2 blockers. Independent Verify09a532d found expiry/SQLupdatedAt/TTLfixture failures; unique correctionf2277c5, deterministic parentRED→GREEN9/9; independentrecheck frontend94/94+PG3/3 clean/upgrade/no-stock. Evidence retains old failures and candidate provenance.
 L9 — Native preflight exit1 invalid_request/not_started/authoritynot_evaluated, intended_untracked_selection_required; no retry, START or ACK. Parent visual review identified low contrast +/− (white on subtle background); no second correction, explicit external-audit decision. Zoom200% and deepbaseline remain omitted.
 L10 — H3-informe.md and h3-verify.md/screenshots created. Own H3-only containers/services stopped after ownership verification; own scratch/privatecredentials removed. Main/tag/originalWIP unchanged,14worktrees preserved. Stop for external audit, no publication.
+
+L11 — New external-audit authorization quoted verbatim in S11. Resume verified b08a141 documentary HEAD, clean H3 worktree; technical f2277c5 and base c91ccd4 unchanged. Existing main/WIP/worktrees preserved. CSS-only contrast is understood and stays inline; independent actors explicitly requested by user. Measured token-derived pre-fix contrast1.09:1; proposed text14.07, disabled5.83, focus8.87 using existing tokens. Native status --help documents --untracked-scope / --intended-untracked-selection / expected inventory; no recovery command invented.
+
+L12 — Technical97ae485 treee2cc605b411bdf90128c3b3eb11cb9a381d86b06 changes only3CSSselectors; parentandVerifyaffected9/9/build/lint0 Node26.4/npm11.17. Reviewvisual noP1/P2. ParentCUAIABavailable despiteworkerbrowsers[]; real360x800 nooverflow, enabled14.0715/disabled5.8317/focus8.1709(onsurface)/8.8682(onwhite); Tab/Enter1→2/Space2→1; independentVerifyrecalculatedartifacts. Cursor:pointerexistingadvisory, no claimedfix.
+L13 — Native documented STATUSexit0/v9 → collect intended_untracked_selection_required. Inventoryexact5newclosurefiles, nooriginalWIP; target64ed4076..., inventoryd1ea8a51... captured. Providerrequires schema_bound_json selection schemaunexposed byinstalled4.2.0 schemaCLI/docs; exactunknownschemastring preserved, auxiliaryexitunknown. No inventedJSON/submissiontokens/alternativeflags/selection/START/ACK/authorityreuse/modechange; stopnativefrontperuser. Updatedreportinvalidatesoldinventorydigest, notclaimvalidforexecution.
+
+L14 — Finalreadback h3_review: new5artifacts+tracking0644/passive, no runtime/config/contractchanges; Review/Verifyprovenance truthful. OwnclosurePG/API/Angularstoppedafterownershipchecks, privatefixturescratchremoved, browsertempclosed/viewportreset; nooriginalresourcesorworktreesmodified. Finalhandoff H3-cierre-validacion.md, visualclosed/nativeblocked, no publication or furtherautomaticreentry.

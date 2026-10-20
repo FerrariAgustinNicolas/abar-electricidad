@@ -1,0 +1,77 @@
+{
+  "buttons": [
+    {
+      "ancestorOpacities": [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      "background": "rgb(243, 246, 248)",
+      "color": "rgb(86, 97, 107)",
+      "cursor": "pointer",
+      "disabled": true,
+      "focusVisible": false,
+      "label": "Disminuir Cable de demostraci\u00f3n visual",
+      "opacity": "1",
+      "outlineColor": "rgb(86, 97, 107)",
+      "outlineOffset": "0px",
+      "outlineStyle": "none",
+      "outlineWidth": "3px",
+      "text": "\u2212",
+      "contrastRatio": 5.8317
+    },
+    {
+      "ancestorOpacities": [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      "background": "rgb(243, 246, 248)",
+      "color": "rgb(32, 38, 44)",
+      "cursor": "pointer",
+      "disabled": false,
+      "focusVisible": true,
+      "label": "Aumentar Cable de demostraci\u00f3n visual",
+      "opacity": "1",
+      "outlineColor": "rgb(8, 77, 125)",
+      "outlineOffset": "2px",
+      "outlineStyle": "solid",
+      "outlineWidth": "3px",
+      "text": "+",
+      "contrastRatio": 14.0715,
+      "focusContrastOnSurface": 8.1709,
+      "focusContrastOnPage": 8.8682
+    }
+  ],
+  "quantity": "1",
+  "viewport": {
+    "height": 800,
+    "scrollWidth": 360,
+    "width": 360
+  },
+  "keyboard": {
+    "initial": 1,
+    "afterEnter": 2,
+    "afterSpace": 1,
+    "tabReachedIncrement": true
+  },
+  "candidate": "97ae4853805ca408fb5f8f24cc2010fec730013a",
+  "execution": "Parent CUA IAB real Angular\u2192Nest\u2192owned PostgreSQL; independent worker browser inventory was unavailable.",
+  "remainingObservation": "Disabled button computed cursor remains pointer due to pre-existing selector specificity; DOM disabled semantics verified. No cursor behavior changed."
+}
