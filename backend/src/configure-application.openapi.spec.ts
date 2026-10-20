@@ -1,3 +1,6 @@
+import { CheckoutController } from './checkout/checkout.controller';
+import { CheckoutService } from './checkout/checkout.service';
+import { PublicCheckoutRateLimiter } from './checkout/public-checkout-rate-limiter';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { Test } from '@nestjs/testing';
@@ -52,15 +55,15 @@ function semantics(value: unknown, document: InterfaceDocument): unknown {
     .map((key) => [key, semantics(object[key], document)]));
 }
 
-describe('production Swagger projection of the frozen H1 and H2 interface', () => {
+describe('production Swagger projection of the frozen H1, H2 and H3 interface', () => {
   let app: NestExpressApplication;
   let document: InterfaceDocument;
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      controllers: [AuthController, AdminUsersController, HealthController, CatalogController, StockController],
+      controllers: [AuthController, AdminUsersController, HealthController, CatalogController, StockController, CheckoutController],
       providers: [CsrfService, LoginService, SessionService, LogoutService,
-        ChangePasswordService, AdminUsersService, HealthService, CatalogService, StockService]
+        ChangePasswordService, AdminUsersService, HealthService, CatalogService, StockService, CheckoutService, PublicCheckoutRateLimiter]
         .map((provide) => ({ provide, useValue: {} })),
     }).compile();
     app = module.createNestApplication<NestExpressApplication>();
@@ -73,7 +76,7 @@ describe('production Swagger projection of the frozen H1 and H2 interface', () =
 
   afterAll(async () => { if (app) await app.close(); });
 
-  it('keeps exactly the implemented H1 and H2 routes and both cookie schemes', () => {
+  it('keeps exactly the implemented H1, H2 and H3 routes and both cookie schemes', () => {
     expect(Object.keys(document.paths).sort()).toEqual(Object.keys(contract.paths).sort());
     expect(semantics(document.components.securitySchemes, document))
       .toEqual(semantics(contract.components.securitySchemes, contract));

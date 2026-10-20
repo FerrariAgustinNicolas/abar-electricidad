@@ -20,7 +20,7 @@ test('H2 migrations preserve H1 and enforce catalog/stock integrity on owned Pos
   await client.connect();
   const suffix = randomUUID().replaceAll('-', '');
   const names = (await readdir(migrations)).filter((name) => /^\d+_/.test(name)).sort();
-  const h1 = names.filter((name) => !name.includes('_h2_'));
+  const h1 = names.filter((name) => !name.includes('_h2_') && !name.includes('_h3_'));
   const h2 = names.filter((name) => name.includes('_h2_'));
   assert.equal(h2.length, 1);
   const executeMigrations = async (list) => {

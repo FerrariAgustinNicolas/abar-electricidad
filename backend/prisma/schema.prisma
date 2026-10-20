@@ -185,3 +185,25 @@ model StockEntry {
   @@id([operationId, presentationId])
   @@index([presentationId, operationId])
 }
+
+// Backend-owned demo policy. H6 may add administration without rewriting quote snapshots.
+model CheckoutPolicy {
+  id                    String   @id @db.VarChar(32)
+  feeMinor              BigInt   @default(0)
+  quoteTtlSeconds       Int      @default(600)
+  enabledDeliveryModes  Json     @db.JsonB
+  paymentMethods        Json     @db.JsonB
+  version               Int      @default(1)
+  updatedAt             DateTime @default(now()) @db.Timestamptz(3)
+}
+
+model CheckoutQuote {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  policyVersion   Int
+  stateFingerprint String  @db.Char(64)
+  response        Json     @db.JsonB
+  createdAt       DateTime @default(now()) @db.Timestamptz(3)
+  expiresAt       DateTime @db.Timestamptz(3)
+
+  @@index([expiresAt])
+}

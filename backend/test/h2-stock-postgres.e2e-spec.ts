@@ -58,7 +58,7 @@ describeOwned('H2 stock behavior on independently verified disposable PostgreSQL
     );
     expect(Number(initialTables.rows[0].count)).toBe(0);
     const migrationNames = (await readdir(migrationsPath)).filter((entry) => /^\d+_/.test(entry)).sort();
-    expect(migrationNames).toHaveLength(4);
+    expect(migrationNames).toHaveLength(5); // H2's four historical migrations plus the additive H3 quote schema.
     for (const migration of migrationNames) {
       await client.query(await readFile(resolve(migrationsPath, migration, 'migration.sql'), 'utf8'));
     }
