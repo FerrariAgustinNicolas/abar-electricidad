@@ -35,6 +35,7 @@ export interface ProductWrite {
   shortDescription: string; description: string; attributes: TechnicalAttribute[];
   active: boolean; featured: boolean; presentations: PresentationWrite[];
 }
+/** Product updates require the full editable catalog payload, not partial merge semantics. */
 export interface ProductPatch extends ProductWrite { expectedVersion: number }
 export interface AdminProduct extends Omit<ProductWrite, 'presentations'> {
   id: string; version: number; presentations: AdminPresentation[]; images: ProductImageView[];

@@ -29,6 +29,11 @@ export const appRoutes: Routes = [
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'usuarios' },
       { path: 'usuarios', loadComponent: () => import('./features/admin/admin-placeholder-page.component').then((module) => module.AdminPlaceholderPageComponent) },
+      { path: 'productos', loadComponent: () => import('./features/admin-catalog/admin-products-page.component').then((module) => module.AdminProductsPageComponent) },
+      { path: 'productos/nuevo', canDeactivate: [(component: { canDeactivate(): boolean }) => component.canDeactivate()], loadComponent: () => import('./features/admin-catalog/admin-product-form-page.component').then((module) => module.AdminProductFormPageComponent) },
+      { path: 'productos/:id/editar', canDeactivate: [(component: { canDeactivate(): boolean }) => component.canDeactivate()], loadComponent: () => import('./features/admin-catalog/admin-product-form-page.component').then((module) => module.AdminProductFormPageComponent) },
+      { path: 'categorias', loadComponent: () => import('./features/admin-catalog/admin-categories-page.component').then((module) => module.AdminCategoriesPageComponent) },
+      { path: 'stock', loadComponent: () => import('./features/admin-catalog/admin-stock-page.component').then((module) => module.AdminStockPageComponent) },
       { path: 'change-password', component: ChangePasswordPageComponent },
     ],
   },
