@@ -28,6 +28,7 @@ El cierre posterior modifica documentación y metadatos descriptivos exclusivame
 | `f03088620563050c78e9eadbcd185913f8c220db` | Angular público real |
 | `83f38abacb260fe37b7c40fb4763ab30af17bb28` | Angular admin y Forms fijado |
 | `b24f5bf1f3521f8fee94c02c48cf064bcd35adfc` | Preservación independiente de borradores de galería |
+| `c9180bff9ae2f5b4a1f3c6bb249c1345ee6d4496` | Informe, archivo histórico y metadatos descriptivos de cierre |
 
 Las unidades coherentes superan a veces la heurística de 400 líneas; no se dividieron DTOs/tests ni se omitieron pruebas para alcanzar una cuota. No se crearon PRs. Topología/publicación futura queda a la auditoría. El logbook y su archivo histórico preservan decisiones y autorizaciones: [tareas](../../odd/tasks/h2-catalog-stock.md), [archivo](H2-work-log.md).
 
@@ -175,7 +176,7 @@ Admin: ACK confirmado `gentle-ai.review-acknowledged/v1`, target `sha256:f495486
 4. `contract:validate:live` histórico **NOT RUN**: target5432 fijo no propio. Se usó equivalente contra API/Swagger/PG nuevos, sin debilitar assertions.
 5. Instalación offline fue con **ignore-scripts**; builds/generación posteriores se verificaron por separado con dependencias instaladas existentes. No se afirma reconstrucción integral nativa desde cero ni se ocultaron los dos abortos de build frontend del scratch backend.
 6. No se repitió smoke navegador completo en b24f5bf; sí pruebas funcionales exactas por hashes/corrección. No se arrancó Compose persistente ni se borraron volúmenes existentes; configuración/bindings se comprobaron sin contactar servicios ajenos. Intento con HOME/config Docker vacíos: exit125 porque faltó el registro del plugin; ejecución directa del Compose instalado, con los mismos configs vacíos y `--env-file .env.example config --quiet`: exit0. Ambos logs se retienen en `odd/checks/h2-final/compose-*.log`.
-7. El delta documental final es estructural/descriptivo, no un nuevo candidato de código ni una aprobación global del branch. Evidencia local ignorada acompaña la auditoría en esta máquina; no se publicó externamente.
+7. El delta documental final es estructural/descriptivo, no un nuevo candidato de código ni una aprobación global del branch. Assessment nativo de `c9180bf` frente a `b24f5bf`: risk=medium por OpenAPI YAML, review_due=false, reason=under_budget; **no** se declara PASS ni revisión nueva. El readback confirma árboles backend/frontend idénticos a `b24f5bf`. Evidencia local ignorada acompaña la auditoría en esta máquina; no se publicó externamente.
 
 ## 8. Matriz de aceptación
 
