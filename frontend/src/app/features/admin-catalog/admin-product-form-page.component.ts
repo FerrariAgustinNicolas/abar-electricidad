@@ -136,7 +136,6 @@ export class AdminProductFormPageComponent {
   readonly imageErrors = signal<Record<string, boolean>>({});
   readonly imageDrafts = signal<Record<string, { alt: string; order: number }>>({});
   private readonly objectUrls = new Set<string>();
-  private readonly imageDraftDirty = signal(false);
   readonly attributes = this.form.controls.attributes;
   readonly presentations = this.form.controls.presentations;
 
@@ -152,7 +151,6 @@ export class AdminProductFormPageComponent {
   imageDraftChanged(image: AdminProduct['images'][number]): boolean { const draft = this.imageDraft(image); return draft.alt !== image.alt || draft.order !== image.order; }
   updateImageDraft(image: AdminProduct['images'][number], key: 'alt' | 'order', value: string | number): void {
     this.imageDrafts.update((drafts) => ({ ...drafts, [image.id]: { ...this.imageDraft(image), [key]: value } }));
-    this.imageDraftDirty.set(true);
   }
   addAttribute(): void { if (this.attributes.length < 40) { this.attributes.push(this.fb.group({ key: '', value: '' })); this.form.markAsDirty(); } }
   removeAttribute(index: number): void { this.attributes.removeAt(index); this.form.markAsDirty(); }
@@ -180,7 +178,7 @@ export class AdminProductFormPageComponent {
   }
 
   canDeactivate(): boolean {
-    return (!this.form.dirty && !this.imageDraftDirty() && !this.selectedImage()) ||
+    return (!this.form.dirty && !this.images().some((image) => this.imageDraftChanged(image)) && !this.selectedImage()) ||
       window.confirm('Hay cambios sin guardar. ¿Querés salir sin guardarlos?');
   }
 
@@ -201,7 +199,7 @@ export class AdminProductFormPageComponent {
 
   selectImage(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.item(0) ?? null;
-    this.selectedImage.set(file); this.imageDraftDirty.set(Boolean(file)); this.error.set('');
+    this.selectedImage.set(file); this.error.set('');
     if (file) void this.validatePng(file);
   }
 
@@ -213,7 +211,7 @@ export class AdminProductFormPageComponent {
     this.busy.set(true); this.error.set('');
     try {
       const result = await firstValueFrom(this.api.uploadProductImage(product.id, file, alt, product.images.length, product.images.length === 0, product.version));
-      this.applyGalleryResult(result); this.selectedImage.set(null); this.imageAlt.set(''); this.imageDraftDirty.set(false);
+      this.applyGalleryResult(result); this.selectedImage.set(null); this.imageAlt.set('');
       const picker = document.getElementById('image-file') as HTMLInputElement | null; if (picker) picker.value = '';
     } catch (error: unknown) { await this.showError(error); }
     finally { this.busy.set(false); }
@@ -231,7 +229,7 @@ export class AdminProductFormPageComponent {
     const product = this.product(); const image = this.images().find((item) => item.id === imageId); const draft = this.imageDrafts()[imageId];
     if (!product || !image || !draft || this.busy() || !draft.alt.trim() || draft.alt.length > 200 || !Number.isSafeInteger(draft.order) || draft.order < 0 || draft.order > 7) return;
     this.busy.set(true); this.error.set('');
-    try { this.applyGalleryResult(await firstValueFrom(this.api.updateProductImage(product.id, imageId, { alt: draft.alt.trim(), order: draft.order, expectedVersion: product.version }))); }
+    try { this.applyGalleryResult(await firstValueFrom(this.api.updateProductImage(product.id, imageId, { alt: draft.alt.trim(), order: draft.order, expectedVersion: product.version })), imageId); }
     catch (error: unknown) { await this.showError(error); }
     finally { this.busy.set(false); }
   }
@@ -246,7 +244,7 @@ export class AdminProductFormPageComponent {
 
   async reloadAfterConflict(): Promise<void> {
     if (!this.productId || !this.versionConflict() || !window.confirm('Se descartarán los cambios locales y se recargará la versión vigente del producto. ¿Continuar?')) return;
-    this.versionConflict.set(false); this.error.set(''); this.imageDraftDirty.set(false); this.selectedImage.set(null);
+    this.versionConflict.set(false); this.error.set(''); this.imageDrafts.set({}); this.selectedImage.set(null);
     await this.loadProduct();
   }
 
@@ -266,7 +264,7 @@ export class AdminProductFormPageComponent {
   }
 
   private async hydrateProduct(product: AdminProduct): Promise<void> {
-    this.product.set(product); this.images.set(product.images); this.form.patchValue({
+    this.setGalleryState(product); this.form.patchValue({
       name: product.name, slug: product.slug, categoryId: product.categoryId, brand: product.brand ?? '', sku: product.sku ?? '',
       shortDescription: product.shortDescription, description: product.description, active: product.active, featured: product.featured,
     });
@@ -280,7 +278,7 @@ export class AdminProductFormPageComponent {
       lowStockThreshold: new FormControl(row.lowStockThreshold, { nonNullable: true, validators: [Validators.min(0), Validators.max(2147483647)] }),
       active: new FormControl(row.active, { nonNullable: true }), isDefault: new FormControl(row.isDefault, { nonNullable: true }),
     })));
-    this.form.markAsPristine(); this.imageDraftDirty.set(false); await this.refreshImagePreviews(product);
+    this.form.markAsPristine(); await this.refreshImagePreviews(product);
   }
 
   private toWrite(): ProductWrite {
@@ -298,7 +296,26 @@ export class AdminProductFormPageComponent {
     };
   }
 
-  private applyGalleryResult(product: AdminProduct): void { this.product.set(product); this.images.set(product.images); this.imageDraftDirty.set(false); void this.refreshImagePreviews(product); }
+  private applyGalleryResult(product: AdminProduct, savedImageId?: string): void {
+    this.setGalleryState(product, savedImageId);
+    void this.refreshImagePreviews(product);
+  }
+
+  private setGalleryState(product: AdminProduct, savedImageId?: string): void {
+    const previous = new Map(this.images().map((image) => [image.id, image]));
+    const drafts = this.imageDrafts();
+    this.imageDrafts.set(Object.fromEntries(product.images.map((image) => {
+      const old = previous.get(image.id);
+      const draft = drafts[image.id];
+      const preserve = image.id !== savedImageId && old && draft;
+      return [image.id, {
+        alt: preserve && draft.alt !== old.alt ? draft.alt : image.alt,
+        order: preserve && draft.order !== old.order ? draft.order : image.order,
+      }];
+    })));
+    this.product.set(product);
+    this.images.set(product.images);
+  }
   private async showError(error: unknown): Promise<void> {
     this.error.set(adminCatalogError(error)); this.versionConflict.set(error instanceof HttpErrorResponse && error.status === 409);
     this.staleCsrf.set(isAdminCatalogCsrfInvalid(error));
@@ -318,7 +335,6 @@ export class AdminProductFormPageComponent {
   private async refreshImagePreviews(product: AdminProduct): Promise<void> {
     const old = this.imageSources(); Object.values(old).forEach((url) => { URL.revokeObjectURL(url); this.objectUrls.delete(url); });
     this.imageSources.set({}); this.imageErrors.set({});
-    this.imageDrafts.set(Object.fromEntries(product.images.map((image) => [image.id, { alt: image.alt, order: image.order }])));
     for (const image of product.images) {
       try {
         const blob = await firstValueFrom(this.api.loadAdminImage(product.id, image.id));
