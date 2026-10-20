@@ -5,6 +5,7 @@ import { catchError, combineLatest, map, of, startWith, Subject, switchMap, tap 
 import { ProductDetail, ProductImageView, PublicPresentation } from '../../core/catalog/catalog.models';
 import { PublicCatalogApiService } from '../../core/catalog/public-catalog-api.service';
 import { formatMoney } from './format-money';
+import { CartStateService } from '../../core/cart/cart-state.service';
 
 @Component({ selector: 'abar-product-detail-page', standalone: true, imports: [RouterLink], template: `
 <div class="detail-page">
@@ -48,8 +49,8 @@ import { formatMoney } from './format-money';
       </div>
       <small>Solo cantidades enteras.</small>
       </div>
-      <button class="coming-soon" type="button" disabled aria-disabled="true">Próximamente</button>
-      <p class="purchase-note">La compra en línea todavía no está disponible.</p>
+      <button class="coming-soon add-to-cart" type="button" [disabled]="!presentation.sellable" (click)="addToCart(presentation)">Agregar al carrito</button>
+      <p class="purchase-note" role="status" aria-live="polite">{{ cartMessage() }}</p>
       }
       @if(item.description){<section class="description">
       <h2>Descripción</h2>
@@ -314,6 +315,7 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible {
   `], changeDetection: ChangeDetectionStrategy.OnPush })
 export class ProductDetailPageComponent implements OnInit {
   private readonly api = inject(PublicCatalogApiService);
+  private readonly cart = inject(CartStateService);
   private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
   private readonly refresh$ = new Subject<void>();
@@ -325,6 +327,7 @@ export class ProductDetailPageComponent implements OnInit {
   readonly selectedPresentation = signal<PublicPresentation | null>(null);
   readonly activeImage = signal<ProductImageView | null>(null);
   readonly quantity = signal(1);
+  readonly cartMessage = signal('La disponibilidad se revalida al solicitar un presupuesto.');
 
   ngOnInit(): void {
     combineLatest([this.route.paramMap, this.refresh$.pipe(startWith(undefined))]).pipe(
@@ -392,6 +395,13 @@ export class ProductDetailPageComponent implements OnInit {
 
   adjustQuantity(delta: number): void {
     this.quantity.update((value) => Math.max(1, value + delta));
+  }
+
+  addToCart(presentation: PublicPresentation): void {
+    if (!presentation.sellable) return;
+    this.cartMessage.set(this.cart.add(presentation.id, this.quantity())
+      ? `Se agregó ${this.quantity()} ${this.unitLabel(presentation)} al carrito.`
+      : 'No se pudo agregar: revisá los límites de cantidad y líneas del carrito.');
   }
 
   formatPrice(presentation: PublicPresentation): string {

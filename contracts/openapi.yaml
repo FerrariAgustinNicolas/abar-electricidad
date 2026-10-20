@@ -1,7 +1,8 @@
 openapi: 3.0.3
 info:
   title: ABAR Electricidad API — transversal candidate
-  version: 0.5.0
+  version: 0.6.0
+  x-abar-h3-freeze: cart-quote-v1
   x-abar-h2-freeze: catalog-stock-v1
   x-abar-h2-runtime-stage: implemented-audit-pending
   x-abar-milestone: H1-contract-freeze
@@ -10,7 +11,7 @@ info:
   x-abar-integrated-runtime-stage: h1
   x-abar-integrated-commit: 18c39e9b86b7b7bf45263fe5bad4fe77125a6386
   description: |
-    Single normative candidate contract, version 0.5.0. H2 catalog/stock schemas are frozen;
+    Single normative candidate contract, version 0.6.0. H3 cart/quote is frozen additively. H2 catalog/stock schemas are frozen;
     local H2 implementation and bounded independent checks are recorded in H2-informe.md.
     External milestone audit remains pending; this metadata is not production approval. H1 authentication and
     administrative-user operations are integrated alongside GET /health at the
@@ -27,6 +28,8 @@ info:
     - /api/v1/auth
     - /api/v1/admin
   x-abar-examples:
+    - file: examples/h3-quote-request.json
+      schema: QuoteRequest
     - file: examples/h2-product.json
       schema: ProductDetail
     - file: examples/h2-product-write.json
@@ -52,6 +55,8 @@ servers:
     description: Local development only; production transport must use HTTPS.
 security: []
 tags:
+  - name: checkout-public
+    description: H3 public demo quotes; no order, payment or reservation.
   - name: catalog-public
     description: Frozen H2 public catalog; no exact stock balances.
   - name: catalog-admin
@@ -65,6 +70,187 @@ tags:
   - name: admin
     description: Frozen H1 administrative users; equal capabilities, no roles.
 paths:
+  /api/v1/public/settings:
+    get:
+      tags:
+        - checkout-public
+      operationId: getPublicSettings
+      summary: getPublicSettings
+      security: []
+      description: Public server-owned fictitious demo configuration; no credentials
+        or commercial approval.
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "429":
+          - RATE_LIMITED
+        "503":
+          - SERVICE_UNAVAILABLE
+      responses:
+        "200":
+          description: Authoritative demo response. No reservation.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                enum:
+                  - no-store
+              x-required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicSettings"
+        "400":
+          description: Sanitized public error; never disclose exact balances or private
+            product names.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "429":
+          description: Sanitized public error; never disclose exact balances or private
+            product names.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Sanitized public error; never disclose exact balances or private
+            product names.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /api/v1/public/payment-methods:
+    get:
+      tags:
+        - checkout-public
+      operationId: getPublicPaymentMethods
+      summary: getPublicPaymentMethods
+      security: []
+      description: Public server-owned fictitious demo configuration; no credentials
+        or commercial approval.
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "429":
+          - RATE_LIMITED
+        "503":
+          - SERVICE_UNAVAILABLE
+      responses:
+        "200":
+          description: Authoritative demo response. No reservation.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                enum:
+                  - no-store
+              x-required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicPaymentMethods"
+        "400":
+          description: Sanitized public error; never disclose exact balances or private
+            product names.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "429":
+          description: Sanitized public error; never disclose exact balances or private
+            product names.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Sanitized public error; never disclose exact balances or private
+            product names.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      parameters:
+        - name: deliveryMode
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/DeliveryMode"
+  /api/v1/public/checkout/quotes:
+    post:
+      tags:
+        - checkout-public
+      operationId: createCheckoutQuote
+      summary: createCheckoutQuote
+      security: []
+      description: Technical quote only, never an order, payment or reservation.
+        Combine repeated presentationId before checking the aggregated maximum of
+        1000000 and stock. Maximum 100 input entries. Sort output by
+        presentationId. Money computed with exact integers, bounded to
+        9223372036854775807 minor units. No private stock quantity. Re-quote
+        explicitly with this endpoint; no automatic write retries.
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "409":
+          - INSUFFICIENT_STOCK
+          - PRODUCT_UNAVAILABLE
+          - METHOD_UNAVAILABLE
+          - DELIVERY_UNAVAILABLE
+        "429":
+          - RATE_LIMITED
+        "503":
+          - SERVICE_UNAVAILABLE
+      responses:
+        "201":
+          description: Authoritative demo response. No reservation.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                enum:
+                  - no-store
+              x-required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuoteResponse"
+        "400":
+          description: Sanitized public error; never disclose exact balances or private
+            product names.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Sanitized public error; never disclose exact balances or private
+            product names.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "429":
+          description: Sanitized public error; never disclose exact balances or private
+            product names.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Sanitized public error; never disclose exact balances or private
+            product names.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuoteRequest"
   /health:
     get:
       tags: [operational]
@@ -2500,6 +2686,211 @@ components:
         type: string
         format: uuid
   schemas:
+    QuoteItemRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - presentationId
+        - quantity
+      properties:
+        presentationId:
+          $ref: "#/components/schemas/OpaqueId"
+        quantity:
+          type: integer
+          minimum: 1
+          maximum: 1000000
+    QuoteRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - items
+        - deliveryMode
+        - paymentMethodCode
+      properties:
+        items:
+          type: array
+          minItems: 1
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/QuoteItemRequest"
+        deliveryMode:
+          $ref: "#/components/schemas/DeliveryMode"
+        paymentMethodCode:
+          type: string
+          enum: &a1
+            - DEMO_PAY_ON_PICKUP
+            - DEMO_TRANSFER
+            - DEMO_SIMULATION
+    DemoPaymentMethod:
+      type: object
+      additionalProperties: false
+      required:
+        - code
+        - label
+        - instructions
+        - demo
+        - deliveryModes
+      properties:
+        code:
+          type: string
+          enum: *a1
+        label:
+          type: string
+          minLength: 1
+        instructions:
+          type: string
+          minLength: 1
+        demo:
+          type: boolean
+          enum:
+            - true
+        deliveryModes:
+          type: array
+          minItems: 1
+          maxItems: 2
+          uniqueItems: true
+          items:
+            $ref: "#/components/schemas/DeliveryMode"
+    PublicPaymentMethods:
+      type: object
+      additionalProperties: false
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          maxItems: 3
+          items:
+            $ref: "#/components/schemas/DemoPaymentMethod"
+    PublicSettings:
+      type: object
+      additionalProperties: false
+      required:
+        - mode
+        - policyVersion
+        - deliveryModes
+        - deliveryFee
+        - quoteTtlSeconds
+        - maxLines
+        - maxQuantity
+      properties:
+        mode:
+          type: string
+          enum:
+            - DEMO
+        policyVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        deliveryModes:
+          type: array
+          maxItems: 2
+          uniqueItems: true
+          items:
+            $ref: "#/components/schemas/DeliveryMode"
+        deliveryFee:
+          $ref: "#/components/schemas/Money"
+        quoteTtlSeconds:
+          type: integer
+          minimum: 60
+          maximum: 3600
+        maxLines:
+          type: integer
+          enum:
+            - 100
+        maxQuantity:
+          type: integer
+          enum:
+            - 1000000
+    QuoteItem:
+      type: object
+      additionalProperties: false
+      required:
+        - presentationId
+        - productId
+        - productSlug
+        - productName
+        - unit
+        - rollLengthMeters
+        - quantity
+        - unitPrice
+        - lineTotal
+      properties:
+        presentationId:
+          $ref: "#/components/schemas/OpaqueId"
+        productId:
+          $ref: "#/components/schemas/OpaqueId"
+        productSlug:
+          type: string
+          minLength: 1
+        productName:
+          type: string
+          minLength: 1
+        unit:
+          $ref: "#/components/schemas/PresentationUnit"
+        rollLengthMeters:
+          type: integer
+          minimum: 1
+          nullable: true
+        quantity:
+          type: integer
+          minimum: 1
+          maximum: 1000000
+        unitPrice:
+          $ref: "#/components/schemas/Money"
+        lineTotal:
+          $ref: "#/components/schemas/Money"
+    QuoteResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - quoteId
+        - expiresAt
+        - items
+        - subtotal
+        - deliveryFee
+        - total
+        - deliveryMode
+        - paymentMethod
+        - policyVersion
+        - stateFingerprint
+        - warnings
+      properties:
+        quoteId:
+          $ref: "#/components/schemas/OpaqueId"
+        expiresAt:
+          $ref: "#/components/schemas/UtcDateTime"
+        items:
+          type: array
+          minItems: 1
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/QuoteItem"
+        subtotal:
+          $ref: "#/components/schemas/Money"
+        deliveryFee:
+          $ref: "#/components/schemas/Money"
+        total:
+          $ref: "#/components/schemas/Money"
+        deliveryMode:
+          $ref: "#/components/schemas/DeliveryMode"
+        paymentMethod:
+          $ref: "#/components/schemas/DemoPaymentMethod"
+        policyVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        stateFingerprint:
+          type: string
+          pattern: ^[0-9a-f]{64}$
+        warnings:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            enum:
+              - QUOTE_DOES_NOT_RESERVE_STOCK
+              - DEMO_PAYMENT_METHODS_ONLY
     CsrfNonce:
       type: string
       minLength: 43

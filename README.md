@@ -1,16 +1,16 @@
 # ABAR Electricidad
 
-## Backend y servicios locales (H1 integrado y H2 local)
+## Backend y servicios locales (H1/H2 integrados y H3 local)
 
-Esta sección describe la base local del backend y sus dependencias: NestJS, PostgreSQL y Mailpit. El frontend Angular se documenta más abajo. H1 mantiene autenticación por sesión y administración de usuarios; H2 agrega catálogo, presentaciones, galería y stock auditado en una rama local pendiente de auditoría externa. El entorno es para desarrollo local; no es una configuración de producción.
+Esta sección describe la base local del backend y sus dependencias: NestJS, PostgreSQL y Mailpit. El frontend Angular se documenta más abajo. H1 mantiene autenticación por sesión y administración de usuarios; H2 integra catálogo, presentaciones, galería y stock auditado; H3 agrega carrito y presupuesto en una rama local pendiente de auditoría externa. El entorno es para desarrollo local; no es una configuración de producción.
 
-### H2 local: catálogo y stock, pendiente de auditoría externa
+### H2 integrado: catálogo y stock
 
 OpenAPI candidato **0.5.0** se congeló antes del desarrollo paralelo. Home,
 `/productos`, `/productos/:slug`, `/admin/productos`, `/admin/categorias` y
 `/admin/stock` consumen la API real. UNIT/METER/ROLL usan precios y saldos
 independientes; la apertura manual auditada convierte rollos cerrados en metros.
-No hay carrito, checkout, pedidos, pagos ni reservas.
+H2 no incluye carrito, checkout, pedidos, pagos ni reservas. H3 extiende esa base como se detalla abajo.
 
 Consultar [informe H2](docs/milestones/H2-informe.md), [contrato y límites](docs/decisions/H2-contract.md)
 y [prompt revisado](docs/milestones/H2-prompt.md). Las pruebas y revisiones por
@@ -19,6 +19,36 @@ unidad no equivalen a aprobación global ni productiva. Validación estática:
 `node --test scripts/h0-contract-validate.test.mjs scripts/h2-contract.test.mjs`.
 El runner LIVE histórico usa un target fijo: no ejecutarlo contra una base
 existente suponiendo que es un fixture descartable.
+
+### H3 local: carrito y presupuesto autoritativo (auditoría pendiente)
+
+Contrato aditivo **0.6.0**: `/carrito` conserva únicamente IDs de presentación y
+cantidades enteras en almacenamiento local versionado. El detalle agrega la
+presentación vendible seleccionada; metros y rollos permanecen independientes.
+El resumen consume `GET /api/v1/public/settings`,
+`GET /api/v1/public/payment-methods?deliveryMode=PICKUP` y
+`POST /api/v1/public/checkout/quotes`. El servidor lee precios/visibilidad/saldo de
+H2, calcula importes ARS exactos y persiste un snapshot con vigencia técnica.
+La tarifa inicial de entrega es $0 **de demostración**, configurable en backend;
+retiro no cobra esa tarifa. Los métodos `DEMO_*` son ficticios, no instrucciones
+bancarias ni servicios de cobro. P05 continúa pendiente para operación real.
+
+Presupuestar **no garantiza disponibilidad futura ni crea pedido, pago o reserva**.
+No modifica saldos/movimientos ni abre rollos. La aceptación explícita del nuevo
+resumen no crea pedidos; H4 deberá revalidar. La recarga requiere presupuesto y
+aceptación nuevos, sin borrar el carrito. No hay formulario final de comprador,
+creación de pedido ni simulador de pagos funcional.
+
+Consultar [contrato H3](docs/decisions/H3-quote.md),
+[alcance autorizado](docs/milestones/H3-prompt.md) e
+[informe del candidato](docs/milestones/H3-informe.md). Las migraciones históricas
+H1/H2 se conservan; la migración H3 es aditiva y no habilita administración H6.
+Verificaciones reproducibles del contrato:
+
+```sh
+node --test scripts/h0-contract-validate.test.mjs scripts/h2-contract.test.mjs scripts/h3-contract.test.mjs
+npm --prefix backend run contract:validate
+```
 
 ### Requisitos
 
@@ -97,7 +127,7 @@ El script usa una API local ya disponible o inicia el backend compilado con conf
 
 ## H1 integrado: contrato y verificaciones
 
-`main` integró H1 en `18c39e9b86b7b7bf45263fe5bad4fe77125a6386`. La base aprobada para H2 es `5c0e0fc200c1c22eaa2731298eb7e8bf968a8466`, con H1 y su cierre correctivo integrados. `contracts/openapi.yaml` es ahora 0.5.0 candidata; conserva las nueve operaciones auth/admin más health y añade H2, sin promesa productiva. P01–P10 y las reglas comerciales siguen fuera de alcance. Ver [decisión H1](docs/decisions/H1-auth.md), [validación post-merge](docs/milestones/H1-postmerge-validation.md) e [historial contractual](contracts/CHANGELOG.md).
+`main` integró H1 en `18c39e9b86b7b7bf45263fe5bad4fe77125a6386`. La base aprobada para H2 es `5c0e0fc200c1c22eaa2731298eb7e8bf968a8466`, con H1 y su cierre correctivo integrados. `contracts/openapi.yaml` es ahora 0.6.0 candidata (extensión H3); conserva las nueve operaciones auth/admin más health y añade H2, sin promesa productiva. P01–P10 y las reglas comerciales siguen fuera de alcance. Ver [decisión H1](docs/decisions/H1-auth.md), [validación post-merge](docs/milestones/H1-postmerge-validation.md) e [historial contractual](contracts/CHANGELOG.md).
 
 ```sh
 npm --prefix backend run contract:validate

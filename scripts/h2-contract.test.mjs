@@ -1,3 +1,4 @@
+import { H3_OPERATIONS } from './h3-contract.mjs';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
@@ -88,7 +89,8 @@ test('frozen H2 validator rejects removal of endpoints, error schemas and multip
 
 test('legacy H1-only contract remains accepted by the same public validator interface', async () => {
   const document = await normative();
-  for (const [route] of H2_OPERATIONS) delete document.paths[route];
+  for (const [route] of [...H2_OPERATIONS, ...H3_OPERATIONS]) delete document.paths[route];
+  delete document.info['x-abar-h3-freeze'];
   document.info.version = '0.4.0';
   delete document.info['x-abar-h2-freeze'];
   delete document.info['x-abar-h2-runtime-stage'];
