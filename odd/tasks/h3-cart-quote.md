@@ -159,10 +159,10 @@ Si aparece una **decisión comercial no definida que bloquee la implementación*
 **Detenerse al finalizar para la auditoría de H3 en este chat.**
 
 ## Tasks
-- T1 / S5: inline, contract freeze and decision; completed; static validator exit 0, contract regression tests 20/20; no runtime claim.
-- T2 / S4,S7: delegated backend, independent from frontend after T1 freeze; pending.
-- T3 / S6,S8: delegated frontend, disjoint edit surface from T2 after T1 freeze; pending.
-- T4 / S9,S10: independent Review and Verify of assembled candidate, final report; pending.
+- T1 / S5: inline, contract freeze and decision; completed; commit 15ebb00; static validator exit 0, contract regression tests 20/20; no runtime claim.
+- T2 / S4,S7: delegated backend, independent from frontend after T1 freeze; implemented commit 4b2a0bf, own H3 checks 13 tests PASS; real PostgreSQL pending independent Verify.
+- T3 / S6,S8: delegated frontend, disjoint edit surface from T2 after T1 freeze; implemented commit 09a532d, 94 tests/build/lint PASS.
+- T4 / S9,S10: independent Review and Verify of assembled candidate 09a532d, executed; original Verify blockers resolved by f2277c5; report created; Needs audit decision (visual contrast/native preflight/omissions).
 
 ## Log
 L1 — Original authorized milestone prompt quoted verbatim above; current user instruction: “Autorizo ejecutar **únicamente H3.1–H3.3** conforme a docs/milestones/H3-prompt.md.” “Sin push, merge a main, tags ni acciones destructivas.” Full original request retained by chat and H3-prompt.
@@ -170,3 +170,42 @@ L2 — Preflight confirmed main/origin-main/tag target c91ccd4, tree 9edf974, an
 L3 — Forecast exceeds 400 lines; use few cohesive local commits, no publication or unnecessary chains. Scope/demo values fixed in normative OpenAPI before parallel workers. Risk: items 3,4,5 (additive API validator, overlapping UI requests, additive schema).
 
 L4 — T1 RED: new H3 acceptance test failed on old exact allowlist. GREEN: H0/H2/H3 contract tests 20/20; static validation exit 0. Frozen 0.6.0, demo methods and bounds. Final independent Review/Verify cover assembled candidate; no global approval inferred.
+
+L5 — Backend h3_backend and frontend h3_frontend ran concurrently with declared disjoint surfaces. Parent alone owned shared Swagger configuration/tests, README, Git and tracking. Workers loaded injected skills. Backend commit 4b2a0bf; frontend commit 09a532d; candidate technical tree b8ee9964abfedb2bb6bb9378fbc168aea463c307. Native aggregate assessment high, review_due high_risk, escalated item1; independent h3_review and h3_verify launched.
+L6 — Frontend bounded parent spot correction fixed nonreactive Date.now expiry and shared method/quote revision deadlock; regression tests raised frontend count91→94. Parent shared seam correction updated H1 Swagger identity expectation and added Checkout controller to runtime projection fixture; two suites110tests passed. Earlier failed assertions retained as historical RED, not silently discarded.
+L7 — User request verbatim:
+
+Comenzamos H3 — Carrito y presupuesto autoritativo de ABAR Electricidad.
+
+**Base aprobada:**
+
+- PR #48 mergeado.
+- `main` y `origin/main`: `c91ccd4b436ecb2e4585d7c33e12b7b1a45d16ff`.
+- Tag anotado `h2-approved` publicado.
+- Árbol aprobado: `9edf974d74e466662850cfd446ac391a18d7d406`.
+
+Autorizo ejecutar **únicamente H3.1–H3.3** conforme a `docs/milestones/H3-prompt.md`.
+
+Antes de implementar, leé el prompt completo y los documentos que referencia. Verificá Git, tags, ramas y los worktrees existentes. Preservá todo el WIP original.
+
+Creá una rama y worktree independientes desde `main`. Si el prompt está sin versionar en el checkout original, incorporalo selectivamente a la nueva rama, sin modificar ese checkout.
+
+Congelá primero el contrato OpenAPI de H3 y luego organizá el trabajo paralelo con los agentes existentes.
+
+Priorizá implementación funcional, pruebas proporcionadas y reutilización de H1/H2. Evitá fragmentar innecesariamente el trabajo o repetir verificaciones que no aporten evidencia nueva.
+
+**Límites:**
+
+- No crear pedidos ni ejecutar pagos.
+- No reservar ni descontar stock.
+- No convertir rollos cerrados en metros automáticamente.
+- No confiar en precios del navegador.
+- No adelantar H4, H5 ni H6 completo.
+
+Al terminar, ejecutá Review y Verify independientes sobre el candidato, generá `docs/milestones/H3-informe.md` y detenete para auditoría externa.
+
+Sin push, merge a main, tags ni acciones destructivas.
+
+L8 — Independent Review09a532d and supplementf2277c5: no concrete P1/P2 blockers. Independent Verify09a532d found expiry/SQLupdatedAt/TTLfixture failures; unique correctionf2277c5, deterministic parentRED→GREEN9/9; independentrecheck frontend94/94+PG3/3 clean/upgrade/no-stock. Evidence retains old failures and candidate provenance.
+L9 — Native preflight exit1 invalid_request/not_started/authoritynot_evaluated, intended_untracked_selection_required; no retry, START or ACK. Parent visual review identified low contrast +/− (white on subtle background); no second correction, explicit external-audit decision. Zoom200% and deepbaseline remain omitted.
+L10 — H3-informe.md and h3-verify.md/screenshots created. Own H3-only containers/services stopped after ownership verification; own scratch/privatecredentials removed. Main/tag/originalWIP unchanged,14worktrees preserved. Stop for external audit, no publication.

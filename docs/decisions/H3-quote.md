@@ -13,3 +13,7 @@ OpenAPI 0.6.0 adds cart-quote-v1 to H2 0.5.0 without changing H1/H2 paths or DTO
 
 ## Scope and evidence
 No H4/H5/H6 complete, order creation, payment, stock reservation, roll conversion, publication or historical migration edits. Figma nodes 9:2 and 9:89 are documented references, not newly inspected. DIF09 corrected arithmetic is 39700, not 30500. Runtime and independent Review/Verify evidence belongs in H3-informe.md.
+
+## Independent review advisories
+
+The fingerprint identifies reference state (catalog and backend policy), not the complete quote identity: quantities remain in the immutable persisted response. H4 must validate the stored quote snapshot and its ID, not trust a matching fingerprint as proof of quantities. The demo limiter is process-local and malformed JSON rejected by the bounded parser does not consume the controller quota. Resolving cart metadata currently scans public catalog pages; this is a scaling debt, not a monetary authority.
