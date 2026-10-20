@@ -104,7 +104,9 @@ describe('Isolated controller HTTP and OpenAPI contract (not AppModule E2E)', ()
     expect(Object.keys(successHeaders).sort()).toEqual(['Cache-Control', 'Set-Cookie', 'X-CSRF-Token']);
     expect(successHeaders['Cache-Control'].schema).toEqual({ type: 'string', enum: ['no-store'] });
     expect(successHeaders['Set-Cookie'].schema).toEqual({ type: 'string' });
-    expect(successHeaders['X-CSRF-Token'].schema).toEqual({ type: 'string', minLength: 43, maxLength: 43 });
+    expect(successHeaders['X-CSRF-Token'].schema).toEqual({
+      type: 'string', minLength: 43, maxLength: 43, pattern: '^[A-Za-z0-9_-]{43}$',
+    });
     // The existing health-schema witness independently pins this shared public envelope.
     const publicErrorSchema = body.paths['/health'].get.responses['503'].content['application/json'].schema;
     for (const status of ['400', '401', '403', '503']) {
