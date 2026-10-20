@@ -1,18 +1,35 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { RouterLink, RouterOutlet } from '@angular/router';
+import { AuthSessionService } from '../core/auth/auth-session.service';
 
 @Component({
   selector: 'abar-admin-layout',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterLink, RouterOutlet],
   template: `
-    <header class="admin-header"><p>Administración · base H0</p></header>
-    <main class="admin-shell">
-      <aside aria-label="Navegación administrativa"><p>Área administrativa sin operaciones habilitadas.</p></aside>
-      <section><router-outlet /></section>
-    </main>
-    <p class="notice">Base H0; no autenticación implementada. No se muestran datos privados.</p>
+    <a class="skip-link" href="#admin-content">Saltar al contenido</a>
+    <header class="admin-header">
+      <a routerLink="/admin/usuarios" class="admin-brand">ABAR Electricidad · Administración</a>
+      <div class="admin-account">
+        <span>{{ accountName() }}</span>
+        <button type="button" class="button-light" (click)="logout()">Cerrar sesión</button>
+      </div>
+    </header>
+    <div class="admin-shell">
+      <nav class="admin-nav" aria-label="Navegación administrativa">
+        <a routerLink="/admin/usuarios" routerLinkActive="active" ariaCurrentWhenActive="page">Usuarios administradores</a>
+        <a routerLink="/admin/change-password" routerLinkActive="active" ariaCurrentWhenActive="page">Cambiar contraseña</a>
+      </nav>
+      <main id="admin-content" class="admin-content"><router-outlet /></main>
+    </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AdminLayoutComponent {}
+export class AdminLayoutComponent {
+  readonly auth = inject(AuthSessionService);
+  accountName(): string { return this.auth.session()?.admin.name ?? ''; }
+
+  async logout(): Promise<void> {
+    try { await this.auth.logout(); } catch { /* Local credentials are cleared even when the server cannot be reached. */ }
+  }
+}
