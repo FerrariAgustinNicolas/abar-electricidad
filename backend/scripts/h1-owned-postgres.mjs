@@ -1,4 +1,4 @@
-// Offline C09 contract only. Import and direct execution deliberately do nothing.
+// Offline C10 v2 contract only. Import and direct execution deliberately do nothing.
 import * as fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -30,23 +30,40 @@ function exact(object, keys) {
 function matches(expression, value) {
   return typeof value === 'string' && expression.test(value);
 }
+const PROJECTION_FILE = 'bootstrap-password.txt';
+const PROJECTION_TARGET = '/run/secrets/h1-bootstrap-password';
+function projectionIdentity(runId) {
+  return { version: 2, runId, file: PROJECTION_FILE,
+    source: path.join(FUTURE_STATE, runId, PROJECTION_FILE),
+    target: PROJECTION_TARGET, readOnly: true };
+}
+function validProjection(evidence, pair) {
+  const identity = projectionIdentity(pair.record.runId);
+  return exact(evidence, [...Object.keys(identity), 'plaintext'])
+    && Object.keys(identity).every(key => evidence[key] === identity[key])
+    && evidence.plaintext === pair.secret.bootstrapPassword;
+}
 function validResource(resource, record) {
-  if (!exact(resource, ['containerId', 'imageId', 'image', 'containerName', 'labels',
+  if (!exact(resource, ['version', 'runId', 'bootstrap', 'containerId', 'imageId', 'image', 'containerName', 'labels',
     'volume', 'secretMount', 'endpoint', 'state'])) return false;
   const { labels, volume, secretMount, endpoint } = resource;
-  return matches(ID, resource.containerId) && matches(IMAGE_ID, resource.imageId)
+  return resource.version === 2 && resource.runId === record.runId
+    && exact(resource.bootstrap, ['role', 'passwordFile'])
+    && resource.bootstrap.role === record.bootstrapRole
+    && resource.bootstrap.passwordFile === PROJECTION_TARGET
+    && matches(ID, resource.containerId) && matches(IMAGE_ID, resource.imageId)
     && resource.image === IMAGE && resource.containerName === `h1_pg_${record.runId}`
     && exact(labels, ['h1.run', 'h1.unit'])
-    && labels['h1.run'] === record.runId && labels['h1.unit'] === 'C09'
+    && labels['h1.run'] === record.runId && labels['h1.unit'] === 'C10'
     && exact(volume, ['type', 'name', 'target', 'labels'])
     && volume.type === 'volume' && volume.name === `h1_volume_${record.runId}`
     && volume.target === '/var/lib/postgresql/data'
     && exact(volume.labels, ['h1.run', 'h1.unit'])
-    && volume.labels['h1.run'] === record.runId && volume.labels['h1.unit'] === 'C09'
+    && volume.labels['h1.run'] === record.runId && volume.labels['h1.unit'] === 'C10'
     && exact(secretMount, ['type', 'source', 'target', 'readOnly'])
     && secretMount.type === 'bind' && secretMount.readOnly === true
-    && secretMount.source === path.join(FUTURE_STATE, record.runId, 'secret.json')
-    && secretMount.target === '/run/secrets/h1-secret.json'
+    && secretMount.source === projectionIdentity(record.runId).source
+    && secretMount.target === PROJECTION_TARGET
     && exact(endpoint, ['host', 'port', 'containerPort'])
     && endpoint.host === '127.0.0.1' && endpoint.containerPort === 5432
     && Number.isInteger(endpoint.port) && endpoint.port >= 1024 && endpoint.port <= 65535
@@ -59,13 +76,18 @@ function validPair(pair) {
   if (!record || typeof record !== 'object') return false;
   const state = Object.getOwnPropertyDescriptor(record, 'state');
   if (!state || !('value' in state) || !['creating', 'provisioned'].includes(state.value)) return false;
-  const keys = ['version', 'runId', 'state', 'image', 'database', 'role'];
+  const keys = ['version', 'runId', 'state', 'image', 'database', 'bootstrapRole', 'migrationRole'];
   if (state.value === 'provisioned') keys.push('resource');
-  if (!exact(record, keys) || !exact(secret, ['version', 'runId', 'password'])) return false;
-  return record.version === 1 && secret.version === 1 && matches(RUN, record.runId)
-    && secret.runId === record.runId && matches(ID, secret.password)
+  if (!exact(record, keys)
+    || !exact(secret, ['version', 'runId', 'bootstrapPassword', 'migrationPassword'])) return false;
+  // Legacy v1 files require manual recovery. Never convert or adopt their credentials.
+  return record.version === 2 && secret.version === 2 && matches(RUN, record.runId)
+    && secret.runId === record.runId && matches(ID, secret.bootstrapPassword)
+    && matches(ID, secret.migrationPassword) && secret.bootstrapPassword !== secret.migrationPassword
     && record.image === IMAGE && record.database === `h1_db_${record.runId}`
-    && record.role === `h1_role_${record.runId}`
+    && record.bootstrapRole === `h1_bootstrap_${record.runId}`
+    && record.migrationRole === `h1_migration_${record.runId}`
+    && record.bootstrapRole !== record.migrationRole
     && (record.state === 'creating' || validResource(record.resource, record));
 }
 export function validatePair(pair) {
@@ -79,13 +101,21 @@ function snapshot(pair) {
   if (!validatePair(pair)) fail();
   return JSON.parse(JSON.stringify(pair));
 }
+function distinctSecrets(runId) {
+  const bootstrapPassword = randomHex(32);
+  const migrationPassword = randomHex(32);
+  // Deny even the improbable RNG collision rather than weakening separation.
+  if (bootstrapPassword === migrationPassword) fail();
+  return { version: 2, runId, bootstrapPassword, migrationPassword };
+}
 export function newPair() {
   try {
     const runId = randomHex(16);
     return {
-      record: { version: 1, runId, state: 'creating', image: IMAGE,
-        database: `h1_db_${runId}`, role: `h1_role_${runId}` },
-      secret: { version: 1, runId, password: randomHex(32) },
+      record: { version: 2, runId, state: 'creating', image: IMAGE,
+        database: `h1_db_${runId}`, bootstrapRole: `h1_bootstrap_${runId}`,
+        migrationRole: `h1_migration_${runId}` },
+      secret: distinctSecrets(runId),
     };
   } catch { fail(); }
 }
@@ -169,7 +199,9 @@ function sameFile(a, b) { return a.dev === b.dev && a.ino === b.ino; }
 // Names are a single component. The helper neither adopts resources nor cleans pairs.
 export function openFixtureStore(name) {
   try {
-    if (typeof name !== 'string' || !/^c09-[A-Za-z0-9-]{6,80}$/.test(name)) fail();
+    if (process.cwd() !== ROOT || fs.realpathSync(ROOT) !== ROOT) fail();
+    components(ROOT);
+    if (typeof name !== 'string' || !/^c10-[A-Za-z0-9-]{6,80}$/.test(name)) fail();
     const directory = path.join(FIXTURES, name);
     const originalDirectory = privateDirectory(directory);
     let held = null;
@@ -182,6 +214,19 @@ export function openFixtureStore(name) {
       const stat = fs.lstatSync(path.join(directory, 'lock'));
       if (stat.isSymbolicLink() || !sameFile(stat, held.stat)
         || readPrivate(directory, 'lock') !== held.text) fail();
+    }
+    function readPair() {
+      try {
+        checkLock();
+        const record = JSON.parse(readPrivate(directory, 'record.json'));
+        const secret = JSON.parse(readPrivate(directory, 'secret.json'));
+        checkLock();
+        const copy = snapshot({ record, secret });
+        if (!validProjection({ ...projectionIdentity(record.runId),
+          plaintext: readPrivate(directory, PROJECTION_FILE) }, copy)) fail();
+        checkLock();
+        return copy;
+      } catch { fail(); }
     }
     return Object.freeze({
       acquire() {
@@ -212,7 +257,9 @@ export function openFixtureStore(name) {
           checkLock();
           createPrivate(directory, 'secret.json', `${JSON.stringify(copy.secret)}\n`);
           checkLock();
-          // Two creations (like two renames) are NOT an atomic pair. On interruption,
+          createPrivate(directory, PROJECTION_FILE, copy.secret.bootstrapPassword);
+          checkLock();
+          // Three creations are NOT atomic. On interruption,
           // retain originals/partial files; recovery must deny, never overwrite/adopt.
         } catch {
           // Even a late sync failure may leave parseable bytes. Keep the acquired
@@ -221,15 +268,19 @@ export function openFixtureStore(name) {
           fail();
         }
       },
-      readPair() {
+      // Read actual bounded plaintext; never reinterpret retained JSON as mount evidence.
+      readProjection() {
         try {
           checkLock();
-          const record = JSON.parse(readPrivate(directory, 'record.json'));
-          const secret = JSON.parse(readPrivate(directory, 'secret.json'));
+          const pair = readPair();
+          const evidence = { ...projectionIdentity(pair.record.runId),
+            plaintext: readPrivate(directory, PROJECTION_FILE) };
           checkLock();
-          return snapshot({ record, secret });
+          if (!validProjection(evidence, pair)) fail();
+          return evidence;
         } catch { fail(); }
       },
+      readPair,
     });
   } catch { fail(); }
 }
@@ -238,7 +289,7 @@ function validAuthentication(evidence, record) {
   return exact(evidence, ['authenticated', 'database', 'role', 'databaseExists',
     'superuser', 'createdb', 'createrole', 'schemas', 'tables'])
     && evidence.authenticated === true && evidence.databaseExists === true
-    && evidence.database === record.database && evidence.role === record.role
+    && evidence.database === record.database && evidence.role === record.migrationRole
     && evidence.superuser === false && evidence.createdb === false && evidence.createrole === false
     && Array.isArray(evidence.schemas) && evidence.schemas.length === 1 && evidence.schemas[0] === 'public'
     && Array.isArray(evidence.tables) && evidence.tables.length === 0;
@@ -256,27 +307,34 @@ function freezeTree(object) {
 export async function planOffline(pair, adapters) {
   try {
     const copy = freezeTree(snapshot(pair));
-    if (copy.record.state !== 'provisioned' || !exact(adapters, ['inspect', 'authenticate'])
-      || typeof adapters.inspect !== 'function' || typeof adapters.authenticate !== 'function') fail();
+    if (copy.record.state !== 'provisioned' || !exact(adapters, ['inspect', 'authenticate', 'readProjection'])
+      || typeof adapters.inspect !== 'function' || typeof adapters.authenticate !== 'function'
+      || typeof adapters.readProjection !== 'function') fail();
     const { record, secret } = copy;
     // Capture functions before awaiting to prevent accidental caller retargeting.
     const inspect = adapters.inspect.bind(adapters);
     const authenticate = adapters.authenticate.bind(adapters);
+    const readProjection = adapters.readProjection.bind(adapters);
+    async function checkProjection() {
+      if (!validProjection(await readProjection(freezeTree(projectionIdentity(record.runId))), copy)) fail();
+    }
     async function inspectExact() {
       const evidence = await inspect(record.resource.containerId);
       if (!validResource(evidence, record) || !isDeepStrictEqual(evidence, record.resource)) fail();
     }
     await inspectExact();
-    const target = freezeTree({ database: record.database, role: record.role,
-      password: secret.password, host: '127.0.0.1', port: record.resource.endpoint.port });
+    await checkProjection();
+    const target = freezeTree({ database: record.database, role: record.migrationRole,
+      password: secret.migrationPassword, host: '127.0.0.1', port: record.resource.endpoint.port });
     if (!validAuthentication(await authenticate(target), record)) fail();
+    await checkProjection();
     await inspectExact(); // Last asynchronous gate immediately before fixed plan construction.
     return freezeTree({
       evidenceKind: 'offline-injected-not-certified',
       executable: process.execPath,
       args: [path.join(ROOT, 'backend/node_modules/prisma/build/index.js'), 'migrate', 'deploy',
         '--config', path.join(ROOT, 'backend/prisma.h1-owned.config.ts')],
-      env: { H1_OWNED_DATABASE_URL: `postgresql://${record.role}:${secret.password}@127.0.0.1:${record.resource.endpoint.port}/${record.database}` },
+      env: { H1_OWNED_DATABASE_URL: `postgresql://${record.migrationRole}:${secret.migrationPassword}@127.0.0.1:${record.resource.endpoint.port}/${record.database}` },
     });
   } catch { fail(); }
 }
