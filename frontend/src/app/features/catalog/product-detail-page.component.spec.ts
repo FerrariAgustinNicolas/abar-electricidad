@@ -4,17 +4,23 @@ import { BehaviorSubject, of } from 'rxjs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ProductDetail } from '../../core/catalog/catalog.models';
 import { PublicCatalogApiService } from '../../core/catalog/public-catalog-api.service';
+import { CartStateService } from '../../core/cart/cart-state.service';
 import { ProductDetailPageComponent } from './product-detail-page.component';
 
 describe('ProductDetailPageComponent', () => {
   afterEach(() => TestBed.resetTestingModule());
 
-  it('starts on the API display presentation and keeps the purchase action disabled', () => {
+  it('starts on the API display presentation and adds only a sellable presentation to the cart', () => {
     const fixture = createFixture(detail());
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('.price')?.textContent).toContain('$');
     expect(fixture.nativeElement.querySelector('.price')?.textContent).toContain('metro');
-    expect(fixture.nativeElement.querySelector('.coming-soon')?.disabled).toBe(true);
+    const add = fixture.nativeElement.querySelector('.add-to-cart') as HTMLButtonElement;
+    expect(add.disabled).toBe(false);
+    add.click();
+    fixture.detectChanges();
+    expect(TestBed.inject(CartStateService).lines()).toEqual([{ presentationId: 'meter', quantity: 1 }]);
+    expect(fixture.nativeElement.querySelector('.purchase-note')?.textContent).toContain('agregó');
     expect(fixture.nativeElement.textContent).not.toContain('existencias:');
   });
 
@@ -28,6 +34,7 @@ describe('ProductDetailPageComponent', () => {
     expect(fixture.nativeElement.querySelector('.price')?.textContent).toContain('rollo de 75 m');
     expect(fixture.nativeElement.querySelector('.availability')?.textContent).toContain('Sin stock');
     expect((fixture.nativeElement.querySelector('#quantity') as HTMLInputElement).disabled).toBe(true);
+    expect((fixture.nativeElement.querySelector('.add-to-cart') as HTMLButtonElement).disabled).toBe(true);
   });
 });
 
