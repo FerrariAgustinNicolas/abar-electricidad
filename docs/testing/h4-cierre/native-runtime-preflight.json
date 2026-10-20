@@ -1,0 +1,226 @@
+{
+  "schema": "gentle-ai.review-integration.status/v9",
+  "contract": "gentle-ai.review-integration/v2",
+  "operation": "review.status",
+  "applicability": "unrelated",
+  "action": "start",
+  "replayability": "not_replayable",
+  "target_identity": "sha256:b7c85ad37b9ff6e3bcb33f95d13aedf67dc12e177323fca33acec9c92b1d6ecd",
+  "projection": {
+    "schema": "gentle-ai.review-integration.projection/v1",
+    "kind": "base-diff",
+    "projection": "workspace",
+    "base_tree": "7110d27e7d3b45b1145df4288092baa327054adb",
+    "initial_review_tree": "dfb3f33287d0f99908985d244da2baf98c64d8df",
+    "current_candidate_tree": "dfb3f33287d0f99908985d244da2baf98c64d8df",
+    "paths_digest": "sha256:b626ddc8bdd973f624d8e180c36220c3f918ed9bac7d986e2fd56596716edee2",
+    "paths": [
+      "README.md",
+      "backend/prisma/migrations/20261020200000_h4_orders/migration.sql",
+      "backend/prisma/schema.prisma",
+      "backend/scripts/h4-orders-postgres.mjs",
+      "backend/src/app.module.ts",
+      "backend/src/auth/login.service.spec.ts",
+      "backend/src/checkout/checkout.module.ts",
+      "backend/src/checkout/checkout.service.ts",
+      "backend/src/config/environment.spec.ts",
+      "backend/src/config/environment.ts",
+      "backend/src/configure-application.openapi.spec.ts",
+      "backend/src/configure-application.ts",
+      "backend/src/orders/orders-json.middleware.ts",
+      "backend/src/orders/orders.controller.ts",
+      "backend/src/orders/orders.module.ts",
+      "backend/src/orders/orders.service.ts",
+      "backend/src/stock/stock.service.spec.ts",
+      "backend/src/stock/stock.service.ts",
+      "backend/test/h4-orders.e2e-spec.ts",
+      "backend/test/h4-orders.spec.ts",
+      "contracts/CHANGELOG.md",
+      "contracts/openapi.yaml",
+      "docs/milestones/H4-cierre-validacion.md",
+      "docs/milestones/H4-informe.md",
+      "docs/testing/h4-cierre/SHA256SUMS",
+      "docs/testing/h4-cierre/approved.jpg",
+      "docs/testing/h4-cierre/baseline-focused.log",
+      "docs/testing/h4-cierre/browser-before-unknown.json",
+      "docs/testing/h4-cierre/browser-unknown-after-reload.json",
+      "docs/testing/h4-cierre/browser-unknown-before-reload.json",
+      "docs/testing/h4-cierre/browser.md",
+      "docs/testing/h4-cierre/frontend-build.log",
+      "docs/testing/h4-cierre/frontend-focused.log",
+      "docs/testing/h4-cierre/frontend-full.log",
+      "docs/testing/h4-cierre/frontend-lint.log",
+      "docs/testing/h4-cierre/initial.jpg",
+      "docs/testing/h4-cierre/manual-before.jpg",
+      "docs/testing/h4-cierre/parent-baseline-result.log",
+      "docs/testing/h4-cierre/proxy-sanitized.jsonl",
+      "docs/testing/h4-cierre/r3-assessment.json",
+      "docs/testing/h4-cierre/reload.jpg",
+      "docs/testing/h4-cierre/review.md",
+      "docs/testing/h4-cierre/stock-before.json",
+      "docs/testing/h4-cierre/unknown-reload.jpg",
+      "docs/testing/h4-cierre/verify-http.log",
+      "docs/testing/h4-cierre/verify-summary.md",
+      "docs/testing/h4/browser-stock-after.json",
+      "docs/testing/h4/browser-stock-before.json",
+      "docs/testing/h4/browser.md",
+      "docs/testing/h4/checkout-1440.jpg",
+      "docs/testing/h4/checkout-360.jpg",
+      "docs/testing/h4/checkout-768.jpg",
+      "docs/testing/h4/checkout-coordinated-1440.jpg",
+      "docs/testing/h4/lookup-1440.jpg",
+      "docs/testing/h4/lookup-360.jpg",
+      "docs/testing/h4/lookup-768.jpg",
+      "docs/testing/h4/manifest.json",
+      "docs/testing/h4/method-mismatch.json",
+      "docs/testing/h4/reflow.json",
+      "docs/testing/h4/resource-cleanup.json",
+      "docs/testing/h4/result-approved-1440.jpg",
+      "docs/testing/h4/result-approved-360.jpg",
+      "docs/testing/h4/result-approved-768.jpg",
+      "docs/testing/h4/result-coordinated-1440.jpg",
+      "docs/testing/h4/result-initial-method-mismatch-1440.jpg",
+      "docs/testing/h4/result-method-mismatch-after-reload.jpg",
+      "docs/testing/h4/review.md",
+      "docs/testing/h4/scratch-cleanup.json",
+      "docs/testing/h4/verify-initial.md",
+      "docs/testing/h4/verify-targeted.md",
+      "frontend/src/app/app.routes.spec.ts",
+      "frontend/src/app/app.routes.ts",
+      "frontend/src/app/core/catalog/catalog.models.ts",
+      "frontend/src/app/core/orders/checkout-handoff.service.spec.ts",
+      "frontend/src/app/core/orders/checkout-handoff.service.ts",
+      "frontend/src/app/core/orders/order-access-session.service.spec.ts",
+      "frontend/src/app/core/orders/order-access-session.service.ts",
+      "frontend/src/app/core/orders/order-create-intent-guard.service.ts",
+      "frontend/src/app/core/orders/orders-api.service.spec.ts",
+      "frontend/src/app/core/orders/orders-api.service.ts",
+      "frontend/src/app/core/orders/orders.models.ts",
+      "frontend/src/app/features/admin-catalog/admin-stock-page.component.spec.ts",
+      "frontend/src/app/features/admin-catalog/admin-stock-page.component.ts",
+      "frontend/src/app/features/cart/cart-page.component.ts",
+      "frontend/src/app/features/checkout/checkout-page.component.spec.ts",
+      "frontend/src/app/features/checkout/checkout-page.component.ts",
+      "frontend/src/app/features/orders/order-lookup-page.component.spec.ts",
+      "frontend/src/app/features/orders/order-lookup-page.component.ts",
+      "frontend/src/app/features/orders/order-result-page.component.spec.ts",
+      "frontend/src/app/features/orders/order-result-page.component.ts"
+    ],
+    "intended_untracked": [],
+    "intended_untracked_proof": "sha256:b97229718d4c7fe50a8892eb474ae5aa6491697bccb400e3e31dbaca4894d2f3",
+    "initial_snapshot_identity": "sha256:b7c85ad37b9ff6e3bcb33f95d13aedf67dc12e177323fca33acec9c92b1d6ecd",
+    "current_snapshot_identity": "sha256:b7c85ad37b9ff6e3bcb33f95d13aedf67dc12e177323fca33acec9c92b1d6ecd"
+  },
+  "eligible_untracked_inventory": "sha256:0fc9c89f9fb57a5340cb06a0d61707dbf4d16b8d18d78a55fd8c28d114b47735",
+  "repair": {
+    "schema": "gentle-ai.review-authority-repair-assessment/v1",
+    "status": "unsupported",
+    "counts": {
+      "lineages": 0,
+      "compact_lineages": 0,
+      "legacy_lineages": 0,
+      "events": 0,
+      "bytes": 0,
+      "eligible_candidates": 0,
+      "unsupported_lineages": 0,
+      "conflicts": 0
+    },
+    "supported_operations": [
+      "review/complete-fix",
+      "review/validate-fix"
+    ],
+    "authorization_schema": "gentle-ai.review-repair-authorization/v1"
+  },
+  "candidates": [],
+  "forecast": {
+    "horizon": "partial",
+    "steps": [
+      {
+        "step": 1,
+        "kind": "execute",
+        "reason_code": "fresh_target_ready",
+        "description": "Target is unreviewed and ready for initial review start"
+      }
+    ]
+  },
+  "next_transition": {
+    "kind": "execute",
+    "reason_code": "fresh_target_ready",
+    "execute": {
+      "operation": "review.start",
+      "command": "gentle-ai review start --cwd=/Users/agustin/Repos/personal/abar-electricidad-worktrees/h4-orders-demo-payments --contract=gentle-ai.review-integration/v2 --target=sha256:b7c85ad37b9ff6e3bcb33f95d13aedf67dc12e177323fca33acec9c92b1d6ecd --target-evidence=v1:base-diff:workspace:7110d27e7d3b45b1145df4288092baa327054adb:dfb3f33287d0f99908985d244da2baf98c64d8df:sha256:b626ddc8bdd973f624d8e180c36220c3f918ed9bac7d986e2fd56596716edee2 --projection=workspace --base-ref=7110d27e7d3b45b1145df4288092baa327054adb --committed-only=true --lineage=review-51f374dc90e1bb9d --agent=codex --consent=relay --lenses=review-risk,review-resilience,review-readability,review-reliability '--lenses-reason=H4 runtime persists personal orders, guards private access and idempotent retries, and changes public observable payment behavior'",
+      "arguments": [
+        {
+          "name": "cwd",
+          "value": "/Users/agustin/Repos/personal/abar-electricidad-worktrees/h4-orders-demo-payments",
+          "token": "--cwd=/Users/agustin/Repos/personal/abar-electricidad-worktrees/h4-orders-demo-payments"
+        },
+        {
+          "name": "contract",
+          "value": "gentle-ai.review-integration/v2",
+          "token": "--contract=gentle-ai.review-integration/v2"
+        },
+        {
+          "name": "target",
+          "value": "sha256:b7c85ad37b9ff6e3bcb33f95d13aedf67dc12e177323fca33acec9c92b1d6ecd",
+          "token": "--target=sha256:b7c85ad37b9ff6e3bcb33f95d13aedf67dc12e177323fca33acec9c92b1d6ecd"
+        },
+        {
+          "name": "target-evidence",
+          "value": "v1:base-diff:workspace:7110d27e7d3b45b1145df4288092baa327054adb:dfb3f33287d0f99908985d244da2baf98c64d8df:sha256:b626ddc8bdd973f624d8e180c36220c3f918ed9bac7d986e2fd56596716edee2",
+          "token": "--target-evidence=v1:base-diff:workspace:7110d27e7d3b45b1145df4288092baa327054adb:dfb3f33287d0f99908985d244da2baf98c64d8df:sha256:b626ddc8bdd973f624d8e180c36220c3f918ed9bac7d986e2fd56596716edee2"
+        },
+        {
+          "name": "projection",
+          "value": "workspace",
+          "token": "--projection=workspace"
+        },
+        {
+          "name": "base-ref",
+          "value": "7110d27e7d3b45b1145df4288092baa327054adb",
+          "token": "--base-ref=7110d27e7d3b45b1145df4288092baa327054adb"
+        },
+        {
+          "name": "committed-only",
+          "value": "true",
+          "token": "--committed-only=true"
+        },
+        {
+          "name": "lineage",
+          "value": "review-51f374dc90e1bb9d",
+          "token": "--lineage=review-51f374dc90e1bb9d"
+        },
+        {
+          "name": "agent",
+          "value": "codex",
+          "token": "--agent=codex"
+        },
+        {
+          "name": "consent",
+          "value": "relay",
+          "token": "--consent=relay"
+        },
+        {
+          "name": "lenses",
+          "value": "review-risk,review-resilience,review-readability,review-reliability",
+          "token": "--lenses=review-risk,review-resilience,review-readability,review-reliability"
+        },
+        {
+          "name": "lenses-reason",
+          "value": "H4 runtime persists personal orders, guards private access and idempotent retries, and changes public observable payment behavior",
+          "token": "--lenses-reason=H4 runtime persists personal orders, guards private access and idempotent retries, and changes public observable payment behavior"
+        }
+      ],
+      "preconditions": [
+        {
+          "name": "target_identity",
+          "value": "sha256:b7c85ad37b9ff6e3bcb33f95d13aedf67dc12e177323fca33acec9c92b1d6ecd"
+        }
+      ],
+      "binding": {
+        "lineage_id": "review-51f374dc90e1bb9d",
+        "target_identity": "sha256:b7c85ad37b9ff6e3bcb33f95d13aedf67dc12e177323fca33acec9c92b1d6ecd"
+      }
+    }
+  }
+}

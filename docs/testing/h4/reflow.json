@@ -1,0 +1,47 @@
+[
+  {
+    "screen": "checkout",
+    "width": 360,
+    "scrollWidth": 360
+  },
+  {
+    "screen": "checkout",
+    "width": 768,
+    "scrollWidth": 768
+  },
+  {
+    "screen": "checkout",
+    "width": 1440,
+    "scrollWidth": 1440
+  },
+  {
+    "screen": "result-approved",
+    "scrollWidth": 360,
+    "width": 360
+  },
+  {
+    "screen": "result-approved",
+    "scrollWidth": 768,
+    "width": 768
+  },
+  {
+    "screen": "result-approved",
+    "scrollWidth": 1440,
+    "width": 1440
+  },
+  {
+    "screen": "lookup",
+    "scrollWidth": 360,
+    "width": 360
+  },
+  {
+    "screen": "lookup",
+    "scrollWidth": 768,
+    "width": 768
+  },
+  {
+    "screen": "lookup",
+    "scrollWidth": 1440,
+    "width": 1440
+  }
+]

@@ -127,6 +127,7 @@ model ProductPresentation {
   product           Product          @relation(fields: [productId], references: [id], onDelete: Restrict)
   balance           StockBalance?
   entries           StockEntry[]
+  orderItems        OrderItem[]
 
   @@unique([productId, unit])
   @@index([active, unit, amountMinor])
@@ -204,6 +205,167 @@ model CheckoutQuote {
   response        Json     @db.JsonB
   createdAt       DateTime @default(now()) @db.Timestamptz(3)
   expiresAt       DateTime @db.Timestamptz(3)
+  orders          Order[]
 
   @@index([expiresAt])
+}
+
+enum H4OrderStatus {
+  RECEIVED
+}
+enum H4PaymentStatus {
+  PENDING
+  REJECTED
+}
+enum H4AttemptStatus {
+  APPROVED
+  PENDING
+  REJECTED
+}
+enum H4PaymentMethod {
+  DEMO_PAY_ON_PICKUP
+  DEMO_TRANSFER
+  DEMO_SIMULATION
+}
+enum H4IdempotencyKind {
+  CREATE_ORDER
+  PAYMENT_ATTEMPT
+}
+enum H4NotificationKind {
+  ORDER_CREATED_BUYER
+  ORDER_CREATED_ADMIN
+}
+enum H4NotificationState {
+  PENDING
+}
+
+model Order {
+  id                    String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orderNumber           String          @unique(map: "Order_orderNumber_key") @db.VarChar(64)
+  quoteId               String          @unique(map: "Order_quoteId_key") @db.Uuid
+  quote                 CheckoutQuote   @relation(fields: [quoteId], references: [id], onDelete: Restrict)
+  createdAt             DateTime        @default(now()) @db.Timestamptz(3)
+  status                H4OrderStatus   @default(RECEIVED)
+  version               Int             @default(1)
+  deliveryMode          String          @db.VarChar(16)
+  customerFirstName     String          @db.VarChar(100)
+  customerLastName      String          @db.VarChar(100)
+  customerEmail         String          @db.VarChar(254)
+  customerPhone         String          @db.VarChar(32)
+  customerNote          String?         @db.VarChar(500)
+  deliveryAddressLine   String?         @db.VarChar(200)
+  deliveryLocality      String?         @db.VarChar(100)
+  deliveryInstructions  String?         @db.VarChar(500)
+  acceptedTermsVersion  String          @db.VarChar(64)
+  subtotalMinor         BigInt
+  deliveryFeeMinor      BigInt
+  totalMinor            BigInt
+  accessTokenHash       String          @unique(map: "Order_accessTokenHash_key") @db.Char(64)
+  accessExpiresAt       DateTime        @db.Timestamptz(3)
+  payment               Payment?
+  items                 OrderItem[]
+  events                OrderEvent[]
+  idempotencyKeys       OrderIdempotencyKey[]
+  notifications         NotificationJob[]
+
+  @@index([createdAt, id])
+  @@index([customerEmail])
+}
+
+model OrderItem {
+  id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orderId            String   @db.Uuid
+  presentationId     String   @db.Uuid
+  productId          String   @db.Uuid
+  productSlug        String   @db.VarChar(120)
+  productName        String   @db.VarChar(200)
+  unit               String   @db.VarChar(8)
+  rollLengthMeters   Int?
+  quantity           Int
+  unitPriceMinor     BigInt
+  lineTotalMinor     BigInt
+  snapshot           Json     @db.JsonB
+  order              Order    @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  presentation       ProductPresentation @relation(fields: [presentationId], references: [id], onDelete: Restrict)
+
+  @@index([presentationId, orderId])
+  @@index([orderId])
+}
+
+model Payment {
+  id                String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orderId           String           @unique(map: "Payment_orderId_key") @db.Uuid
+  status            H4PaymentStatus  @default(PENDING)
+  amountMinor       BigInt
+  currentAttemptId  String?          @unique(map: "Payment_currentAttemptId_key") @db.Uuid
+  order             Order            @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  attempts          PaymentAttempt[] @relation("PaymentAttempts")
+  currentAttempt    PaymentAttempt?  @relation("CurrentPaymentAttempt", fields: [currentAttemptId], references: [id], onDelete: Restrict)
+
+  @@index([status])
+}
+
+model PaymentAttempt {
+  id           String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  paymentId    String            @db.Uuid
+  methodCode   H4PaymentMethod
+  status       H4AttemptStatus
+  sequence     Int
+  createdAt    DateTime          @default(now()) @db.Timestamptz(3)
+  updatedAt    DateTime          @default(now()) @db.Timestamptz(3)
+  demoScenario H4AttemptStatus?
+  payment      Payment           @relation("PaymentAttempts", fields: [paymentId], references: [id], onDelete: Restrict)
+  currentFor   Payment?          @relation("CurrentPaymentAttempt")
+  events       OrderEvent[]
+  idempotencyKeys OrderIdempotencyKey[]
+
+  @@unique([paymentId, sequence], map: "PaymentAttempt_paymentId_sequence_key")
+  @@index([paymentId, createdAt])
+}
+
+model OrderEvent {
+  id          String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orderId     String         @db.Uuid
+  attemptId   String?        @db.Uuid
+  eventType   String         @db.VarChar(48)
+  createdAt   DateTime       @default(now()) @db.Timestamptz(3)
+  details     Json           @default("{}") @db.JsonB
+  order       Order          @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  attempt     PaymentAttempt? @relation(fields: [attemptId], references: [id], onDelete: Restrict)
+
+  @@index([orderId, createdAt, id])
+}
+
+model OrderIdempotencyKey {
+  id               String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  kind             H4IdempotencyKind
+  scope            String           @db.VarChar(64)
+  key              String           @db.VarChar(200)
+  fingerprint      String           @db.Char(64)
+  responseStatus   Int
+  responseCiphertext Bytes          @db.ByteA
+  responseIv       Bytes            @db.ByteA
+  responseTag      Bytes            @db.ByteA
+  createdAt        DateTime         @default(now()) @db.Timestamptz(3)
+  orderId          String?          @db.Uuid
+  attemptId        String?          @db.Uuid
+  order            Order?           @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  attempt          PaymentAttempt?  @relation(fields: [attemptId], references: [id], onDelete: Restrict)
+
+  @@unique([scope, key], map: "OrderIdempotencyKey_scope_key_key")
+  @@index([orderId])
+}
+
+model NotificationJob {
+  id          String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orderId     String              @db.Uuid
+  kind        H4NotificationKind
+  recipient   String              @db.VarChar(254)
+  dedupeKey   String              @unique(map: "NotificationJob_dedupeKey_key") @db.VarChar(200)
+  state       H4NotificationState @default(PENDING)
+  createdAt   DateTime            @default(now()) @db.Timestamptz(3)
+  payload     Json                @db.JsonB
+  order       Order               @relation(fields: [orderId], references: [id], onDelete: Restrict)
+
+  @@index([state, createdAt])
 }

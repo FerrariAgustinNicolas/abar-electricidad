@@ -1,0 +1,25 @@
+{
+  "appsStopped": [
+    91975,
+    91976,
+    91977,
+    93998,
+    93999,
+    94000
+  ],
+  "cliStopped": [],
+  "removedExactDirectories": [
+    "/private/tmp/abar-h4-fixture.uc1qoe11",
+    "/private/tmp/abar-h4-fixture.7vk4hs64",
+    "/private/tmp/abar-h4-fixture.naaaxcru",
+    "/private/tmp/abar-h4-fixture.62y5nr4r",
+    "/private/tmp/abar-h4-fixture.zjr9g23w",
+    "/private/tmp/abar-h4-verify.nD9tVj",
+    "/private/tmp/abar-h4-recheck.shfJLU",
+    "/private/tmp/h4-independent-review.RH4YYM",
+    "/private/tmp/h4-orders-frontend-dist.zp9tjZ",
+    "/private/tmp/h4-orders-frontend-dist.Aq1AYn",
+    "/private/tmp/h4-orders-frontend-dist.xipjkB"
+  ],
+  "unknownOrForeignPathsRemoved": false
+}

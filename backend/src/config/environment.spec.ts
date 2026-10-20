@@ -9,7 +9,26 @@ describe('validated local configuration', () => {
       HOST: '127.0.0.1',
       NODE_ENV: 'development',
       PORT: 3000,
+      H4_ACCESS_TTL_SECONDS: 86400,
+      H4_DEMO_SIMULATION_ENABLED: false,
+      H4_REPLAY_KEY_BASE64: undefined,
     });
+  });
+
+  it('accepts bounded H4 access settings and an independent 32-byte replay key', () => {
+    const key = Buffer.alloc(32, 7).toString('base64');
+    expect(validateEnvironment({ DATABASE_URL: databaseUrl, H4_ACCESS_TTL_SECONDS: '3600', H4_DEMO_SIMULATION_ENABLED: 'true', H4_REPLAY_KEY_BASE64: key })).toMatchObject({
+      H4_ACCESS_TTL_SECONDS: 3600, H4_DEMO_SIMULATION_ENABLED: true, H4_REPLAY_KEY_BASE64: key,
+    });
+  });
+
+  it.each([
+    [{ H4_ACCESS_TTL_SECONDS: '59' }, 'H4_ACCESS_TTL_SECONDS'],
+    [{ H4_ACCESS_TTL_SECONDS: '604801' }, 'H4_ACCESS_TTL_SECONDS'],
+    [{ H4_DEMO_SIMULATION_ENABLED: 'yes' }, 'H4_DEMO_SIMULATION_ENABLED'],
+    [{ H4_REPLAY_KEY_BASE64: 'not-a-key' }, 'H4_REPLAY_KEY_BASE64'],
+  ])('rejects invalid H4 configuration (%s)', (extra, key) => {
+    expect(() => validateEnvironment({ DATABASE_URL: databaseUrl, ...extra } as Record<string, unknown>)).toThrow(key);
   });
 
   it.each([

@@ -1,8 +1,8 @@
 # ABAR Electricidad
 
-## Backend y servicios locales (H1/H2 integrados y H3 local)
+## Backend y servicios locales (H1–H3 integrados y H4 local)
 
-Esta sección describe la base local del backend y sus dependencias: NestJS, PostgreSQL y Mailpit. El frontend Angular se documenta más abajo. H1 mantiene autenticación por sesión y administración de usuarios; H2 integra catálogo, presentaciones, galería y stock auditado; H3 agrega carrito y presupuesto en una rama local pendiente de auditoría externa. El entorno es para desarrollo local; no es una configuración de producción.
+Esta sección describe la base local del backend y sus dependencias: NestJS, PostgreSQL y Mailpit. El frontend Angular se documenta más abajo. H1 mantiene autenticación por sesión y administración de usuarios; H2 integra catálogo, presentaciones, galería y stock auditado; H3 integra carrito y presupuesto autoritativo desde la base aprobada `d08adc1`. H4 agrega checkout de invitado y simulación académica en su rama local, pendiente de auditoría externa. El entorno es para desarrollo local; no es una configuración de producción.
 
 ### H2 integrado: catálogo y stock
 
@@ -20,7 +20,7 @@ unidad no equivalen a aprobación global ni productiva. Validación estática:
 El runner LIVE histórico usa un target fijo: no ejecutarlo contra una base
 existente suponiendo que es un fixture descartable.
 
-### H3 local: carrito y presupuesto autoritativo (auditoría pendiente)
+### H3 integrado: carrito y presupuesto autoritativo
 
 Contrato aditivo **0.6.0**: `/carrito` conserva únicamente IDs de presentación y
 cantidades enteras en almacenamiento local versionado. El detalle agrega la
@@ -35,9 +35,9 @@ bancarias ni servicios de cobro. P05 continúa pendiente para operación real.
 
 Presupuestar **no garantiza disponibilidad futura ni crea pedido, pago o reserva**.
 No modifica saldos/movimientos ni abre rollos. La aceptación explícita del nuevo
-resumen no crea pedidos; H4 deberá revalidar. La recarga requiere presupuesto y
-aceptación nuevos, sin borrar el carrito. No hay formulario final de comprador,
-creación de pedido ni simulador de pagos funcional.
+resumen no crea pedidos; H4 revalida al registrar el pedido. La recarga requiere presupuesto y
+aceptación nuevos, sin borrar el carrito, salvo la reconciliación de una solicitud cuyo
+resultado sea desconocido (ver H4).
 
 Consultar [contrato H3](docs/decisions/H3-quote.md),
 [alcance autorizado](docs/milestones/H3-prompt.md) e
@@ -49,6 +49,75 @@ Verificaciones reproducibles del contrato:
 node --test scripts/h0-contract-validate.test.mjs scripts/h2-contract.test.mjs scripts/h3-contract.test.mjs
 npm --prefix backend run contract:validate
 ```
+
+### H4 local: checkout y pedidos de demostración
+
+Contrato aditivo **0.7.0**, [decisión H4](docs/decisions/H4-orders-payments.md) y
+[alcance autorizado](docs/milestones/H4-prompt.md). La evidencia y las limitaciones,
+no una aprobación automática, se registran en [informe H4](docs/milestones/H4-informe.md).
+
+`/carrito` → aceptación explícita del presupuesto → `/checkout` →
+`/pedido/:id/resultado`. `/consultar-pedido` ofrece solo estado mínimo mediante
+número y contacto coincidente; no recupera la credencial privada. El comprador
+incluye nombre, apellido, correo y teléfono; la entrega coordinada requiere
+dirección y localidad. Las condiciones mostradas son provisionales, académicas
+y versionadas, no términos legales aprobados por ABAR.
+
+Un pedido no tiene vencimiento comercial automático ni edición de renglones.
+El presupuesto y la credencial tienen vigencias técnicas independientes.
+**Crear, simular o reintentar no reserva ni descuenta existencias.**
+APPROVED corresponde al intento demo: el pago comercial permanece PENDING y el
+pedido RECEIVED. REJECTED conserva el pedido y permite otro intento. No hay H5,
+confirmación manual, datos bancarios/tarjetas ni correo enviado; las notificaciones
+se registran como trabajos pendientes. `requestedUnpaidQuantity` es demanda
+informativa por presentación en stock administrativo, nunca disponibilidad neta.
+
+#### Configuración privada local
+
+La creación y los replays requieren `H4_REPLAY_KEY_BASE64`: 32 bytes aleatorios,
+codificados en base64, aportados por entorno privado al proceso backend. No
+versionar el valor ni imprimirlo. Conservar la misma clave para reemitir respuestas
+históricas; regenerarla por arranque rompe la reconciliación. No se incluyó una
+clave operativa de ejemplo ni una rotación automática.
+
+`H4_DEMO_SIMULATION_ENABLED=true` habilita escenarios exclusivamente del lado
+servidor; el frontend no puede activarlos. `H4_ACCESS_TTL_SECONDS` controla solo
+acceso temporal (por defecto 86400; límites técnicos 60–604800). Sin clave válida,
+las operaciones que necesitan replay fallan de forma cerrada con 503. El destino
+administrativo de notificaciones pendientes es ficticio/configurado; no se usa SMTP.
+
+La misma intención conserva request y `Idempotency-Key` después de un timeout.
+En esa pantalla puede reconciliarse incluso si venció posteriormente el presupuesto.
+Al recargar tras un resultado desconocido se conserva solo un marcador no sensible
+y se impide crear silenciosamente otra intención. La consulta mínima no restaura
+el formulario ni la credencial; esa limitación debe distinguirse de recuperación
+completa. El carrito se vacía únicamente después de constatar un 201 de creación
+(o replay). No se guardan datos personales en el almacenamiento del carrito;
+la credencial temporal usa únicamente memoria o sessionStorage y viaja por header,
+nunca por URL.
+
+#### Verificación
+
+```sh
+node --test scripts/*contract*.test.mjs
+npm --prefix backend run contract:validate
+npm --prefix backend run prisma:validate
+npm --prefix backend run build
+npm --prefix frontend test -- --watch=false
+npm --prefix frontend run lint
+npm --prefix frontend run build
+```
+
+`node backend/scripts/h4-orders-postgres.mjs` exige cuatro variables privadas:
+`H4_ORDERS_CLEAN_DATABASE_URL`, `H4_ORDERS_UPGRADE_DATABASE_URL`,
+`H4_ORDERS_CONTAINER_ID` y `H4_ORDERS_OWNER`. **No usa DATABASE_URL como fallback.**
+Se deben proporcionar bases nuevas `h4_orders` y `h4_orders_upgrade`, usuario
+`h4_orders`, en un contenedor propio `postgres:17.11-bookworm`, con las etiquetas
+`com.abar.h4-orders-owner=<UUID>` y `com.abar.h4-orders-purpose=integration`,
+PostgreSQL en tmpfs, sin volúmenes ni binds y puerto únicamente loopback. Verifica
+estas condiciones antes de aplicar migraciones. No ejecutarlo contra un fixture
+usado ni limpiar una base existente para satisfacer el guard. La prueba H3 histórica
+mantiene su corte de migraciones; H4 verifica por separado el upgrade desde ese corte.
 
 ### Requisitos
 
@@ -200,7 +269,7 @@ La contraseña temporal debe tener 15–128 puntos Unicode tras NFC y superar la
 
 Iniciá la API con esa misma base y su clave CSRF privada; abrí `/admin/login`, ingresá `admin@example.test`, cambiá la contraseña obligatoria y comprobá `/admin/usuarios`. Antes del cambio, users debe responder 403 `PASSWORD_CHANGE_REQUIRED`; luego verificá logout e imposibilidad de reutilizar la sesión anterior. No conserves la contraseña temporal. Para otra base local, creá un nuevo contenedor/base descartable en vez de borrar datos existentes. Los resultados efectivamente ejecutados están en el informe, no se deducen de estos pasos.
 
-## Frontend Angular (H1 y H2)
+## Frontend Angular (H1–H4)
 
 El frontend es una aplicación Angular standalone/zoneless con dependencias fijadas en `frontend/package.json` y lockfile separado. Requiere Node.js 24.x y npm 11.x. No se añadió gestor de monorepo.
 
@@ -216,7 +285,7 @@ npm --prefix frontend start
 
 Abrí `http://127.0.0.1:4200`. El servidor Angular se liga solo a loopback y el proxy conserva `GET /health` fuera de `/api/v1`; también pasa `/api` sin reescribirlo. El estado visible consulta la respuesta normativa `{"status":"ok"}` y muestra carga, disponibilidad, error o reintento. El endpoint solo responde saludable cuando PostgreSQL contestó `SELECT 1`.
 
-El shell público toma como referencia documental Home CORREGIDA (`17:256`), sin afirmar acceso o reproducción directa de Figma. H1 incorpora login, cambio obligatorio de contraseña y administración de usuarios; H2 agrega catálogo público y administración de catálogo/stock. Carrito y checkout permanecen fuera de alcance. Las pruebas con Vitest/jsdom verifican DOM, rutas y HTTP, no son pruebas de navegador real ni certifican responsive/contraste.
+El shell público toma como referencia documental Home CORREGIDA (`17:256`), sin afirmar acceso o reproducción directa de Figma. H1 incorpora login, cambio obligatorio de contraseña y administración de usuarios; H2 agrega catálogo público y administración de catálogo/stock. H3 incorpora carrito y H4 incorpora checkout y consulta de pedidos de demostración, sin cobros reales. Las pruebas con Vitest/jsdom verifican DOM, rutas y HTTP, no son pruebas de navegador real ni certifican responsive/contraste.
 
 Para iniciar procesos backend y frontend propios, comprobar que el landing se sirve y que el proxy recibe el health real de PostgreSQL:
 

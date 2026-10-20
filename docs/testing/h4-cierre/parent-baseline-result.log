@@ -1,0 +1,111 @@
+
+> abar-frontend@0.1.0 test
+> ng test --watch=false --include=src/app/features/orders/order-result-page.component.spec.ts
+
+❯ Building...
+✔ Building...
+Initial chunk files                                     | Names                                                |  Raw size
+spec-app-features-orders-order-result-page.component.js | spec-app-features-orders-order-result-page.component |  47.02 kB | 
+styles.css                                              | styles                                               |   6.64 kB | 
+chunk-RSTWSNOR.js                                       | -                                                    |   4.75 kB | 
+init-testbed.js                                         | init-testbed                                         |   1.21 kB | 
+vitest-mock-patch.js                                    | vitest-mock-patch                                    | 974 bytes | 
+
+                                                        | Initial total                                        |  60.60 kB
+
+Application bundle generation complete. [1.229 seconds] - 2026-10-20T23:28:57.026Z
+
+
+ RUN  v4.1.11 /private/tmp/abar-h4-r3-baseline.gqC7aF/frontend
+
+ ❯ |abar-frontend| src/app/features/orders/order-result-page.component.spec.ts (8 tests | 4 failed) 517ms
+     × registers async options with the server attempt selected and submits the visible method 60ms
+     × sends an explicitly selected manual method without scenario and restores the server method on reload 110ms
+     × ignores an older method response that arrives after a newer response and explicit selection 63ms
+     × rejects incompatible options before creating a key or sending a request 56ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |abar-frontend| src/app/features/orders/order-result-page.component.spec.ts > R3 asynchronous method selection > registers async options with the server attempt selected and submits the visible method
+AssertionError: expected 'DEMO_PAY_ON_PICKUP' to be 'DEMO_SIMULATION' // Object.is equality
+
+Expected: "DEMO_SIMULATION"
+Received: "DEMO_PAY_ON_PICKUP"
+
+ ❯ src/app/features/orders/order-result-page.component.spec.ts:84:26
+     82|     pending.next({items:methods});pending.complete();await settle(f);
+     83|     const select=f.nativeElement.querySelector('#retry-method') as HTM…
+     84|     expect(select.value).toBe('DEMO_SIMULATION');
+       |                          ^
+     85|     await f.componentInstance.retryAttempt();expect(api.createAttempt.…
+     86|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  |abar-frontend| src/app/features/orders/order-result-page.component.spec.ts > R3 asynchronous method selection > sends an explicitly selected manual method without scenario and restores the server method on reload
+AssertionError: expected 'DEMO_PAY_ON_PICKUP' to be 'DEMO_SIMULATION' // Object.is equality
+
+Expected: "DEMO_SIMULATION"
+Received: "DEMO_PAY_ON_PICKUP"
+
+ ❯ src/app/features/orders/order-result-page.component.spec.ts:91:118
+     89|     expect(f.nativeElement.querySelector('#retry-scenario')).toBeNull(…
+     90|     expect(api.createAttempt.mock.calls[0][2]).toEqual({methodCode:'DE…
+     91|     f.destroy();f=await render();expect((f.nativeElement.querySelector…
+       |                                                                                                                      ^
+     92|   });
+     93|   it('ignores an older method response that arrives after a newer resp…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  |abar-frontend| src/app/features/orders/order-result-page.component.spec.ts > R3 asynchronous method selection > ignores an older method response that arrives after a newer response and explicit selection
+AssertionError: expected 'DEMO_PAY_ON_PICKUP' to be 'DEMO_TRANSFER' // Object.is equality
+
+Expected: "DEMO_TRANSFER"
+Received: "DEMO_PAY_ON_PICKUP"
+
+ ❯ src/app/features/orders/order-result-page.component.spec.ts:100:89
+     98|     choose(f,'#retry-method','DEMO_TRANSFER');await settle(f);
+     99|     older.next({items:methods.filter((method)=>method.code!=='DEMO_TRA…
+    100|     expect((f.nativeElement.querySelector('#retry-method') as HTMLSele…
+       |                                                                                         ^
+    101|     await f.componentInstance.retryAttempt();expect(api.createAttempt.…
+    102|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  |abar-frontend| src/app/features/orders/order-result-page.component.spec.ts > R3 asynchronous method selection > rejects incompatible options before creating a key or sending a request
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "40000000-0000-4000-8000-000000000001",
+      "unit-test-only-not-an-operational-token",
+      Object {
+        "methodCode": "DEMO_PAY_ON_PICKUP",
+      },
+      "4605e93c-6e52-4dc0-b5b6-0273ebbab8a2",
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/orders/order-result-page.component.spec.ts:115:76
+    113|     const select=f.nativeElement.querySelector('#retry-method') as HTM…
+    114|     const forged=document.createElement('option');forged.value='DEMO_P…
+    115|     await f.componentInstance.retryAttempt();expect(api.createAttempt)…
+       |                                                                            ^
+    116|     expect(f.nativeElement.querySelector('#retry-scenario')).toBeNull(…
+    117|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 4 passed (8)
+   Start at  20:28:57
+   Duration  969ms (transform 30ms, setup 87ms, import 35ms, tests 517ms, environment 264ms)
+

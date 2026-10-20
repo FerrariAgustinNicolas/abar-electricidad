@@ -89,6 +89,17 @@ export class StockService {
         }),
         this.prisma.productPresentation.count({ where }),
       ]);
+      const demandRows = rows.length ? await this.prisma.orderItem.groupBy({
+        by: ['presentationId'],
+        where: { presentationId: { in: rows.map((row: any) => row.id) }, order: { is: { payment: { is: { status: { in: ['PENDING', 'REJECTED'] } } } } } },
+        _sum: { quantity: true },
+      }) : [];
+      const demandByPresentation = new Map<string, number>();
+      for (const demand of demandRows) {
+        const quantity = demand._sum.quantity ?? 0;
+        if (!Number.isSafeInteger(quantity) || quantity < 0) fail(503, 'SERVICE_UNAVAILABLE');
+        demandByPresentation.set(demand.presentationId, quantity);
+      }
       await auth.recheck(this.prisma as never);
       const filtered = rows.map((row: any) => {
         const quantity = row.balance?.availableQuantity ?? 0;
@@ -98,6 +109,7 @@ export class StockService {
           unit: row.unit, rollLengthMeters: row.rollLengthMeters, active: row.active,
           availableQuantity: quantity, lowStockThreshold: row.lowStockThreshold,
           version: row.balance?.version ?? 1, availability: derived,
+          requestedUnpaidQuantity: demandByPresentation.get(row.id) ?? 0,
         };
       }).filter((item: any) => state === undefined || item.availability === state);
       const totalItems = state === undefined ? count : filtered.length;

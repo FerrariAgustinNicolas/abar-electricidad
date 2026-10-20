@@ -4,6 +4,7 @@ import { DOCUMENT } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { CartLine, CartStateService, CART_MAX_QUANTITY } from '../../core/cart/cart-state.service';
+import { CheckoutHandoffService } from '../../core/orders/checkout-handoff.service';
 import { DeliveryMode, DemoPaymentMethod, PublicSettings, QuoteResponse } from '../../core/cart/cart.models';
 import { PublicCheckoutApiService } from '../../core/cart/public-checkout-api.service';
 import { ProductSummary, PublicPresentation } from '../../core/catalog/catalog.models';
@@ -101,7 +102,7 @@ type QuoteError = 'conflict' | 'rate-limit' | 'unavailable' | 'generic' | '';
               }
               @else if (acceptanceRequired()) {
                 <button class="primary-button" type="button" [disabled]="expired()" (click)="acceptQuote()">Aceptar este presupuesto</button>
-              } @else { <p class="accepted" role="status">Presupuesto aceptado explícitamente para esta sesión.</p> }
+              } @else { <p class="accepted" role="status">Presupuesto aceptado explícitamente para esta sesión.</p><a class="primary-button checkout-link" routerLink="/checkout">Continuar al checkout</a> }
             </section>
           }
         </section>
@@ -118,7 +119,7 @@ type QuoteError = 'conflict' | 'rate-limit' | 'unavailable' | 'generic' | '';
     .stepper button:disabled{color:var(--color-muted);opacity:1}
     .stepper button:focus-visible{outline-color:var(--color-blue-dark)}
     .stepper output{min-width:2.5rem;text-align:center}.primary-button,.secondary-button,.notice button{padding:.6rem 1rem;border:0;border-radius:.45rem;font-weight:700}
-    .primary-button{background:var(--color-blue-dark);color:#fff}.secondary-button,.notice button{background:var(--color-surface-subtle);color:var(--color-text);border:1px solid var(--color-border)}
+    .primary-button{background:var(--color-blue-dark);color:#fff}.checkout-link{display:inline-block;margin-top:.75rem;text-decoration:none;border-radius:.45rem;padding:.6rem 1rem}.secondary-button,.notice button{background:var(--color-surface-subtle);color:var(--color-text);border:1px solid var(--color-border)}
     .text-button{padding:.25rem .5rem;border:0;background:transparent;color:var(--color-blue-dark);text-decoration:underline}.field{display:grid;gap:.4rem;max-width:450px;margin:1rem 0}
     select{min-height:2.8rem;padding:.5rem;border:1px solid var(--color-border);border-radius:.4rem;background:var(--color-surface);font:inherit}.quote-section{margin-top:2rem;padding-top:1rem;border-top:2px solid var(--color-border)}
     .quote-card{margin-top:1.5rem;padding:1.25rem;border:1px solid var(--color-border);border-radius:.75rem}.quote-card h3{margin-top:0}.quote-card dl{max-width:400px}.quote-card dl div{display:flex;justify-content:space-between;gap:1rem}.quote-card dd{margin:0}.quote-card .total{font-size:1.25rem;font-weight:800;border-top:1px solid var(--color-border);padding-top:.75rem}
@@ -129,6 +130,7 @@ type QuoteError = 'conflict' | 'rate-limit' | 'unavailable' | 'generic' | '';
 })
 export class CartPageComponent {
   readonly cart = inject(CartStateService);
+  private readonly handoff = inject(CheckoutHandoffService);
   private readonly catalogApi = inject(PublicCatalogApiService);
   private readonly checkoutApi = inject(PublicCheckoutApiService);
   private readonly destroyRef = inject(DestroyRef);
@@ -184,7 +186,7 @@ export class CartPageComponent {
     const expiryTimer = setInterval(() => {
       this.now.set(Date.now());
       const current = this.quote();
-      if (current && Date.parse(current.expiresAt) <= Date.now()) this.acceptedQuoteId.set('');
+      if (current && Date.parse(current.expiresAt) <= Date.now()) { this.acceptedQuoteId.set(''); this.handoff.clear(); }
     }, 1000);
     const onVisibilityChange = () => {
       if (this.document.visibilityState === 'hidden' && this.quote()) {
@@ -274,6 +276,7 @@ export class CartPageComponent {
     if (!items.length || !method) return;
     const revision = ++this.quoteRevision;
       const previous = this.quote() ?? this.comparisonQuote();
+    this.handoff.clear();
     this.comparisonQuote.set(previous);
     this.quote.set(null);
     this.quoteBusy.set(true); this.quoteError.set('');
@@ -295,6 +298,7 @@ export class CartPageComponent {
     const current = this.quote();
     if (!current || Date.parse(current.expiresAt) <= Date.now()) return;
     this.acceptedQuoteId.set(current.quoteId);
+    this.handoff.accept(current, this.cart.lines());
     this.quoteChanges.set('');
   }
 
@@ -317,6 +321,7 @@ export class CartPageComponent {
     finally { if (revision === this.catalogRevision) this.catalogLoading.set(false); }
   }
   private invalidateQuote(message: string): void {
+    this.handoff.clear();
     this.quoteRevision++;
     if (this.quote()) this.comparisonQuote.set(this.quote());
     this.quote.set(null);

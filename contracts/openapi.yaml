@@ -1,7 +1,12 @@
 openapi: 3.0.3
 info:
   title: ABAR Electricidad API — transversal candidate
-  version: 0.6.0
+  version: 0.7.0
+  x-abar-h4-freeze: orders-demo-v1
+  x-abar-h4-runtime-stage: implemented-local-verification-pending
+  x-abar-h4-decisions:
+    P02: user-confirmed-academic-no-commercial-expiry
+    P03: user-confirmed-academic-buyer-and-versioned-demo-terms
   x-abar-h3-freeze: cart-quote-v1
   x-abar-h2-freeze: catalog-stock-v1
   x-abar-h2-runtime-stage: implemented-audit-pending
@@ -11,14 +16,14 @@ info:
   x-abar-integrated-runtime-stage: h1
   x-abar-integrated-commit: 18c39e9b86b7b7bf45263fe5bad4fe77125a6386
   description: |
-    Single normative candidate contract, version 0.6.0. H3 cart/quote is frozen additively. H2 catalog/stock schemas are frozen;
+    Single normative candidate contract, version 0.7.0. H4 guest orders/demo attempts extend H3 additively. H2 catalog/stock schemas are frozen;
     local H2 implementation and bounded independent checks are recorded in H2-informe.md.
     External milestone audit remains pending; this metadata is not production approval. H1 authentication and
     administrative-user operations are integrated alongside GET /health at the
     commit identified above. No external approval or production readiness is implied.
     The h0 runtime marker and projected-area list are historical freeze metadata,
     retained for validator compatibility, not current runtime availability claims.
-    Later-milestone components, P01–P10 and buyer-field rules remain projected; H2 catalog/stock is implemented locally.
+    Historical H0 projected metadata below is retained; scoped H4 P02/P03 academic confirmations are explicit in x-abar-h4-decisions. H4 runtime awaits independent verification and external audit.
     All H1 responses use Cache-Control: no-store. No passwords, cookie values or runtime
     nonces are provided as examples. Required response headers use x-required: true.
     Cookie authentication does not replace Origin/CSRF checks. See docs/decisions/H1-auth.md.
@@ -28,6 +33,8 @@ info:
     - /api/v1/auth
     - /api/v1/admin
   x-abar-examples:
+    - file: examples/h4-order-request.json
+      schema: CreateOrderRequest
     - file: examples/h3-quote-request.json
       schema: QuoteRequest
     - file: examples/h2-product.json
@@ -70,6 +77,486 @@ tags:
   - name: admin
     description: Frozen H1 administrative users; equal capabilities, no roles.
 paths:
+  /api/v1/public/checkout/terms:
+    get:
+      tags:
+        - orders-public
+      operationId: getCheckoutTerms
+      summary: getCheckoutTerms
+      security: []
+      description: H4 academic demo. Stored quote snapshots authoritative. Orders have no automatic
+        commercial expiry. Token expiry is separate. All responses no-store. Durable
+        transaction/idempotency; never reserves stock. Lookup is rate limited with indistinguishable
+        missing/wrong contact errors. No H5 payment confirmation.
+      parameters: []
+      x-abar-errors:
+        "429":
+          - RATE_LIMITED
+        "503":
+          - SERVICE_UNAVAILABLE
+      responses:
+        "200":
+          description: Demo only. No reservation or deduction. APPROVED is not PAID.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                enum:
+                  - no-store
+              x-required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/H4Terms"
+        "429":
+          description: Sanitized error. No PII, credential, exact public balance or SQL details.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                enum:
+                  - no-store
+              x-required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Sanitized error. No PII, credential, exact public balance or SQL details.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                enum:
+                  - no-store
+              x-required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /api/v1/public/orders:
+    post:
+      tags:
+        - orders-public
+      operationId: createPublicOrder
+      summary: createPublicOrder
+      security: []
+      description: H4 academic demo. Stored quote snapshots authoritative. Orders have no automatic
+        commercial expiry. Token expiry is separate. All responses no-store. Durable
+        transaction/idempotency; never reserves stock. Lookup is rate limited with indistinguishable
+        missing/wrong contact errors. No H5 payment confirmation.
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema:
+            type: string
+            minLength: 16
+            maxLength: 200
+            pattern: ^[A-Za-z0-9_-]{16,200}$
+          description: "Durable scope: create-order or orderId/payment-attempt. Same canonical request replays
+            exact original status/body before quote expiry checks; differing request 409. Keep
+            key/body after ambiguous transport. No caller PII in key."
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "409":
+          - QUOTE_EXPIRED
+          - QUOTE_CHANGED
+          - INSUFFICIENT_STOCK
+          - QUOTE_ALREADY_USED
+          - IDEMPOTENCY_CONFLICT
+        "429":
+          - RATE_LIMITED
+        "503":
+          - SERVICE_UNAVAILABLE
+      responses:
+        "201":
+          description: Demo only. No reservation or deduction. APPROVED is not PAID.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                enum:
+                  - no-store
+              x-required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateOrderResponse"
+        "400":
+          description: Sanitized error. No PII, credential, exact public balance or SQL details.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                enum:
+                  - no-store
+              x-required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Sanitized error. No PII, credential, exact public balance or SQL details.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                enum:
+                  - no-store
+              x-required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "429":
+          description: Sanitized error. No PII, credential, exact public balance or SQL details.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                enum:
+                  - no-store
+              x-required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Sanitized error. No PII, credential, exact public balance or SQL details.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                enum:
+                  - no-store
+              x-required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOrderRequest"
+  /api/v1/public/orders/lookup:
+    post:
+      tags:
+        - orders-public
+      operationId: lookupPublicOrder
+      summary: lookupPublicOrder
+      security: []
+      description: H4 academic demo. Stored quote snapshots authoritative. Orders have no automatic
+        commercial expiry. Token expiry is separate. All responses no-store. Durable
+        transaction/idempotency; never reserves stock. Lookup is rate limited with indistinguishable
+        missing/wrong contact errors. No H5 payment confirmation.
+      parameters: []
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "404":
+          - ORDER_NOT_FOUND
+        "429":
+          - RATE_LIMITED
+        "503":
+          - SERVICE_UNAVAILABLE
+      responses:
+        "200":
+          description: Demo only. No reservation or deduction. APPROVED is not PAID.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                enum:
+                  - no-store
+              x-required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderLookupResponse"
+        "400":
+          description: Sanitized error. No PII, credential, exact public balance or SQL details.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                enum:
+                  - no-store
+              x-required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Sanitized error. No PII, credential, exact public balance or SQL details.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                enum:
+                  - no-store
+              x-required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "429":
+          description: Sanitized error. No PII, credential, exact public balance or SQL details.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                enum:
+                  - no-store
+              x-required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Sanitized error. No PII, credential, exact public balance or SQL details.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                enum:
+                  - no-store
+              x-required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrderLookupRequest"
+  /api/v1/public/orders/{id}:
+    get:
+      tags:
+        - orders-public
+      operationId: getPublicOrder
+      summary: getPublicOrder
+      security:
+        - OrderAccessToken: []
+      description: H4 academic demo. Stored quote snapshots authoritative. Orders have no automatic
+        commercial expiry. Token expiry is separate. All responses no-store. Durable
+        transaction/idempotency; never reserves stock. Lookup is rate limited with indistinguishable
+        missing/wrong contact errors. No H5 payment confirmation.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/OpaqueId"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "403":
+          - ORDER_ACCESS_INVALID
+        "429":
+          - RATE_LIMITED
+        "503":
+          - SERVICE_UNAVAILABLE
+      responses:
+        "200":
+          description: Demo only. No reservation or deduction. APPROVED is not PAID.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                enum:
+                  - no-store
+              x-required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicOrderView"
+        "400":
+          description: Sanitized error. No PII, credential, exact public balance or SQL details.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                enum:
+                  - no-store
+              x-required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: Sanitized error. No PII, credential, exact public balance or SQL details.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                enum:
+                  - no-store
+              x-required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "429":
+          description: Sanitized error. No PII, credential, exact public balance or SQL details.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                enum:
+                  - no-store
+              x-required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Sanitized error. No PII, credential, exact public balance or SQL details.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                enum:
+                  - no-store
+              x-required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /api/v1/public/orders/{id}/payment-attempts:
+    post:
+      tags:
+        - orders-public
+      operationId: createPublicPaymentAttempt
+      summary: createPublicPaymentAttempt
+      security:
+        - OrderAccessToken: []
+      description: H4 academic demo. Stored quote snapshots authoritative. Orders have no automatic
+        commercial expiry. Token expiry is separate. All responses no-store. Durable
+        transaction/idempotency; never reserves stock. Lookup is rate limited with indistinguishable
+        missing/wrong contact errors. No H5 payment confirmation.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/OpaqueId"
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema:
+            type: string
+            minLength: 16
+            maxLength: 200
+            pattern: ^[A-Za-z0-9_-]{16,200}$
+          description: "Durable scope: create-order or orderId/payment-attempt. Same canonical request replays
+            exact original status/body before quote expiry checks; differing request 409. Keep
+            key/body after ambiguous transport. No caller PII in key."
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "403":
+          - ORDER_ACCESS_INVALID
+          - DEMO_DISABLED
+        "409":
+          - ORDER_PAID
+          - ORDER_CANCELLED
+          - METHOD_UNAVAILABLE
+          - IDEMPOTENCY_CONFLICT
+        "429":
+          - RATE_LIMITED
+        "503":
+          - SERVICE_UNAVAILABLE
+      responses:
+        "201":
+          description: Demo only. No reservation or deduction. APPROVED is not PAID.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                enum:
+                  - no-store
+              x-required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AttemptResponse"
+        "400":
+          description: Sanitized error. No PII, credential, exact public balance or SQL details.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                enum:
+                  - no-store
+              x-required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: Sanitized error. No PII, credential, exact public balance or SQL details.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                enum:
+                  - no-store
+              x-required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Sanitized error. No PII, credential, exact public balance or SQL details.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                enum:
+                  - no-store
+              x-required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "429":
+          description: Sanitized error. No PII, credential, exact public balance or SQL details.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                enum:
+                  - no-store
+              x-required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Sanitized error. No PII, credential, exact public balance or SQL details.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                enum:
+                  - no-store
+              x-required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AttemptRequest"
   /api/v1/public/settings:
     get:
       tags:
@@ -2545,6 +3032,12 @@ paths:
               $ref: "#/components/schemas/RollOpeningRequest"
 components:
   securitySchemes:
+    OrderAccessToken:
+      type: apiKey
+      in: header
+      name: X-Order-Access-Token
+      description: Temporary per-order possession credential. Hash validation and expiry; no query or URL
+        credential. Expiry never cancels order.
     AdminSessionCookie:
       type: apiKey
       in: cookie
@@ -2686,6 +3179,355 @@ components:
         type: string
         format: uuid
   schemas:
+    H4Terms:
+      type: object
+      additionalProperties: false
+      required:
+        - version
+        - text
+        - demoMode
+        - simulationEnabled
+      properties:
+        version:
+          type: string
+          enum:
+            - demo-2026-10-20-v1
+        text:
+          type: string
+          enum:
+            - "Condiciones de demostración académica, provisionales y no validadas como términos legales
+              de ABAR. Registrar un pedido no reserva ni garantiza existencias futuras. Los medios e
+              intentos de pago son ficticios. Una simulación aprobada no confirma un cobro: requiere
+              confirmación administrativa posterior fuera de H4."
+        demoMode:
+          type: boolean
+          enum:
+            - true
+        simulationEnabled:
+          type: boolean
+    H4Customer:
+      type: object
+      additionalProperties: false
+      required:
+        - firstName
+        - lastName
+        - email
+        - phone
+      properties:
+        firstName:
+          type: string
+          minLength: 1
+          maxLength: 100
+        lastName:
+          type: string
+          minLength: 1
+          maxLength: 100
+        email:
+          type: string
+          minLength: 3
+          maxLength: 254
+          format: email
+        phone:
+          type: string
+          minLength: 7
+          maxLength: 32
+          pattern: ^[+0-9 ()-]{7,32}$
+    H4DeliveryDetails:
+      type: object
+      additionalProperties: false
+      required:
+        - addressLine
+        - locality
+      properties:
+        addressLine:
+          type: string
+          minLength: 1
+          maxLength: 200
+        locality:
+          type: string
+          minLength: 1
+          maxLength: 100
+        instructions:
+          type: string
+          minLength: 0
+          maxLength: 500
+    CreateOrderRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - quoteId
+        - customer
+        - acceptedTermsVersion
+      properties:
+        quoteId:
+          $ref: "#/components/schemas/OpaqueId"
+        customer:
+          $ref: "#/components/schemas/H4Customer"
+        customerNote:
+          type: string
+          minLength: 0
+          maxLength: 500
+        deliveryDetails:
+          $ref: "#/components/schemas/H4DeliveryDetails"
+        acceptedTermsVersion:
+          type: string
+          enum:
+            - demo-2026-10-20-v1
+    H4PaymentAttempt:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - methodCode
+        - status
+        - sequence
+        - createdAt
+        - demoMode
+      properties:
+        id:
+          $ref: "#/components/schemas/OpaqueId"
+        methodCode:
+          type: string
+          enum:
+            - DEMO_PAY_ON_PICKUP
+            - DEMO_TRANSFER
+            - DEMO_SIMULATION
+        status:
+          $ref: "#/components/schemas/PaymentAttemptStatus"
+        sequence:
+          type: integer
+          minimum: 1
+        createdAt:
+          $ref: "#/components/schemas/UtcDateTime"
+        demoMode:
+          type: boolean
+          enum:
+            - true
+    CreateOrderResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - orderId
+        - orderNumber
+        - orderStatus
+        - paymentStatus
+        - currentAttemptId
+        - total
+        - accessToken
+        - accessExpiresAt
+        - nextActions
+        - demoMode
+      properties:
+        orderId:
+          $ref: "#/components/schemas/OpaqueId"
+        orderNumber:
+          type: string
+          minLength: 1
+          maxLength: 64
+        orderStatus:
+          type: string
+          enum:
+            - RECEIVED
+        paymentStatus:
+          type: string
+          enum:
+            - PENDING
+        currentAttemptId:
+          $ref: "#/components/schemas/OpaqueId"
+        total:
+          $ref: "#/components/schemas/Money"
+        accessToken:
+          type: string
+          minLength: 43
+          maxLength: 128
+          description: Sensitive opaque possession credential. Never log, place in URLs or persist in
+            localStorage. No example token.
+        accessExpiresAt:
+          $ref: "#/components/schemas/UtcDateTime"
+        nextActions:
+          type: array
+          maxItems: 3
+          items:
+            type: string
+            enum:
+              - VIEW_ORDER
+              - RETRY_PAYMENT
+              - LOOKUP_ORDER
+        demoMode:
+          type: boolean
+          enum:
+            - true
+    PublicOrderView:
+      type: object
+      additionalProperties: false
+      required:
+        - orderId
+        - orderNumber
+        - createdAt
+        - items
+        - subtotal
+        - deliveryFee
+        - total
+        - deliveryMode
+        - orderStatus
+        - paymentStatus
+        - currentAttempt
+        - nextActions
+        - demoMode
+      properties:
+        orderId:
+          $ref: "#/components/schemas/OpaqueId"
+        orderNumber:
+          type: string
+          minLength: 1
+          maxLength: 64
+        createdAt:
+          $ref: "#/components/schemas/UtcDateTime"
+        items:
+          type: array
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/QuoteItem"
+        subtotal:
+          $ref: "#/components/schemas/Money"
+        deliveryFee:
+          $ref: "#/components/schemas/Money"
+        total:
+          $ref: "#/components/schemas/Money"
+        deliveryMode:
+          $ref: "#/components/schemas/DeliveryMode"
+        orderStatus:
+          type: string
+          enum:
+            - RECEIVED
+        paymentStatus:
+          type: string
+          enum:
+            - PENDING
+            - REJECTED
+        currentAttempt:
+          $ref: "#/components/schemas/H4PaymentAttempt"
+        nextActions:
+          type: array
+          maxItems: 3
+          items:
+            type: string
+            enum:
+              - VIEW_ORDER
+              - RETRY_PAYMENT
+              - LOOKUP_ORDER
+        demoMode:
+          type: boolean
+          enum:
+            - true
+    AttemptRequest:
+      oneOf:
+        - type: object
+          additionalProperties: false
+          required:
+            - methodCode
+          properties:
+            methodCode:
+              type: string
+              enum:
+                - DEMO_PAY_ON_PICKUP
+                - DEMO_TRANSFER
+        - type: object
+          additionalProperties: false
+          required:
+            - methodCode
+            - scenario
+          properties:
+            methodCode:
+              type: string
+              enum:
+                - DEMO_SIMULATION
+            scenario:
+              $ref: "#/components/schemas/PaymentAttemptStatus"
+    AttemptResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - orderId
+        - orderStatus
+        - paymentStatus
+        - currentAttempt
+        - nextActions
+        - demoMode
+      properties:
+        orderId:
+          $ref: "#/components/schemas/OpaqueId"
+        orderStatus:
+          type: string
+          enum:
+            - RECEIVED
+        paymentStatus:
+          type: string
+          enum:
+            - PENDING
+            - REJECTED
+        currentAttempt:
+          $ref: "#/components/schemas/H4PaymentAttempt"
+        nextActions:
+          type: array
+          maxItems: 3
+          items:
+            type: string
+            enum:
+              - VIEW_ORDER
+              - RETRY_PAYMENT
+              - LOOKUP_ORDER
+        demoMode:
+          type: boolean
+          enum:
+            - true
+    OrderLookupRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - orderNumber
+        - contact
+      properties:
+        orderNumber:
+          type: string
+          minLength: 1
+          maxLength: 64
+        contact:
+          type: string
+          minLength: 3
+          maxLength: 254
+    OrderLookupResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - orderNumber
+        - createdAt
+        - orderStatus
+        - paymentStatus
+        - currentAttemptStatus
+        - demoMode
+      properties:
+        orderNumber:
+          type: string
+          minLength: 1
+          maxLength: 64
+        createdAt:
+          $ref: "#/components/schemas/UtcDateTime"
+        orderStatus:
+          type: string
+          enum:
+            - RECEIVED
+        paymentStatus:
+          type: string
+          enum:
+            - PENDING
+            - REJECTED
+        currentAttemptStatus:
+          $ref: "#/components/schemas/PaymentAttemptStatus"
+        demoMode:
+          type: boolean
+          enum:
+            - true
     QuoteItemRequest:
       type: object
       additionalProperties: false
@@ -3982,6 +4824,13 @@ components:
           maximum: 2147483647
         availability:
           $ref: "#/components/schemas/Availability"
+        requestedUnpaidQuantity:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+          description: Informational active unpaid order demand for this presentation only, includes
+            recoverable rejected payments; never deducted from availableQuantity. No abandoned quotes. No
+            public exact quantities.
     StockList:
       type: object
       additionalProperties: false

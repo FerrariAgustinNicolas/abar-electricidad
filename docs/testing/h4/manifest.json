@@ -1,0 +1,30 @@
+{
+  "candidateCommit": "826c17057993e2108118f8431555f71f5f92e751",
+  "candidateTree": "a45f95bedaa125c7896cfca5780bbc3ca7f54624",
+  "scope": "Real CUA browser plus independent immutable verification; partial milestone, R3 open",
+  "files": {
+    "browser-stock-after.json": "a28168bcfbcdad123a9b7e68544794431a78161b61ac60a4326681c1c3fbf397",
+    "browser-stock-before.json": "a28168bcfbcdad123a9b7e68544794431a78161b61ac60a4326681c1c3fbf397",
+    "browser.md": "6a9e43a58111517b455bdfbbf5669a4cce808ff501bc732085b7cc858773d059",
+    "checkout-1440.jpg": "822b4713b858853d2c04e20e1afafee21a58d363ec1599d27e2375029157619b",
+    "checkout-360.jpg": "b30e2adb99431882c578c1366ede0462f7d13e41b17b27880847c9b0cdd4ce79",
+    "checkout-768.jpg": "31fe2987fcad3bf9968013728c2f2da51a54ff4028c3653a15812269b963e739",
+    "checkout-coordinated-1440.jpg": "a443634f47b111c67bdcb2ccd21ab0e855240c05dcb713f3e8c228e09ed9c0ac",
+    "lookup-1440.jpg": "440c4e9a066349e3f06ddfee9452ffee817308825fda5b5962a8c67e2778d860",
+    "lookup-360.jpg": "1120174c68bfbbab65d18a99606ddfd2701c2739a661618b3760f8f3bcd2dc7f",
+    "lookup-768.jpg": "1350f8409af14e9279ccd360a88205cc73847fcb0cdd38362514fb566f31a8a9",
+    "method-mismatch.json": "fe1be8fa3248ae33d310c6848fed03ca1e2a82e2d3e733676bc067a62899c7b7",
+    "reflow.json": "4ab2a8d327b69d16b861d3cb0773061a1d94aec9d5afb817c1fa3768f8cb9ab1",
+    "resource-cleanup.json": "9211746b6d831186a1f14d524397ffc69ad60f4a007425a325e0e076909efad2",
+    "result-approved-1440.jpg": "d0272a5c1dfbe97c7bb85ab57ef34d124eaec18e788dc660b50fef9c98b1d4ea",
+    "result-approved-360.jpg": "fe5b0a2bbcdf1f8033048e037128cb452428f078d9bf6a39ef0031977ff9bb84",
+    "result-approved-768.jpg": "2faa06ff971a6cee2ef3b322bd5eb1faec21ba64937ef3ef1030dc0c1cd65fe8",
+    "result-coordinated-1440.jpg": "00d0941f788e1d0f63ed008ec5e659fb1075854e10f22bd9fad6f4558781775a",
+    "result-initial-method-mismatch-1440.jpg": "6e7f64dad3437b63a1ff6387a7b87b9b379b3d0ff2c9e9c23f01bf0586101795",
+    "result-method-mismatch-after-reload.jpg": "6e7f64dad3437b63a1ff6387a7b87b9b379b3d0ff2c9e9c23f01bf0586101795",
+    "review.md": "b13414348f7d1ba4801fd3f5535553848f0944154e5da09e5bd4ab2c67250747",
+    "scratch-cleanup.json": "87d87414359bb732f5d800eb1d2cae26a84ae7a1e9a764ee494f261a53290dbe",
+    "verify-initial.md": "425679ea8fe82fe4d04c0f80dac9bc0c95c028b39f95bc9f19ef8c056cb320f4",
+    "verify-targeted.md": "ef05c91fa23a50a2dbfddfb475def8810ee519e4502ee3bc9d1ad7b4e56ac5a1"
+  }
+}

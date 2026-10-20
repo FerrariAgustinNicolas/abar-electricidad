@@ -1,0 +1,56 @@
+[
+  {
+    "pid": 91975,
+    "status": "own-process-SIGTERM"
+  },
+  {
+    "pid": 91976,
+    "status": "own-process-SIGTERM"
+  },
+  {
+    "pid": 91977,
+    "status": "own-process-SIGTERM"
+  },
+  {
+    "pid": 93998,
+    "status": "own-process-SIGTERM"
+  },
+  {
+    "pid": 93999,
+    "status": "own-process-SIGTERM"
+  },
+  {
+    "pid": 94000,
+    "status": "own-process-SIGTERM"
+  },
+  {
+    "container": "f1efd850dfc17af1d8720f0d5679dbcb3fe548f9f6430ea82d853c1e5400e0a1",
+    "owner": "e021e598-4dac-4b7c-bcea-486154d3a874",
+    "status": "own-tmpfs-stopped-removed",
+    "externalVolumesTouched": false
+  },
+  {
+    "container": "3f1f1a45d1ec061d02b031eaab2c39c59a40ab55214ed3a0b2075b45d30931e2",
+    "owner": "c26aec88-3141-408a-b9c1-4f56cf0f29a8",
+    "status": "own-tmpfs-stopped-removed",
+    "externalVolumesTouched": false
+  },
+  {
+    "container": "3971a7d3dd2fde99625daf69ec4621191cb39332d5c92325d9ab79d837065f73",
+    "owner": "2e2f8832-f991-4dd7-a412-7f24a03c1f0e",
+    "status": "own-tmpfs-stopped-removed",
+    "externalVolumesTouched": false
+  },
+  {
+    "container": "0a988a7d25e398506d596f48c7030dc2adcf92d9cf248d42b4845aaa3064e62f",
+    "owner": "bdbbb022-0b04-4a11-adc5-f62e4dd7d518",
+    "status": "own-tmpfs-stopped-removed",
+    "externalVolumesTouched": false
+  },
+  {
+    "container": "2bdd1b863a592a3fe4ecdbc8cf01fc0b1487091b14b10babb6d2cc283da00b90",
+    "owner": "f0ba1ba7-69ec-483c-b77c-bf70aac74fb8",
+    "status": "own-tmpfs-stopped-removed",
+    "externalVolumesTouched": false
+  }
+]

@@ -1,0 +1,28 @@
+
+> abar-frontend@0.1.0 test
+> ng test --watch=false --include=src/app/features/orders/order-result-page.component.spec.ts --include=src/app/features/checkout/checkout-page.component.spec.ts
+
+❯ Building...
+✔ Building...
+Initial chunk files                                     | Names                                                |  Raw size
+spec-app-features-checkout-checkout-page.component.js   | spec-app-features-checkout-checkout-page.component   |  64.64 kB | 
+spec-app-features-orders-order-result-page.component.js | spec-app-features-orders-order-result-page.component |  43.40 kB | 
+styles.css                                              | styles                                               |   6.64 kB | 
+chunk-RSTWSNOR.js                                       | -                                                    |   4.75 kB | 
+chunk-IEJUFYBF.js                                       | -                                                    |   4.61 kB | 
+init-testbed.js                                         | init-testbed                                         |   1.21 kB | 
+vitest-mock-patch.js                                    | vitest-mock-patch                                    | 974 bytes | 
+
+                                                        | Initial total                                        | 126.23 kB
+
+Application bundle generation complete. [1.124 seconds] - 2026-10-20T23:32:32.190Z
+
+
+ RUN  v4.1.11 /private/tmp/abar-h4-independent.2jhM5H/frontend
+
+
+ Test Files  2 passed (2)
+      Tests  14 passed (14)
+   Start at  20:32:32
+   Duration  1.03s (transform 85ms, setup 203ms, import 154ms, tests 600ms, environment 540ms)
+

@@ -1,0 +1,59 @@
+{
+  "schema": "gentle-ai.review-assessment/v1",
+  "risk": "high",
+  "reasons": [
+    {
+      "code": "executable_change",
+      "path": "frontend/src/app/features/checkout/checkout-page.component.spec.ts"
+    },
+    {
+      "code": "agent_escalation",
+      "detail": "item 4 (concurrency): Async method responses must not overwrite a newer payment intent selection"
+    }
+  ],
+  "changed_paths": 3,
+  "changed_lines": 140,
+  "candidate": {
+    "kind": "base-diff",
+    "base_ref": "5d1d5647dc679c1d2d648cd135465cd6d254ea08",
+    "consumed": false
+  },
+  "review_due": true,
+  "review_due_reason": "high_risk",
+  "next_transition": {
+    "operation": "review.status",
+    "command": "gentle-ai review status --cwd=/Users/agustin/Repos/personal/abar-electricidad-worktrees/h4-orders-demo-payments --contract=gentle-ai.review-integration/v2 --agent=codex --next-transition=true --base-ref=5d1d5647dc679c1d2d648cd135465cd6d254ea08 --committed-only=true",
+    "arguments": [
+      {
+        "name": "cwd",
+        "value": "/Users/agustin/Repos/personal/abar-electricidad-worktrees/h4-orders-demo-payments",
+        "token": "--cwd=/Users/agustin/Repos/personal/abar-electricidad-worktrees/h4-orders-demo-payments"
+      },
+      {
+        "name": "contract",
+        "value": "gentle-ai.review-integration/v2",
+        "token": "--contract=gentle-ai.review-integration/v2"
+      },
+      {
+        "name": "agent",
+        "value": "codex",
+        "token": "--agent=codex"
+      },
+      {
+        "name": "next-transition",
+        "value": "true",
+        "token": "--next-transition=true"
+      },
+      {
+        "name": "base-ref",
+        "value": "5d1d5647dc679c1d2d648cd135465cd6d254ea08",
+        "token": "--base-ref=5d1d5647dc679c1d2d648cd135465cd6d254ea08"
+      },
+      {
+        "name": "committed-only",
+        "value": "true",
+        "token": "--committed-only=true"
+      }
+    ]
+  }
+}

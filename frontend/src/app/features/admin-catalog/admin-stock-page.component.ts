@@ -26,8 +26,8 @@ interface RollOpeningPair { roll: StockRow; meter: StockRow; }
       @if (loading() && !stock()) { <p role="status">Cargando existencias…</p> }
       @if (stock()?.items?.length === 0) { <p class="empty-state">No hay existencias para estos filtros.</p> }
       @if (stock()?.items?.length) {
-        <div class="table-wrap"><table><caption>Saldo y estado por presentación</caption><thead><tr><th scope="col">Producto</th><th scope="col">Presentación</th><th scope="col">Saldo</th><th scope="col">Mínimo</th><th scope="col">Estado</th><th scope="col">Versión</th></tr></thead>
-          <tbody>@for (row of stock()!.items; track row.presentationId) { <tr><td>{{ row.productName }}</td><td>{{ presentationLabel(row) }}</td><td>{{ row.availableQuantity }}</td><td>{{ row.lowStockThreshold }}</td><td>{{ availabilityLabel(row.availability) }}</td><td>{{ row.version }}</td></tr> }</tbody>
+        <div class="table-wrap"><table><caption>Saldo y demanda impaga por presentación</caption><thead><tr><th scope="col">Producto</th><th scope="col">Presentación</th><th scope="col">Saldo disponible</th><th scope="col">Demanda impaga solicitada (informativa)</th><th scope="col">Mínimo</th><th scope="col">Estado</th><th scope="col">Versión</th></tr></thead>
+          <tbody>@for (row of stock()!.items; track row.presentationId) { <tr><td>{{ row.productName }}</td><td>{{ presentationLabel(row) }}</td><td>{{ row.availableQuantity }}</td><td>{{ row.requestedUnpaidQuantity ?? '—' }}</td><td>{{ row.lowStockThreshold }}</td><td>{{ availabilityLabel(row.availability) }}</td><td>{{ row.version }}</td></tr> }</tbody>
         </table></div>
         <nav class="pagination" aria-label="Paginación de existencias"><button class="button-secondary" type="button" (click)="loadStock(page() - 1)" [disabled]="loading() || page() <= 1">Anterior</button>
           <span>Página {{ page() }} de {{ stock()!.pageInfo.totalPages || 1 }} · {{ stock()!.pageInfo.totalItems }} presentaciones</span>
