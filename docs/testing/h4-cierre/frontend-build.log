@@ -1,0 +1,37 @@
+
+> abar-frontend@0.1.0 build
+> ng build
+
+❯ Building...
+✔ Building...
+Initial chunk files | Names                             |  Raw size | Estimated transfer size
+chunk-VVC4LL7D.js   | -                                 | 157.52 kB |                46.07 kB
+chunk-OSU7S3CN.js   | -                                 |  99.15 kB |                25.58 kB
+main-Q3YCHKTB.js    | main                              |  12.13 kB |                 3.40 kB
+styles-75NM3PEV.css | styles                            |   5.41 kB |                 1.39 kB
+chunk-OZATT2VW.js   | -                                 |   4.26 kB |                 1.32 kB
+
+                    | Initial total                     | 278.49 kB |                77.76 kB
+
+Lazy chunk files    | Names                             |  Raw size | Estimated transfer size
+chunk-63KF66EM.js   | -                                 |  47.31 kB |                 9.38 kB
+chunk-JECEQ7KM.js   | cart-page-component               |  23.45 kB |                 6.06 kB
+chunk-R6YR3PRB.js   | admin-product-form-page-component |  23.14 kB |                 6.75 kB
+chunk-AR2N4NXG.js   | admin-stock-page-component        |  20.27 kB |                 5.46 kB
+chunk-GJSEBZLK.js   | checkout-page-component           |  18.52 kB |                 5.48 kB
+chunk-7JKGTFWH.js   | order-result-page-component       |  12.73 kB |                 4.01 kB
+chunk-VXV7XW5A.js   | product-detail-page-component     |  12.32 kB |                 3.63 kB
+chunk-33MYD25Q.js   | catalog-page-component            |  12.16 kB |                 3.83 kB
+chunk-BOEVNBYH.js   | admin-placeholder-page-component  |  11.78 kB |                 3.56 kB
+chunk-XQT3JXEU.js   | admin-categories-page-component   |  10.62 kB |                 3.25 kB
+chunk-WA7BGRUE.js   | home-page-component               |   8.90 kB |                 2.67 kB
+chunk-PSGVQ6CA.js   | admin-products-page-component     |   8.90 kB |                 3.18 kB
+chunk-V6LSLGSB.js   | order-lookup-page-component       |   4.84 kB |                 1.91 kB
+chunk-EKXMJB4N.js   | -                                 |   4.75 kB |                 1.58 kB
+chunk-2WO37EPV.js   | auth-routes                       |   2.90 kB |                 1.29 kB
+...and 9 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [1.817 seconds] - 2026-10-20T23:32:21.053Z
+
+Output location: /private/tmp/abar-h4-independent.2jhM5H/frontend/dist/abar-frontend
+
