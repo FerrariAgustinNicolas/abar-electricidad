@@ -50,7 +50,7 @@ function inline(value: unknown, seen = new Set<string>()): unknown {
 export function CatalogEndpoint(route: string, method: 'get' | 'post' | 'patch' | 'delete'): MethodDecorator {
   const operation = contract.paths?.[route]?.[method] as OperationObject | undefined;
   if (!operation) throw new Error('H2 endpoint is not in the frozen contract');
-  const decorators: MethodDecorator[] = [ApiOperation({ operationId: operation.operationId, summary: operation.summary }), ApiTags(...operation.tags ?? [])];
+  const decorators: MethodDecorator[] = [ApiOperation({ operationId: operation.operationId, summary: operation.summary, ...(operation.security?.length === 0 ? { security: [] } : {}) }), ApiTags(...operation.tags ?? [])];
   if (route.startsWith('/api/v1/admin/')) decorators.push(ApiSecurity('AdminSessionCookie'));
   for (const raw of operation.parameters ?? []) {
     const parameter = inline(raw) as ParameterObject;

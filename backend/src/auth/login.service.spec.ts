@@ -292,11 +292,11 @@ describe('production-configured login OpenAPI metadata', () => {
     await closeApplication?.();
   });
 
-  it('retains integrated H1 document identity and existing login response contract', () => {
+  it('retains integrated H1/H2 document identity and existing login response contract', () => {
     expect(document?.info).toMatchObject({
       title: 'ABAR Electricidad API — transversal candidate',
-      description: 'H1 authentication and administrative-user endpoints for local verification. The frozen contract remains a candidate; no external approval or production readiness is implied.',
-      version: '0.4.0',
+      description: 'H1 authentication and H2 catalog/stock endpoints for local verification. The frozen contract remains a candidate; no external approval or production readiness is implied.',
+      version: '0.5.0',
     });
     expect(document?.openapi).toBe('3.0.3');
     expect(document?.security).toBeUndefined();

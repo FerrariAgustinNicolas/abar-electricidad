@@ -15,6 +15,10 @@ import { ChangePasswordService } from './auth/change-password.service';
 import { AdminUsersService } from './auth/admin-users.service';
 import { HealthController } from './health/health.controller';
 import { HealthService } from './health/health.service';
+import { CatalogController } from './catalog/catalog.controller';
+import { CatalogService } from './catalog/catalog.service';
+import { StockController } from './stock/stock.controller';
+import { StockService } from './stock/stock.service';
 
 type JsonObject = Record<string, unknown>;
 type InterfaceDocument = {
@@ -48,15 +52,15 @@ function semantics(value: unknown, document: InterfaceDocument): unknown {
     .map((key) => [key, semantics(object[key], document)]));
 }
 
-describe('production Swagger projection of the frozen H1 interface', () => {
+describe('production Swagger projection of the frozen H1 and H2 interface', () => {
   let app: NestExpressApplication;
   let document: InterfaceDocument;
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      controllers: [AuthController, AdminUsersController, HealthController],
+      controllers: [AuthController, AdminUsersController, HealthController, CatalogController, StockController],
       providers: [CsrfService, LoginService, SessionService, LogoutService,
-        ChangePasswordService, AdminUsersService, HealthService]
+        ChangePasswordService, AdminUsersService, HealthService, CatalogService, StockService]
         .map((provide) => ({ provide, useValue: {} })),
     }).compile();
     app = module.createNestApplication<NestExpressApplication>();
@@ -69,7 +73,7 @@ describe('production Swagger projection of the frozen H1 interface', () => {
 
   afterAll(async () => { if (app) await app.close(); });
 
-  it('keeps exactly the ten implemented routes and both cookie schemes', () => {
+  it('keeps exactly the implemented H1 and H2 routes and both cookie schemes', () => {
     expect(Object.keys(document.paths).sort()).toEqual(Object.keys(contract.paths).sort());
     expect(semantics(document.components.securitySchemes, document))
       .toEqual(semantics(contract.components.securitySchemes, contract));
@@ -77,7 +81,7 @@ describe('production Swagger projection of the frozen H1 interface', () => {
   });
 
   for (const [path, item] of Object.entries(contract.paths)) {
-    for (const method of ['get', 'post', 'patch']) {
+    for (const method of ['get', 'post', 'patch', 'delete']) {
       if (!item[method]) continue;
       it(`matches ${method.toUpperCase()} ${path} schemas, headers, errors and security`, () => {
         expect(semantics(document.paths[path][method], document))
