@@ -1,0 +1,116 @@
+[
+  {
+    "path": "/",
+    "before": {
+      "tag": "A",
+      "text": "Saltar al contenido"
+    },
+    "after": {
+      "color": "rgb(247, 147, 30)",
+      "id": "contenido",
+      "outline": "solid"
+    },
+    "url": "http://127.0.0.1:55875/",
+    "next": {
+      "id": "",
+      "tag": "A",
+      "text": "Ver productos"
+    },
+    "pass": true
+  },
+  {
+    "path": "/productos",
+    "before": {
+      "tag": "A",
+      "text": "Saltar al contenido"
+    },
+    "after": {
+      "color": "rgb(247, 147, 30)",
+      "id": "contenido",
+      "outline": "solid"
+    },
+    "url": "http://127.0.0.1:55875/productos",
+    "next": {
+      "id": "",
+      "tag": "INPUT",
+      "text": ""
+    },
+    "pass": true
+  },
+  {
+    "path": "/productos/cable-demo-25",
+    "before": {
+      "tag": "A",
+      "text": "Saltar al contenido"
+    },
+    "after": {
+      "color": "rgb(247, 147, 30)",
+      "id": "contenido",
+      "outline": "solid"
+    },
+    "url": "http://127.0.0.1:55875/productos/cable-demo-25",
+    "next": {
+      "id": "",
+      "tag": "A",
+      "text": "← Volver al catálogo"
+    },
+    "pass": true
+  },
+  {
+    "path": "/admin/productos",
+    "before": {
+      "tag": "A",
+      "text": "Saltar al contenido"
+    },
+    "after": {
+      "color": "rgb(8, 77, 125)",
+      "id": "admin-content",
+      "outline": "solid"
+    },
+    "url": "http://127.0.0.1:55875/admin/productos",
+    "next": {
+      "id": "",
+      "tag": "A",
+      "text": "Nuevo producto"
+    },
+    "pass": true
+  },
+  {
+    "path": "/admin/categorias",
+    "before": {
+      "tag": "A",
+      "text": "Saltar al contenido"
+    },
+    "after": {
+      "color": "rgb(8, 77, 125)",
+      "id": "admin-content",
+      "outline": "solid"
+    },
+    "url": "http://127.0.0.1:55875/admin/categorias",
+    "next": {
+      "id": "",
+      "tag": "BUTTON",
+      "text": "Actualizar"
+    },
+    "pass": true
+  },
+  {
+    "path": "/admin/stock",
+    "before": {
+      "tag": "A",
+      "text": "Saltar al contenido"
+    },
+    "after": {
+      "color": "rgb(8, 77, 125)",
+      "id": "admin-content",
+      "outline": "solid"
+    },
+    "url": "http://127.0.0.1:55875/admin/stock",
+    "next": {
+      "id": "",
+      "tag": "BUTTON",
+      "text": "Actualizar existencias"
+    },
+    "pass": true
+  }
+]

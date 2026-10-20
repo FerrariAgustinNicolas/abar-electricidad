@@ -1,0 +1,108 @@
+{
+  "observedAt": "2026-10-20T18:03:49.972Z",
+  "containerId": "94ab472c55db5f9e5b805662336acab1a9d88f66da7c6aea513087cfc56bc934",
+  "owner": "df6bd3c9-d891-403d-9c49-a4f65f25dbd1",
+  "identityRechecked": true,
+  "readOnlyTransaction": true,
+  "balances": [
+    {
+      "productId": "20000000-0000-4000-8000-000000000001",
+      "slug": "cable-demo-25",
+      "presentationId": "029502ce-c1f1-40e2-a7f4-5c4445909ad5",
+      "unit": "METER",
+      "rollLengthMeters": null,
+      "availableQuantity": 120,
+      "version": 3
+    },
+    {
+      "productId": "20000000-0000-4000-8000-000000000001",
+      "slug": "cable-demo-25",
+      "presentationId": "5953950f-3fd1-4148-98ef-60bdd30177d9",
+      "unit": "ROLL",
+      "rollLengthMeters": 80,
+      "availableQuantity": 1,
+      "version": 2
+    }
+  ],
+  "operations": [
+    {
+      "id": "386f6493-28a1-48fe-a3dd-9c0213cbace5",
+      "type": "ADJUSTMENT",
+      "reason": "Complementary H2 validation adjustment",
+      "actorAdminUserId": "bef4fba6-89fa-4bb1-bded-42cd2e7b094d",
+      "createdAt": "2026-10-20T18:02:02.816Z",
+      "entryCount": 1
+    },
+    {
+      "id": "cc8a3cde-7e2d-4f40-a8fc-a24bea8f1a38",
+      "type": "ROLL_OPENING",
+      "reason": "Complementary H2 manual roll opening",
+      "actorAdminUserId": "bef4fba6-89fa-4bb1-bded-42cd2e7b094d",
+      "createdAt": "2026-10-20T18:03:38.574Z",
+      "entryCount": 2
+    }
+  ],
+  "entries": [
+    {
+      "operationId": "386f6493-28a1-48fe-a3dd-9c0213cbace5",
+      "unit": "METER",
+      "delta": 5,
+      "resultingQuantity": 40,
+      "version": 2
+    },
+    {
+      "operationId": "cc8a3cde-7e2d-4f40-a8fc-a24bea8f1a38",
+      "unit": "METER",
+      "delta": 80,
+      "resultingQuantity": 120,
+      "version": 3
+    },
+    {
+      "operationId": "cc8a3cde-7e2d-4f40-a8fc-a24bea8f1a38",
+      "unit": "ROLL",
+      "delta": -1,
+      "resultingQuantity": 1,
+      "version": 2
+    }
+  ],
+  "totals": {
+    "operations": 2,
+    "adjustments": 1,
+    "rollOpenings": 1,
+    "entries": 3
+  },
+  "h1Metadata": {
+    "users": {
+      "total": 1,
+      "active": 1,
+      "mustChangePassword": 0
+    },
+    "sessions": {
+      "total": 1,
+      "notRevoked": 1
+    }
+  },
+  "gallery": [
+    {
+      "slug": "cable-demo-25",
+      "id": "60c860a9-659e-43e1-9775-52c2362ae31d",
+      "alt": "Imagen ficticia de demostración 1",
+      "order": 0,
+      "isPrimary": true,
+      "bytes": 194,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "slug": "cable-demo-25",
+      "id": "2bdc6b4f-f938-4279-928f-341540afbbbd",
+      "alt": "Imagen ficticia de demostración 2",
+      "order": 1,
+      "isPrimary": false,
+      "bytes": 195,
+      "width": 64,
+      "height": 64
+    }
+  ],
+  "verdict": "Opening committed exactly once"
+}

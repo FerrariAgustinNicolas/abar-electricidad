@@ -347,6 +347,35 @@ The complete revised input below is normative. The user's latest approved Git st
 >
 > **Detenerse para auditoría humana antes de integrar o publicar H2.**
 
+### S15 — Complementary validation authorized after external audit
+
+> H2 fue auditado externamente.
+>
+> Dictamen: núcleo funcional H2.1–H2.4 conforme según evidencia. Cierre global PARCIAL únicamente por comprobaciones finales pendientes.
+>
+> Autorizo un cierre complementario acotado de H2.
+>
+> Base:
+>
+> - Rama `codex/h2-catalog-stock`.
+> - Candidato técnico `b24f5bf`.
+> - Commit documental posterior `c9180bf`.
+>
+> Trabajo:
+>
+> 1. Confirmá el estado Git y que el cierre documental no modificó código de producción.
+> 2. Ejecutá una verificación visual real, con navegador, en 360/768/1440 px para Home, catálogo, detalle, productos/categorías y administración de stock. Incluí teclado/foco y zoom/reflow. Registrá capturas y problemas concretos.
+> 3. Ejecutá un smoke integrado breve del candidato final, priorizando login, catálogo, edición de galería con borradores independientes, ajuste/apertura de rollos y visibilidad pública. Usá únicamente fixtures y servicios propios.
+> 4. Realizá una revisión independiente de lectura del contrato H2, limitada a invariantes de stock, permisos administrativos, precios y estados de error. No fuerces una nueva revisión nativa si su coste o bloqueo no lo justifica.
+> 5. No repitas las suites completas ya aprobadas salvo que se modifique código afectado.
+> 6. Si detectás defectos reales, corregí solo lo necesario y verificá esas correcciones.
+>
+> Entregá `docs/milestones/H2-cierre-validacion.md` con resultados, evidencias y commit exacto.
+>
+> No hacer push, PR, merge, tags ni iniciar H3.
+> Preservá WIP y worktrees.
+> Detenete para auditoría externa.
+
 ## Tasks
 
 - T0 | S1 | inline + delegated read-only mapping (mandatory full reference reading exceeds bounded inline evidence) | COMPLETE | approved base verified, full-read handoff received; no remote operations.
@@ -356,6 +385,10 @@ The complete revised input below is normative. The user's latest approved Git st
 - T4 | S2–S3,S6–S8,S11 | delegated parallel public frontend unit, after contract freeze; disjoint public pages | COMPLETE | commitf030886; isolatedVerify53tests/build/lint/asset, nativeReviewapproved/ACKburned | API Home/catalog/detail, URL state and presentation availability; Risk item 3 (shared routes owned by parent).
 - T5 | S2–S8,S11 | delegated parallel admin frontend unit, after contract freeze; disjoint admin pages | COMPLETE | commits83f38ab+b24f5bf; independent77tests+8probes, native correctedapproval/ACKburned | catalog/stock administration using unchanged H1 session; Risk item 2.
 - T6 | S11–S14 | independent Review + independent Verify; parent synthesis | COMPLETE LOCAL DELIVERY, EXTERNAL AUDIT PENDING | report records exact candidates/checks, failures/skips and16criteria; no global production approval. Codeb24f5bf; passive closure follows.
+
+- T7 | S15 | parent inline Git/visual/browser smoke; delegated owned-fixture setup for external tooling | PARTIAL: native zoom unavailable | 18realbrowsermatrix+3edit+6reflow PASS;6keyboard PASS;ownsmoke PASS;receipt113/113codeexactb7efb3bf;resourcesstopped.
+- T8 | S15,S3,S5,S6 | delegated independent read-only contract reviewer | COMPLETE | independentread-only PASS fourareas;P3 preexistingentriescardinalityadvisory;no nativecycle.
+- T9 | S15,S12–S14 | parent inline report and proportional fixes if reproduced | COMPLETE LOCAL DELIVERY, EXTERNAL AUDIT PENDING | b7efb3bf minimalUI/focusfix,2RED->4GREEN,frontendbuild/lint79PASS,independent4+2PASS;H2-cierre-validacion.md withnativezoomgap.
 
 ## Log
 
@@ -422,43 +455,6 @@ Full entries are retained verbatim in `docs/milestones/H2-work-log.md` and prior
 
 Anonymous exact Forms21.2.25 was authorized and installed without changing other pins. Original H1 WIP/main/tags preserved. Public/admin and backend catalog/stock source remains uncommitted. All previous known failures/skips/provenance, candidate IDs and cleanup receipts remain in the historical entries and ignored `odd/checks` evidence. In particular the22 Swagger/runtime gaps were H2 implementation gaps, NOT approved-H1 debt; real modules/parity now resolve them.
 
-### L22 — Image approval confirmed; catalog runtime work unit ready
-
-User: "Sí, autorizo un único reintento instrumentado y sanitizado de fiabilidad en la misma transacción de imágenes. Si completa, continuá H2. Sin inspeccionar credenciales; WIP intacto, sin push, merge ni tags." Fourthimageattempt/secondinstrumentedreliability completedapproved; exactACK acknowledged/burned review-312b76024ad06bec revision9a00e856d81108554b5b269956adf2d3f7a18601cd152b83d37e01408a0bc6b3. No trailingSTATUS. Rawstderrdiscarded, no credentialsinspected; no causalclaimabout429. Nativeadvisoriesonly: synchronousPNGload,filesystemIOunderlock,UUIDshaperegex,missingcommittedintegrationproofinimageslice,magiclockID,brittlePNGoffsets,productiontestfixtureexport. No correctiontransitionorcandidate reopening. Plannedcoordinationregressionnowincludedincatalogunit.
-
-Localcatalogunit6e7fb1c2c1f4cf69131e9c73429ae47a3a8c1821:15files1139authoredlines; coreHTTPcatalog/gallery/seed behavior plus unchanged-sourceindependentregressions,fictionalPNGassets,modulewiringandSwagger/H1metadataalignment. Coherentbeyondadvisorybudget; noper-filefragmentation. Freshbuild/lint/125focusedtestsandpreviousindependent128fileB1–B7PASScoverunchangedruntimebytes. NewH2-catalog-runtimedecisionrecords commands,seedownershiplimits,omissions/rollback. FrontendWIP/taskarchiveuntouched.
-
-CleanreviewrootreusedonlyafterimageACKburned; detachedd6e7fb1c. CleanassessmentHIGH/item2securityandprocessboundary; exactcanonicalpreflight/newSTARTrelayreturnedNEWconsent/v3high15files1139lines,target394bce6e…412b,lineage review-7fa42cd2bc30c909,base d47b8fc/tree72ac9db1…7d40,candidate88a8ffda…0b36. Nativecatalogconsentpending; no grantedSTART/capturesorapproval. Exactenvelope odd/checks/h2-catalog/native-consent.json; priorimage/stockgrantsdonotapply. Remainingfrontendcommits/reviews,finalmetadata/H2-informe andexternal-auditstopstillpending. No push/merge/tags/H3.
-
-
-### L23 — Granted catalog review has one pending reliability slot
-
-Userreply: `granted`. Executed exactcatalogSTARTonce review-7fa42cd2bc30c909,target394bce6e…412b,commit6e7fb1c. Fourproviderreturnedcaptureslaunchedconcurrentlyinorder; risk/resilience/readabilityadmittedcompletedartifacts. Reliability429exit1/not_started. ExactboundSTATUSreofferedidenticalslot; waited180seconds thenoneboundedretryagain429. No completedlensrerun, instrumentationactivation,rawstderrpersistence,newSTART,approvalorACK. FinalexactSTATUSreviewing/onlyreliabilityslot; cleanReviewroot6e7fb1cunchanged. Evidence/currentcontinuation odd/checks/h2-catalog/native-blocked-state.json. Needuserdecisionbeforefurtherinstrumentedretry; previousimageauthorizationdoesnotapply. No codechanges/push/merge/tags/H3. HistoricalL16–L18retryentriesmovedverbatimtoexistingH2-work-logarchivetokeepfullEngrammirrorbelow50KiB; S1–S14andL1untouched.
-
-
-### L24 — Catalog correction approved; public frontend candidate ready
-
-User: "Autorizo un único reintento instrumentado y sanitizado de fiabilidad en la misma transacción de catálogo. Si completa, continuá H2. Sin inspeccionar credenciales; WIP intacto, sin push, merge ni tags." Exactreliabilitycapturecompletedcorrection_required. Exactstatus_continuationentered; onlycriticalfinding R4-commit-ambiguity-removes-published-image requiredcorrection. Captured160lineforecastwithin200budget; no sourcewritebeforeplan. RED2fail6passprovedtransactionrejectiondeletedpublishedfileevenwhenmetadatacommitted. Correctionremovesunsafecompensation,retainsbytesforcoordinatedorphancleanup. GREEN8pass/lint0; independentfreshscratchbuild/lint/fullJest1218pass1skip/2outcomeprobesPASS,129hashesunchanged; parentlintspot0. Commit395cece1ae879cc711d6485612ccc2cd15381a05 contains3paths111authoredlines. No contract/businesschange. SamecleanReviewrootupdatedtocorrectedcommit; exactSTATUSissuedtargetedvalidatoronly. Nativecapture-validationapproved; exactACKburnedreview-7fa42cd2bc30c909,target385f6623…e9ab,revisionddca8c321d5f31c6bd131d0e6549de0734cea543940f488ef3a75b560d209c3b. No trailingSTATUS. R3imageorderswapfindingnativelyrefuted;remainingwarningsnonblocking(publicreadscale,deadsearchhelper,hostDockerpath,seedsummarycounts). Native/RED/GREEN/Verifyevidenceretained;threeambiguityscratchpathsremoved.
-
-Publicunitf03088620563050c78e9eadbcd185913f8c220db:16files1489authoredlines, coherentHome/catalog/detail/client/formatting/asset+tests/doc. Only2publicroutelinesstagedfromsharedroutes; liveadminWIPbytehash1c8e1b7a168f71e55031962f98000fb81da738010d65e2e5ffa9ed1be2935b76unchanged. Noformsdependencyoradminroutes/filesstaged. Independentfresharchivedexactcommitwithoutadminsurface: build/lint0,53tests/11filesPASS,asset1PASS,noskips/warnings,commit/sourcehash5401af7d…219a;livefrontendhasha2e489e9…fd76unchanged. ParentassetspotPASS;ownedpublicscratchremovedafterevidenceretention.
-
-Cleanreviewrootnowf030886aftercatalogACKburned. AssessmentHIGHconfiguration/sharedroutes, duehighrisk. Threepertinentlensesresilience/readability/reliability: publicreadonlyUIrequestfailures/cancellation,copy/navigation,price/quantitybehavior; noauthpolicyorpersistencemutationchanged, so no risklensaddedartificially. Canonicalpreflight/newSTARTrelayreturnedNEWconsentmedium16files1489lines target19f66d2d…20df,lineage review-8acb1bc6de04d150,base395cece/treeb7559feb…1600,candidatee5934573…7766. Exactenvelope odd/checks/h2-public/native-consent.json. No grantedSTART/capturesyet; previouscataloggrantdoesnotapply. AdminWIP,pinnedformsdependency,finalmetadata/reportstillpending. HistoricalL19–L21movedverbatimtoexistingarchivefor50KiBmirrorcap;S1–S14/L1unchanged. No push/merge/tags/H3.
-
-
-### L25 — Public review confirmed; admin frontend candidate ready
-
-Userreply: `granted`. Publicreview-8acb1bc6de04d150threecapturesconcurrentcompletedfirstbatch, no429orinstrumentation. ApprovedandexactACKburnedtarget19f66d2d…20df,revision4ef5ea549f14f9ca056c35b4f0070158254d2d6793b8b78b6c2254a2d924b692. No trailingSTATUS. SoleadvisoryR4-category-recovery: transientcategoryfailurebecomesempty/productretrydoesnotreloadcategories; filtersmaylosecategorywithoutoptions. Nonblockinglaterfollowup, no correctiontransition.
-
-Adminunit83f38abacb260fe37b7c40fb4763ab30af17bb28 commits16files1473lines:protectedcategory/product/gallery/stockUI,client/typedforms/tests,route/navigationregistration,exactuserauthorized@angular/forms21.2.25dependency. Existingversions/resolved/integritiesunchanged,standard-schemaonlydevmarkerremoved. NewH2clientlocalerrorcopyneutralizedIniciá→Iniciebeforecommit/checks; noH1copychanges. Independentfresharchivedexactcommitbuild/lint0,70tests15filesPASS,asset1PASSnoskips/warnings;dependenciesassertionsPASS. VerifierpreflightPythonsyntaxerrorpreventedbeforehashcapture: preservePARTIALbefore/afterhashproof,nofabricatedinvariance. Correctedpost-checkscratch=immutablecommit672c7a10…a2a; parentgitdiffHEADfrontend/assetscriptemptyandassetspotPASS. No sourcemutationduringchecksobserved. Evidenceodd/checks/h2-frontend/admin-commit-verify; ownedadminscratchremoved. Featurecodefullycommitted; onlytrackingdocument/archiveWIPremain.
-
-CleanReviewrootnow83f38abafterpublicACKburned. AssessmentHIGHconfig/securityitem2; canonicalpreflight/newSTARTrelayNEWconsentmedium16files1473lines,target4dd97ae4…bc07,lineage review-2601dfa46cfb8115,basef030886/treee5934573…7766,candidate14b1541a…47b7. Fourpertinentlensesrisk/resilience/readability/reliabilityforH1session/CSRF,mutationretries,forms/copy,stocklogicandpinneddependency. Exactenvelopeodd/checks/h2-admin/native-consent.json. NEWconsentpending; nocaptures/grantedSTARTorapproval. Remainingfinalverification/gaps,runtime-metadataannotationandH2-informe/external-auditstop pending. No push/merge/tags/H3.
-
-
-### L26 — Granted admin review retains only pending readability
-
-Userreply: `granted`. ExactadminSTARToncefor83f38ab,review-2601dfa46cfb8115,target4dd97ae4…bc07. Fourcapturesconcurrentproviderorder. Risk/resilience/reliabilityadmittedcompletedartifacts; readability429exit1/not_started. ExactboundSTATUSreofferedidenticalreadabilityslot; waited180seconds thenoneboundedretryagain429. No otherlensrerun,newSTART,loggingactivation,credentialinspectionorrawstderrpersistence. FinalexactSTATUSreviewing/onlyreadabilityslot; cleanReviewroot83f38abunchanged. Noapproval/ACKorcorrectionauthority. Exactcontinuation+3artifactrefs+sanitizedfailureodd/checks/h2-admin/native-blocked-state.json. NeedsuserdecisionfornewinstrumentedREADABILITYretry; priorinstrumentedgrantsforcatalog/imagesdonotapply. No codechanges/push/merge/tags/H3.
-
-
 ### L27 — Admin retry completed; bounded gallery correction
 
 User: "Autorizo un único reintento instrumentado y sanitizado de legibilidad en la misma transacción administrativa. Si completa, continuá H2. Sin inspeccionar credenciales; WIP intacto, sin push, merge ni tags." One instrumented readability capture completed in review-2601dfa46cfb8115. Native R2-gallery-dirty-state/R3-gallery-draft-loss identify the same unrelated metadata draft loss, not a429rootcause. Exact status_continuation entered;190line forecast accepted within200budget. No new START. Test harness first failed TS4114 (not behavioral RED), corrected static override;7newcases then failed/3priorpassed. Per-image/per-field state reconciliation changed focused suite to10PASS, fullfrontend77PASS/15files,build/lint0. Saving ownmetadata clears only ownimage; otheroperations preserve pending fields/files, server refreshes untouchedfields. Explicitdiscard remains intentional. Correction3files136authoredlines; independent scopedfunctionalVerify pending; native stop corrected_candidate_unavailable awaits correctioncommit. Completed lenses not rerun; rawstderrdiscarded/no credentialsinspected. Original WIP untouched. Finalintegration rerun delegated independently; finalreport still pending. L12–L15 moved verbatim into existing H2-work-log archive; requirements/L1 unchanged.
@@ -481,3 +477,40 @@ Generateddocs/milestones/H2-informe.md: base/commits,H2.1–4,decisions,API/secu
 ### L30 — Final readback and delivery boundary
 
 Closurecommitc9180bff9ae2f5b4a1f3c6bb249c1345ee6d4496:9files568authoredlines includingverbatimhistoricalarchive, no runtimecodechange. Nativeassessmentagainstb24f5bf medium/configuration_change(OpenAPI), review_due=false/under_budget; no newreview/consent/PASS implied, no authoritycreated. Finalbackend/frontendtreesidenticaltob24f5bf. Finalsourcecodecommitb24f5bf; reportrecordsclosurec9180bfanditsassessment. Originalstatusdiffand4protectedfilehashchecksallmatchinitial; main/originmain/h1tagremainapprovedbase, h0tagunchanged. Allfourreportedownedverify/offlinenpm/scratchlocatorpathsremovedafterNONSECRETevidenceretention; twoPGfixturesalreadyownerchecked/stopped. Structuralreport16rows/local-linksvalid,finaltrackedtreecleanatdelivery. This follow-up is passive evidence bookkeeping, not implementation or a new code candidate. External human audit is the next action; no publish/H3.
+
+
+### L31 — External audit and bounded complementary validation (2026-10-20)
+
+H2 fue auditado externamente.
+
+Dictamen: núcleo funcional H2.1–H2.4 conforme según evidencia. Cierre global PARCIAL únicamente por comprobaciones finales pendientes.
+
+Autorizo un cierre complementario acotado de H2.
+
+Base:
+
+- Rama `codex/h2-catalog-stock`.
+- Candidato técnico `b24f5bf`.
+- Commit documental posterior `c9180bf`.
+
+Trabajo:
+
+1. Confirmá el estado Git y que el cierre documental no modificó código de producción.
+2. Ejecutá una verificación visual real, con navegador, en 360/768/1440 px para Home, catálogo, detalle, productos/categorías y administración de stock. Incluí teclado/foco y zoom/reflow. Registrá capturas y problemas concretos.
+3. Ejecutá un smoke integrado breve del candidato final, priorizando login, catálogo, edición de galería con borradores independientes, ajuste/apertura de rollos y visibilidad pública. Usá únicamente fixtures y servicios propios.
+4. Realizá una revisión independiente de lectura del contrato H2, limitada a invariantes de stock, permisos administrativos, precios y estados de error. No fuerces una nueva revisión nativa si su coste o bloqueo no lo justifica.
+5. No repitas las suites completas ya aprobadas salvo que se modifique código afectado.
+6. Si detectás defectos reales, corregí solo lo necesario y verificá esas correcciones.
+
+Entregá `docs/milestones/H2-cierre-validacion.md` con resultados, evidencias y commit exacto.
+
+No hacer push, PR, merge, tags ni iniciar H3.
+Preservá WIP y worktrees.
+Detenete para auditoría externa.
+
+Git preflight:featureclean HEAD5431f4fe2b4e558577c15b2546b84a42ef454be6; backend/frontend byte-identicaltob24f5bf; c9180bfand5431f4f touchonlydocs+informativeOpenAPI. Original WIPunchanged. No projectskillregistry foundinEngram/.atl; exactinstalledwork-unit-commits/cognitive-doc-design paths supplied. Existingtaskidentityretained; L22–L26archivedverbatimtokeepmirrorunder50KiB. Setup uses onlynewownedPG/services, no ambientcredentials/no fullsuiterepeats. Native user-ownedmodeunchanged; independentcontractreadingseparate.
+
+
+### L32 — Complementary browser validation and delivery
+
+Codecommitb7efb3bf9f88715e3bdaa99819b105dc57d1fc2f fixesHomeheadingcontrast1->8.87,detailplus1.09->14.07,basehrefskipnavigationwithmainfocus/publicnavgap. Risk3sharedlayouts;2REDthen4GREEN,parentfrontendbuild/lint79PASS/16files;independentfreshscratch4+2PASS/61hashunchanged. Nativeassessmentmedium/under_budget/review_duefalse,no newnativecycle. Actualbrowser6routesx3widths+3edit+6reflow=27documentwidthmatches;6skipfocusURLpreserved;keyboardtablepan. NativezoomUNVERIFIED(controlsineffective,Chromeunavailable),720CSSreflowNOT200%zoom. Ownsmoke35->40->120METER,2->1ROLL,2ops3entries;openingconfirmtransportinterruptreconciledwithoutretry. GalleryA/BdraftssurviveprimaryB/saveA/saveB/reload,v4;public200/hidden404,noqty/privateversion,pricesunchanged. Final113/113productionfilesmatchb7. Logoutvisible;ownbrowserclosedviewportreset. Services/containerownercheckedstopped;Angularprocesstitlerefusalresolvedbyexactidentityreadback. Onlyallowlistnonsecretevidencecopied;53+visualcapturesoriginalsretained,curatedversioned46files+manifest. IndependentcontractfourareasPASSwithP3preexistingentriesmin/maxnotconditionalbytype. Reportdocs/milestones/H2-cierre-validacion.md honestPARTIALonlynativezoom;no backendfullsuiterepeat,newnativeSTART,push/PR/merge/tags/H3. Stopforexternalaudit.
