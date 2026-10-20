@@ -114,7 +114,9 @@ type QuoteError = 'conflict' | 'rate-limit' | 'unavailable' | 'generic' | '';
     .warning{border-left:4px solid var(--color-orange)}.notice{border-left:4px solid var(--color-muted)}.cart-lines{list-style:none;padding:0;margin:1.5rem 0}
     .cart-line{display:flex;justify-content:space-between;gap:1.5rem;padding:1.25rem 0;border-bottom:1px solid var(--color-border)}.line-copy{min-width:0}.line-copy h2{font-size:1.15rem;margin:.1rem 0}
     .line-copy p{margin:.4rem 0}.line-actions{display:grid;gap:.45rem;align-content:start;min-width:180px}.stepper{display:flex;align-items:center;gap:.5rem}
-    .stepper button,.primary-button,.secondary-button,.text-button,.notice button{min-height:2.75rem;font:inherit;cursor:pointer}.stepper button{width:2.75rem;border:1px solid var(--color-border);background:var(--color-surface-subtle);font-size:1.2rem}
+    .stepper button,.primary-button,.secondary-button,.text-button,.notice button{min-height:2.75rem;font:inherit;cursor:pointer}.stepper button{width:2.75rem;border:1px solid var(--color-border);background:var(--color-surface-subtle);color:var(--color-text);font-size:1.2rem}
+    .stepper button:disabled{color:var(--color-muted);opacity:1}
+    .stepper button:focus-visible{outline-color:var(--color-blue-dark)}
     .stepper output{min-width:2.5rem;text-align:center}.primary-button,.secondary-button,.notice button{padding:.6rem 1rem;border:0;border-radius:.45rem;font-weight:700}
     .primary-button{background:var(--color-blue-dark);color:#fff}.secondary-button,.notice button{background:var(--color-surface-subtle);color:var(--color-text);border:1px solid var(--color-border)}
     .text-button{padding:.25rem .5rem;border:0;background:transparent;color:var(--color-blue-dark);text-decoration:underline}.field{display:grid;gap:.4rem;max-width:450px;margin:1rem 0}
