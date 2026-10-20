@@ -1,0 +1,10 @@
+{
+  "quoteId": "40000000-0000-4000-8000-000000000001",
+  "customer": {
+    "firstName": "Demo",
+    "lastName": "Buyer",
+    "email": "buyer@example.test",
+    "phone": "+541155550000"
+  },
+  "acceptedTermsVersion": "demo-2026-10-20-v1"
+}

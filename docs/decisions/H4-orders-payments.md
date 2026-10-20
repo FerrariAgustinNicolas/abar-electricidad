@@ -1,0 +1,22 @@
+# H4 — Guest orders and demo attempts
+
+OpenAPI **0.7.0**, `orders-demo-v1`, is the single normative contract. Freeze precedes runtime implementation. Existing H1–H3 paths and schemas remain unchanged except the optional additive admin-only `StockRow.requestedUnpaidQuantity`; no exact quantities become public. H4 introduces five operations: terms, create, protected view, lookup, protected payment attempts. The terms read is necessary to expose backend-owned version and provisional text without changing H3's closed settings DTO.
+
+## Confirmed academic decisions
+
+P02 and P03 were confirmed by the user on 2026-10-20 for the academic version only: no automatic commercial order expiry; immutable order lines/prices/tariff; required first/last name, email and phone; address required only for coordinated delivery; exact accepted provisional demo terms version. Historical H0 review-boundary metadata remains historical, not a new claim that the user approved other decisions. P01/P04/P05/P06/P07/P09/P10 retain their prior applicable status.
+
+## Frozen technical choices
+
+- `X-Order-Access-Token` is a possession credential, scoped to one order. No token in URLs/logs/localStorage. Token validation uses only a SHA-256 hash and expiry; creation replays encrypt their complete sensitive response using AES-256-GCM with an independently supplied 32-byte environment key (`H4_REPLAY_KEY_BASE64`). Missing/invalid key fails closed. AAD binds replay scope/key/fingerprint. Key rotation needs operational migration; no silent regeneration.
+- Access TTL uses `H4_ACCESS_TTL_SECONDS` (default86400; technical bounds60–604800). Expiry denies possession access, never cancels or edits an order. Retain durable idempotency records; no invented commercial duplicate expiry window.
+- Idempotency key: 16–200 ASCII alphanumeric/underscore/hyphen, random client intent ID, no PII. Create scope global; retry scope order ID. Canonical validated JSON fingerprint, replay before quote expiry recheck, original201/body including identical credential. Failures do not persist successful idempotency state. Same key/different body409. Unknown transport retains identical key/body.
+- `deliveryDetails` uses `addressLine`, `locality`, optional `instructions`; optional `customerNote`. Length bounds are technical storage/input limits, not confirmed commercial policy. Trim required names/address and reject blank-only values. Backend independently validates email/phone and conditional delivery. Never accept browser price/state/quantity in order creation.
+- Existing H3 code is **DEMO_PAY_ON_PICKUP**, not a new incompatible PAY_ON_PICKUP alias. Manual methods reject scenario. Simulation requires server `H4_DEMO_SIMULATION_ENABLED=true` and DEMO_SIMULATION; APPROVED remains commercial PENDING, REJECTED is recoverable, Order remains RECEIVED. No confirmation endpoint or PAID creation.
+- Current attempt pointer changes in the same transaction as append-only attempt/event history. Serialize competing creates/retries and quote consumption; preserve complete snapshot and revalidate coherent current policy/catalog/price/stock at first use. Quantities come from persisted quote response, not fingerprint alone. Notification jobs are pending with buyer/configured fictitious administrator recipients and dedupe keys in the creation transaction; no mail is sent.
+- Minimal lookup uses orderNumber+email or phone, returns status only with identical generic404 for wrong/missing values, bounded requests and comparable work. Never returns an order token, buyer, full address or notes. Protected view omits these fields as well. Every response no-store.
+- Demand sums active unpaid order items by presentation, including recoverable rejects, independent of available stock and quotes. It can exceed available stock. Response field is optional for H2 client compatibility; H4 runtime emits it. Never change balance/version/stock movements for quote/order/attempt/retry.
+
+## Freeze evidence
+
+New contract tests observed RED exit1 before schemas/routes. The first integrated run failed one stale H1 fixture projection (retained H4 marker/routes); fixture updated to remove every later allowlist while preserving its legacy public-interface assertions. Static validation covers request examples, forbidden client fields, possession security, idempotency, manual scenario rejection and closed future-route allowlist. Exact results/commits belong in H4-informe.md. Runtime, real PostgreSQL, independent Review/Verify and native review are not implied by this freeze.

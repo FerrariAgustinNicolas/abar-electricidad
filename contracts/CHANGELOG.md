@@ -31,3 +31,7 @@ Según [H0-contract](../docs/decisions/H0-contract.md) y [H0-base](../docs/decis
 ## 0.6.0 — H3 cart/quote freeze
 
 Adds public demo settings, compatible payment-method discovery, and authoritative quote creation. Closed DTOs, exact ARS minor units, bounded quantities, snapshots/expiry and sanitized conflicts are frozen before parallel implementation. H1/H2 unchanged. No order/payment/reservation; external H3 audit pending.
+
+## 0.7.0 — H4 orders/demo freeze
+
+Add guest-order creation, possession-header view, minimal contact lookup, idempotent demo attempts, and a versioned provisional terms read. Optional admin-only unpaid demand is additive per presentation. P02/P03 are user-confirmed for the academic version only. No commercial PAID, reservation, deduction, manual confirmation, real gateway, or H5. [Decisions](../docs/decisions/H4-orders-payments.md) separate contract freeze from runtime evidence.
