@@ -62,6 +62,44 @@ describe('driver-compatible transaction lock projection', () => {
   }
 });
 
+describe('catalog authorization facade', () => {
+  it('exposes only actor identity and canonical transaction recheck', async () => {
+    const f = fixture();
+    const auth = await f.service.authorizeCatalog(f.proof, true);
+    expect(Object.keys(auth).sort()).toEqual(['adminUserId', 'recheck']);
+    expect(auth.adminUserId).toBe(adminId);
+    expect(Object.isFrozen(auth)).toBe(true);
+    await auth.recheck(f.prisma as any);
+    const locks = (f.prisma.$queryRaw as jest.Mock).mock.calls.map((call: any[]) => call[0].join(''));
+    expect(locks).toEqual([
+      'SELECT "id" FROM "AdminUser" WHERE "id" =  FOR UPDATE',
+      'SELECT "id" FROM "AuthSession" WHERE "id" =  FOR UPDATE',
+    ]);
+  });
+
+  it('does not bypass origin or CSRF checks for catalog mutations', async () => {
+    const f = fixture();
+    await expect(f.service.authorizeCatalog({ ...f.proof, origin: 'https://foreign.invalid' }, true)).rejects.toMatchObject({ status: 403 });
+    await expect(f.service.authorizeCatalog({ ...f.proof, csrfToken: undefined }, true)).rejects.toMatchObject({ status: 403 });
+  });
+
+  it('rechecks revocation and password restrictions inside the transaction', async () => {
+    const f = fixture();
+    const auth = await f.service.authorizeCatalog(f.proof, true);
+    const tx = { ...f.prisma, authSession: { findUnique: jest.fn(async () => ({ ...sessionRow, revokedAt: timestamp })) } };
+    await expect(auth.recheck(tx as any)).rejects.toMatchObject({ status: 401 });
+    tx.authSession.findUnique = jest.fn(async () => ({ ...sessionRow, adminUser: { ...owner, mustChangePassword: true } })) as any;
+    await expect(auth.recheck(tx as any)).rejects.toMatchObject({ status: 403 });
+  });
+
+  it('allows canonical authenticated reads without requiring mutation proof', async () => {
+    const f = fixture();
+    const auth = await f.service.authorizeCatalog({ cookieHeader: f.proof.cookieHeader }, false);
+    await auth.recheck(f.prisma as any);
+    expect(f.prisma.$queryRaw).not.toHaveBeenCalled();
+  });
+});
+
 describe('AdminUsersService public operations', () => {
   it('lists only sanitized users with bounded default pagination and stable sorting', async () => {
     const f = fixture();

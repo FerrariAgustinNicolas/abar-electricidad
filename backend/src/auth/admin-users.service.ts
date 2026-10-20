@@ -1,5 +1,6 @@
 import { createHash, timingSafeEqual } from 'node:crypto';
 import { HttpException, Injectable } from '@nestjs/common';
+import type { Prisma } from '../generated/prisma/client';
 import type { PrismaService } from '../prisma/prisma.service';
 import type { CsrfNonceCipher } from './csrf-nonce.cipher';
 import type { AuthConfig } from './auth.config';
@@ -204,6 +205,18 @@ export class AdminUsersService {
     private readonly blocklist: PasswordBlocklistLookup,
     private readonly now: () => number = Date.now,
   ) {}
+
+  /** Reuse the H1 policy for H2, including a first-in-transaction recheck. */
+  async authorizeCatalog(request: AdminUsersRequest, mutation: boolean): Promise<Readonly<{
+    adminUserId: string;
+    recheck: (tx: Prisma.TransactionClient) => Promise<void>;
+  }>> {
+    const auth = await this.authenticate(request, mutation);
+    return Object.freeze({
+      adminUserId: auth.adminUserId,
+      recheck: (tx: Prisma.TransactionClient) => this.assertStillAuthorized(tx, auth, this.readNow(), mutation),
+    });
+  }
 
   async list(request: AdminUsersRequest): Promise<AdminUserList> {
     const auth = await this.authenticate(request, false);

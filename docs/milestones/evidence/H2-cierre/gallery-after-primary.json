@@ -1,0 +1,12 @@
+[
+  {
+    "alt": "Closure draft A",
+    "primary": false,
+    "saveDisabled": false
+  },
+  {
+    "alt": "Closure draft B",
+    "primary": true,
+    "saveDisabled": false
+  }
+]

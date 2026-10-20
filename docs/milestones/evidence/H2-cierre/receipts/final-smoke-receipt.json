@@ -1,0 +1,135 @@
+{
+  "observedAt": "2026-10-20T18:11:08.687Z",
+  "identityRechecked": true,
+  "readOnly": true,
+  "containerId": "94ab472c55db5f9e5b805662336acab1a9d88f66da7c6aea513087cfc56bc934",
+  "owner": "df6bd3c9-d891-403d-9c49-a4f65f25dbd1",
+  "commit": "b7efb3bf9f88715e3bdaa99819b105dc57d1fc2f",
+  "productionComparison": {
+    "matched": 113,
+    "total": 113,
+    "mismatches": [],
+    "manifest": "final-production-comparison.json"
+  },
+  "product": {
+    "id": "20000000-0000-4000-8000-000000000001",
+    "slug": "cable-demo-25",
+    "version": 4,
+    "active": true
+  },
+  "balances": [
+    {
+      "unit": "METER",
+      "rollLengthMeters": null,
+      "amountMinor": "125000",
+      "availableQuantity": 120,
+      "version": 3
+    },
+    {
+      "unit": "ROLL",
+      "rollLengthMeters": 80,
+      "amountMinor": "8200000",
+      "availableQuantity": 1,
+      "version": 2
+    }
+  ],
+  "gallery": [
+    {
+      "id": "60c860a9-659e-43e1-9775-52c2362ae31d",
+      "alt": "Closure draft A",
+      "order": 0,
+      "isPrimary": false
+    },
+    {
+      "id": "2bdc6b4f-f938-4279-928f-341540afbbbd",
+      "alt": "Closure draft B",
+      "order": 1,
+      "isPrimary": true
+    }
+  ],
+  "operations": [
+    {
+      "id": "386f6493-28a1-48fe-a3dd-9c0213cbace5",
+      "type": "ADJUSTMENT",
+      "reason": "Complementary H2 validation adjustment",
+      "entryCount": 1
+    },
+    {
+      "id": "cc8a3cde-7e2d-4f40-a8fc-a24bea8f1a38",
+      "type": "ROLL_OPENING",
+      "reason": "Complementary H2 manual roll opening",
+      "entryCount": 2
+    }
+  ],
+  "totals": {
+    "operations": 2,
+    "entries": 3
+  },
+  "h1Metadata": {
+    "users": {
+      "total": 1,
+      "active": 1,
+      "mustChangePassword": 0
+    },
+    "sessions": {
+      "total": 1,
+      "notRevoked": 1,
+      "currentlyUnexpired": 1
+    }
+  },
+  "publicReadback": {
+    "detailStatus": 200,
+    "primaryAlt": "Closure draft B",
+    "presentations": [
+      {
+        "id": "029502ce-c1f1-40e2-a7f4-5c4445909ad5",
+        "unit": "METER",
+        "rollLengthMeters": null,
+        "price": {
+          "amountMinor": "125000",
+          "currency": "ARS"
+        },
+        "availability": "AVAILABLE",
+        "sellable": true
+      },
+      {
+        "id": "5953950f-3fd1-4148-98ef-60bdd30177d9",
+        "unit": "ROLL",
+        "rollLengthMeters": 80,
+        "price": {
+          "amountMinor": "8200000",
+          "currency": "ARS"
+        },
+        "availability": "LOW_STOCK",
+        "sellable": true
+      }
+    ],
+    "privateFieldPaths": [],
+    "hiddenStatus": 404,
+    "listStatus": 200,
+    "listedSlugs": [
+      "cable-demo-25",
+      "cable-prueba-15",
+      "lampara-ficticia-led",
+      "toma-ficticia-stock",
+      "toma-ficticia-minimo"
+    ]
+  },
+  "checks": {
+    "catalogVersion4": true,
+    "galleryAltsPersisted": true,
+    "primaryB": true,
+    "stockAndPriceUnchanged": true,
+    "exactOperations": true,
+    "h1Metadata": true,
+    "publicDetail200": true,
+    "publicStates": true,
+    "publicPrimaryB": true,
+    "noPublicQuantityThresholdPrivateVersions": true,
+    "hiddenPublic404": true,
+    "hiddenAbsentFromList": true,
+    "productionMatchesCommit": true
+  },
+  "allPassed": true,
+  "servicesLeftRunning": true
+}

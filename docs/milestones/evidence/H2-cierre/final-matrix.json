@@ -1,0 +1,321 @@
+[
+  {
+    "name": "admin-edit-360-after",
+    "active": "",
+    "h1": "Editar producto",
+    "height": 1000,
+    "scrollWidth": 360,
+    "tables": [],
+    "width": 360
+  },
+  {
+    "name": "admin-edit-768-after",
+    "active": "",
+    "h1": "Editar producto",
+    "height": 1000,
+    "scrollWidth": 768,
+    "tables": [],
+    "width": 768
+  },
+  {
+    "name": "admin-edit-1440-after",
+    "active": "",
+    "h1": "Editar producto",
+    "height": 1000,
+    "scrollWidth": 1440,
+    "tables": [],
+    "width": 1440
+  },
+  {
+    "name": "home-360-final",
+    "active": "",
+    "h1": "ABAR Electricidad",
+    "height": 1000,
+    "scrollWidth": 360,
+    "tables": [],
+    "width": 360
+  },
+  {
+    "name": "home-768-final",
+    "active": "",
+    "h1": "ABAR Electricidad",
+    "height": 1000,
+    "scrollWidth": 768,
+    "tables": [],
+    "width": 768
+  },
+  {
+    "name": "home-1440-final",
+    "active": "",
+    "h1": "ABAR Electricidad",
+    "height": 1000,
+    "scrollWidth": 1440,
+    "tables": [],
+    "width": 1440
+  },
+  {
+    "name": "catalog-360-final",
+    "active": "",
+    "h1": "Productos",
+    "height": 1000,
+    "scrollWidth": 360,
+    "tables": [],
+    "width": 360
+  },
+  {
+    "name": "catalog-768-final",
+    "active": "",
+    "h1": "Productos",
+    "height": 1000,
+    "scrollWidth": 768,
+    "tables": [],
+    "width": 768
+  },
+  {
+    "name": "catalog-1440-final",
+    "active": "",
+    "h1": "Productos",
+    "height": 1000,
+    "scrollWidth": 1440,
+    "tables": [],
+    "width": 1440
+  },
+  {
+    "name": "detail-360-final",
+    "active": "",
+    "h1": "Cable demostración 2.5 mm",
+    "height": 1000,
+    "scrollWidth": 360,
+    "tables": [],
+    "width": 360
+  },
+  {
+    "name": "detail-768-final",
+    "active": "",
+    "h1": "Cable demostración 2.5 mm",
+    "height": 1000,
+    "scrollWidth": 768,
+    "tables": [],
+    "width": 768
+  },
+  {
+    "name": "detail-1440-final",
+    "active": "",
+    "h1": "Cable demostración 2.5 mm",
+    "height": 1000,
+    "scrollWidth": 1440,
+    "tables": [],
+    "width": 1440
+  },
+  {
+    "name": "admin-products-360-final",
+    "active": "",
+    "h1": "Productos",
+    "height": 1000,
+    "scrollWidth": 360,
+    "tables": [
+      {
+        "clientWidth": 326,
+        "scrollWidth": 704
+      }
+    ],
+    "width": 360
+  },
+  {
+    "name": "admin-products-768-final",
+    "active": "",
+    "h1": "Productos",
+    "height": 1000,
+    "scrollWidth": 768,
+    "tables": [
+      {
+        "clientWidth": 734,
+        "scrollWidth": 734
+      }
+    ],
+    "width": 768
+  },
+  {
+    "name": "admin-products-1440-final",
+    "active": "",
+    "h1": "Productos",
+    "height": 1000,
+    "scrollWidth": 1440,
+    "tables": [
+      {
+        "clientWidth": 844,
+        "scrollWidth": 844
+      }
+    ],
+    "width": 1440
+  },
+  {
+    "name": "admin-categories-360-final",
+    "active": "",
+    "h1": "Categorías",
+    "height": 1000,
+    "scrollWidth": 360,
+    "tables": [
+      {
+        "clientWidth": 326,
+        "scrollWidth": 704
+      }
+    ],
+    "width": 360
+  },
+  {
+    "name": "admin-categories-768-final",
+    "active": "",
+    "h1": "Categorías",
+    "height": 1000,
+    "scrollWidth": 768,
+    "tables": [
+      {
+        "clientWidth": 734,
+        "scrollWidth": 734
+      }
+    ],
+    "width": 768
+  },
+  {
+    "name": "admin-categories-1440-final",
+    "active": "",
+    "h1": "Categorías",
+    "height": 1000,
+    "scrollWidth": 1440,
+    "tables": [
+      {
+        "clientWidth": 844,
+        "scrollWidth": 844
+      }
+    ],
+    "width": 1440
+  },
+  {
+    "name": "admin-stock-360-final",
+    "active": "",
+    "h1": "Existencias",
+    "height": 1000,
+    "scrollWidth": 360,
+    "tables": [
+      {
+        "clientWidth": 326,
+        "scrollWidth": 704
+      },
+      {
+        "clientWidth": 326,
+        "scrollWidth": 704
+      }
+    ],
+    "width": 360
+  },
+  {
+    "name": "admin-stock-768-final",
+    "active": "",
+    "h1": "Existencias",
+    "height": 1000,
+    "scrollWidth": 768,
+    "tables": [
+      {
+        "clientWidth": 734,
+        "scrollWidth": 734
+      },
+      {
+        "clientWidth": 734,
+        "scrollWidth": 734
+      }
+    ],
+    "width": 768
+  },
+  {
+    "name": "admin-stock-1440-final",
+    "active": "",
+    "h1": "Existencias",
+    "height": 1000,
+    "scrollWidth": 1440,
+    "tables": [
+      {
+        "clientWidth": 844,
+        "scrollWidth": 844
+      },
+      {
+        "clientWidth": 844,
+        "scrollWidth": 844
+      }
+    ],
+    "width": 1440
+  },
+  {
+    "name": "home-720-reflow",
+    "active": "",
+    "h1": "ABAR Electricidad",
+    "height": 1000,
+    "scrollWidth": 720,
+    "tables": [],
+    "width": 720
+  },
+  {
+    "name": "catalog-720-reflow",
+    "active": "",
+    "h1": "Productos",
+    "height": 1000,
+    "scrollWidth": 720,
+    "tables": [],
+    "width": 720
+  },
+  {
+    "name": "detail-720-reflow",
+    "active": "",
+    "h1": "Cable demostración 2.5 mm",
+    "height": 1000,
+    "scrollWidth": 720,
+    "tables": [],
+    "width": 720
+  },
+  {
+    "name": "admin-products-720-reflow",
+    "active": "",
+    "h1": "Productos",
+    "height": 1000,
+    "scrollWidth": 720,
+    "tables": [
+      {
+        "clientWidth": 686,
+        "scrollWidth": 704
+      }
+    ],
+    "width": 720
+  },
+  {
+    "name": "admin-categories-720-reflow",
+    "active": "",
+    "h1": "Categorías",
+    "height": 1000,
+    "scrollWidth": 720,
+    "tables": [
+      {
+        "clientWidth": 686,
+        "scrollWidth": 704
+      }
+    ],
+    "width": 720
+  },
+  {
+    "name": "admin-stock-720-reflow",
+    "active": "",
+    "h1": "Existencias",
+    "height": 1000,
+    "scrollWidth": 720,
+    "tables": [
+      {
+        "clientWidth": 686,
+        "scrollWidth": 704
+      },
+      {
+        "clientWidth": 686,
+        "scrollWidth": 704
+      }
+    ],
+    "width": 720
+  }
+]

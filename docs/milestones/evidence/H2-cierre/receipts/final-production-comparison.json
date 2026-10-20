@@ -1,0 +1,687 @@
+{
+  "commit": "b7efb3bf9f88715e3bdaa99819b105dc57d1fc2f",
+  "comparison": "Actual running scratch production sources/runtime/config/schema/assets against immutable Git blobs",
+  "excluded": "tests/specs/generated/dist/cache/env examples; owned fixture/proxy scripts are not tracked production sources",
+  "files": [
+    {
+      "path": "backend/package-lock.json",
+      "expectedSha256": "03c21da88e5bbce857490866812e3343b93e035dde60a0fe910230b669211d0f",
+      "archiveSha256": "03c21da88e5bbce857490866812e3343b93e035dde60a0fe910230b669211d0f",
+      "matches": true
+    },
+    {
+      "path": "backend/package.json",
+      "expectedSha256": "d43383abdfb5bfd0f377ff4aaf151609455b64d0274065f8bcb228f6ca7ef8a2",
+      "archiveSha256": "d43383abdfb5bfd0f377ff4aaf151609455b64d0274065f8bcb228f6ca7ef8a2",
+      "matches": true
+    },
+    {
+      "path": "backend/prisma.config.ts",
+      "expectedSha256": "2c832a93e83632a31901ebf8c99594f6b0c2d617faaa505cd5157f809becacf5",
+      "archiveSha256": "2c832a93e83632a31901ebf8c99594f6b0c2d617faaa505cd5157f809becacf5",
+      "matches": true
+    },
+    {
+      "path": "backend/prisma.schema.config.ts",
+      "expectedSha256": "9fa038b4eb224b8dfd3d8c9dd8f2598e25b33a056289d7c16d0f036c9ac35fb6",
+      "archiveSha256": "9fa038b4eb224b8dfd3d8c9dd8f2598e25b33a056289d7c16d0f036c9ac35fb6",
+      "matches": true
+    },
+    {
+      "path": "backend/prisma/migrations/20261009000100_h1_admin_user/migration.sql",
+      "expectedSha256": "fd430951759df8f73895d50dbe0a75c51d3b2d36a9c7e9567487ff9c198d02e4",
+      "archiveSha256": "fd430951759df8f73895d50dbe0a75c51d3b2d36a9c7e9567487ff9c198d02e4",
+      "matches": true
+    },
+    {
+      "path": "backend/prisma/migrations/20261009000200_h1_auth_context/migration.sql",
+      "expectedSha256": "c39bb9da8ac5bce166ed12c4587b45e10f6349e919100acfb567e1de2337519d",
+      "archiveSha256": "c39bb9da8ac5bce166ed12c4587b45e10f6349e919100acfb567e1de2337519d",
+      "matches": true
+    },
+    {
+      "path": "backend/prisma/migrations/20261009000300_h1_admin_audit/migration.sql",
+      "expectedSha256": "892c1484893fd83fbafec4eb972db9842357f9af72796e5f0a6e6d6a812f2787",
+      "archiveSha256": "892c1484893fd83fbafec4eb972db9842357f9af72796e5f0a6e6d6a812f2787",
+      "matches": true
+    },
+    {
+      "path": "backend/prisma/migrations/20261020000100_h2_catalog_stock/migration.sql",
+      "expectedSha256": "3d84a3de34b264606678424b6144f85db9b32bf1a1cc5ac45401a89f48f8329d",
+      "archiveSha256": "3d84a3de34b264606678424b6144f85db9b32bf1a1cc5ac45401a89f48f8329d",
+      "matches": true
+    },
+    {
+      "path": "backend/prisma/schema.prisma",
+      "expectedSha256": "040b94feae8c19bc98f5311f08b078ce1ec33226708059f69a046a2304dc6ea6",
+      "archiveSha256": "040b94feae8c19bc98f5311f08b078ce1ec33226708059f69a046a2304dc6ea6",
+      "matches": true
+    },
+    {
+      "path": "backend/resources/auth/LICENSE.pwdb.txt",
+      "expectedSha256": "4088d581cba171b1aa6f880ad3fb5327e2d6de415621cf8b80685ac506c0cae1",
+      "archiveSha256": "4088d581cba171b1aa6f880ad3fb5327e2d6de415621cf8b80685ac506c0cae1",
+      "matches": true
+    },
+    {
+      "path": "backend/resources/auth/LICENSE.seclists.txt",
+      "expectedSha256": "3dbdc93d5f8829de0941744841730a09c106d0732e5ae0e98ca1d77be7ded66c",
+      "archiveSha256": "3dbdc93d5f8829de0941744841730a09c106d0732e5ae0e98ca1d77be7ded66c",
+      "matches": true
+    },
+    {
+      "path": "backend/resources/auth/password-blocklist.bin",
+      "expectedSha256": "7a85af89d0f800cc94cbe81ad5a11de7590da24a5ed33c6a5bc5e7f0abea1eb0",
+      "archiveSha256": "7a85af89d0f800cc94cbe81ad5a11de7590da24a5ed33c6a5bc5e7f0abea1eb0",
+      "matches": true
+    },
+    {
+      "path": "backend/resources/auth/password-blocklist.manifest.json",
+      "expectedSha256": "581027ae246da0bacf0d71a65a35edad5a20a71c5fcfe2d810513b128bfdb510",
+      "archiveSha256": "581027ae246da0bacf0d71a65a35edad5a20a71c5fcfe2d810513b128bfdb510",
+      "matches": true
+    },
+    {
+      "path": "backend/resources/catalog/demo-cable-blue.png",
+      "expectedSha256": "8b0f334d5b7a166ade57e79f2526c288f732b471e109df1aa075c6ae2e61ae8d",
+      "archiveSha256": "8b0f334d5b7a166ade57e79f2526c288f732b471e109df1aa075c6ae2e61ae8d",
+      "matches": true
+    },
+    {
+      "path": "backend/resources/catalog/demo-cable-red.png",
+      "expectedSha256": "a04ddab7e004996b5ee431c880beb10c25d59cf0591ea4bef57e0498b16dddc5",
+      "archiveSha256": "a04ddab7e004996b5ee431c880beb10c25d59cf0591ea4bef57e0498b16dddc5",
+      "matches": true
+    },
+    {
+      "path": "backend/scripts/copy-auth-resources-cli.mjs",
+      "expectedSha256": "60f5ece349cf3d3be2e06391be4f033e361d46c29ae5de66b8cdd952eb51a2ba",
+      "archiveSha256": "60f5ece349cf3d3be2e06391be4f033e361d46c29ae5de66b8cdd952eb51a2ba",
+      "matches": true
+    },
+    {
+      "path": "backend/scripts/copy-auth-resources.mjs",
+      "expectedSha256": "84dc5d71cb02a92335795f1216a1138647a5703e81a86ed987a82cb294e75953",
+      "archiveSha256": "84dc5d71cb02a92335795f1216a1138647a5703e81a86ed987a82cb294e75953",
+      "matches": true
+    },
+    {
+      "path": "backend/scripts/copy-catalog-contract.mjs",
+      "expectedSha256": "3c3b819341065ef2223116158841bef82587a1353781ace79493ea4c50255755",
+      "archiveSha256": "3c3b819341065ef2223116158841bef82587a1353781ace79493ea4c50255755",
+      "matches": true
+    },
+    {
+      "path": "backend/scripts/h1-owned-postgres-docker-admission.mjs",
+      "expectedSha256": "eb38374fe4155339635753033b8ea941cf61f7aa8a782f315d382eafb35d4ff9",
+      "archiveSha256": "eb38374fe4155339635753033b8ea941cf61f7aa8a782f315d382eafb35d4ff9",
+      "matches": true
+    },
+    {
+      "path": "backend/scripts/h1-owned-postgres-docker-daemon.mjs",
+      "expectedSha256": "7eabe3e4c337c8435a3166ac0c2f58242317725e30e258d57336d0c53c48ad11",
+      "archiveSha256": "7eabe3e4c337c8435a3166ac0c2f58242317725e30e258d57336d0c53c48ad11",
+      "matches": true
+    },
+    {
+      "path": "backend/scripts/h1-owned-postgres-docker-image-observations.mjs",
+      "expectedSha256": "2ce51b1d4aa8ac06fc1424f488fdda735fb0de49547d9e9b5f1ae3296d9583bb",
+      "archiveSha256": "2ce51b1d4aa8ac06fc1424f488fdda735fb0de49547d9e9b5f1ae3296d9583bb",
+      "matches": true
+    },
+    {
+      "path": "backend/scripts/h1-owned-postgres-docker-observations.mjs",
+      "expectedSha256": "f26e06f09e831d56d98cb4aa51966b1863f790f8ed878f873048cf0986547f43",
+      "archiveSha256": "f26e06f09e831d56d98cb4aa51966b1863f790f8ed878f873048cf0986547f43",
+      "matches": true
+    },
+    {
+      "path": "backend/scripts/h1-owned-postgres-docker-transport.mjs",
+      "expectedSha256": "dd27898ca96ab4b6748b74a7a73e5d172194a116c88bd2c73494911b869942bc",
+      "archiveSha256": "dd27898ca96ab4b6748b74a7a73e5d172194a116c88bd2c73494911b869942bc",
+      "matches": true
+    },
+    {
+      "path": "backend/scripts/h1-owned-postgres-oci-identity.mjs",
+      "expectedSha256": "424e3176cc9b111bca0b720fa8bc3509e9080745c886e600204c2bc1abc3d4ce",
+      "archiveSha256": "424e3176cc9b111bca0b720fa8bc3509e9080745c886e600204c2bc1abc3d4ce",
+      "matches": true
+    },
+    {
+      "path": "backend/scripts/h1-owned-postgres-pg-evidence.mjs",
+      "expectedSha256": "499eb246b5110d4169953de4219c841aa33b1d3c54093a08cd6095983fc1b174",
+      "archiveSha256": "499eb246b5110d4169953de4219c841aa33b1d3c54093a08cd6095983fc1b174",
+      "matches": true
+    },
+    {
+      "path": "backend/scripts/h1-owned-postgres.mjs",
+      "expectedSha256": "940ca68b00a5c1dcfaa9a8c44c526461bae9ad8bce3ba585aba7c72d77699a99",
+      "archiveSha256": "940ca68b00a5c1dcfaa9a8c44c526461bae9ad8bce3ba585aba7c72d77699a99",
+      "matches": true
+    },
+    {
+      "path": "backend/scripts/h1-product-e2e.mjs",
+      "expectedSha256": "fa13cc641969a7c2860423f60505f04978dc124280f0e026c8f9975834614868",
+      "archiveSha256": "fa13cc641969a7c2860423f60505f04978dc124280f0e026c8f9975834614868",
+      "matches": true
+    },
+    {
+      "path": "backend/scripts/h1-real-e2e-runner.mjs",
+      "expectedSha256": "40e3f0bd04275b04bd4a5de8836edf13289eb03b91fb1c3323254593414e90d9",
+      "archiveSha256": "40e3f0bd04275b04bd4a5de8836edf13289eb03b91fb1c3323254593414e90d9",
+      "matches": true
+    },
+    {
+      "path": "backend/scripts/h1-real-e2e.mjs",
+      "expectedSha256": "2e7efaf7fbcc50bef45e4598e94a3e3c7301033f5d59c09d2ca2ad623e4729e0",
+      "archiveSha256": "2e7efaf7fbcc50bef45e4598e94a3e3c7301033f5d59c09d2ca2ad623e4729e0",
+      "matches": true
+    },
+    {
+      "path": "backend/scripts/h2-image-cleanup.mjs",
+      "expectedSha256": "835de956e4d1c7e5ce5ec9defbbbd816377bdd2ba2116d0a28f0a9d6ee62eb81",
+      "archiveSha256": "835de956e4d1c7e5ce5ec9defbbbd816377bdd2ba2116d0a28f0a9d6ee62eb81",
+      "matches": true
+    },
+    {
+      "path": "backend/scripts/h2-seed.mjs",
+      "expectedSha256": "a261ab7308ebe785737122e99c1541aee2c8d03159e7fe0f572c98953dc83325",
+      "archiveSha256": "a261ab7308ebe785737122e99c1541aee2c8d03159e7fe0f572c98953dc83325",
+      "matches": true
+    },
+    {
+      "path": "backend/src/app.module.ts",
+      "expectedSha256": "66b884281f80ec9e8d91cd86efc216424ae282b3b22d8b66d99158c3e3a3a016",
+      "archiveSha256": "66b884281f80ec9e8d91cd86efc216424ae282b3b22d8b66d99158c3e3a3a016",
+      "matches": true
+    },
+    {
+      "path": "backend/src/auth/admin-users.controller.ts",
+      "expectedSha256": "a722f0e6b236854e2da8a315e55c0acc4bc43f658d867e7d2acd5bdcbc4bfbe2",
+      "archiveSha256": "a722f0e6b236854e2da8a315e55c0acc4bc43f658d867e7d2acd5bdcbc4bfbe2",
+      "matches": true
+    },
+    {
+      "path": "backend/src/auth/admin-users.service.ts",
+      "expectedSha256": "d6bec4fe26557388fb9122bd08c308d674e7097f4b333313b3cc26b2632ecaf8",
+      "archiveSha256": "d6bec4fe26557388fb9122bd08c308d674e7097f4b333313b3cc26b2632ecaf8",
+      "matches": true
+    },
+    {
+      "path": "backend/src/auth/auth-runtime.module.ts",
+      "expectedSha256": "051a588d1e1b9f8e161f53172f4afa89dc57cb5979912dd2676c19c77419f744",
+      "archiveSha256": "051a588d1e1b9f8e161f53172f4afa89dc57cb5979912dd2676c19c77419f744",
+      "matches": true
+    },
+    {
+      "path": "backend/src/auth/auth.config.ts",
+      "expectedSha256": "3493ee997e1e54b9c56a8654f169ab3c66428dd5fd8640299e47a49726581744",
+      "archiveSha256": "3493ee997e1e54b9c56a8654f169ab3c66428dd5fd8640299e47a49726581744",
+      "matches": true
+    },
+    {
+      "path": "backend/src/auth/auth.controller.ts",
+      "expectedSha256": "cbfe68f4d1c616596aca9d43e1bf2776f5fdae3e589d3ac2ae32fcba10485429",
+      "archiveSha256": "cbfe68f4d1c616596aca9d43e1bf2776f5fdae3e589d3ac2ae32fcba10485429",
+      "matches": true
+    },
+    {
+      "path": "backend/src/auth/auth.module.ts",
+      "expectedSha256": "27afae663f6ef57c0cb4b9e8f9671b70055013368c12fc3d3d5be235e3e7bcce",
+      "archiveSha256": "27afae663f6ef57c0cb4b9e8f9671b70055013368c12fc3d3d5be235e3e7bcce",
+      "matches": true
+    },
+    {
+      "path": "backend/src/auth/change-password.service.ts",
+      "expectedSha256": "59071e35021e0c0408953d81d3c5005eb12ba128143fb266da059324e87ba4cc",
+      "archiveSha256": "59071e35021e0c0408953d81d3c5005eb12ba128143fb266da059324e87ba4cc",
+      "matches": true
+    },
+    {
+      "path": "backend/src/auth/csrf-nonce.cipher.ts",
+      "expectedSha256": "259febf7504e7070fd4a5c5407ab34992b10e7e65799556a8d6ef167b5619aaf",
+      "archiveSha256": "259febf7504e7070fd4a5c5407ab34992b10e7e65799556a8d6ef167b5619aaf",
+      "matches": true
+    },
+    {
+      "path": "backend/src/auth/csrf.service.ts",
+      "expectedSha256": "e6a7405f2d4feb6d85b0f5b6cd956af4b9b14d65311b4560f971337011adeea7",
+      "archiveSha256": "e6a7405f2d4feb6d85b0f5b6cd956af4b9b14d65311b4560f971337011adeea7",
+      "matches": true
+    },
+    {
+      "path": "backend/src/auth/login.service.ts",
+      "expectedSha256": "8eea915de471abb3e6122758a880d7345de9e6e7b1f0273ecace8117f73bbb06",
+      "archiveSha256": "8eea915de471abb3e6122758a880d7345de9e6e7b1f0273ecace8117f73bbb06",
+      "matches": true
+    },
+    {
+      "path": "backend/src/auth/logout.service.ts",
+      "expectedSha256": "017a45a316c02673bd0f5112cd90ffe26e0b147d2321fd23a8ebff4832fd2a94",
+      "archiveSha256": "017a45a316c02673bd0f5112cd90ffe26e0b147d2321fd23a8ebff4832fd2a94",
+      "matches": true
+    },
+    {
+      "path": "backend/src/auth/password-blocklist.ts",
+      "expectedSha256": "4aabb2e22f51213ad69107dbb8c5d83df4f5ddd2236f2acd226ed2eb71a4df9a",
+      "archiveSha256": "4aabb2e22f51213ad69107dbb8c5d83df4f5ddd2236f2acd226ed2eb71a4df9a",
+      "matches": true
+    },
+    {
+      "path": "backend/src/auth/password-hasher.ts",
+      "expectedSha256": "29d34071c61c9f52c82bfb1b8eb29eefff6a23b8d398ccee2034831cc54ab835",
+      "archiveSha256": "29d34071c61c9f52c82bfb1b8eb29eefff6a23b8d398ccee2034831cc54ab835",
+      "matches": true
+    },
+    {
+      "path": "backend/src/auth/password-policy.ts",
+      "expectedSha256": "520a0a32c4028cd5d74b82286672857970eacea521be0520e27c8de471488fe2",
+      "archiveSha256": "520a0a32c4028cd5d74b82286672857970eacea521be0520e27c8de471488fe2",
+      "matches": true
+    },
+    {
+      "path": "backend/src/auth/session.service.ts",
+      "expectedSha256": "0a337da7b8899742159427158871bab80de1d4eb9cf3b83f697e49507398de7c",
+      "archiveSha256": "0a337da7b8899742159427158871bab80de1d4eb9cf3b83f697e49507398de7c",
+      "matches": true
+    },
+    {
+      "path": "backend/src/catalog-shared/catalog-contract.ts",
+      "expectedSha256": "3826b266b876aade330e27b1f54c1734d72ce4f4bb1998e26e9ea3d5844379a7",
+      "archiveSha256": "3826b266b876aade330e27b1f54c1734d72ce4f4bb1998e26e9ea3d5844379a7",
+      "matches": true
+    },
+    {
+      "path": "backend/src/catalog-shared/catalog-error.ts",
+      "expectedSha256": "21df41c3075fb5bf72e351d7b84ddffa55424183ee9c3fa1cc739471c24e71cc",
+      "archiveSha256": "21df41c3075fb5bf72e351d7b84ddffa55424183ee9c3fa1cc739471c24e71cc",
+      "matches": true
+    },
+    {
+      "path": "backend/src/catalog/catalog.controller.ts",
+      "expectedSha256": "f3579d92a10b2e2b88c513741753819eb85457e2cf3d6401662d72183b18c56f",
+      "archiveSha256": "f3579d92a10b2e2b88c513741753819eb85457e2cf3d6401662d72183b18c56f",
+      "matches": true
+    },
+    {
+      "path": "backend/src/catalog/catalog.module.ts",
+      "expectedSha256": "281408714a448de62aed0096083c6a46e5fc33d58f1393c2ad4e98cb99db66ba",
+      "archiveSha256": "281408714a448de62aed0096083c6a46e5fc33d58f1393c2ad4e98cb99db66ba",
+      "matches": true
+    },
+    {
+      "path": "backend/src/catalog/catalog.service.ts",
+      "expectedSha256": "acd232301c14a1c5a35a94eb57ce3e5eb9547f9af1492e327c951fe57b73733d",
+      "archiveSha256": "acd232301c14a1c5a35a94eb57ce3e5eb9547f9af1492e327c951fe57b73733d",
+      "matches": true
+    },
+    {
+      "path": "backend/src/catalog/image-coordination.ts",
+      "expectedSha256": "723346e8b2ab0657d270dc9af3fa49b404affb5af6d3de9389a64d69ff04b034",
+      "archiveSha256": "723346e8b2ab0657d270dc9af3fa49b404affb5af6d3de9389a64d69ff04b034",
+      "matches": true
+    },
+    {
+      "path": "backend/src/catalog/image-storage.ts",
+      "expectedSha256": "b4df5e9c00c0ede815d844d0aaaabd9d5596e639bbee556a76c8fb930f787c9d",
+      "archiveSha256": "b4df5e9c00c0ede815d844d0aaaabd9d5596e639bbee556a76c8fb930f787c9d",
+      "matches": true
+    },
+    {
+      "path": "backend/src/common/api-exception.filter.ts",
+      "expectedSha256": "2c948b9e4e7eb5798626dce58f0b56cc927f49ae2d7d41f6bbd07b820ecd9c28",
+      "archiveSha256": "2c948b9e4e7eb5798626dce58f0b56cc927f49ae2d7d41f6bbd07b820ecd9c28",
+      "matches": true
+    },
+    {
+      "path": "backend/src/common/base-validation.pipe.ts",
+      "expectedSha256": "6654b9bcf08015cfc71a6e220dc04f0f2faead7c61aaec83a7168109649decc1",
+      "archiveSha256": "6654b9bcf08015cfc71a6e220dc04f0f2faead7c61aaec83a7168109649decc1",
+      "matches": true
+    },
+    {
+      "path": "backend/src/common/change-password-json.middleware.ts",
+      "expectedSha256": "c420aacaf1bcda992596e3846f35618b9e0220041145b70c9deb1bd03a5d87f7",
+      "archiveSha256": "c420aacaf1bcda992596e3846f35618b9e0220041145b70c9deb1bd03a5d87f7",
+      "matches": true
+    },
+    {
+      "path": "backend/src/common/request-id.middleware.ts",
+      "expectedSha256": "53a49eaa83c69ebd542e0a900bab36ac8cf37b13fc1d29f8706d3b88958fad53",
+      "archiveSha256": "53a49eaa83c69ebd542e0a900bab36ac8cf37b13fc1d29f8706d3b88958fad53",
+      "matches": true
+    },
+    {
+      "path": "backend/src/config/environment.ts",
+      "expectedSha256": "b6b465e3f7bb1960e0180698c67ebc017ffd6683f011a474adc2e47569ac3512",
+      "archiveSha256": "b6b465e3f7bb1960e0180698c67ebc017ffd6683f011a474adc2e47569ac3512",
+      "matches": true
+    },
+    {
+      "path": "backend/src/configure-application.ts",
+      "expectedSha256": "59961880b53809815de419cebf2b85102a7fa9a1638e8473754a49944ccb046c",
+      "archiveSha256": "59961880b53809815de419cebf2b85102a7fa9a1638e8473754a49944ccb046c",
+      "matches": true
+    },
+    {
+      "path": "backend/src/health/health.controller.ts",
+      "expectedSha256": "e72eba44cf21f8504a5ca1bcedb228e383256fec3f9b8caf20791b25047b68d3",
+      "archiveSha256": "e72eba44cf21f8504a5ca1bcedb228e383256fec3f9b8caf20791b25047b68d3",
+      "matches": true
+    },
+    {
+      "path": "backend/src/health/health.module.ts",
+      "expectedSha256": "bf4033948a55d92db1ece7cb444900866c2c4a14a0f65e1fc71a1c35caba266f",
+      "archiveSha256": "bf4033948a55d92db1ece7cb444900866c2c4a14a0f65e1fc71a1c35caba266f",
+      "matches": true
+    },
+    {
+      "path": "backend/src/health/health.service.ts",
+      "expectedSha256": "e0c897922d4a060f831a8f140eed500887e972edda016b3a55f8c703330ac9ba",
+      "archiveSha256": "e0c897922d4a060f831a8f140eed500887e972edda016b3a55f8c703330ac9ba",
+      "matches": true
+    },
+    {
+      "path": "backend/src/main.ts",
+      "expectedSha256": "dbf1f71ac8efcb3d5ae3dae53a03302771d3b0a4e93ba029d0f534423c442e9e",
+      "archiveSha256": "dbf1f71ac8efcb3d5ae3dae53a03302771d3b0a4e93ba029d0f534423c442e9e",
+      "matches": true
+    },
+    {
+      "path": "backend/src/prisma/prisma.module.ts",
+      "expectedSha256": "0cded004a66f8e902920bc1762ed229b6514e581d5c6ab601f42691a223eb167",
+      "archiveSha256": "0cded004a66f8e902920bc1762ed229b6514e581d5c6ab601f42691a223eb167",
+      "matches": true
+    },
+    {
+      "path": "backend/src/prisma/prisma.service.ts",
+      "expectedSha256": "5b09589f503bda01b9c5426cb82e65e2d604bade427d27ddc526eefb6a34b6ad",
+      "archiveSha256": "5b09589f503bda01b9c5426cb82e65e2d604bade427d27ddc526eefb6a34b6ad",
+      "matches": true
+    },
+    {
+      "path": "backend/src/stock/stock.controller.ts",
+      "expectedSha256": "d8662b69608bbf98fe39ee301f2024eb4e968f76e55fc38c8b123909f528c210",
+      "archiveSha256": "d8662b69608bbf98fe39ee301f2024eb4e968f76e55fc38c8b123909f528c210",
+      "matches": true
+    },
+    {
+      "path": "backend/src/stock/stock.module.ts",
+      "expectedSha256": "6d2bd717c2511026531cee2319e2796cb22decb0ee8194088dab625defb54e30",
+      "archiveSha256": "6d2bd717c2511026531cee2319e2796cb22decb0ee8194088dab625defb54e30",
+      "matches": true
+    },
+    {
+      "path": "backend/src/stock/stock.service.ts",
+      "expectedSha256": "8d694155ca6998a8d7b5144b6a69d0b7b05224e035e988ce9e9c4fb19bfb719c",
+      "archiveSha256": "8d694155ca6998a8d7b5144b6a69d0b7b05224e035e988ce9e9c4fb19bfb719c",
+      "matches": true
+    },
+    {
+      "path": "backend/tsconfig.build.json",
+      "expectedSha256": "9a82c3a69f502077912ad77104cc9e5e446763b04e568d8c7be3c288cfa37e51",
+      "archiveSha256": "9a82c3a69f502077912ad77104cc9e5e446763b04e568d8c7be3c288cfa37e51",
+      "matches": true
+    },
+    {
+      "path": "backend/tsconfig.json",
+      "expectedSha256": "657c85ecc074ad3ba1f08481d6676ac7c2e4fd7cfcd90d828239c0c74b7d721d",
+      "archiveSha256": "657c85ecc074ad3ba1f08481d6676ac7c2e4fd7cfcd90d828239c0c74b7d721d",
+      "matches": true
+    },
+    {
+      "path": "frontend/angular.json",
+      "expectedSha256": "7e13de63bbd44a173021b4e537e25efdd1ba5196f07e623d3dfa889c358f4f01",
+      "archiveSha256": "7e13de63bbd44a173021b4e537e25efdd1ba5196f07e623d3dfa889c358f4f01",
+      "matches": true
+    },
+    {
+      "path": "frontend/package-lock.json",
+      "expectedSha256": "69ed8f4e4d52778d1ccd0c1b66919f1e570cbed6ff292b3c074005694cecdbe1",
+      "archiveSha256": "69ed8f4e4d52778d1ccd0c1b66919f1e570cbed6ff292b3c074005694cecdbe1",
+      "matches": true
+    },
+    {
+      "path": "frontend/package.json",
+      "expectedSha256": "ed18c9089e90b3469df80067ffdde56b5a23ddeae191f921400f8a17cc543a38",
+      "archiveSha256": "ed18c9089e90b3469df80067ffdde56b5a23ddeae191f921400f8a17cc543a38",
+      "matches": true
+    },
+    {
+      "path": "frontend/proxy.conf.json",
+      "expectedSha256": "0800ab8c16bdb588a390b476055182a9e99541af6cc066a92c85010d392c8472",
+      "archiveSha256": "0800ab8c16bdb588a390b476055182a9e99541af6cc066a92c85010d392c8472",
+      "matches": true
+    },
+    {
+      "path": "frontend/public/assets/product-fallback.svg",
+      "expectedSha256": "85e50a1de629ee027c5511219585c9e424e25ebb0ad55dff27c6b7f7c792e9ec",
+      "archiveSha256": "85e50a1de629ee027c5511219585c9e424e25ebb0ad55dff27c6b7f7c792e9ec",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/app.component.ts",
+      "expectedSha256": "45dd8df74b6ce9b49528fe96f01b52990b7915d8a11318e119e9fdcfbf4bb76d",
+      "archiveSha256": "45dd8df74b6ce9b49528fe96f01b52990b7915d8a11318e119e9fdcfbf4bb76d",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/app.config.ts",
+      "expectedSha256": "fbaa88ce7f6abb4e9529a4490449c40e5dd713006e5bcda0c9d7edc45a386068",
+      "archiveSha256": "fbaa88ce7f6abb4e9529a4490449c40e5dd713006e5bcda0c9d7edc45a386068",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/app.routes.ts",
+      "expectedSha256": "1c8e1b7a168f71e55031962f98000fb81da738010d65e2e5ffa9ed1be2935b76",
+      "archiveSha256": "1c8e1b7a168f71e55031962f98000fb81da738010d65e2e5ffa9ed1be2935b76",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/core/auth/auth-api.service.ts",
+      "expectedSha256": "c90180ecceb0092a4ba04dc83f390ade41814822c0226bbbfcef07cca3723c54",
+      "archiveSha256": "c90180ecceb0092a4ba04dc83f390ade41814822c0226bbbfcef07cca3723c54",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/core/auth/auth-session.service.ts",
+      "expectedSha256": "17c2ca692ecfcbb6eff303508e81190f9caa09a952cc5b16db827cb4fec4b37b",
+      "archiveSha256": "17c2ca692ecfcbb6eff303508e81190f9caa09a952cc5b16db827cb4fec4b37b",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/core/auth/auth.guard.ts",
+      "expectedSha256": "d82e0e6d44e03447accf8d68c0b47abed4dd975698e0bcda8ef23d5b38dc0e22",
+      "archiveSha256": "d82e0e6d44e03447accf8d68c0b47abed4dd975698e0bcda8ef23d5b38dc0e22",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/core/auth/auth.models.ts",
+      "expectedSha256": "22a46ed431b82a26514f2f4e59eda3fc0da7f39b51120d47cea6ee7d4ef898fe",
+      "archiveSha256": "22a46ed431b82a26514f2f4e59eda3fc0da7f39b51120d47cea6ee7d4ef898fe",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/core/catalog/admin-catalog-api.service.ts",
+      "expectedSha256": "21d97db35ef0bc673fd7de6abd58d8bb2594383e3d2f6b13492b6b4d3d350e0d",
+      "archiveSha256": "21d97db35ef0bc673fd7de6abd58d8bb2594383e3d2f6b13492b6b4d3d350e0d",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/core/catalog/catalog.models.ts",
+      "expectedSha256": "a58a00ff6f6a93cd5d11cbc7bf4920b34503e856efd0042e7ba4f4e50e610e19",
+      "archiveSha256": "a58a00ff6f6a93cd5d11cbc7bf4920b34503e856efd0042e7ba4f4e50e610e19",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/core/catalog/public-catalog-api.service.ts",
+      "expectedSha256": "a7305f3400296461d75f16ceecc98c216929276dbb4cb3d25dafd5abb96775b4",
+      "archiveSha256": "a7305f3400296461d75f16ceecc98c216929276dbb4cb3d25dafd5abb96775b4",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/core/health/health-api.service.ts",
+      "expectedSha256": "3935e84a5c531742ed0703757fa570d428dfd08fcb4fa79ac8cac327ffc2667b",
+      "archiveSha256": "3935e84a5c531742ed0703757fa570d428dfd08fcb4fa79ac8cac327ffc2667b",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/core/health/health-ok.ts",
+      "expectedSha256": "eb86ae475a021f7fc5c6696c1420d046e86f249ad533729c4cad6b13e5b18d4c",
+      "archiveSha256": "eb86ae475a021f7fc5c6696c1420d046e86f249ad533729c4cad6b13e5b18d4c",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/features/admin-catalog/admin-catalog.shared.ts",
+      "expectedSha256": "41684cc0f66619df66063765202cff37e148f802a9a3dd78a09c78b9068c18f1",
+      "archiveSha256": "41684cc0f66619df66063765202cff37e148f802a9a3dd78a09c78b9068c18f1",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/features/admin-catalog/admin-categories-page.component.ts",
+      "expectedSha256": "978c701575c61e44aa83c4dd84798ad7d86598a91ab2e2f996cf75dc2d81d43c",
+      "archiveSha256": "978c701575c61e44aa83c4dd84798ad7d86598a91ab2e2f996cf75dc2d81d43c",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/features/admin-catalog/admin-product-form-page.component.ts",
+      "expectedSha256": "295d815938cb3fd3b3dd0a010442215241fbec67e69680799d7c4f6be89bbb43",
+      "archiveSha256": "295d815938cb3fd3b3dd0a010442215241fbec67e69680799d7c4f6be89bbb43",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/features/admin-catalog/admin-products-page.component.ts",
+      "expectedSha256": "009a4ce63bf2d6d2a70c69a0f4b28ffc40513a8641d4bf156c1f8425e91f72a3",
+      "archiveSha256": "009a4ce63bf2d6d2a70c69a0f4b28ffc40513a8641d4bf156c1f8425e91f72a3",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/features/admin-catalog/admin-stock-page.component.ts",
+      "expectedSha256": "7657624d4724232287eef790273f7b8e901fee588810d94bbcf3c781da2ee5e8",
+      "archiveSha256": "7657624d4724232287eef790273f7b8e901fee588810d94bbcf3c781da2ee5e8",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/features/admin/admin-placeholder-page.component.ts",
+      "expectedSha256": "346b3d97599c1b566ed21bdcb6fd7ffda6c58859e2c6bc20be7619046ecd9224",
+      "archiveSha256": "346b3d97599c1b566ed21bdcb6fd7ffda6c58859e2c6bc20be7619046ecd9224",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/features/auth/auth.routes.ts",
+      "expectedSha256": "c9ba6929ab03aaa6b663331f00cbfd7fcee5a5af8b44087ac020425f8bb8b16c",
+      "archiveSha256": "c9ba6929ab03aaa6b663331f00cbfd7fcee5a5af8b44087ac020425f8bb8b16c",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/features/auth/change-password-page.component.ts",
+      "expectedSha256": "d4aa286976c91dda5f2b9370e3ac7301bb79b89adaa58c72eaf52c687900fd0b",
+      "archiveSha256": "d4aa286976c91dda5f2b9370e3ac7301bb79b89adaa58c72eaf52c687900fd0b",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/features/auth/login-placeholder-page.component.ts",
+      "expectedSha256": "6c8e9520f2ccf4f951c7d421f71fcceb10e7dfca9440b3578cd78ffdac9edb13",
+      "archiveSha256": "6c8e9520f2ccf4f951c7d421f71fcceb10e7dfca9440b3578cd78ffdac9edb13",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/features/catalog/catalog-page.component.ts",
+      "expectedSha256": "c97d028229bdb30829fbeb12d5ed8dd51c55a4d81bfe08a8d594f361ba2d3d7f",
+      "archiveSha256": "c97d028229bdb30829fbeb12d5ed8dd51c55a4d81bfe08a8d594f361ba2d3d7f",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/features/catalog/format-money.ts",
+      "expectedSha256": "9e95d7857bc70126567ddfe5d099907fd785ed243defc387df7d694f1873d502",
+      "archiveSha256": "9e95d7857bc70126567ddfe5d099907fd785ed243defc387df7d694f1873d502",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/features/catalog/product-detail-page.component.ts",
+      "expectedSha256": "275b2b5f94699db52cff90cde0a1d55152c774464923f368cad3edef43caa9bf",
+      "archiveSha256": "275b2b5f94699db52cff90cde0a1d55152c774464923f368cad3edef43caa9bf",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/features/home/home-page.component.ts",
+      "expectedSha256": "9563e8500dd346520b4001a1f2c5aeaecb7aaaca92c37af7ffca96b48f95c700",
+      "archiveSha256": "9563e8500dd346520b4001a1f2c5aeaecb7aaaca92c37af7ffca96b48f95c700",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/features/status/status-page.component.ts",
+      "expectedSha256": "1826fa2083bd4a5c0db4650880a80e4876d35ff3a96946ce2c57b09a6c45e669",
+      "archiveSha256": "1826fa2083bd4a5c0db4650880a80e4876d35ff3a96946ce2c57b09a6c45e669",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/layouts/admin-layout.component.ts",
+      "expectedSha256": "de2f4db457b8c8bc2c9a946d2b4ea4cb77c7734eca29a1825b0179d8ef68215a",
+      "archiveSha256": "de2f4db457b8c8bc2c9a946d2b4ea4cb77c7734eca29a1825b0179d8ef68215a",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/layouts/auth-layout.component.ts",
+      "expectedSha256": "577427a8b875818c261ab62a66611a88fcc59d5eee1f45b1cf71ddecf500dad8",
+      "archiveSha256": "577427a8b875818c261ab62a66611a88fcc59d5eee1f45b1cf71ddecf500dad8",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/layouts/public-layout.component.ts",
+      "expectedSha256": "77b6e322e63e54583d2971f6965f9f4106ff4610ffda27019a84b7a753e63088",
+      "archiveSha256": "77b6e322e63e54583d2971f6965f9f4106ff4610ffda27019a84b7a753e63088",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/shared/ui/health-status.component.ts",
+      "expectedSha256": "c8f1682d2f9e5cb78937c12135f471d16ca574c4f7b03add7b3efe55cde7f305",
+      "archiveSha256": "c8f1682d2f9e5cb78937c12135f471d16ca574c4f7b03add7b3efe55cde7f305",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/app/shared/ui/not-found-page.component.ts",
+      "expectedSha256": "e4a180589f3a274e1d37de893488448f83fa53ec0584762560e608c98fed369a",
+      "archiveSha256": "e4a180589f3a274e1d37de893488448f83fa53ec0584762560e608c98fed369a",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/index.html",
+      "expectedSha256": "eccc999a7f2c7cb8ca75a0d9e52234b84d5c58740961dddc081c2255903aad8c",
+      "archiveSha256": "eccc999a7f2c7cb8ca75a0d9e52234b84d5c58740961dddc081c2255903aad8c",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/main.ts",
+      "expectedSha256": "e3fc72fa5e488cbd73f8ce4467e8d52c994cf86ab89732f2d295b1aca04dea82",
+      "archiveSha256": "e3fc72fa5e488cbd73f8ce4467e8d52c994cf86ab89732f2d295b1aca04dea82",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/styles.css",
+      "expectedSha256": "7eb966494893cb8b0dd7c7cf465e71341de39d9f6a435b370361dea1f50ba330",
+      "archiveSha256": "7eb966494893cb8b0dd7c7cf465e71341de39d9f6a435b370361dea1f50ba330",
+      "matches": true
+    },
+    {
+      "path": "frontend/src/styles/tokens.css",
+      "expectedSha256": "3b34073b48be3cbbb4c2f5543304d89ef3e3274fe1c32400fca5c496206e2c36",
+      "archiveSha256": "3b34073b48be3cbbb4c2f5543304d89ef3e3274fe1c32400fca5c496206e2c36",
+      "matches": true
+    },
+    {
+      "path": "frontend/tsconfig.app.json",
+      "expectedSha256": "ab8820f036eaf80ed6add06e81fe25b8faa0159059e6dad57519dec07235f2cf",
+      "archiveSha256": "ab8820f036eaf80ed6add06e81fe25b8faa0159059e6dad57519dec07235f2cf",
+      "matches": true
+    },
+    {
+      "path": "frontend/tsconfig.json",
+      "expectedSha256": "d76f69c3856349ae619352feed62fa382b980a89fe5479edcb1d677f4f884cfc",
+      "archiveSha256": "d76f69c3856349ae619352feed62fa382b980a89fe5479edcb1d677f4f884cfc",
+      "matches": true
+    }
+  ],
+  "matched": 113,
+  "mismatches": []
+}

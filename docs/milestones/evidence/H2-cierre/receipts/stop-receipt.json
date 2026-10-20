@@ -1,0 +1,24 @@
+{
+  "events": [
+    {
+      "service": "frontend",
+      "pid": 99747,
+      "absentAfterOwnerCheckedSIGTERM": true
+    },
+    {
+      "service": "api",
+      "pid": 99738,
+      "absentAfterOwnerCheckedSIGTERM": true
+    }
+  ],
+  "containerId": "94ab472c55db5f9e5b805662336acab1a9d88f66da7c6aea513087cfc56bc934",
+  "owner": "df6bd3c9-d891-403d-9c49-a4f65f25dbd1",
+  "ownerLabelsImageVerifiedBeforeStop": true,
+  "stopExit": 0,
+  "absentAfterStop": true,
+  "notes": [
+    "Original stop helper refused Angular process-title change before sending signals.",
+    "Exact title/start/group verified in bounded continuation.",
+    "Post-stop inspect found container absent; stop had returned zero."
+  ]
+}

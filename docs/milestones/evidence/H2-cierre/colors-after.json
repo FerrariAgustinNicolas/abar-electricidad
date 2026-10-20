@@ -1,0 +1,11 @@
+{
+  "hero": {
+    "background": "rgb(8, 77, 125)",
+    "foreground": "rgb(255, 255, 255)"
+  },
+  "stepper": {
+    "background": "rgb(243, 246, 248)",
+    "enabled": true,
+    "foreground": "rgb(32, 38, 44)"
+  }
+}

@@ -64,6 +64,6 @@ import { AdminUsersService } from './admin-users.service';
       inject: [PrismaService, CSRF_NONCE_CIPHER, AUTH_RUNTIME],
     },
   ],
-  exports: [CsrfService],
+  exports: [CsrfService, AdminUsersService],
 })
 export class AuthModule {}
