@@ -1,0 +1,9 @@
+{
+  "visibleMethodBeforeClick": "DEMO_PAY_ON_PICKUP",
+  "actualPersistedCurrentAttempt": {
+    "methodCode": "DEMO_SIMULATION",
+    "status": "PENDING",
+    "sequence": 5,
+    "commercialStatus": "PENDING"
+  }
+}
