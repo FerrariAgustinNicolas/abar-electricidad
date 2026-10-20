@@ -39,6 +39,32 @@ npm --prefix backend test -- --runInBand
 npm --prefix backend run test:e2e -- --runInBand
 ```
 
+### Prisma: configuración explícita sin datasource (C08)
+
+Los scripts públicos `prisma:generate`, `prisma:validate` y `build` seleccionan
+`backend/prisma.schema.config.ts` explícitamente. Esa configuración solo indica
+`prisma/schema.prisma`: no lee `DATABASE_URL`, no carga dotenv ni aporta datasource.
+El build conserva el orden generate → TypeScript → empaquetado autenticado de recursos.
+
+Desde `backend`, el equivalente directo es:
+
+```sh
+./node_modules/.bin/prisma generate --config prisma.schema.config.ts
+./node_modules/.bin/prisma validate --config prisma.schema.config.ts
+```
+
+La configuración descubierta por defecto (`prisma.config.ts`) rechaza siempre con
+un mensaje fijo seguro. Los comandos Prisma sin selección explícita, incluidos
+`generate`, `validate` y `migrate status`, quedan denegados intencionalmente: nunca
+seleccionan por accidente la conexión de la aplicación ni un fallback local.
+Esto **no es autorización absoluta**: un operador puede elegir deliberadamente
+otra configuración con `--config` o un target con `--url` donde Prisma lo admita.
+Tampoco habilita `generate --sql`, que requiere datasource.
+
+El guard de propiedad, runner, configuración confiable de migraciones y PostgreSQL
+nuevo/exclusivo son gates C09+ pendientes; C08 no ejecuta migraciones ni provisiona
+recursos. Review/Verify independientes y commit de C08 siguen pendientes del padre.
+
 El esquema Prisma está vacío deliberadamente: no introduce modelos comerciales, tablas, migraciones ni seeds. El cliente generado se escribe explícitamente en `backend/src/generated/prisma`; vuelve a generarlo con el script de Prisma al instalar o actualizar dependencias. La configuración de Nest no carga archivos `.env`; define la conexión local explícitamente al iniciar:
 
 ```sh
