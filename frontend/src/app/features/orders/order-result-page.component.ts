@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { DemoPaymentMethod } from '../../core/cart/cart.models';
@@ -12,7 +13,7 @@ import { formatMoney } from '../catalog/format-money';
 interface AttemptIntent { body: CreateAttemptRequest; key: string }
 
 @Component({
-  selector: 'abar-order-result-page', standalone: true, imports: [DatePipe, RouterLink],
+  selector: 'abar-order-result-page', standalone: true, imports: [DatePipe, RouterLink, FormsModule],
   template: `
     <main class="order-page" aria-labelledby="result-title"><p class="eyebrow">Pedido de demostración</p><h1 id="result-title">Resultado del pedido</h1>
       @if (loading()) { <p role="status">Consultando el estado del pedido…</p> }
@@ -34,13 +35,13 @@ interface AttemptIntent { body: CreateAttemptRequest; key: string }
           <section class="attempt-panel" aria-labelledby="attempt-title"><h2 id="attempt-title">Nuevo intento demo</h2><p>Elegí solo un método disponible para este pedido. No ingreses datos de tarjeta ni bancarios.</p>
             @if (methodsLoading()) { <p role="status">Cargando métodos disponibles…</p> }
             @if (methodsError()) { <p class="error" role="alert">No pudimos cargar los métodos demo.</p><button type="button" (click)="loadMethods()" [disabled]="attemptBusy()">Reintentar métodos</button> }
-            <fieldset [disabled]="attemptBusy() || attemptUnknown()"><legend>Medio demo</legend>
-              <label for="retry-method">Método<select id="retry-method" [value]="selectedMethod()" (change)="selectMethod($event)">@for (method of methods(); track method.code) { <option [value]="method.code">{{ method.label }}</option> }</select></label>
-              @if (selectedMethod() === 'DEMO_SIMULATION' && terms()?.simulationEnabled) { <label for="retry-scenario">Escenario de simulación<select id="retry-scenario" [value]="scenario()" (change)="setScenario($event)"><option value="PENDING">Pendiente</option><option value="APPROVED">Aprobado (solo intento)</option><option value="REJECTED">Rechazado</option></select></label> }
+            <fieldset [disabled]="attemptBusy() || attemptUnknown() || methodsLoading() || methodsError()"><legend>Medio demo</legend>
+              <label for="retry-method">Método<select id="retry-method" [ngModel]="selectedMethod()" (ngModelChange)="selectMethod($event)">@for (method of methods(); track method.code) { <option [value]="method.code">{{ method.label }}</option> }</select></label>
+              @if (selectedMethod() === 'DEMO_SIMULATION' && terms()?.simulationEnabled) { <label for="retry-scenario">Escenario de simulación<select id="retry-scenario" [ngModel]="scenario()" (ngModelChange)="setScenario($event)"><option value="PENDING">Pendiente</option><option value="APPROVED">Aprobado (solo intento)</option><option value="REJECTED">Rechazado</option></select></label> }
             </fieldset>
             @if (attemptUnknown()) { <p class="notice" role="alert">El resultado es desconocido. Reintentá exactamente este mismo intento; no cambies método ni escenario hasta reconciliarlo.</p> }
             @if (attemptError()) { <p class="error" role="alert">{{ attemptError() }}</p> }
-            <button class="primary" type="button" [disabled]="attemptBusy() || methodsLoading() || methodsError() || !methods().length" (click)="retryAttempt()">{{ attemptBusy() ? 'Registrando intento…' : attemptUnknown() ? 'Reintentar el mismo intento' : 'Registrar intento demo' }}</button>
+            <button class="primary" type="button" [disabled]="attemptBusy() || methodsLoading() || methodsError() || !methods().length || !selectedMethod()" (click)="retryAttempt()">{{ attemptBusy() ? 'Registrando intento…' : attemptUnknown() ? 'Reintentar el mismo intento' : 'Registrar intento demo' }}</button>
           </section>
         }
       }
@@ -58,7 +59,7 @@ export class OrderResultPageComponent {
   readonly order = signal<PublicOrderView | null>(null);
   readonly terms = signal<H4Terms | null>(null);
   readonly methods = signal<DemoPaymentMethod[]>([]);
-  readonly selectedMethod = signal<DemoPaymentMethod['code']>('DEMO_PAY_ON_PICKUP');
+  readonly selectedMethod = signal<DemoPaymentMethod['code'] | ''>('');
   readonly scenario = signal<PaymentAttemptStatus>('PENDING');
   readonly loading = signal(false);
   readonly methodsLoading = signal(false);
@@ -69,6 +70,7 @@ export class OrderResultPageComponent {
   readonly attemptUnknown = signal(false);
   readonly attemptError = signal('');
   private intent: AttemptIntent | null = null;
+  private methodsRevision = 0;
 
   constructor() { void this.loadOrder(); }
 
@@ -92,33 +94,42 @@ export class OrderResultPageComponent {
   }
 
   async loadMethods(deliveryMode = this.order()?.deliveryMode): Promise<void> {
-    if (!deliveryMode) return;
+    if (!deliveryMode || this.attemptBusy() || this.attemptUnknown()) return;
+    const revision = ++this.methodsRevision;
     this.methodsLoading.set(true); this.methodsError.set(false);
     try {
       const [response, terms] = await Promise.all([firstValueFrom(this.api.paymentMethods(deliveryMode)), firstValueFrom(this.api.terms())]);
+      if (revision !== this.methodsRevision) return;
       this.terms.set(terms);
       this.methods.set(response.items.filter((method) => method.demo && method.deliveryModes.includes(deliveryMode) && (method.code !== 'DEMO_SIMULATION' || terms.simulationEnabled)));
-      if (!this.methods().some((method) => method.code === this.selectedMethod())) this.selectedMethod.set(this.methods()[0]?.code ?? 'DEMO_PAY_ON_PICKUP');
-    } catch { this.methodsError.set(true); }
-    finally { this.methodsLoading.set(false); }
+      if (!this.methods().some((method) => method.code === this.selectedMethod())) this.selectedMethod.set(this.methods()[0]?.code ?? '');
+    } catch { if (revision === this.methodsRevision) this.methodsError.set(true); }
+    finally { if (revision === this.methodsRevision) this.methodsLoading.set(false); }
   }
 
-  selectMethod(event: Event): void { if (!this.attemptUnknown()) this.selectedMethod.set((event.target as HTMLSelectElement).value as DemoPaymentMethod['code']); }
-  setScenario(event: Event): void { if (!this.attemptUnknown()) this.scenario.set((event.target as HTMLSelectElement).value as PaymentAttemptStatus); }
+  selectMethod(value: string): void {
+    if (this.attemptBusy() || this.attemptUnknown() || this.methodsLoading()) return;
+    this.selectedMethod.set(this.methods().find((method) => method.code === value)?.code ?? '');
+  }
+  setScenario(value: PaymentAttemptStatus): void {
+    if (!this.attemptBusy() && !this.attemptUnknown() && !this.methodsLoading() &&
+        this.selectedMethod() === 'DEMO_SIMULATION' && this.terms()?.simulationEnabled &&
+        ['APPROVED', 'PENDING', 'REJECTED'].includes(value)) this.scenario.set(value);
+  }
 
   async retryAttempt(): Promise<void> {
     const order = this.order(); const orderId = order?.orderId;
     const session = orderId ? this.access.get(orderId) : null;
     if (!order || !orderId || !session || this.attemptBusy() || !order.nextActions.includes('RETRY_PAYMENT')) return;
-    const methodCode = this.selectedMethod();
-    const body: CreateAttemptRequest = methodCode === 'DEMO_SIMULATION'
-      ? { methodCode, scenario: this.terms()?.simulationEnabled ? this.scenario() : 'PENDING' }
-      : { methodCode };
-    if (this.intent && JSON.stringify(body) !== JSON.stringify(this.intent.body)) {
-      this.attemptError.set('El intento anterior aún no está reconciliado. Reintentá el método y escenario originales.');
-      this.attemptUnknown.set(true);
+    const method = this.methods().find((item) => item.code === this.selectedMethod() && item.deliveryModes.includes(order.deliveryMode));
+    if (!this.intent && (this.methodsLoading() || this.methodsError() || !method ||
+        (method.code === 'DEMO_SIMULATION' && !this.terms()?.simulationEnabled))) {
+      this.attemptError.set('El método seleccionado no está disponible. Es necesario actualizar los métodos antes de reintentar.');
       return;
     }
+    const body: CreateAttemptRequest = this.intent?.body ?? (method!.code === 'DEMO_SIMULATION'
+      ? { methodCode: method!.code, scenario: this.scenario() }
+      : { methodCode: method!.code });
     if (!this.intent) {
       try { this.intent = { body, key: crypto.randomUUID() }; }
       catch { this.attemptError.set('Este navegador no puede generar una clave segura de intento.'); return; }

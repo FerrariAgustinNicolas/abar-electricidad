@@ -140,12 +140,17 @@ describe('CheckoutPageComponent', () => {
       provideHttpClient(), provideHttpClientTesting(), provideRouter([]),
       { provide: OrdersApiService, useValue: api }, { provide: CartStateService, useValue: cart },
     ] });
+    const keyGeneration = vi.spyOn(crypto, 'randomUUID');
+    const savedMarker = sessionValues.get('abar.order-create-intent.v1');
     const resumed = TestBed.createComponent(CheckoutPageComponent);
     await Promise.resolve(); await Promise.resolve(); resumed.detectChanges();
     expect(resumed.componentInstance.unresolvedIntent()).toBe(true);
     expect(resumed.nativeElement.textContent).toContain('Ir a consulta mínima del pedido');
     await resumed.componentInstance.submit();
     expect(api.createOrder).toHaveBeenCalledOnce();
+    expect(keyGeneration).not.toHaveBeenCalled();
+    expect(sessionValues.get('abar.order-create-intent.v1')).toBe(savedMarker);
+    keyGeneration.mockRestore();
   });
 
   it('preserves reconciliation when the quote expires while the create response is pending', async () => {
