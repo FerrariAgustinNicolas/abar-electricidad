@@ -344,37 +344,32 @@ export class CatalogService {
   }
 
   async uploadImage(auth: Authorization, id: string, fields: { alt: string; order: number; isPrimary: boolean; expectedVersion: number }, bytes: Buffer) {
-    let stored: Awaited<ReturnType<CatalogImageStorage['put']>> | undefined;
-    let metadataCommitted = false;
-    try {
-      await this.prisma.$transaction(async (tx) => {
-        await auth.recheck(tx);
-        await lockCatalogImages(tx);
-        await tx.$queryRaw`SELECT id FROM "Product" WHERE id = ${id}::uuid FOR UPDATE`;
-        const product = await tx.product.findUnique({ where: { id }, include: { images: true } }); if (!product) return notFound();
-        if (product.version !== fields.expectedVersion) conflict('VERSION_CONFLICT');
-        if (product.images.length >= 8) conflict('IMAGE_LIMIT_REACHED');
-        if (fields.order >= 8 || product.images.some((item) => item.order === fields.order)) conflict('VERSION_CONFLICT');
-        const isPrimary = fields.isPrimary || product.images.length === 0 || !product.images.some((item) => item.isPrimary);
-        try { stored = await this.storage.put(bytes); }
-        catch (error) {
-          const code = error instanceof Error ? error.message : '';
-          if (code === 'IMAGE_TOO_LARGE') throw new CatalogException(413, 'IMAGE_TOO_LARGE');
-          if (code === 'UNSUPPORTED_IMAGE_TYPE') throw new CatalogException(415, 'UNSUPPORTED_IMAGE_TYPE');
-          if (code === 'INVALID_IMAGE') throw new CatalogException(400, 'INVALID_IMAGE');
-          throw new CatalogException(503, 'SERVICE_UNAVAILABLE');
-        }
-        if (isPrimary) await tx.productImage.updateMany({ where: { productId: id }, data: { isPrimary: false } });
-        await tx.productImage.create({ data: { productId: id, storageKey: stored.key, contentType: stored.contentType,
-          bytes: stored.bytes, width: stored.width, height: stored.height, alt: fields.alt, order: fields.order, isPrimary } });
-        await tx.product.update({ where: { id }, data: { version: { increment: 1 } } });
-      });
-      metadataCommitted = true;
-      return adminProduct(await this.adminViewAfterMutation(id));
-    } catch (error) {
-      if (stored && !metadataCommitted) await this.storage.remove(stored.key).catch(() => undefined);
-      throw error;
-    }
+    // A rejected commit acknowledgement does not prove rollback. Keep published
+    // bytes on failure; coordinated cleanup checks committed metadata before deletion.
+    await this.prisma.$transaction(async (tx) => {
+      let stored: Awaited<ReturnType<CatalogImageStorage['put']>>;
+      await auth.recheck(tx);
+      await lockCatalogImages(tx);
+      await tx.$queryRaw`SELECT id FROM "Product" WHERE id = ${id}::uuid FOR UPDATE`;
+      const product = await tx.product.findUnique({ where: { id }, include: { images: true } }); if (!product) return notFound();
+      if (product.version !== fields.expectedVersion) conflict('VERSION_CONFLICT');
+      if (product.images.length >= 8) conflict('IMAGE_LIMIT_REACHED');
+      if (fields.order >= 8 || product.images.some((item) => item.order === fields.order)) conflict('VERSION_CONFLICT');
+      const isPrimary = fields.isPrimary || product.images.length === 0 || !product.images.some((item) => item.isPrimary);
+      try { stored = await this.storage.put(bytes); }
+      catch (error) {
+        const code = error instanceof Error ? error.message : '';
+        if (code === 'IMAGE_TOO_LARGE') throw new CatalogException(413, 'IMAGE_TOO_LARGE');
+        if (code === 'UNSUPPORTED_IMAGE_TYPE') throw new CatalogException(415, 'UNSUPPORTED_IMAGE_TYPE');
+        if (code === 'INVALID_IMAGE') throw new CatalogException(400, 'INVALID_IMAGE');
+        throw new CatalogException(503, 'SERVICE_UNAVAILABLE');
+      }
+      if (isPrimary) await tx.productImage.updateMany({ where: { productId: id }, data: { isPrimary: false } });
+      await tx.productImage.create({ data: { productId: id, storageKey: stored.key, contentType: stored.contentType,
+        bytes: stored.bytes, width: stored.width, height: stored.height, alt: fields.alt, order: fields.order, isPrimary } });
+      await tx.product.update({ where: { id }, data: { version: { increment: 1 } } });
+    });
+    return adminProduct(await this.adminViewAfterMutation(id));
   }
 
   async patchImage(auth: Authorization, id: string, imageId: string, input: unknown) {

@@ -12,7 +12,7 @@ Product PATCH remains the frozen complete editable payload plus expectedVersion,
 
 ## Gallery transaction and failure policy
 
-The catalog publishes only bounded validated PNG content using server-generated keys. Maximum eight images and one primary image are enforced with database coordination. All cooperating publishers, seed gallery creation and orphan cleanup use the same advisory-lock helper. The publication lock spans filesystem publication and metadata commit; rollback removes unpublished files. A failed post-commit response must not delete a committed image. Public image reads require a visible owning product; administrator reads require H1 authorization.
+The catalog publishes only bounded validated PNG content using server-generated keys. Maximum eight images and one primary image are enforced with database coordination. All cooperating publishers, seed gallery creation and orphan cleanup use the same advisory-lock helper. The publication lock spans filesystem publication and metadata commit; failed or ambiguously acknowledged transactions may leave inaccessible orphan files. Only coordinated cleanup may remove them after checking committed metadata. A failed post-commit response must not delete a committed image. Public image reads require a visible owning product; administrator reads require H1 authorization.
 
 The already reviewed storage unit defines PNG validation and cleanup limits. The committed PostgreSQL regression in this unit pauses a real publication, observes cleanup waiting on the lock, releases publication and verifies retained readable bytes after metadata commit.
 
@@ -43,3 +43,9 @@ The coherent unit keeps HTTP behavior, gallery/seed integration, registration, S
 Remove CatalogModule registration, its runtime files, seeds and corresponding Swagger-test/metadata additions to remove this runtime surface. Do not delete persisted catalog, stock or H1 data as a rollback shortcut. Schema and stock behavior remain separate reviewed units. Native Review is candidate-specific; the final H2 report must distinguish approved units, omitted checks and unresolved advisories.
 
 Risk: items 1, 2, 3 and 4 — persisted metadata/files, H1-authorized routes, shared Swagger projection and transactional coordination. Independent Verify is recorded; this exact work unit requires its own native review decision.
+
+## Bounded native correction: ambiguous commit acknowledgement
+
+An interactive-transaction promise may reject after PostgreSQL committed. Immediate filesystem compensation could therefore destroy a referenced image. Upload now retains published bytes on transaction/readback failure and relies on the existing coordinated orphan cleanup, rather than guessing the commit outcome. Two regression cases observed RED before the fix: metadata committed despite a rejected acknowledgement, and metadata rolled back. They assert the original error, no destructive compensation, preserved bytes, and readable public content when metadata committed. This does not change request/response contracts or make upload retries idempotent. Native targeted validation remains separate from these focused checks.
+
+Independent bounded correction verification: build/lint exit 0, full Jest 1,218 pass / one retained skip, and two independent deterministic acknowledgement-outcome probes pass in a fresh scratch copy. Source hashes matched before/copy/after. Real PostgreSQL/HTTP/seed suites were not rerun for this narrow correction. Parent lint spot-check passes; native targeted validation is still required.

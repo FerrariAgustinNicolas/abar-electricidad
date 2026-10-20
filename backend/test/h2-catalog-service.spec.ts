@@ -126,4 +126,50 @@ describe('H2 catalog presentation matching', () => {
     expect(tx.$queryRaw).toHaveBeenCalledTimes(2);
     expect(storage.remove).not.toHaveBeenCalled();
   });
+  it.each([true, false])('preserves published bytes after an ambiguous commit (metadata persisted: %s)', async (persisted) => {
+    const productId = '00000000-0000-4000-8000-000000000001';
+    const key = '00000000-0000-4000-8000-000000000002.png';
+    const bytes = Buffer.from('published PNG fixture');
+    const files = new Map<string, Buffer>();
+    let image: { storageKey: string } | undefined;
+    const tx = {
+      $queryRaw: jest.fn(async () => [{ locked: 1 }]),
+      product: { findUnique: jest.fn(async () => ({ id: productId, version: 1, images: [] })), update: jest.fn() },
+      productImage: {
+        updateMany: jest.fn(),
+        create: jest.fn(async () => { image = { storageKey: key }; return image; }),
+      },
+    };
+    const commitError = new Error('Commit acknowledgement was lost');
+    const prisma = {
+      $transaction: jest.fn(async (work: (client: any) => unknown) => {
+        await work(tx);
+        if (!persisted) image = undefined;
+        throw commitError;
+      }),
+      productImage: { findFirst: jest.fn(async () => image) },
+    } as any;
+    const storage = {
+      put: jest.fn(async () => { files.set(key, bytes); return { key, bytes: bytes.length, width: 1, height: 1, contentType: 'image/png' }; }),
+      remove: jest.fn(async (name: string) => { files.delete(name); }),
+      read: jest.fn(async (name: string) => {
+        const value = files.get(name);
+        if (!value) throw new Error('Missing image');
+        return value;
+      }),
+    } as any;
+    const service = new CatalogService(prisma, {} as any, storage);
+    await expect(service.uploadImage({ recheck: jest.fn() } as any, productId,
+      { alt: 'Ambiguous commit', order: 0, isPrimary: true, expectedVersion: 1 }, bytes)).rejects.toBe(commitError);
+    expect(tx.productImage.create).toHaveBeenCalledTimes(1);
+    expect(tx.product.update).toHaveBeenCalledTimes(1);
+    expect(storage.remove).not.toHaveBeenCalled();
+    expect(files.get(key)).toEqual(bytes);
+    if (persisted) {
+      await expect(service.readImage('visible-product', 'image-id', false)).resolves.toEqual({ bytes, contentType: 'image/png' });
+    } else {
+      expect(image).toBeUndefined(); // Unreferenced bytes remain for coordinated orphan cleanup.
+    }
+  });
+
 });
