@@ -5,12 +5,7 @@ import { RouterOutlet } from '@angular/router';
   selector: 'abar-auth-layout',
   standalone: true,
   imports: [RouterOutlet],
-  template: `
-    <main class="auth-shell">
-      <p class="notice">Base H0; no autenticación implementada.</p>
-      <router-outlet />
-    </main>
-  `,
+  template: '<main class="auth-shell"><router-outlet /></main>',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthLayoutComponent {}
