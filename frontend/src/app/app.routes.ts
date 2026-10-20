@@ -3,6 +3,8 @@ import { AdminLayoutComponent } from './layouts/admin-layout.component';
 import { AuthLayoutComponent } from './layouts/auth-layout.component';
 import { PublicLayoutComponent } from './layouts/public-layout.component';
 import { NotFoundPageComponent } from './shared/ui/not-found-page.component';
+import { adminGuard } from './core/auth/auth.guard';
+import { ChangePasswordPageComponent } from './features/auth/change-password-page.component';
 
 export const appRoutes: Routes = [
   {
@@ -21,8 +23,11 @@ export const appRoutes: Routes = [
   {
     path: 'admin',
     component: AdminLayoutComponent,
+    canActivate: [adminGuard],
     children: [
-      { path: '', pathMatch: 'full', loadComponent: () => import('./features/admin/admin-placeholder-page.component').then((module) => module.AdminPlaceholderPageComponent) },
+      { path: '', pathMatch: 'full', redirectTo: 'usuarios' },
+      { path: 'usuarios', loadComponent: () => import('./features/admin/admin-placeholder-page.component').then((module) => module.AdminPlaceholderPageComponent) },
+      { path: 'change-password', component: ChangePasswordPageComponent },
     ],
   },
   { path: '**', component: NotFoundPageComponent },
