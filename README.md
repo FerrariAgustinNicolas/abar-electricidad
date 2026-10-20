@@ -192,3 +192,12 @@ node scripts/h0-frontend-smoke.mjs
 El smoke requiere que `127.0.0.1:3000` esté libre, inicia backend propio en ese puerto (target fijo del proxy) y elige un puerto frontend loopback disponible. Usa únicamente una URL PostgreSQL local ficticia explícita, no lee archivos de entorno, no inicia ni detiene Compose y termina solo los procesos que inició. Si 3000 está ocupado, falla sin contactar ni detener ese proceso.
 
 El mapa completo de nodos/rutas, brechas y criterios visuales pendientes está en `docs/figma-map.md`. Las corridas históricas de navegador se conservan en el informe H1; el informe post-merge distingue lo repetido sobre este candidato de lo todavía pendiente. Compilar y jsdom no sustituyen una nueva verificación visual.
+
+### Verificación aislada del modelo H2
+
+La migración H2 es aditiva; no ejecutar reset sobre una base existente.
+`node --test backend/scripts/h2-schema.test.mjs` solo ejecuta SQL con
+`H2_TEST_DATABASE_URL` y `H2_TEST_OWNED=1` explícitos, host loopback, base
+`h2_schema` y usuario `h2_runner` de un fixture nuevo y propio. Sin fixture,
+reporta SKIPPED; no usa `DATABASE_URL`. Ver los resultados y pendientes en
+[decisiones de persistencia H2](docs/decisions/H2-persistence.md).
