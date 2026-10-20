@@ -3,15 +3,110 @@ import { spawnSync } from 'node:child_process';
 import { copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
 import test from 'node:test';
 import {
   validateContractDocument,
   validateContractFile,
   validateExample,
   validateHealthSemantics,
+  validateH1Semantics,
 } from './h0-contract-validate.mjs';
 
 const contractPath = new URL('../contracts/openapi.yaml', import.meta.url);
+const require = createRequire(new URL('../backend/package.json', import.meta.url));
+const YAML = require('yaml');
+const normative = async () => YAML.parse(await readFile(contractPath, 'utf8'));
+
+const h1Operations = [
+  ['/api/v1/auth/csrf', 'get'], ['/api/v1/auth/login', 'post'],
+  ['/api/v1/auth/me', 'get'], ['/api/v1/auth/logout', 'post'],
+  ['/api/v1/auth/change-password', 'post'], ['/api/v1/admin/users', 'get'],
+  ['/api/v1/admin/users', 'post'], ['/api/v1/admin/users/{id}', 'patch'],
+  ['/api/v1/admin/users/{id}/reset-password', 'post'],
+];
+
+test('H1 freezes exactly nine auth/admin operations alongside unprefixed health', async () => {
+  const document = await normative();
+  for (const [route, method] of h1Operations) assert.ok(document.paths[route]?.[method], `${method} ${route}`);
+  assert.equal(document.info['x-abar-milestone'], 'H1-contract-freeze');
+  assert.equal(validateContractDocument(document).valid, true);
+});
+
+test('strict H1 static validation rejects missing operations, headers, DTO fields and security', async () => {
+  const original = await normative();
+  for (const [label, mutate] of [
+    ['operation', (d) => { delete d.paths['/api/v1/auth/me']; }],
+    ['CSRF header', (d) => { if (d.paths['/api/v1/auth/me']) delete d.paths['/api/v1/auth/me'].get.responses['200'].headers['X-CSRF-Token']; }],
+    ['DTO', (d) => { if (d.components.schemas.AdminSessionView) d.components.schemas.AdminSessionView.required = ['admin']; }],
+    ['security', (d) => { if (d.paths['/api/v1/admin/users']) d.paths['/api/v1/admin/users'].get.security = []; }],
+    ['auth metadata', (d) => { if (d.components.schemas.CsrfMetadata) d.components.schemas.CsrfMetadata.properties.headerName.enum = ['Wrong']; }],
+    ['error field constraints', (d) => { delete d.components.schemas.FieldError.additionalProperties; }],
+  ]) {
+    const changed = structuredClone(original);
+    mutate(changed);
+    assert.equal(validateContractDocument(changed).valid, false, label);
+  }
+});
+
+test('full H1 fixture semantics reject operation/header/security/request/DTO constraint drift', async () => {
+  const document = await normative();
+  const reordered = structuredClone(document);
+  reordered.components.schemas.AdminUserView.required.reverse();
+  reordered.paths['/api/v1/admin/users'].get.parameters.reverse();
+  reordered.paths['/api/v1/auth/login'].post.security.reverse();
+  assert.deepEqual(validateH1Semantics(document, reordered), []);
+  for (const [label, mutate] of [
+    ['operation', (d) => { delete d.paths['/api/v1/auth/login']; }],
+    ['response header', (d) => { delete d.paths['/api/v1/auth/me'].get.responses['200'].headers['X-CSRF-Token']; }],
+    ['cookie header', (d) => { delete d.paths['/api/v1/auth/login'].post.responses['200'].headers['Set-Cookie']; }],
+    ['security', (d) => { d.paths['/api/v1/admin/users'].get.security = []; }],
+    ['DTO required', (d) => { d.components.schemas.AdminSessionView.required = ['admin']; }],
+    ['auth metadata', (d) => { d.components.schemas.CsrfMetadata.properties.headerName.enum = ['Wrong']; }],
+    ['error field constraint', (d) => { delete d.components.schemas.FieldError.additionalProperties; }],
+    ['request header', (d) => { d.components.parameters.CsrfToken.required = false; }],
+    ['query constraint', (d) => { d.paths['/api/v1/admin/users'].get.parameters[1].schema.maximum = 101; }],
+    ['request constraint', (d) => { d.components.schemas.PatchAdminUserRequest.anyOf = []; }],
+    ['extra endpoint', (d) => { d.paths['/api/v1/admin/unapproved'] = { get: d.paths['/api/v1/admin/users'].get }; }],
+  ]) {
+    const changed = structuredClone(document);
+    mutate(changed);
+    assert.notDeepEqual(validateH1Semantics(document, changed), [], label);
+    assert.equal(validateContractDocument(changed).valid, false, `${label}: static freeze`);
+  }
+  const healthOnly = structuredClone(document);
+  healthOnly.paths = { '/health': healthOnly.paths['/health'] };
+  assert.deepEqual(validateHealthSemantics(document, healthOnly), [], 'explicit H0 subset remains health-only');
+  assert.ok(validateH1Semantics(document, healthOnly).length > 0, 'default full H1 must reject health-only runtime');
+});
+
+test('H1 public DTO examples reject secret metadata, invalid UTC and fieldErrors input echoes', async () => {
+  const user = JSON.parse(await readFile(new URL('../contracts/examples/admin-user.json', import.meta.url), 'utf8'));
+  const session = JSON.parse(await readFile(new URL('../contracts/examples/admin-session.json', import.meta.url), 'utf8'));
+  for (const [schema, value] of [
+    ['AdminSessionView', { ...session, sessionId: 'forbidden' }],
+    ['AdminSessionView', { ...session, admin: { ...session.admin, active: true } }],
+    ['AdminUserView', { ...user, passwordHash: 'forbidden' }],
+    ['AdminUserView', { ...user, version: 0 }],
+    ['AdminUserView', { ...user, createdAt: '2026-10-02T15:04:05+03:00' }],
+    ['AdminUserView', { ...user, name: '😀'.repeat(101) }],
+    ['AdminUserView', { ...user, email: 'not-an-email' }],
+    ['AdminUserList', { items: [user] }],
+    ['ApiError', { code: 'VALIDATION_ERROR', message: 'Datos inválidos', requestId: user.id, fieldErrors: [{ field: 'name', code: 'INVALID', message: 'Campo inválido', value: 'forbidden' }] }],
+    ['PatchAdminUserRequest', { expectedVersion: 1 }],
+    ['PatchAdminUserRequest', { active: false, expectedVersion: 0 }],
+    ['PatchAdminUserRequest', { active: true, expectedVersion: 1, email: 'other@example.test' }],
+    ['LoginRequest', { email: 'admin@example.test', password: '' }],
+  ]) {
+    const checked = await validateExample(contractPath, { schema, value });
+    assert.equal(checked.valid, false, `${schema} negative example`);
+  }
+  assert.equal((await validateExample(contractPath, { schema: 'AdminUserView', value: { ...user, name: '😀'.repeat(100) } })).valid, true, 'length counts Unicode code points');
+  assert.equal((await validateExample(contractPath, { schema: 'PatchAdminUserRequest', value: { active: false, expectedVersion: 1 } })).valid, true);
+  const document = await normative();
+  assert.deepEqual(document.components.schemas.ResetAdminPasswordRequest.required, ['temporaryPassword', 'reason']);
+  assert.equal(document.components.schemas.ResetAdminPasswordRequest.properties.expectedVersion, undefined);
+});
 
 test('normative OpenAPI loads and validates', async () => {
   const result = await validateContractFile(contractPath);
@@ -63,7 +158,7 @@ test('projected API and transversal conventions stay explicitly candidate', asyn
 test('invalid external JSON examples keep validateContractFile and CLI invalid', async (t) => {
   const testDirectory = path.dirname(fileURLToPath(import.meta.url));
   const projectRoot = path.resolve(testDirectory, '..');
-  const fixtureRoot = await mkdtemp(path.join(testDirectory, '.h0-contract-fixture-'));
+  const fixtureRoot = await mkdtemp(path.join(projectRoot, 'contracts', '.h0-contract-fixture-'));
   t.after(() => rm(fixtureRoot, { recursive: true, force: true }));
 
   const fixtureContracts = path.join(fixtureRoot, 'contracts');
@@ -71,7 +166,8 @@ test('invalid external JSON examples keep validateContractFile and CLI invalid',
   await mkdir(fixtureExamples, { recursive: true });
   await copyFile(path.join(projectRoot, 'contracts/openapi.yaml'), path.join(fixtureContracts, 'openapi.yaml'));
   await copyFile(path.join(projectRoot, 'contracts/redocly.yaml'), path.join(fixtureContracts, 'redocly.yaml'));
-  for (const name of ['health-ok.json', 'health-unavailable.json', 'money-ars.json']) {
+  const registered = (await normative()).info['x-abar-examples'].map((example) => path.basename(example.file));
+  for (const name of registered) {
     await copyFile(path.join(projectRoot, 'contracts/examples', name), path.join(fixtureExamples, name));
   }
 

@@ -39,6 +39,32 @@ npm --prefix backend test -- --runInBand
 npm --prefix backend run test:e2e -- --runInBand
 ```
 
+### Prisma: configuración explícita sin datasource (C08)
+
+Los scripts públicos `prisma:generate`, `prisma:validate` y `build` seleccionan
+`backend/prisma.schema.config.ts` explícitamente. Esa configuración solo indica
+`prisma/schema.prisma`: no lee `DATABASE_URL`, no carga dotenv ni aporta datasource.
+El build conserva el orden generate → TypeScript → empaquetado autenticado de recursos.
+
+Desde `backend`, el equivalente directo es:
+
+```sh
+./node_modules/.bin/prisma generate --config prisma.schema.config.ts
+./node_modules/.bin/prisma validate --config prisma.schema.config.ts
+```
+
+La configuración descubierta por defecto (`prisma.config.ts`) rechaza siempre con
+un mensaje fijo seguro. Los comandos Prisma sin selección explícita, incluidos
+`generate`, `validate` y `migrate status`, quedan denegados intencionalmente: nunca
+seleccionan por accidente la conexión de la aplicación ni un fallback local.
+Esto **no es autorización absoluta**: un operador puede elegir deliberadamente
+otra configuración con `--config` o un target con `--url` donde Prisma lo admita.
+Tampoco habilita `generate --sql`, que requiere datasource.
+
+El guard de propiedad, runner, configuración confiable de migraciones y PostgreSQL
+nuevo/exclusivo son gates C09+ pendientes; C08 no ejecuta migraciones ni provisiona
+recursos. Review/Verify independientes y commit de C08 siguen pendientes del padre.
+
 El esquema Prisma está vacío deliberadamente: no introduce modelos comerciales, tablas, migraciones ni seeds. El cliente generado se escribe explícitamente en `backend/src/generated/prisma`; vuelve a generarlo con el script de Prisma al instalar o actualizar dependencias. La configuración de Nest no carga archivos `.env`; define la conexión local explícitamente al iniciar:
 
 ```sh
@@ -55,9 +81,9 @@ node scripts/h0-backend-smoke.mjs
 
 El script usa una API local ya disponible o inicia el backend compilado con configuración ficticia explícita de loopback y luego detiene únicamente el proceso que inició. Envía correo solo a `@example.test` y comprueba su captura en Mailpit; no hay envío externo. Compose puede quedar ejecutándose y el volumen nombrado permanece intacto al usar `stop`.
 
-## Contrato transversal candidato (H0.3)
+## Contrato candidato (H1 normativo / runtime H0)
 
-`contracts/openapi.yaml` es la referencia normativa candidata. Solo `GET /health` está implementado; `/api/v1/public`, `/api/v1/auth` y `/api/v1/admin` son áreas proyectadas, sin endpoints comerciales implementados. Los pendientes P01–P10 siguen abiertos y no se han finalizado las reglas de campos del comprador.
+`contracts/openapi.yaml` es la única referencia normativa candidata: versión 0.4.0, nueve operaciones H1 auth/admin definidas para implementación futura más `GET /health`. **Solo health está implementado**; Swagger actual sigue mostrando runtime H0. No hay login funcional ni endpoints comerciales implementados. Los pendientes P01–P10 siguen abiertos y no se han finalizado las reglas de campos del comprador. Ver [protocolo H1](docs/decisions/H1-auth.md), [informe parcial](docs/milestones/H1-informe.md) e [historial contractual](contracts/CHANGELOG.md).
 
 Validá OpenAPI 3.0.3 y los ejemplos JSON externos:
 
@@ -66,13 +92,15 @@ npm --prefix backend run contract:validate
 node --test scripts/h0-contract-validate.test.mjs
 ```
 
-Para comparar el Swagger real con el contrato y comprobar health 200/503 en procesos locales que el script inicia y detiene, ejecutá después de compilar el backend y con PostgreSQL local disponible:
+Para comparar explícitamente el **subset transicional H0** (Swagger y health 200/503) en procesos locales que el script inicia y detiene, ejecutá después de compilar el backend y con PostgreSQL local disponible:
 
 ```sh
-npm --prefix backend run contract:validate:live
+npm --prefix backend run contract:validate:live -- --stage=h0
 ```
 
-La opción live usa únicamente variables explícitas ficticias de desarrollo (nunca lee `.env` ni `.env.example`), liga el backend a loopback y detiene solo los procesos que inicia. Requiere PostgreSQL local accesible para comprobar 200; un segundo proceso usa un puerto de base deliberadamente inaccesible para verificar el error 503. Los componentes comerciales, convenciones de sesión e idempotencia son candidatos documentales, no funcionalidades. El rollout comercial permanece cerrado hasta autorización explícita; H1 no se inicia con este cambio.
+Sin `--stage=h0`, `npm --prefix backend run contract:validate:live` usa H1 por defecto y **rechaza las rutas H1 aún no implementadas**. El subset H0 no certifica autenticación. El runbook runtime H1 y el procedimiento/comando bootstrap seguro están pendientes de implementación; no hay comando de login/bootstrap disponible.
+
+La opción live usa únicamente variables explícitas ficticias de desarrollo (nunca lee `.env` ni `.env.example`), liga el backend a loopback y detiene solo los procesos que inicia. Requiere PostgreSQL local accesible para comprobar 200; un segundo proceso usa un puerto de base deliberadamente inaccesible para verificar el error 503. Los componentes comerciales e idempotencia siguen proyectados; el protocolo de sesión H1 está documentado, no implementado. El rollout comercial permanece cerrado hasta autorización explícita; esta preparación contractual no inicia implementación H1 ni acredita aprobación externa.
 
 ## Frontend Angular (H0.2)
 

@@ -1,0 +1,15 @@
+{
+  "items": [
+    {
+      "id": "d7386dac-2877-4b61-b788-60c1a06f3a87",
+      "name": "Administración de ejemplo",
+      "email": "admin@example.test",
+      "active": true,
+      "mustChangePassword": true,
+      "version": 1,
+      "createdAt": "2026-10-02T15:04:05Z",
+      "updatedAt": "2026-10-02T15:04:05Z"
+    }
+  ],
+  "pageInfo": { "page": 1, "pageSize": 20, "totalItems": 1, "totalPages": 1 }
+}
