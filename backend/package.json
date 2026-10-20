@@ -4,14 +4,14 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "prisma generate && tsc -p tsconfig.build.json && node scripts/copy-auth-resources-cli.mjs",
+    "build": "prisma generate --config prisma.schema.config.ts && tsc -p tsconfig.build.json && node scripts/copy-auth-resources-cli.mjs",
     "lint": "eslint \"{src,test}/**/*.ts\"",
     "start": "node dist/main.js",
     "start:dev": "nest start --watch",
     "test": "jest",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prisma:validate": "prisma validate",
-    "prisma:generate": "prisma generate",
+    "prisma:validate": "prisma validate --config prisma.schema.config.ts",
+    "prisma:generate": "prisma generate --config prisma.schema.config.ts",
     "contract:validate": "node ../scripts/h0-contract-validate.mjs",
     "contract:validate:live": "node ../scripts/h0-contract-validate.mjs --live"
   },

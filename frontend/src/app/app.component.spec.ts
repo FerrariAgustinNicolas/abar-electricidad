@@ -34,16 +34,22 @@ describe('ABAR frontend routing and render', () => {
     expect(fixture.nativeElement.textContent).toContain('API y base de datos disponibles.');
   });
 
-  it('renders login and admin as inert placeholders without private data or health requests', async () => {
+  it('renders the Spanish login and restores a protected destination through the session guard', async () => {
     const fixture = TestBed.createComponent(AppComponent);
     await router.navigateByUrl('/admin/login');
     fixture.detectChanges();
-    expect(fixture.nativeElement.textContent).toContain('no autenticación implementada');
-    expect(fixture.nativeElement.textContent).not.toContain('Contraseña');
+    expect(fixture.nativeElement.querySelector('h1')?.textContent).toContain('Iniciar sesión');
+    expect(fixture.nativeElement.querySelector('#password')).not.toBeNull();
 
-    await router.navigateByUrl('/admin');
+    const navigation = router.navigateByUrl('/admin/usuarios');
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    const request = http.expectOne('/api/v1/auth/me');
+    expect(request.request.withCredentials).toBe(true);
+    request.flush({ code: 'SESSION_EXPIRED', message: 'Sesión vencida', requestId: 'e7777777-e777-4777-8777-e77777777777' }, { status: 401, statusText: 'Unauthorized' });
+    await navigation;
     fixture.detectChanges();
-    expect(fixture.nativeElement.textContent).toContain('No hay operaciones administrativas');
+    expect(router.url).toContain('/admin/login');
+    expect(router.url).toContain('returnUrl');
     http.expectNone('/health');
   });
 
