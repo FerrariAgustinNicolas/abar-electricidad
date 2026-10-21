@@ -37,3 +37,7 @@ Adds public demo settings, compatible payment-method discovery, and authoritativ
 Add guest-order creation, possession-header view, minimal contact lookup, idempotent demo attempts, and a versioned provisional terms read. Optional admin-only unpaid demand is additive per presentation. P02/P03 are user-confirmed for the academic version only. No commercial PAID, reservation, deduction, manual confirmation, real gateway, or H5. [Decisions](../docs/decisions/H4-orders-payments.md) separate contract freeze from runtime evidence.
 
 Runtime H4 local: implementación y pruebas propias registradas; Verify independiente, revisión nativa del runtime y auditoría externa se distinguen del ACK contractual. Los metadatos H4 no modifican DTOs congelados.
+
+## 0.8.0 — H5 manual confirmation freeze (runtime pending)
+
+Seven admin order operations with H1 session/Origin/CSRF, stable scoped replay, Order.version aggregate preconditions, exact full ARS amounts, closed DTOs, allowed actions, internal notes/history and unpaid-only cancellation (P01 academic). Public read states extend additively; private data remains admin-only. Stock movement reads add payment linkage and PAYMENT_CONFIRMATION; H2 adjustment/opening writes are unchanged. [Decision](../docs/decisions/H5-manual-confirmation.md). Contract freeze is not an implemented route, PostgreSQL proof, native approval or external audit.

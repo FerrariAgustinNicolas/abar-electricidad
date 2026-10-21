@@ -1,7 +1,11 @@
 openapi: 3.0.3
 info:
   title: ABAR Electricidad API — transversal candidate
-  version: 0.7.0
+  version: 0.8.0
+  x-abar-h5-freeze: manual-confirmation-v1
+  x-abar-h5-runtime-stage: contract-only-not-implemented
+  x-abar-h5-decisions:
+    P01: user-confirmed-academic-unpaid-only-cancellation
   x-abar-h4-freeze: orders-demo-v1
   x-abar-h4-runtime-stage: implemented-local-verification-pending
   x-abar-h4-decisions:
@@ -16,7 +20,7 @@ info:
   x-abar-integrated-runtime-stage: h1
   x-abar-integrated-commit: 18c39e9b86b7b7bf45263fe5bad4fe77125a6386
   description: |
-    Single normative candidate contract, version 0.7.0. H4 guest orders/demo attempts extend H3 additively. H2 catalog/stock schemas are frozen;
+    Single normative candidate contract, version 0.8.0. H5 operations are contract-only until implemented. H4 guest orders/demo attempts extend H3 additively. H2 catalog/stock schemas are frozen;
     local H2 implementation and bounded independent checks are recorded in H2-informe.md.
     External milestone audit remains pending; this metadata is not production approval. H1 authentication and
     administrative-user operations are integrated alongside GET /health at the
@@ -33,6 +37,8 @@ info:
     - /api/v1/auth
     - /api/v1/admin
   x-abar-examples:
+    - file: examples/h5-confirmation-request.json
+      schema: PaymentConfirmationRequest
     - file: examples/h4-order-request.json
       schema: CreateOrderRequest
     - file: examples/h3-quote-request.json
@@ -62,6 +68,8 @@ servers:
     description: Local development only; production transport must use HTTPS.
 security: []
 tags:
+  - name: orders-admin
+    description: H5 frozen academic manual operations; implementation pending.
   - name: checkout-public
     description: H3 public demo quotes; no order, payment or reservation.
   - name: catalog-public
@@ -77,6 +85,730 @@ tags:
   - name: admin
     description: Frozen H1 administrative users; equal capabilities, no roles.
 paths:
+  /api/v1/admin/orders:
+    get:
+      tags:
+        - orders-admin
+      operationId: listAdminOrders
+      summary: listAdminOrders
+      security:
+        - AdminSessionCookie: []
+      description: Frozen H5 admin-only read, not implemented at freeze. Active H1 session required; never authorize with
+        public order token. No-store.
+      parameters:
+        - &a3
+          name: page
+          in: query
+          required: false
+          description: Page number.
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - &a4
+          name: pageSize
+          in: query
+          required: false
+          description: Page size.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: orderStatus
+          in: query
+          required: false
+          description: Bounded admin-only filter; dates inclusive UTC, search literal case-insensitive number/name/email/phone.
+          schema:
+            $ref: "#/components/schemas/OrderStatus"
+        - name: paymentStatus
+          in: query
+          required: false
+          description: Bounded admin-only filter; dates inclusive UTC, search literal case-insensitive number/name/email/phone.
+          schema:
+            $ref: "#/components/schemas/PaymentStatus"
+        - name: deliveryMode
+          in: query
+          required: false
+          description: Bounded admin-only filter; dates inclusive UTC, search literal case-insensitive number/name/email/phone.
+          schema:
+            $ref: "#/components/schemas/DeliveryMode"
+        - name: from
+          in: query
+          required: false
+          description: Bounded admin-only filter; dates inclusive UTC, search literal case-insensitive number/name/email/phone.
+          schema:
+            $ref: "#/components/schemas/UtcDateTime"
+        - name: to
+          in: query
+          required: false
+          description: Bounded admin-only filter; dates inclusive UTC, search literal case-insensitive number/name/email/phone.
+          schema:
+            $ref: "#/components/schemas/UtcDateTime"
+        - name: search
+          in: query
+          required: false
+          description: Bounded admin-only filter; dates inclusive UTC, search literal case-insensitive number/name/email/phone.
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 100
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+        "404":
+          - ORDER_NOT_FOUND
+        "503":
+          - SERVICE_UNAVAILABLE
+      responses:
+        "200":
+          description: Academic demo only. This operation does not perform real payment processing.
+          headers:
+            Cache-Control: &a1
+              schema:
+                type: string
+                enum:
+                  - no-store
+              x-required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminOrderList"
+        "400":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /api/v1/admin/orders/{id}:
+    get:
+      tags:
+        - orders-admin
+      operationId: getAdminOrder
+      summary: getAdminOrder
+      security:
+        - AdminSessionCookie: []
+      description: Frozen H5 admin-only read, not implemented at freeze. Active H1 session required; never authorize with
+        public order token. No-store.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Order identity.
+          schema:
+            $ref: "#/components/schemas/OpaqueId"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+        "404":
+          - ORDER_NOT_FOUND
+        "503":
+          - SERVICE_UNAVAILABLE
+      responses:
+        "200":
+          description: Academic demo only. This operation does not perform real payment processing.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminOrderDetail"
+        "400":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /api/v1/admin/orders/{id}/payment-confirmation:
+    post:
+      tags:
+        - orders-admin
+      operationId: confirmOrderPayment
+      summary: confirmOrderPayment
+      security:
+        - AdminSessionCookie: []
+      description: Frozen H5 operation, not implemented at freeze. H1 authority revalidated inside transaction.
+        expectedVersion is Order.version (order/payment/current-attempt/notes aggregate), incremented exactly once per new
+        mutation; replay does not increment. Only confirmation can set PAID/PREPARING or debit stock. Paid cancellation is
+        forbidden.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Order identity.
+          schema:
+            $ref: "#/components/schemas/OpaqueId"
+        - $ref: "#/components/parameters/Origin"
+        - $ref: "#/components/parameters/CsrfToken"
+        - name: Idempotency-Key
+          in: header
+          required: true
+          description: "16–200 ASCII letters, digits, underscore or hyphen. Scope: operation + order + authenticated actor; same
+            normalized body returns original response before version check. Different body conflicts. No automatic
+            replacement key after timeout."
+          schema:
+            type: string
+            pattern: ^[A-Za-z0-9_-]{16,200}$
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+          - ORIGIN_INVALID
+          - CSRF_INVALID
+        "404":
+          - ORDER_NOT_FOUND
+        "409": &a2
+          - AMOUNT_MISMATCH
+          - INVALID_ATTEMPT
+          - PAYMENT_ALREADY_CONFIRMED
+          - INSUFFICIENT_STOCK
+          - INVALID_TRANSITION
+          - VERSION_CONFLICT
+          - IDEMPOTENCY_CONFLICT
+        "503":
+          - SERVICE_UNAVAILABLE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PaymentConfirmationRequest"
+      responses:
+        "200":
+          description: Academic demo only. This operation does not perform real payment processing.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentConfirmationResponse"
+        "400":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /api/v1/admin/orders/{id}/status:
+    patch:
+      tags:
+        - orders-admin
+      operationId: updateOrderStatus
+      summary: updateOrderStatus
+      security:
+        - AdminSessionCookie: []
+      description: Frozen H5 operation, not implemented at freeze. H1 authority revalidated inside transaction.
+        expectedVersion is Order.version (order/payment/current-attempt/notes aggregate), incremented exactly once per new
+        mutation; replay does not increment. Only confirmation can set PAID/PREPARING or debit stock. Paid cancellation is
+        forbidden.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Order identity.
+          schema:
+            $ref: "#/components/schemas/OpaqueId"
+        - $ref: "#/components/parameters/Origin"
+        - $ref: "#/components/parameters/CsrfToken"
+        - name: Idempotency-Key
+          in: header
+          required: true
+          description: "16–200 ASCII letters, digits, underscore or hyphen. Scope: operation + order + authenticated actor; same
+            normalized body returns original response before version check. Different body conflicts. No automatic
+            replacement key after timeout."
+          schema:
+            type: string
+            pattern: ^[A-Za-z0-9_-]{16,200}$
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+          - ORIGIN_INVALID
+          - CSRF_INVALID
+        "404":
+          - ORDER_NOT_FOUND
+        "409": *a2
+        "503":
+          - SERVICE_UNAVAILABLE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrderStatusRequest"
+      responses:
+        "200":
+          description: Academic demo only. This operation does not perform real payment processing.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderMutationResponse"
+        "400":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /api/v1/admin/orders/{id}/cancel:
+    post:
+      tags:
+        - orders-admin
+      operationId: cancelUnpaidOrder
+      summary: cancelUnpaidOrder
+      security:
+        - AdminSessionCookie: []
+      description: Frozen H5 operation, not implemented at freeze. H1 authority revalidated inside transaction.
+        expectedVersion is Order.version (order/payment/current-attempt/notes aggregate), incremented exactly once per new
+        mutation; replay does not increment. Only confirmation can set PAID/PREPARING or debit stock. Paid cancellation is
+        forbidden.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Order identity.
+          schema:
+            $ref: "#/components/schemas/OpaqueId"
+        - $ref: "#/components/parameters/Origin"
+        - $ref: "#/components/parameters/CsrfToken"
+        - name: Idempotency-Key
+          in: header
+          required: true
+          description: "16–200 ASCII letters, digits, underscore or hyphen. Scope: operation + order + authenticated actor; same
+            normalized body returns original response before version check. Different body conflicts. No automatic
+            replacement key after timeout."
+          schema:
+            type: string
+            pattern: ^[A-Za-z0-9_-]{16,200}$
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+          - ORIGIN_INVALID
+          - CSRF_INVALID
+        "404":
+          - ORDER_NOT_FOUND
+        "409": *a2
+        "503":
+          - SERVICE_UNAVAILABLE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CancelOrderRequest"
+      responses:
+        "200":
+          description: Academic demo only. This operation does not perform real payment processing.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderMutationResponse"
+        "400":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /api/v1/admin/orders/{id}/notes:
+    post:
+      tags:
+        - orders-admin
+      operationId: addOrderNote
+      summary: addOrderNote
+      security:
+        - AdminSessionCookie: []
+      description: Frozen H5 operation, not implemented at freeze. H1 authority revalidated inside transaction.
+        expectedVersion is Order.version (order/payment/current-attempt/notes aggregate), incremented exactly once per new
+        mutation; replay does not increment. Only confirmation can set PAID/PREPARING or debit stock. Paid cancellation is
+        forbidden.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Order identity.
+          schema:
+            $ref: "#/components/schemas/OpaqueId"
+        - $ref: "#/components/parameters/Origin"
+        - $ref: "#/components/parameters/CsrfToken"
+        - name: Idempotency-Key
+          in: header
+          required: true
+          description: "16–200 ASCII letters, digits, underscore or hyphen. Scope: operation + order + authenticated actor; same
+            normalized body returns original response before version check. Different body conflicts. No automatic
+            replacement key after timeout."
+          schema:
+            type: string
+            pattern: ^[A-Za-z0-9_-]{16,200}$
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+          - ORIGIN_INVALID
+          - CSRF_INVALID
+        "404":
+          - ORDER_NOT_FOUND
+        "409": *a2
+        "503":
+          - SERVICE_UNAVAILABLE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrderNoteRequest"
+      responses:
+        "200":
+          description: Academic demo only. This operation does not perform real payment processing.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderNote"
+        "400":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /api/v1/admin/orders/{id}/history:
+    get:
+      tags:
+        - orders-admin
+      operationId: getOrderHistory
+      summary: getOrderHistory
+      security:
+        - AdminSessionCookie: []
+      description: Frozen H5 admin-only read, not implemented at freeze. Active H1 session required; never authorize with
+        public order token. No-store.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Order identity.
+          schema:
+            $ref: "#/components/schemas/OpaqueId"
+        - *a3
+        - *a4
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+        "404":
+          - ORDER_NOT_FOUND
+        "503":
+          - SERVICE_UNAVAILABLE
+      responses:
+        "200":
+          description: Academic demo only. This operation does not perform real payment processing.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderHistory"
+        "400":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Safe error; no balances, PII, notes, tokens or infrastructure details.
+          headers:
+            Cache-Control: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
   /api/v1/public/checkout/terms:
     get:
       tags:
@@ -2760,6 +3492,7 @@ paths:
             enum:
               - ADJUSTMENT
               - ROLL_OPENING
+              - PAYMENT_CONFIRMATION
         - name: actorAdminUserId
           in: query
           required: false
@@ -2833,6 +3566,7 @@ paths:
           - PASSWORD_CHANGE_REQUIRED
         "503":
           - SERVICE_UNAVAILABLE
+
   /api/v1/admin/stock/adjustments:
     post:
       tags:
@@ -3179,6 +3913,389 @@ components:
         type: string
         format: uuid
   schemas:
+    AllowedOrderActions:
+      type: object
+      additionalProperties: false
+      required:
+        - confirmPayment
+        - cancel
+        - markReady
+        - markDelivered
+        - addNote
+      properties:
+        confirmPayment:
+          type: boolean
+        cancel:
+          type: boolean
+        markReady:
+          type: boolean
+        markDelivered:
+          type: boolean
+        addNote:
+          type: boolean
+    AdminOrderSummary:
+      type: object
+      additionalProperties: false
+      required:
+        - orderId
+        - orderNumber
+        - createdAt
+        - version
+        - orderStatus
+        - paymentStatus
+        - deliveryMode
+        - customer
+        - total
+        - allowedActions
+      properties:
+        orderId: &a1
+          $ref: "#/components/schemas/OpaqueId"
+        orderNumber: &a2
+          type: string
+          minLength: 1
+          maxLength: 64
+        createdAt: &a3
+          $ref: "#/components/schemas/UtcDateTime"
+        version: &a4
+          $ref: "#/components/schemas/ExpectedVersion"
+        orderStatus: &a5
+          $ref: "#/components/schemas/OrderStatus"
+        paymentStatus: &a6
+          $ref: "#/components/schemas/PaymentStatus"
+        deliveryMode: &a7
+          $ref: "#/components/schemas/DeliveryMode"
+        customer: &a8
+          $ref: "#/components/schemas/H5Buyer"
+        total: &a9
+          $ref: "#/components/schemas/Money"
+        allowedActions: &a10
+          $ref: "#/components/schemas/AllowedOrderActions"
+    H5Buyer:
+      type: object
+      additionalProperties: false
+      required:
+        - firstName
+        - lastName
+        - email
+        - phone
+      properties:
+        firstName:
+          type: string
+          minLength: 1
+          maxLength: 100
+        lastName:
+          type: string
+          minLength: 1
+          maxLength: 100
+        email:
+          type: string
+          minLength: 3
+          maxLength: 254
+        phone:
+          type: string
+          minLength: 7
+          maxLength: 32
+    H5DeliveryDetails:
+      type: object
+      additionalProperties: false
+      required:
+        - addressLine
+        - locality
+      properties:
+        addressLine:
+          type: string
+          minLength: 1
+          maxLength: 200
+        locality:
+          type: string
+          minLength: 1
+          maxLength: 100
+        instructions:
+          type: string
+          minLength: 0
+          maxLength: 500
+    AdminOrderList:
+      type: object
+      additionalProperties: false
+      required:
+        - items
+        - pageInfo
+      properties:
+        items:
+          type: array
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/AdminOrderSummary"
+        pageInfo:
+          $ref: "#/components/schemas/PageInfo"
+    H5StockRequirement:
+      type: object
+      additionalProperties: false
+      required:
+        - presentationId
+        - unit
+        - quantity
+        - availableQuantity
+        - version
+      properties:
+        presentationId:
+          $ref: "#/components/schemas/OpaqueId"
+        unit:
+          $ref: "#/components/schemas/PresentationUnit"
+        quantity:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        availableQuantity:
+          type: integer
+          minimum: 0
+          maximum: 2147483647
+        version:
+          $ref: "#/components/schemas/ExpectedVersion"
+    AdminOrderDetail:
+      type: object
+      additionalProperties: false
+      required:
+        - orderId
+        - orderNumber
+        - createdAt
+        - version
+        - orderStatus
+        - paymentStatus
+        - deliveryMode
+        - customer
+        - total
+        - allowedActions
+        - paymentId
+        - paymentAmount
+        - currentAttempt
+        - items
+        - subtotal
+        - deliveryFee
+        - stock
+        - history
+        - notes
+      properties:
+        orderId: *a1
+        orderNumber: *a2
+        createdAt: *a3
+        version: *a4
+        orderStatus: *a5
+        paymentStatus: *a6
+        deliveryMode: *a7
+        customer: *a8
+        total: *a9
+        allowedActions: *a10
+        paymentId:
+          $ref: "#/components/schemas/OpaqueId"
+        paymentAmount:
+          $ref: "#/components/schemas/Money"
+        currentAttempt:
+          $ref: "#/components/schemas/H4PaymentAttempt"
+        items:
+          type: array
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/QuoteItem"
+        subtotal:
+          $ref: "#/components/schemas/Money"
+        deliveryFee:
+          $ref: "#/components/schemas/Money"
+        customerNote:
+          type: string
+          minLength: 0
+          maxLength: 500
+        deliveryDetails:
+          $ref: "#/components/schemas/H5DeliveryDetails"
+        stock:
+          type: array
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/H5StockRequirement"
+        history:
+          type: array
+          maxItems: 1000
+          items:
+            $ref: "#/components/schemas/OrderHistoryEntry"
+        notes:
+          type: array
+          maxItems: 1000
+          items:
+            $ref: "#/components/schemas/OrderNote"
+    OrderHistoryEntry:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - eventType
+        - createdAt
+      properties:
+        id:
+          $ref: "#/components/schemas/OpaqueId"
+        eventType:
+          type: string
+          minLength: 1
+          maxLength: 48
+        createdAt:
+          $ref: "#/components/schemas/UtcDateTime"
+        actorAdminUserId:
+          $ref: "#/components/schemas/OpaqueId"
+        attemptId:
+          $ref: "#/components/schemas/OpaqueId"
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+        fromStatus:
+          $ref: "#/components/schemas/OrderStatus"
+        toStatus:
+          $ref: "#/components/schemas/OrderStatus"
+    OrderHistory:
+      type: object
+      additionalProperties: false
+      required:
+        - items
+        - pageInfo
+      properties:
+        items:
+          type: array
+          maxItems: 1000
+          items:
+            $ref: "#/components/schemas/OrderHistoryEntry"
+        pageInfo:
+          $ref: "#/components/schemas/PageInfo"
+    OrderNote:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - orderId
+        - actorAdminUserId
+        - createdAt
+        - text
+        - version
+      properties:
+        id:
+          $ref: "#/components/schemas/OpaqueId"
+        orderId:
+          $ref: "#/components/schemas/OpaqueId"
+        actorAdminUserId:
+          $ref: "#/components/schemas/OpaqueId"
+        createdAt:
+          $ref: "#/components/schemas/UtcDateTime"
+        text:
+          type: string
+          minLength: 1
+          maxLength: 2000
+        version:
+          $ref: "#/components/schemas/ExpectedVersion"
+    PaymentConfirmationRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - expectedVersion
+        - attemptId
+        - confirmedAmount
+      properties:
+        expectedVersion:
+          $ref: "#/components/schemas/ExpectedVersion"
+        attemptId:
+          $ref: "#/components/schemas/OpaqueId"
+        confirmedAmount:
+          $ref: "#/components/schemas/Money"
+    OrderStatusRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - expectedVersion
+        - status
+      properties:
+        expectedVersion:
+          $ref: "#/components/schemas/ExpectedVersion"
+        status:
+          type: string
+          enum:
+            - READY
+            - DELIVERED
+    CancelOrderRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - expectedVersion
+        - reason
+      properties:
+        expectedVersion:
+          $ref: "#/components/schemas/ExpectedVersion"
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+    OrderNoteRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - expectedVersion
+        - text
+      properties:
+        expectedVersion:
+          $ref: "#/components/schemas/ExpectedVersion"
+        text:
+          type: string
+          minLength: 1
+          maxLength: 2000
+    OrderMutationResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - orderId
+        - version
+        - orderStatus
+        - paymentStatus
+        - allowedActions
+      properties:
+        orderId: &a11
+          $ref: "#/components/schemas/OpaqueId"
+        version: &a12
+          $ref: "#/components/schemas/ExpectedVersion"
+        orderStatus: &a13
+          $ref: "#/components/schemas/OrderStatus"
+        paymentStatus: &a14
+          $ref: "#/components/schemas/PaymentStatus"
+        allowedActions: &a15
+          $ref: "#/components/schemas/AllowedOrderActions"
+    PaymentConfirmationResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - orderId
+        - version
+        - orderStatus
+        - paymentStatus
+        - allowedActions
+        - paymentId
+        - attemptId
+        - confirmedAt
+        - confirmedByAdminUserId
+        - stockOperationId
+        - total
+      properties:
+        orderId: *a11
+        version: *a12
+        orderStatus: *a13
+        paymentStatus: *a14
+        allowedActions: *a15
+        paymentId:
+          $ref: "#/components/schemas/OpaqueId"
+        attemptId:
+          $ref: "#/components/schemas/OpaqueId"
+        confirmedAt:
+          $ref: "#/components/schemas/UtcDateTime"
+        confirmedByAdminUserId:
+          $ref: "#/components/schemas/OpaqueId"
+        stockOperationId:
+          $ref: "#/components/schemas/OpaqueId"
+        total:
+          $ref: "#/components/schemas/Money"
     H4Terms:
       type: object
       additionalProperties: false
@@ -3400,11 +4517,16 @@ components:
           type: string
           enum:
             - RECEIVED
+            - PREPARING
+            - READY
+            - DELIVERED
+            - CANCELLED
         paymentStatus:
           type: string
           enum:
             - PENDING
             - REJECTED
+            - PAID
         currentAttempt:
           $ref: "#/components/schemas/H4PaymentAttempt"
         nextActions:
@@ -3416,6 +4538,7 @@ components:
               - VIEW_ORDER
               - RETRY_PAYMENT
               - LOOKUP_ORDER
+          description: RETRY_PAYMENT only while RECEIVED and not PAID; terminal/paid orders expose VIEW_ORDER and LOOKUP_ORDER only.
         demoMode:
           type: boolean
           enum:
@@ -3517,11 +4640,16 @@ components:
           type: string
           enum:
             - RECEIVED
+            - PREPARING
+            - READY
+            - DELIVERED
+            - CANCELLED
         paymentStatus:
           type: string
           enum:
             - PENDING
             - REJECTED
+            - PAID
         currentAttemptStatus:
           $ref: "#/components/schemas/PaymentAttemptStatus"
         demoMode:
@@ -4828,9 +5956,14 @@ components:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          description: Informational active unpaid order demand for this presentation only, includes
-            recoverable rejected payments; never deducted from availableQuantity. No abandoned quotes. No
-            public exact quantities.
+          description: Informational active unpaid order demand for this presentation only, includes recoverable rejected
+            payments; never deducted from availableQuantity. No abandoned quotes. No public exact quantities.
+        paidPendingDeliveryQuantity:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+          description: Optional admin-only demand of PAID PREPARING/READY orders for this presentation; already debited, never
+            subtract again.
     StockList:
       type: object
       additionalProperties: false
@@ -4889,6 +6022,7 @@ components:
           enum:
             - ADJUSTMENT
             - ROLL_OPENING
+            - PAYMENT_CONFIRMATION
         reason:
           type: string
           minLength: 1
@@ -4899,10 +6033,16 @@ components:
           $ref: "#/components/schemas/UtcDateTime"
         entries:
           type: array
-          maxItems: 2
+          maxItems: 100
           items:
             $ref: "#/components/schemas/StockEntryView"
           minItems: 1
+        paymentId:
+          $ref: "#/components/schemas/OpaqueId"
+        orderId:
+          $ref: "#/components/schemas/OpaqueId"
+      description: H5 confirmation has required paymentId/orderId; historical adjustments/openings omit both. One operation
+        per confirmed payment, entries aggregated by presentation. Unchanged historical result snapshots remain valid.
     StockOperationList:
       type: object
       additionalProperties: false

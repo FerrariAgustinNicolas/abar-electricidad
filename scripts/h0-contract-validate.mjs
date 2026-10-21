@@ -1,3 +1,4 @@
+import { H5_OPERATIONS, validateH5Contract } from './h5-contract.mjs';
 import { H4_OPERATIONS, validateH4Contract } from './h4-contract.mjs';
 import { H3_OPERATIONS, validateH3Contract } from './h3-contract.mjs';
 import { H2_OPERATIONS, validateH2Contract } from './h2-contract.mjs';
@@ -72,18 +73,21 @@ export function validateContractDocument(document) {
     errors.push('paths must be an object');
   }
   if (document.info?.['x-abar-contract-status'] !== 'candidate') errors.push('contract status must remain candidate');
+  const h5 = document.info?.['x-abar-h5-freeze'] === 'manual-confirmation-v1';
   const h4 = document.info?.['x-abar-h4-freeze'] === 'orders-demo-v1';
   const h3 = document.info?.['x-abar-h3-freeze'] === 'cart-quote-v1';
   const h2 = document.info?.['x-abar-h2-freeze'] === 'catalog-stock-v1';
   const expectedOperations = ['get /health', ...h1Operations.map(([route, method]) => `${method} ${route}`),
     ...(h2 ? H2_OPERATIONS.map(([route, method]) => `${method} ${route}`) : []),
     ...(h3 ? H3_OPERATIONS.map(([route, method]) => `${method} ${route}`) : []),
-    ...(h4 ? H4_OPERATIONS.map(([route, method]) => `${method} ${route}`) : [])].sort();
+    ...(h4 ? H4_OPERATIONS.map(([route, method]) => `${method} ${route}`) : []),
+    ...(h5 ? H5_OPERATIONS.map(([route, method]) => `${method} ${route}`) : [])].sort();
+  if (h5) errors.push(...validateH5Contract(document));
   if (h4) errors.push(...validateH4Contract(document));
   if (h3) errors.push(...validateH3Contract(document));
   if (h2) errors.push(...validateH2Contract(document));
   if (!same(operationKeys(document), expectedOperations)) errors.push('H1 requires exactly nine frozen operations plus GET /health');
-  if (document.info?.['x-abar-milestone'] !== 'H1-contract-freeze' || document.info?.version !== (h4 ? '0.7.0' : h3 ? '0.6.0' : h2 ? '0.5.0' : '0.4.0')) errors.push('H1 freeze/version markers are required');
+  if (document.info?.['x-abar-milestone'] !== 'H1-contract-freeze' || document.info?.version !== (h5 ? '0.8.0' : h4 ? '0.7.0' : h3 ? '0.6.0' : h2 ? '0.5.0' : '0.4.0')) errors.push('H1 freeze/version markers are required');
   if (document.info?.['x-abar-runtime-stage'] !== 'h0') errors.push('Current runtime must be honestly marked h0');
   for (const area of ['/api/v1/public', '/api/v1/auth', '/api/v1/admin']) {
     if (!document.info?.['x-abar-projected-areas']?.includes(area)) errors.push(`missing projected area marker ${area}`);
