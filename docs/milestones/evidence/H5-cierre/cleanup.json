@@ -1,0 +1,34 @@
+{
+  "scope": "Only processes/container created for this complementary validation; no existing worktree or resource cleanup.",
+  "stopped": [
+    {
+      "kind": "backend",
+      "pid": 51697,
+      "processGroup": 51697,
+      "verifiedOwnedCommand": true
+    },
+    {
+      "kind": "frontend",
+      "pid": 51698,
+      "processGroup": 51698,
+      "verifiedOwnedCommand": true
+    },
+    {
+      "kind": "chrome",
+      "pid": 51699,
+      "processGroup": 51699,
+      "verifiedOwnedCommand": true
+    }
+  ],
+  "container": {
+    "id": "91f90fb12ca775a3314f03cf0af1a934fe1d2557729117397bc996d28049d406",
+    "verifiedOwnership": true,
+    "removed": true,
+    "image": "postgres:17.11-bookworm",
+    "mounts": 0
+  },
+  "failedFixture": {
+    "removedPreviously": true,
+    "reason": "wrong compatibility label; before any test business writes"
+  }
+}

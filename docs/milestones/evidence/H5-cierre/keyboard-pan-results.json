@@ -1,0 +1,70 @@
+{
+  "browser": "Chrome for Testing127.0.6533.88 headless, fresh profile, CDP",
+  "source": "7712c45ac8c98a04644d2e6bcbdf68c5abec70ce (only added expiry tests after candidate)",
+  "origin": "http://127.0.0.1:43176",
+  "widths": [
+    360,
+    768,
+    1440
+  ],
+  "zoom": "Emulation viewport reflow at deviceScaleFactor1/visualViewport.scale1; NOT native200% zoom",
+  "measurements": [
+    {
+      "width": 360,
+      "stage": "stock-keyboard-pan",
+      "innerWidth": 360,
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "bodyScrollWidth": 360,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 0,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 326,
+          "scrollWidth": 843,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 326,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    }
+  ],
+  "keyboard": [
+    {
+      "width": 360,
+      "stage": "stock-horizontal-keyboard",
+      "reachedByTab": true,
+      "beforeScrollLeft": 0,
+      "afterScrollLeft": 400,
+      "moved": true,
+      "focus": {
+        "tag": "DIV",
+        "id": "",
+        "text": "Saldo y demanda impaga por presentación\nProducto\tPresentación\tSaldo disponible\tD",
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(8, 77, 125)",
+        "boxShadow": "none",
+        "visible": true,
+        "focusVisible": true,
+        "rect": {
+          "x": 16,
+          "y": 295.28125,
+          "width": 328,
+          "height": 606
+        }
+      }
+    }
+  ],
+  "actions": [],
+  "errors": [],
+  "completed": true
+}

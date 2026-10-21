@@ -1,0 +1,10 @@
+CAPTURE 360 movements-correct-anchor
+CAPTURE 360 history-final
+CAPTURE 360 safe-read-error
+CAPTURE 768 movements-correct-anchor
+CAPTURE 768 history-final
+CAPTURE 768 safe-read-error
+CAPTURE 1440 movements-correct-anchor
+CAPTURE 1440 history-final
+CAPTURE 1440 safe-read-error
+EXTRA_BROWSER_COMPLETE 9

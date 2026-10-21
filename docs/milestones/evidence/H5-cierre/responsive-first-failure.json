@@ -1,0 +1,16 @@
+{
+  "browser": "Chrome for Testing127.0.6533.88 headless, fresh profile, CDP",
+  "source": "7712c45ac8c98a04644d2e6bcbdf68c5abec70ce (only added expiry tests after candidate)",
+  "origin": "http://127.0.0.1:43176",
+  "widths": [
+    360,
+    768,
+    1440
+  ],
+  "zoom": "Emulation viewport reflow at deviceScaleFactor1/visualViewport.scale1; NOT native200% zoom",
+  "measurements": [],
+  "keyboard": [],
+  "actions": [],
+  "errors": [],
+  "failure": "Timed out: location.pathname!==\"/admin/login\""
+}

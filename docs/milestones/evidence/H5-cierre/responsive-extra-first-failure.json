@@ -1,0 +1,690 @@
+{
+  "browser": "Chrome for Testing127.0.6533.88 headless, fresh profile, CDP",
+  "source": "7712c45ac8c98a04644d2e6bcbdf68c5abec70ce (only added expiry tests after candidate)",
+  "origin": "http://127.0.0.1:43176",
+  "widths": [
+    360,
+    768,
+    1440
+  ],
+  "zoom": "Emulation viewport reflow at deviceScaleFactor1/visualViewport.scale1; NOT native200% zoom",
+  "measurements": [
+    {
+      "width": 360,
+      "stage": "movements-correct-anchor",
+      "innerWidth": 360,
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "bodyScrollWidth": 360,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 2907.5,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 326,
+          "scrollWidth": 843,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 326,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 360,
+      "stage": "history-final",
+      "innerWidth": 360,
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "bodyScrollWidth": 360,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 2430,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 292,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 292,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    }
+  ],
+  "keyboard": [
+    {
+      "width": 360,
+      "stage": "native-movement-select-Escape",
+      "valueUnchanged": true,
+      "focus": {
+        "tag": "SELECT",
+        "id": "movement-type",
+        "text": "Todos\nAjustes\nAperturas\nConfirmaciones de pago",
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(8, 77, 125)",
+        "boxShadow": "none",
+        "visible": true,
+        "focusVisible": true,
+        "rect": {
+          "x": 16,
+          "y": 245.09375,
+          "width": 328,
+          "height": 44
+        }
+      }
+    },
+    {
+      "width": 360,
+      "stage": "stock-tab-traversal",
+      "focused": [
+        {
+          "tag": "A",
+          "id": "",
+          "text": "Saltar al contenido",
+          "outlineStyle": "solid",
+          "outlineWidth": "3px",
+          "outlineColor": "rgb(8, 77, 125)",
+          "boxShadow": "none",
+          "visible": true,
+          "focusVisible": true,
+          "rect": {
+            "x": 16,
+            "y": 16,
+            "width": 148.53125,
+            "height": 44
+          }
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "text": "ABAR Electricidad · Administración",
+          "outlineStyle": "solid",
+          "outlineWidth": "3px",
+          "outlineColor": "rgb(255, 255, 255)",
+          "boxShadow": "none",
+          "visible": true,
+          "focusVisible": true,
+          "rect": {
+            "x": 16,
+            "y": 16,
+            "width": 270.578125,
+            "height": 44
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "text": "Cerrar sesión",
+          "outlineStyle": "solid",
+          "outlineWidth": "3px",
+          "outlineColor": "rgb(255, 255, 255)",
+          "boxShadow": "none",
+          "visible": true,
+          "focusVisible": true,
+          "rect": {
+            "x": 194.75,
+            "y": 76,
+            "width": 124.03125,
+            "height": 44
+          }
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "text": "Usuarios administradores",
+          "outlineStyle": "solid",
+          "outlineWidth": "3px",
+          "outlineColor": "rgb(8, 77, 125)",
+          "boxShadow": "none",
+          "visible": true,
+          "focusVisible": true,
+          "rect": {
+            "x": 24,
+            "y": 160,
+            "width": 200.59375,
+            "height": 44
+          }
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "text": "Pedidos",
+          "outlineStyle": "solid",
+          "outlineWidth": "3px",
+          "outlineColor": "rgb(8, 77, 125)",
+          "boxShadow": "none",
+          "visible": true,
+          "focusVisible": true,
+          "rect": {
+            "x": 232.59375,
+            "y": 160,
+            "width": 77.0078125,
+            "height": 44
+          }
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "text": "Productos",
+          "outlineStyle": "solid",
+          "outlineWidth": "3px",
+          "outlineColor": "rgb(8, 77, 125)",
+          "boxShadow": "none",
+          "visible": true,
+          "focusVisible": true,
+          "rect": {
+            "x": 24,
+            "y": 212,
+            "width": 91.2265625,
+            "height": 44
+          }
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "text": "Categorías",
+          "outlineStyle": "solid",
+          "outlineWidth": "3px",
+          "outlineColor": "rgb(8, 77, 125)",
+          "boxShadow": "none",
+          "visible": true,
+          "focusVisible": true,
+          "rect": {
+            "x": 123.2265625,
+            "y": 212,
+            "width": 97.453125,
+            "height": 44
+          }
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "text": "Stock y movimientos",
+          "outlineStyle": "solid",
+          "outlineWidth": "3px",
+          "outlineColor": "rgb(8, 77, 125)",
+          "boxShadow": "none",
+          "visible": true,
+          "focusVisible": true,
+          "rect": {
+            "x": 24,
+            "y": 264,
+            "width": 165.8984375,
+            "height": 44
+          }
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "text": "Cambiar contraseña",
+          "outlineStyle": "solid",
+          "outlineWidth": "3px",
+          "outlineColor": "rgb(8, 77, 125)",
+          "boxShadow": "none",
+          "visible": true,
+          "focusVisible": true,
+          "rect": {
+            "x": 24,
+            "y": 316,
+            "width": 163.2578125,
+            "height": 44
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "text": "Actualizar existencias",
+          "outlineStyle": "solid",
+          "outlineWidth": "3px",
+          "outlineColor": "rgb(8, 77, 125)",
+          "boxShadow": "none",
+          "visible": true,
+          "focusVisible": true,
+          "rect": {
+            "x": 16,
+            "y": 604,
+            "width": 183.84375,
+            "height": 44
+          }
+        },
+        {
+          "tag": "INPUT",
+          "id": "stock-search",
+          "text": "",
+          "outlineStyle": "solid",
+          "outlineWidth": "3px",
+          "outlineColor": "rgb(8, 77, 125)",
+          "boxShadow": "none",
+          "visible": true,
+          "focusVisible": true,
+          "rect": {
+            "x": 33,
+            "y": 726.59375,
+            "width": 294,
+            "height": 44
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "stock-unit",
+          "text": "Todas\nUnidad\nMetro\nRollo",
+          "outlineStyle": "solid",
+          "outlineWidth": "3px",
+          "outlineColor": "rgb(8, 77, 125)",
+          "boxShadow": "none",
+          "visible": true,
+          "focusVisible": true,
+          "rect": {
+            "x": 33,
+            "y": 820.1875,
+            "width": 294,
+            "height": 44
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "stock-availability",
+          "text": "Todas\nDisponible\nPocas unidades\nSin stock",
+          "outlineStyle": "solid",
+          "outlineWidth": "3px",
+          "outlineColor": "rgb(8, 77, 125)",
+          "boxShadow": "none",
+          "visible": true,
+          "focusVisible": true,
+          "rect": {
+            "x": 33,
+            "y": 428.28125,
+            "width": 294,
+            "height": 44
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "text": "Buscar",
+          "outlineStyle": "solid",
+          "outlineWidth": "3px",
+          "outlineColor": "rgb(8, 77, 125)",
+          "boxShadow": "none",
+          "visible": true,
+          "focusVisible": true,
+          "rect": {
+            "x": 33,
+            "y": 484.28125,
+            "width": 294,
+            "height": 44
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "text": "Saldo y demanda impaga por presentación\nProducto\tPresentación\tSaldo disponible\tD",
+          "outlineStyle": "solid",
+          "outlineWidth": "3px",
+          "outlineColor": "rgb(8, 77, 125)",
+          "boxShadow": "none",
+          "visible": true,
+          "focusVisible": true,
+          "rect": {
+            "x": 16,
+            "y": 295.28125,
+            "width": 328,
+            "height": 606
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "adjust-presentation",
+          "text": "Seleccione una presentación\nCable para validación de pedidos y movimientos · Uni",
+          "outlineStyle": "solid",
+          "outlineWidth": "3px",
+          "outlineColor": "rgb(8, 77, 125)",
+          "boxShadow": "none",
+          "visible": true,
+          "focusVisible": true,
+          "rect": {
+            "x": 33,
+            "y": 428.2890625,
+            "width": 294,
+            "height": 44
+          }
+        },
+        {
+          "tag": "INPUT",
+          "id": "adjust-delta",
+          "text": "",
+          "outlineStyle": "solid",
+          "outlineWidth": "3px",
+          "outlineColor": "rgb(8, 77, 125)",
+          "boxShadow": "none",
+          "visible": true,
+          "focusVisible": true,
+          "rect": {
+            "x": 33,
+            "y": 517.8828125,
+            "width": 294,
+            "height": 44
+          }
+        },
+        {
+          "tag": "TEXTAREA",
+          "id": "adjust-reason",
+          "text": "",
+          "outlineStyle": "solid",
+          "outlineWidth": "3px",
+          "outlineColor": "rgb(8, 77, 125)",
+          "boxShadow": "none",
+          "visible": true,
+          "focusVisible": true,
+          "rect": {
+            "x": 33,
+            "y": 607.4765625,
+            "width": 294,
+            "height": 80
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "roll-product",
+          "text": "Seleccione un producto\nCable para validación de pedidos y movimientos · 100 m po",
+          "outlineStyle": "solid",
+          "outlineWidth": "3px",
+          "outlineColor": "rgb(8, 77, 125)",
+          "boxShadow": "none",
+          "visible": true,
+          "focusVisible": true,
+          "rect": {
+            "x": 33,
+            "y": 428.484375,
+            "width": 294,
+            "height": 44
+          }
+        },
+        {
+          "tag": "INPUT",
+          "id": "roll-count",
+          "text": "",
+          "outlineStyle": "solid",
+          "outlineWidth": "3px",
+          "outlineColor": "rgb(8, 77, 125)",
+          "boxShadow": "none",
+          "visible": true,
+          "focusVisible": true,
+          "rect": {
+            "x": 33,
+            "y": 518.078125,
+            "width": 294,
+            "height": 44
+          }
+        },
+        {
+          "tag": "TEXTAREA",
+          "id": "roll-reason",
+          "text": "",
+          "outlineStyle": "solid",
+          "outlineWidth": "3px",
+          "outlineColor": "rgb(8, 77, 125)",
+          "boxShadow": "none",
+          "visible": true,
+          "focusVisible": true,
+          "rect": {
+            "x": 33,
+            "y": 607.671875,
+            "width": 294,
+            "height": 80
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "movement-type",
+          "text": "Todos\nAjustes\nAperturas\nConfirmaciones de pago",
+          "outlineStyle": "solid",
+          "outlineWidth": "3px",
+          "outlineColor": "rgb(8, 77, 125)",
+          "boxShadow": "none",
+          "visible": true,
+          "focusVisible": true,
+          "rect": {
+            "x": 16,
+            "y": 428.09375,
+            "width": 328,
+            "height": 44
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "movement-presentation",
+          "text": "Todas\nCable para validación de pedidos y movimientos · Unidad\nCable para validac",
+          "outlineStyle": "solid",
+          "outlineWidth": "3px",
+          "outlineColor": "rgb(8, 77, 125)",
+          "boxShadow": "none",
+          "visible": true,
+          "focusVisible": true,
+          "rect": {
+            "x": 16,
+            "y": 521.6875,
+            "width": 328,
+            "height": 44
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "text": "Filtrar historial",
+          "outlineStyle": "solid",
+          "outlineWidth": "3px",
+          "outlineColor": "rgb(8, 77, 125)",
+          "boxShadow": "none",
+          "visible": true,
+          "focusVisible": true,
+          "rect": {
+            "x": 16,
+            "y": 577.6875,
+            "width": 328,
+            "height": 44
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "text": "Movimientos auditables\nFecha\tTipo\tMotivo\tCambios\n2026-10-21T14:13:27.950Z\tConfir",
+          "outlineStyle": "solid",
+          "outlineWidth": "3px",
+          "outlineColor": "rgb(8, 77, 125)",
+          "boxShadow": "none",
+          "visible": true,
+          "focusVisible": true,
+          "rect": {
+            "x": 16,
+            "y": 564.1875,
+            "width": 328,
+            "height": 337.125
+          }
+        },
+        {
+          "tag": "BODY",
+          "id": "",
+          "text": "Saltar al contenido\nABAR Electricidad · Administración\nComplement validation\nCer",
+          "outlineStyle": "none",
+          "outlineWidth": "0px",
+          "outlineColor": "rgb(32, 38, 44)",
+          "boxShadow": "none",
+          "visible": true,
+          "focusVisible": false,
+          "rect": {
+            "x": 0,
+            "y": -2806,
+            "width": 360,
+            "height": 3807.3125
+          }
+        }
+      ],
+      "scrollWrapperReached": true,
+      "scrollWrappers": [
+        {
+          "tabIndex": -1,
+          "role": null,
+          "clientWidth": 326,
+          "scrollWidth": 843
+        },
+        {
+          "tabIndex": -1,
+          "role": null,
+          "clientWidth": 326,
+          "scrollWidth": 704
+        }
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "width": 360,
+      "action": "stock-controls-measured",
+      "controls": [
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "text": "Actualizar existencias",
+          "width": 183.84375,
+          "height": 44,
+          "withinDocument": true,
+          "visible": true
+        },
+        {
+          "id": "stock-search",
+          "tag": "INPUT",
+          "text": "",
+          "width": 294,
+          "height": 44,
+          "withinDocument": true,
+          "visible": true
+        },
+        {
+          "id": "stock-unit",
+          "tag": "SELECT",
+          "text": "Todas\nUnidad\nMetro\nRollo",
+          "width": 294,
+          "height": 44,
+          "withinDocument": true,
+          "visible": true
+        },
+        {
+          "id": "stock-availability",
+          "tag": "SELECT",
+          "text": "Todas\nDisponible\nPocas unidades\nSin stock",
+          "width": 294,
+          "height": 44,
+          "withinDocument": true,
+          "visible": true
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "text": "Buscar",
+          "width": 294,
+          "height": 44,
+          "withinDocument": true,
+          "visible": true
+        },
+        {
+          "id": "adjust-presentation",
+          "tag": "SELECT",
+          "text": "Seleccione una presentación\nCable para valida",
+          "width": 294,
+          "height": 44,
+          "withinDocument": true,
+          "visible": true
+        },
+        {
+          "id": "adjust-delta",
+          "tag": "INPUT",
+          "text": "",
+          "width": 294,
+          "height": 44,
+          "withinDocument": true,
+          "visible": true
+        },
+        {
+          "id": "adjust-reason",
+          "tag": "TEXTAREA",
+          "text": "",
+          "width": 294,
+          "height": 80,
+          "withinDocument": true,
+          "visible": true
+        },
+        {
+          "id": "roll-product",
+          "tag": "SELECT",
+          "text": "Seleccione un producto\nCable para validación ",
+          "width": 294,
+          "height": 44,
+          "withinDocument": true,
+          "visible": true
+        },
+        {
+          "id": "roll-count",
+          "tag": "INPUT",
+          "text": "",
+          "width": 294,
+          "height": 44,
+          "withinDocument": true,
+          "visible": true
+        },
+        {
+          "id": "roll-reason",
+          "tag": "TEXTAREA",
+          "text": "",
+          "width": 294,
+          "height": 80,
+          "withinDocument": true,
+          "visible": true
+        },
+        {
+          "id": "movement-type",
+          "tag": "SELECT",
+          "text": "Todos\nAjustes\nAperturas\nConfirmaciones de pag",
+          "width": 328,
+          "height": 44,
+          "withinDocument": true,
+          "visible": true
+        },
+        {
+          "id": "movement-presentation",
+          "tag": "SELECT",
+          "text": "Todas\nCable para validación de pedidos y movi",
+          "width": 328,
+          "height": 44,
+          "withinDocument": true,
+          "visible": true
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "text": "Filtrar historial",
+          "width": 328,
+          "height": 44,
+          "withinDocument": true,
+          "visible": true
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "failure": "Timed out: document.readyState===\"complete\" && !!document.querySelector(\"h1\")"
+}
