@@ -18,6 +18,7 @@ import { AuthSessionService } from '../core/auth/auth-session.service';
     <div class="admin-shell">
       <nav class="admin-nav" aria-label="Navegación administrativa">
         <a routerLink="/admin/usuarios" routerLinkActive="active" ariaCurrentWhenActive="page">Usuarios administradores</a>
+        <a routerLink="/admin/pedidos" routerLinkActive="active" ariaCurrentWhenActive="page">Pedidos</a>
         <a routerLink="/admin/productos">Productos</a>
         <a routerLink="/admin/categorias">Categorías</a>
         <a routerLink="/admin/stock">Stock y movimientos</a>

@@ -33,6 +33,35 @@ describe('OrderResultPageComponent', () => {
   });
 });
 
+describe('H5 public terminal order states', () => {
+  for (const state of [
+    { orderStatus: 'PREPARING' as const, paymentStatus: 'PAID' as const, label: 'Pagado (confirmación manual)' },
+    { orderStatus: 'CANCELLED' as const, paymentStatus: 'PENDING' as const, label: 'Cancelado' },
+  ]) {
+    it(`shows ${state.label} and never offers another payment attempt`, async () => {
+      const view: PublicOrderView = {
+        orderId: 'order-terminal', orderNumber: 'AB-TERM', createdAt: '2026-10-21T12:00:00Z', items: [],
+        subtotal: { amountMinor: '1000', currency: 'ARS' }, deliveryFee: { amountMinor: '0', currency: 'ARS' }, total: { amountMinor: '1000', currency: 'ARS' },
+        deliveryMode: 'PICKUP', orderStatus: state.orderStatus, paymentStatus: state.paymentStatus,
+        currentAttempt: { id: 'attempt-1', methodCode: 'DEMO_SIMULATION', status: 'APPROVED', sequence: 1, createdAt: '2026-10-21T12:00:00Z', demoMode: true },
+        nextActions: ['VIEW_ORDER', 'LOOKUP_ORDER', 'RETRY_PAYMENT'], demoMode: true,
+      };
+      const api = { getOrder: vi.fn(() => of(view)), paymentMethods: vi.fn(), terms: vi.fn() };
+      TestBed.configureTestingModule({ imports: [OrderResultPageComponent], providers: [provideRouter([]),
+        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => 'order-terminal' } } } },
+        { provide: OrdersApiService, useValue: api },
+        { provide: OrderAccessSessionService, useValue: { get: () => ({ orderId: 'order-terminal', accessToken: 'opaque', accessExpiresAt: '2099-01-01T00:00:00Z' }) } },
+      ] });
+      const fixture = TestBed.createComponent(OrderResultPageComponent);
+      await fixture.whenStable(); fixture.detectChanges();
+      expect(fixture.nativeElement.textContent).toContain(state.label);
+      expect(fixture.nativeElement.querySelector('.attempt-panel')).toBeNull();
+      expect(api.paymentMethods).not.toHaveBeenCalled();
+      TestBed.resetTestingModule();
+    });
+  }
+});
+
 // Exercise native option registration and the public retry action, not signal state alone.
 describe('R3 asynchronous method selection', () => {
   const orderId = '40000000-0000-4000-8000-000000000001';

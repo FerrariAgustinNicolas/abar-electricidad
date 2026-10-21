@@ -17,7 +17,7 @@ import { OrderLookupResponse } from '../../core/orders/orders.models';
         <button class="primary" type="submit" [disabled]="loading() || form.invalid">{{ loading() ? 'Buscando…' : 'Consultar estado' }}</button>
       </form>
       @if (result(); as current) { <section class="result" aria-live="polite" aria-labelledby="lookup-result-title"><h2 id="lookup-result-title">Pedido {{ current.orderNumber }}</h2>
-        <p>Estado del pedido: <strong>Recibido</strong></p><p>Estado comercial del pago: <strong>{{ current.paymentStatus === 'PENDING' ? 'Pendiente de confirmación' : 'Rechazado; puede reintentarse' }}</strong></p>
+        <p>Estado del pedido: <strong>{{ orderLabel(current.orderStatus) }}</strong></p><p>Estado comercial del pago: <strong>{{ paymentLabel(current.paymentStatus) }}</strong></p>
         <p>Resultado del intento demo: <strong>{{ attemptLabel(current.currentAttemptStatus) }}</strong></p><p>Fecha: <time [attr.datetime]="current.createdAt">{{ current.createdAt }}</time></p>
         <p>La consulta no entrega una credencial ni permite cambios. Si perdiste el acceso, contactá al comercio por los canales informados en tu pedido.</p>
       </section> }
@@ -40,6 +40,8 @@ export class OrderLookupPageComponent {
   readonly result = signal<OrderLookupResponse | null>(null);
 
   attemptLabel(status: OrderLookupResponse['currentAttemptStatus']): string { return status === 'APPROVED' ? 'Aprobado en la simulación' : status === 'REJECTED' ? 'Rechazado en la simulación' : 'Pendiente en la simulación'; }
+  orderLabel(status: OrderLookupResponse['orderStatus']): string { return ({ RECEIVED: 'Recibido', PREPARING: 'En preparación', READY: 'Listo para retirar o coordinar', DELIVERED: 'Entregado', CANCELLED: 'Cancelado' })[status]; }
+  paymentLabel(status: OrderLookupResponse['paymentStatus']): string { return status === 'PAID' ? 'Pagado (confirmación manual)' : status === 'REJECTED' ? 'Rechazado' : 'Pendiente de confirmación'; }
 
   async lookup(): Promise<void> {
     if (this.loading() || this.form.invalid) { this.form.markAllAsTouched(); return; }
