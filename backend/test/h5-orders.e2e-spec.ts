@@ -217,6 +217,33 @@ describe('H5 on a newly owned PostgreSQL 17 fixture (required, never skipped)', 
     other = await session();
     const stockRows: any = await stock.list({ cookieHeader: `abar_admin_session=${actor.token}` }); expect(stockRows.items.length).toBeGreaterThan(0);
   });
+  it.each(['absolute', 'idle'] as const)('H5 complementary temporal %s expiry rejects confirmation and cancellation without business writes', async expiry => {
+    const expired = await session(); const p = await product(); const server = app.getHttpServer();
+    const pending = await Promise.all([order([{ ...p[0], quantity: 1 }]), order([{ ...p[0], quantity: 1 }])]);
+    const ids = pending.map(o => o.id); const paymentIds = pending.map(o => o.paymentId);
+    const state = async () => hash({
+      orders: await prisma.order.findMany({ where: { id: { in: ids } }, orderBy: { id: 'asc' } }),
+      payments: await prisma.payment.findMany({ where: { id: { in: paymentIds } }, orderBy: { id: 'asc' } }),
+      balances: await balances(p.map(x => x.id)),
+      operations: await prisma.stockOperation.findMany({ where: { orderId: { in: ids } }, orderBy: { id: 'asc' } }),
+      entries: await prisma.stockEntry.findMany({ where: { presentationId: { in: p.map(x => x.id) } }, orderBy: [{ operationId: 'asc' }, { presentationId: 'asc' }] }),
+      events: await prisma.orderEvent.findMany({ where: { orderId: { in: ids } }, orderBy: { id: 'asc' } }),
+      jobs: await prisma.notificationJob.findMany({ where: { orderId: { in: ids } }, orderBy: { id: 'asc' } }),
+      replays: await prisma.orderIdempotencyKey.findMany({ where: { orderId: { in: ids } }, orderBy: { id: 'asc' } }),
+    });
+    await request(server).get(`/api/v1/admin/orders/${pending[0].id}`).set('Cookie', `abar_admin_session=${expired.token}`).expect(200);
+    const now = Date.now(); const absoluteExpiresAt = new Date(now + (expiry === 'absolute' ? -1000 : 3600000));
+    await prisma.authSession.update({ where: { id: expired.sessionId }, data: { lastActivityAt: new Date(now - 120000), absoluteExpiresAt, idleExpiresAt: new Date(now - 2000) } });
+    const row = await prisma.authSession.findUniqueOrThrow({ where: { id: expired.sessionId } });
+    expect(row.revokedAt).toBeNull(); expect(row.idleExpiresAt.getTime()).toBeLessThan(Date.now());
+    expect(row.absoluteExpiresAt.getTime() < Date.now()).toBe(expiry === 'absolute');
+    const before = await state(); const headers = { Cookie: `abar_admin_session=${expired.token}`, Origin: origin, 'X-CSRF-Token': expired.csrf };
+    const confirmation = await request(server).post(`/api/v1/admin/orders/${pending[0].id}/payment-confirmation`).set(headers).set('Idempotency-Key', key()).send({ expectedVersion: 1, attemptId: pending[0].attemptId, confirmedAmount: { amountMinor: pending[0].totalMinor.toString(), currency: 'ARS' } }).expect(401);
+    expect(confirmation.body.code).toBe('SESSION_EXPIRED'); expect(await state()).toBe(before);
+    const cancellation = await request(server).post(`/api/v1/admin/orders/${pending[1].id}/cancel`).set(headers).set('Idempotency-Key', key()).send({ expectedVersion: 1, reason: 'Expired session must not cancel' }).expect(401);
+    expect(cancellation.body.code).toBe('SESSION_EXPIRED'); expect(await state()).toBe(before);
+    console.log('H5 temporal expiry invariant', { expiry, confirmationStatus: confirmation.status, cancellationStatus: cancellation.status, beforeHash: before, afterHash: await state(), businessStateUnchanged: true });
+  });
   it('Independent public-interface probe: HTTP confirmation replay, rejected side effects, transitions and notes privacy', async () => {
     const p = await product(); const o = await order([{ ...p[0], quantity: 2 }]);
     const server = app.getHttpServer(), path = `/api/v1/admin/orders/${o.id}`;
