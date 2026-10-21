@@ -1,0 +1,105 @@
+
+> abar-frontend@0.1.0 test
+> ng test --watch=false
+
+❯ Building...
+✔ Building...
+Initial chunk files                                                  | Names                                                             |  Raw size
+chunk-XDE3KZ64.js                                                    | -                                                                 |  65.62 kB | 
+chunk-UDJWJKBC.js                                                    | -                                                                 |  62.55 kB | 
+chunk-C2M37P3C.js                                                    | -                                                                 |  60.82 kB | 
+chunk-J7WIF2UZ.js                                                    | -                                                                 |  60.38 kB | 
+chunk-XYFP4336.js                                                    | -                                                                 |  47.73 kB | 
+chunk-D52CJG5F.js                                                    | -                                                                 |  35.23 kB | 
+chunk-QOKOJ3TL.js                                                    | -                                                                 |  34.75 kB | 
+chunk-PVROFAHO.js                                                    | -                                                                 |  32.96 kB | 
+chunk-SGVEEE2J.js                                                    | -                                                                 |  31.79 kB | 
+chunk-HMJS5C64.js                                                    | -                                                                 |  24.61 kB | 
+chunk-NBRTRBAW.js                                                    | -                                                                 |  16.81 kB | 
+chunk-7JZQBMRV.js                                                    | -                                                                 |  13.39 kB | 
+spec-app-features-admin-catalog-admin-stock-page.component.js        | spec-app-features-admin-catalog-admin-stock-page.component        |  13.38 kB | 
+spec-app-features-admin-catalog-admin-product-form-page.component.js | spec-app-features-admin-catalog-admin-product-form-page.component |  12.90 kB | 
+spec-app-features-orders-order-result-page.component.js              | spec-app-features-orders-order-result-page.component              |  11.08 kB | 
+spec-app-features-checkout-checkout-page.component.js                | spec-app-features-checkout-checkout-page.component                |  10.89 kB | 
+spec-app-features-cart-cart-page.component.js                        | spec-app-features-cart-cart-page.component                        |  10.60 kB | 
+chunk-2EFP3HPQ.js                                                    | -                                                                 |  10.45 kB | 
+spec-app-features-admin-admin-placeholder-page.component.js          | spec-app-features-admin-admin-placeholder-page.component          |   9.38 kB | 
+chunk-FIXNZAKD.js                                                    | -                                                                 |   7.88 kB | 
+spec-app-features-auth-change-password-page.component.js             | spec-app-features-auth-change-password-page.component             |   7.69 kB | 
+spec-app-core-auth-auth-session.service.js                           | spec-app-core-auth-auth-session.service                           |   7.36 kB | 
+chunk-AWDX2LTT.js                                                    | -                                                                 |   7.07 kB | 
+styles.css                                                           | styles                                                            |   6.64 kB | 
+spec-app-core-auth-auth-api.service.js                               | spec-app-core-auth-auth-api.service                               |   6.34 kB | 
+spec-app-features-admin-orders-admin-order-detail-page.component.js  | spec-app-features-admin-orders-admin-order-detail-page.component  |   5.83 kB | 
+spec-app-features-auth-login-placeholder-page.component.js           | spec-app-features-auth-login-placeholder-page.component           |   5.75 kB | 
+chunk-HGEZJ45M.js                                                    | -                                                                 |   5.52 kB | 
+chunk-5HJ7JAKU.js                                                    | -                                                                 |   5.40 kB | 
+chunk-L5OEOBS4.js                                                    | -                                                                 |   4.79 kB | 
+chunk-RSTWSNOR.js                                                    | -                                                                 |   4.75 kB | 
+spec-app-app.component.js                                            | spec-app-app.component                                            |   4.66 kB | 
+chunk-743YQ7EG.js                                                    | -                                                                 |   4.60 kB | 
+spec-app-features-catalog-public-catalog-acceptance.js               | spec-app-features-catalog-public-catalog-acceptance               |   4.59 kB | 
+spec-app-core-cart-cart-state.service.js                             | spec-app-core-cart-cart-state.service                             |   3.95 kB | 
+spec-app-core-catalog-admin-catalog-api.service.js                   | spec-app-core-catalog-admin-catalog-api.service                   |   3.70 kB | 
+spec-app-features-catalog-product-detail-page.component.js           | spec-app-features-catalog-product-detail-page.component           |   3.55 kB | 
+chunk-2YV4IFQ5.js                                                    | -                                                                 |   3.27 kB | 
+chunk-SVGEZROV.js                                                    | -                                                                 |   3.09 kB | 
+spec-app-layouts-skip-links.js                                       | spec-app-layouts-skip-links                                       |   2.95 kB | 
+spec-app-features-admin-catalog-admin-categories-page.component.js   | spec-app-features-admin-catalog-admin-categories-page.component   |   2.69 kB | 
+spec-app-core-orders-orders-api.service.js                           | spec-app-core-orders-orders-api.service                           |   2.66 kB | 
+spec-app-core-catalog-public-catalog-api.service.js                  | spec-app-core-catalog-public-catalog-api.service                  |   2.55 kB | 
+spec-app-shared-ui-health-status.component.js                        | spec-app-shared-ui-health-status.component                        |   2.53 kB | 
+spec-app-features-admin-orders-admin-orders-api.service.js           | spec-app-features-admin-orders-admin-orders-api.service           |   2.41 kB | 
+chunk-NGJWMZRJ.js                                                    | -                                                                 |   2.40 kB | 
+spec-app-features-admin-orders-admin-orders-list-page.component.js   | spec-app-features-admin-orders-admin-orders-list-page.component   |   2.06 kB | 
+chunk-MFVTBF7X.js                                                    | -                                                                 |   1.98 kB | 
+spec-app-core-cart-public-checkout-api.service.js                    | spec-app-core-cart-public-checkout-api.service                    |   1.88 kB | 
+chunk-24LQOFR3.js                                                    | -                                                                 |   1.77 kB | 
+spec-app-core-orders-checkout-handoff.service.js                     | spec-app-core-orders-checkout-handoff.service                     |   1.77 kB | 
+spec-app-core-orders-order-access-session.service.js                 | spec-app-core-orders-order-access-session.service                 |   1.66 kB | 
+spec-app-features-orders-order-lookup-page.component.js              | spec-app-features-orders-order-lookup-page.component              |   1.58 kB | 
+chunk-2NEVLUYC.js                                                    | -                                                                 |   1.53 kB | 
+chunk-KR7CXDCF.js                                                    | -                                                                 |   1.45 kB | 
+chunk-KV56PN3Z.js                                                    | -                                                                 |   1.31 kB | 
+chunk-WH275QL5.js                                                    | -                                                                 |   1.26 kB | 
+init-testbed.js                                                      | init-testbed                                                      |   1.21 kB | 
+spec-app-app.routes.js                                               | spec-app-app.routes                                               |   1.20 kB | 
+vitest-mock-patch.js                                                 | vitest-mock-patch                                                 | 974 bytes | 
+chunk-Q5TEDZR6.js                                                    | -                                                                 | 948 bytes | 
+spec-app-features-catalog-format-money.js                            | spec-app-features-catalog-format-money                            | 668 bytes | 
+
+                                                                     | Initial total                                                     | 713.20 kB
+
+Lazy chunk files                                                     | Names                                                             |  Raw size
+chunk-4OJU2PXN.js                                                    | catalog-page-component                                            |  32.22 kB | 
+chunk-YGXJNWTZ.js                                                    | admin-products-page-component                                     |  26.91 kB | 
+chunk-LD25DAM5.js                                                    | home-page-component                                               |  24.91 kB | 
+chunk-CJPIW35L.js                                                    | status-page-component                                             |   1.67 kB | 
+chunk-G3NOYZOX.js                                                    | admin-product-form-page-component                                 | 354 bytes | 
+chunk-E5XUT6VC.js                                                    | auth-routes                                                       | 351 bytes | 
+chunk-VZ7BOMDY.js                                                    | checkout-page-component                                           | 322 bytes | 
+chunk-4QPD5HJE.js                                                    | cart-page-component                                               | 314 bytes | 
+chunk-SGVYGJMP.js                                                    | admin-order-detail-page-component                                 | 308 bytes | 
+chunk-ZYMN3MKA.js                                                    | admin-orders-list-page-component                                  | 306 bytes | 
+chunk-LJFCJ34C.js                                                    | admin-categories-page-component                                   | 306 bytes | 
+chunk-AGP6IWTB.js                                                    | admin-stock-page-component                                        | 296 bytes | 
+chunk-PJ3YAA2L.js                                                    | product-detail-page-component                                     | 272 bytes | 
+chunk-B4MDKI74.js                                                    | order-result-page-component                                       | 268 bytes | 
+chunk-YQI6KMES.js                                                    | admin-placeholder-page-component                                  | 248 bytes | 
+...and 1 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [1.183 seconds] - 2026-10-21T13:27:50.164Z
+
+
+ RUN  v4.1.11 <worktree>/frontend
+
+(node:39983) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:39979) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+ Test Files  29 passed (29)
+      Tests  131 passed (131)
+   Start at  10:27:50
+   Duration  1.52s (transform 804ms, setup 1.94s, import 1.59s, tests 2.36s, environment 12.37s)
+

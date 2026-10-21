@@ -21,8 +21,8 @@ interface AttemptIntent { body: CreateAttemptRequest; key: string }
       @if (needsLookup()) { <section class="notice"><p>No contamos con una credencial vigente para consultar este pedido. La consulta mínima no restaura el acceso privado.</p><a routerLink="/consultar-pedido">Consultar por número y contacto</a></section> }
       @if (order(); as current) {
         <section class="summary" aria-labelledby="order-summary-title" aria-live="polite"><h2 id="order-summary-title">Pedido {{ current.orderNumber }}</h2>
-          <p>Estado del pedido: <strong>Recibido</strong></p>
-          <p>Estado comercial del pago: <strong>{{ current.paymentStatus === 'PENDING' ? 'Pendiente de confirmación' : 'Rechazado; puede reintentarse' }}</strong></p>
+          <p>Estado del pedido: <strong>{{ orderLabel(current.orderStatus) }}</strong></p>
+          <p>Estado comercial del pago: <strong>{{ paymentLabel(current.paymentStatus) }}</strong></p>
           <p>Resultado del intento demo: <strong>{{ attemptLabel(current.currentAttempt.status) }}</strong></p>
           @if (current.currentAttempt.status === 'APPROVED') { <p class="notice">El intento fue aprobado en la simulación. Esto no confirma un cobro ni cambia el pedido de Recibido.</p> }
           @if (current.currentAttempt.status === 'REJECTED') { <p class="notice">El intento demo fue rechazado. El pedido se conserva y el pago sigue sin confirmación comercial.</p> }
@@ -31,7 +31,7 @@ interface AttemptIntent { body: CreateAttemptRequest; key: string }
           <dl><div><dt>Subtotal</dt><dd>{{ formatMoney(current.subtotal.amountMinor) }}</dd></div><div><dt>Entrega</dt><dd>{{ formatMoney(current.deliveryFee.amountMinor) }}</dd></div><div class="total"><dt>Total solicitado</dt><dd>{{ formatMoney(current.total.amountMinor) }}</dd></div></dl>
           <p class="notice">Los importes corresponden al pedido recibido. H4 no confirma cobros ni garantiza existencias futuras.</p>
         </section>
-        @if (current.nextActions.includes('RETRY_PAYMENT') && !needsLookup()) {
+        @if (canRetryPayment() && !needsLookup()) {
           <section class="attempt-panel" aria-labelledby="attempt-title"><h2 id="attempt-title">Nuevo intento demo</h2><p>Elegí solo un método disponible para este pedido. No ingreses datos de tarjeta ni bancarios.</p>
             @if (methodsLoading()) { <p role="status">Cargando métodos disponibles…</p> }
             @if (methodsError()) { <p class="error" role="alert">No pudimos cargar los métodos demo.</p><button type="button" (click)="loadMethods()" [disabled]="attemptBusy()">Reintentar métodos</button> }
@@ -76,6 +76,9 @@ export class OrderResultPageComponent {
 
   formatMoney = formatMoney;
   attemptLabel(status: PaymentAttemptStatus): string { return status === 'APPROVED' ? 'Aprobado en la simulación' : status === 'REJECTED' ? 'Rechazado en la simulación' : 'Pendiente en la simulación'; }
+  orderLabel(status: PublicOrderView['orderStatus']): string { return ({ RECEIVED: 'Recibido', PREPARING: 'En preparación', READY: 'Listo para retirar o coordinar', DELIVERED: 'Entregado', CANCELLED: 'Cancelado' })[status]; }
+  paymentLabel(status: PublicOrderView['paymentStatus']): string { return status === 'PAID' ? 'Pagado (confirmación manual)' : status === 'REJECTED' ? 'Rechazado' : 'Pendiente de confirmación'; }
+  canRetryPayment(): boolean { const current = this.order(); return !!current && current.orderStatus === 'RECEIVED' && current.paymentStatus !== 'PAID' && current.nextActions.includes('RETRY_PAYMENT'); }
   unitLabel(item: PublicOrderView['items'][number]): string { return item.unit === 'UNIT' ? 'unidad' : item.unit === 'METER' ? 'metro' : `rollo${item.rollLengthMeters ? ` de ${item.rollLengthMeters} m` : ''}`; }
 
   async loadOrder(): Promise<void> {
@@ -88,13 +91,13 @@ export class OrderResultPageComponent {
       this.order.set(result);
       this.needsLookup.set(false);
       this.selectedMethod.set(result.currentAttempt.methodCode);
-      if (result.nextActions.includes('RETRY_PAYMENT')) await this.loadMethods(result.deliveryMode);
+      if (this.canRetryPayment()) await this.loadMethods(result.deliveryMode);
     } catch { this.error.set('No pudimos consultar el pedido con la credencial disponible. Podés usar la consulta mínima.'); this.needsLookup.set(true); }
     finally { this.loading.set(false); }
   }
 
   async loadMethods(deliveryMode = this.order()?.deliveryMode): Promise<void> {
-    if (!deliveryMode || this.attemptBusy() || this.attemptUnknown()) return;
+    if (!deliveryMode || !this.canRetryPayment() || this.attemptBusy() || this.attemptUnknown()) return;
     const revision = ++this.methodsRevision;
     this.methodsLoading.set(true); this.methodsError.set(false);
     try {
@@ -120,7 +123,7 @@ export class OrderResultPageComponent {
   async retryAttempt(): Promise<void> {
     const order = this.order(); const orderId = order?.orderId;
     const session = orderId ? this.access.get(orderId) : null;
-    if (!order || !orderId || !session || this.attemptBusy() || !order.nextActions.includes('RETRY_PAYMENT')) return;
+    if (!order || !orderId || !session || this.attemptBusy() || !this.canRetryPayment()) return;
     const method = this.methods().find((item) => item.code === this.selectedMethod() && item.deliveryModes.includes(order.deliveryMode));
     if (!this.intent && (this.methodsLoading() || this.methodsError() || !method ||
         (method.code === 'DEMO_SIMULATION' && !this.terms()?.simulationEnabled))) {

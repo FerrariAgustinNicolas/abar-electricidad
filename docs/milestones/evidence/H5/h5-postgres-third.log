@@ -1,0 +1,148 @@
+
+> abar-backend@0.1.0 test:e2e
+> node scripts/copy-catalog-contract.mjs && jest --config ./test/jest-e2e.json --runInBand --testPathPatterns=h5-orders.e2e-spec.ts
+
+  console.log
+    H5-Q01 historical hash 420c929dd0b9f0e5016c2e491c39664f1f5ce8055046f6dbdb74c2dc7b1d81a9
+
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:89:15)
+
+FAIL test/h5-orders.e2e-spec.ts
+  ● H5 on a newly owned PostgreSQL 17 fixture (required, never skipped) › H5-Q02/Q03 simulation alone leaves stock intact; full manual confirmation debits UNIT/METER/ROLL once at historical prices
+
+    AdminUsersRouteException: SESSION_EXPIRED
+
+      83 | }>;
+      84 |
+    > 85 | function fail(code: AdminUsersErrorCode): never { throw new AdminUsersRouteException(code); }
+         |                                                         ^
+      86 | function isRecord(value: unknown): value is Record<string, unknown> {
+      87 |   if (value === null || typeof value !== 'object' || Array.isArray(value)) return false;
+      88 |   const prototype = Object.getPrototypeOf(value);
+
+      at fail (src/auth/admin-users.service.ts:85:57)
+      at readSessionToken (src/auth/admin-users.service.ts:132:42)
+      at AdminUsersService.authenticate (src/auth/admin-users.service.ts:356:19)
+      at AdminUsersService.authorizeCatalog (src/auth/admin-users.service.ts:214:29)
+      at AdminOrdersService.mutate (src/orders/admin-orders.service.ts:115:36)
+      at confirm (test/h5-orders.e2e-spec.ts:70:71)
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:96:31)
+
+  ● H5 on a newly owned PostgreSQL 17 fixture (required, never skipped) › H5-Q04/Q05 rejects invalid amount, historical/rejected/pending attempts and rolls back insufficient multi-line stock
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 409
+    Received: 401
+
+      71 |   const balances = async (ids: string[]) => prisma.stockBalance.findMany({ where: { presentationId: { in: ids } }, orderBy: { presentationId: 'asc' } });
+      72 |   const hash = (v: any) => digest(JSON.stringify(v, (_, value) => typeof value === 'bigint' ? value.toString() : value));
+    > 73 |   async function reject(p: Promise<unknown>, status: number, code?: string) { try { await p; throw Error('Expected rejection'); } catch (e: any) { expect(e.getStatus?.()).toBe(status); if (code) expect(e.message).toBe(code); } }
+         |                                                                                                                                                                            ^
+      74 |
+      75 |   it('H5-Q01 deploys seven migrations and upgrades populated H4 without changing historical bytes', async () => {
+      76 |     const ledger: any[] = await prisma.$queryRaw`SELECT migration_name FROM _prisma_migrations WHERE finished_at IS NOT NULL ORDER BY migration_name`; expect(ledger).toHaveLength(7);
+
+      at reject (test/h5-orders.e2e-spec.ts:73:172)
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:104:5)
+
+  ● H5 on a newly owned PostgreSQL 17 fixture (required, never skipped) › H5-Q06 same key replays exact response; changed body/new key/other actor cannot debit twice
+
+    AdminUsersRouteException: SESSION_EXPIRED
+
+      83 | }>;
+      84 |
+    > 85 | function fail(code: AdminUsersErrorCode): never { throw new AdminUsersRouteException(code); }
+         |                                                         ^
+      86 | function isRecord(value: unknown): value is Record<string, unknown> {
+      87 |   if (value === null || typeof value !== 'object' || Array.isArray(value)) return false;
+      88 |   const prototype = Object.getPrototypeOf(value);
+
+      at fail (src/auth/admin-users.service.ts:85:57)
+      at readSessionToken (src/auth/admin-users.service.ts:132:42)
+      at AdminUsersService.authenticate (src/auth/admin-users.service.ts:356:19)
+      at AdminUsersService.authorizeCatalog (src/auth/admin-users.service.ts:214:29)
+      at AdminOrdersService.mutate (src/orders/admin-orders.service.ts:115:36)
+      at confirm (test/h5-orders.e2e-spec.ts:70:71)
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:110:120)
+
+  ● H5 on a newly owned PostgreSQL 17 fixture (required, never skipped) › H5-Q07 two admins competing for the last unit really wait on PostgreSQL locks; only one pays
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 2
+    Received:    0
+
+      118 |     let waiters = 0;
+      119 |     try { for (let i = 0; i < 100; i++) { const r = await blocker.query(`SELECT count(*)::int count FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND pid<>pg_backend_pid()`); waiters = r.rows[0].count; if (waiters >= 2) break; await new Promise(r => setTimeout(r, 20)); } } finally { await blocker.query('COMMIT'); await blocker.end(); }
+    > 120 |     const results = await Promise.all(promises); expect(waiters).toBeGreaterThanOrEqual(2); expect(results.filter(x => x.ok)).toHaveLength(1); expect((await balances([p[0].id]))[0].availableQuantity).toBe(0); expect(await prisma.payment.count({ where: { orderId: { in: [a.id, b.id] }, status: 'PAID' } })).toBe(1); console.log('H5-Q07 observed lock waiters', waiters);
+          |                                                                  ^
+      121 |   });
+      122 |   it('H5-Q09 failure in operation, event or job causes total rollback', async () => {
+      123 |     for (const table of ['StockOperation', 'OrderEvent', 'NotificationJob']) {
+
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:120:66)
+
+  ● H5 on a newly owned PostgreSQL 17 fixture (required, never skipped) › H5-Q09 failure in operation, event or job causes total rollback
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 503
+    Received: 401
+
+      71 |   const balances = async (ids: string[]) => prisma.stockBalance.findMany({ where: { presentationId: { in: ids } }, orderBy: { presentationId: 'asc' } });
+      72 |   const hash = (v: any) => digest(JSON.stringify(v, (_, value) => typeof value === 'bigint' ? value.toString() : value));
+    > 73 |   async function reject(p: Promise<unknown>, status: number, code?: string) { try { await p; throw Error('Expected rejection'); } catch (e: any) { expect(e.getStatus?.()).toBe(status); if (code) expect(e.message).toBe(code); } }
+         |                                                                                                                                                                            ^
+      74 |
+      75 |   it('H5-Q01 deploys seven migrations and upgrades populated H4 without changing historical bytes', async () => {
+      76 |     const ledger: any[] = await prisma.$queryRaw`SELECT migration_name FROM _prisma_migrations WHERE finished_at IS NOT NULL ORDER BY migration_name`; expect(ledger).toHaveLength(7);
+
+      at reject (test/h5-orders.e2e-spec.ts:73:172)
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:127:13)
+
+  ● H5 on a newly owned PostgreSQL 17 fixture (required, never skipped) › H5-Q10/Q11/Q12 unpaid cancellation preserves stock; paid transitions cannot cancel or debit again
+
+    AdminUsersRouteException: SESSION_EXPIRED
+
+      83 | }>;
+      84 |
+    > 85 | function fail(code: AdminUsersErrorCode): never { throw new AdminUsersRouteException(code); }
+         |                                                         ^
+      86 | function isRecord(value: unknown): value is Record<string, unknown> {
+      87 |   if (value === null || typeof value !== 'object' || Array.isArray(value)) return false;
+      88 |   const prototype = Object.getPrototypeOf(value);
+
+      at fail (src/auth/admin-users.service.ts:85:57)
+      at readSessionToken (src/auth/admin-users.service.ts:132:42)
+      at AdminUsersService.authenticate (src/auth/admin-users.service.ts:356:19)
+      at AdminUsersService.authorizeCatalog (src/auth/admin-users.service.ts:214:29)
+      at AdminOrdersService.mutate (src/orders/admin-orders.service.ts:115:36)
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:135:34)
+
+  ● H5 on a newly owned PostgreSQL 17 fixture (required, never skipped) › H5-Q13/Q14 real H1 auth and HTTP privacy/error envelopes fail closed
+
+    expected 403 "Forbidden", got 401 "Unauthorized"
+
+      143 |     const p = await product(); const o = await order([{ ...p[0], quantity: 1 }]); const server = app.getHttpServer(); const path = `/api/v1/admin/orders/${o.id}`;
+      144 |     await request(server).get(path).set('X-Order-Access-Token', o.token).expect(401);
+    > 145 |     await request(server).post(`${path}/payment-confirmation`).set('Cookie', `abar_admin_session=${actor.token}`).set('Origin', origin).set('Idempotency-Key', key()).send({}).expect(403);
+          |                                                                                                                                                                                ^
+      146 |     const note: any = await admin.mutate(o.id, 'ORDER_NOTE', req({ expectedVersion: 1, text: '<script>private</script>' })); expect(note.text).toContain('<script>');
+      147 |     const detail = await request(server).get(path).set('Cookie', `abar_admin_session=${actor.token}`).expect(200); expect(detail.headers['cache-control']).toBe('no-store'); expect(detail.body.notes[0].text).toBe(note.text);
+      148 |     const view = await request(server).get(`/api/v1/public/orders/${o.id}`).set('X-Order-Access-Token', o.token).expect(200); for (const field of ['customer', 'stock', 'notes', 'history']) expect(view.body[field]).toBeUndefined();
+
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:145:176)
+      ----
+      at Test._assertStatus (node_modules/supertest/lib/test.js:404:14)
+      at node_modules/supertest/lib/test.js:460:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:437:13)
+      at Test.assert (node_modules/supertest/lib/test.js:302:23)
+      at localAssert (node_modules/supertest/lib/test.js:220:38)
+      at Server.<anonymous> (node_modules/supertest/lib/test.js:227:13)
+
+Test Suites: 1 failed, 1 total
+Tests:       7 failed, 1 passed, 8 total
+Snapshots:   0 total
+Time:        4.646 s
+Ran all test suites matching h5-orders.e2e-spec.ts.

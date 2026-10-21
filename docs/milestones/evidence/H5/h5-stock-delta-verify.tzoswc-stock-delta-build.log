@@ -1,0 +1,37 @@
+
+> abar-frontend@0.1.0 build
+> ng build
+
+❯ Building...
+✔ Building...
+Initial chunk files | Names                             |  Raw size | Estimated transfer size
+chunk-PH3QQV27.js   | -                                 | 157.52 kB |                46.07 kB
+chunk-ZGVS32WI.js   | -                                 |  99.15 kB |                25.57 kB
+main-YGPG7QDP.js    | main                              |  12.47 kB |                 3.44 kB
+styles-75NM3PEV.css | styles                            |   5.41 kB |                 1.39 kB
+chunk-LYXJUH3U.js   | -                                 |   4.26 kB |                 1.31 kB
+
+                    | Initial total                     | 278.82 kB |                77.79 kB
+
+Lazy chunk files    | Names                             |  Raw size | Estimated transfer size
+chunk-66YTZCY3.js   | -                                 |  48.53 kB |                 9.48 kB
+chunk-BUZHOVXF.js   | cart-page-component               |  23.45 kB |                 6.07 kB
+chunk-JLJYEYBT.js   | admin-product-form-page-component |  23.14 kB |                 6.75 kB
+chunk-7OGCS5YQ.js   | admin-order-detail-page-component |  22.62 kB |                 6.38 kB
+chunk-MZBVJHHH.js   | admin-stock-page-component        |  20.58 kB |                 5.54 kB
+chunk-YOQNRG6Y.js   | checkout-page-component           |  18.52 kB |                 5.50 kB
+chunk-5WXONHSL.js   | order-result-page-component       |  13.10 kB |                 4.14 kB
+chunk-6PU4OBML.js   | product-detail-page-component     |  12.32 kB |                 3.62 kB
+chunk-43KBN4KB.js   | catalog-page-component            |  12.16 kB |                 3.84 kB
+chunk-JD75JC7Q.js   | admin-placeholder-page-component  |  11.78 kB |                 3.56 kB
+chunk-XBY5KLG7.js   | admin-categories-page-component   |  10.62 kB |                 3.25 kB
+chunk-466OXBKH.js   | home-page-component               |   8.90 kB |                 2.66 kB
+chunk-RIPNTU6Q.js   | admin-products-page-component     |   8.90 kB |                 3.19 kB
+chunk-MCIFQNCL.js   | admin-orders-list-page-component  |   8.27 kB |                 2.96 kB
+chunk-XGBBEDYC.js   | order-lookup-page-component       |   5.09 kB |                 2.00 kB
+...and 12 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [1.843 seconds] - 2026-10-21T13:25:47.896Z
+
+Output location: <independent-scratch>/frontend/dist/abar-frontend
+

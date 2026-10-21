@@ -1,0 +1,39 @@
+✔ H1 freezes exactly nine auth/admin operations alongside unprefixed health (105.180792ms)
+✔ strict H1 static validation rejects missing operations, headers, DTO fields and security (73.751ms)
+✔ full H1 fixture semantics reject operation/header/security/request/DTO constraint drift (287.06ms)
+✔ H1 public DTO examples reject secret metadata, invalid UTC and fieldErrors input echoes (615.697375ms)
+✔ normative OpenAPI loads and validates (570.228833ms)
+✔ missing and invalid contract documents fail explicitly (0.181292ms)
+✔ external examples validate against their OpenAPI schemas (138.371958ms)
+✔ projected API and transversal conventions stay explicitly candidate (518.574875ms)
+✔ invalid external JSON examples keep validateContractFile and CLI invalid (1172.659709ms)
+✔ health schema comparison preserves constraints and canonicalizes unordered schema sets (0.425166ms)
+✔ live Swagger health contract matches actual health operations and response semantics (0.144375ms)
+✔ H2 freezes only its explicit catalog, image and stock operations while preserving H1 (88.535709ms)
+✔ every admin catalog mutation keeps H1 session, Origin and CSRF, with stock idempotency required (115.337417ms)
+✔ public presentations cannot expose exact stock and Money remains a decimal ARS string (331.326958ms)
+✔ stock requests disallow fractional or zero deltas, client-computed meters and direct balances (569.53675ms)
+✔ frozen H2 validator rejects removal of endpoints, error schemas and multipart content (31.884041ms)
+✔ legacy H1-only contract remains accepted by the same public validator interface (26.65375ms)
+✔ H3 additive freeze is accepted and remains closed to future order/payment routes (81.150875ms)
+✔ H3 requires quote security, request/response and all safe conflicts (242.532667ms)
+✔ quote request rejects client money, malformed quantities and oversize input (371.8105ms)
+✔ H4 additive freeze explicitly authorizes only the bounded order operations (83.49575ms)
+✔ H4 creation accepts buyer and terms, never client totals or payment states (420.571083ms)
+✔ H4 requires possession header and durable idempotency on mutations (39.200417ms)
+✔ H4 manual attempts forbid scenarios; public views cannot carry private buyer fields (173.038083ms)
+✔ H5 freezes exactly seven protected admin operations, not arbitrary payment writes (81.391834ms)
+✔ H5 confirmation accepts only full exact ARS minor units and aggregate preconditions (304.501291ms)
+✔ H5 cancellation needs a reason; generic status cannot pay or cancel (314.588583ms)
+✔ H5 public views remain closed and expose final statuses without private fields (36.8905ms)
+✔ H5 notes and allowed actions are closed, bounded and versioned (139.446792ms)
+✔ H5 movement reads preserve both H2 types and add payment linkage (28.384375ms)
+✔ H5 movement linkage is mandatory only for confirmation and H2 limits remain unchanged (243.112917ms)
+ℹ tests 31
+ℹ suites 0
+ℹ pass 31
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3566.842416

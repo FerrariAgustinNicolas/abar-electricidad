@@ -1,0 +1,19 @@
+{
+  "ownListenersStopped": [
+    43155,
+    43156
+  ],
+  "ownContainersRemoved": [
+    "1d2d3bc5047665621afcc386fa3b9aea14c86fc6ac9911375803487af274b708",
+    "ea4d55142f78d652b247b372369bd44c22cbef971e35244aba5a08f4f83a7914",
+    "32e90d81665af8dd222863404bc7e8d9af928baeab30a361cbb6d2b41c3647f6",
+    "10683cc09a03d28bb2effc7d728615ba94fb6dbab4804aac6d6292eb0ac7de9b",
+    "7bb0f2df764a8aed6799ea0296eb42a92e08a08501ea75b695ef2bf461fc41ff"
+  ],
+  "independentContainersPreviouslyRemoved": [
+    "381103c9af8509944c4c41aa22bb4ab776836ef9be2b77c45ea5763fea56e0c8",
+    "7ec677db2f4874ac80a22bb5bcb41ca644bdb6b75caecf342189ea2fc1bc30d8"
+  ],
+  "scope": "only this run, verified ownership; no pre-existing worktree/container cleanup",
+  "firstFailedFixtureRecoveredBy": "exact observed port59349, matching owner/name/image/labels and empty mounts"
+}

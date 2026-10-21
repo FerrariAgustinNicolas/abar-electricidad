@@ -1,0 +1,33 @@
+
+> abar-backend@0.1.0 test:e2e
+> node scripts/copy-catalog-contract.mjs && jest --config ./test/jest-e2e.json --runInBand --testPathPatterns=h5-orders.e2e-spec.ts --testNamePattern=H5 complementary temporal
+
+  console.log
+    H5 temporal expiry invariant {
+      expiry: 'absolute',
+      confirmationStatus: 401,
+      cancellationStatus: 401,
+      beforeHash: 'f68c3b79ed058cef05ce4e6dbbfb42775dd19eecda083c93673dd732a7e3ec1b',
+      afterHash: 'f68c3b79ed058cef05ce4e6dbbfb42775dd19eecda083c93673dd732a7e3ec1b',
+      businessStateUnchanged: true
+    }
+
+      at test/h5-orders.e2e-spec.ts:245:13
+
+  console.log
+    H5 temporal expiry invariant {
+      expiry: 'idle',
+      confirmationStatus: 401,
+      cancellationStatus: 401,
+      beforeHash: '634c219de809a479bf4a157bc7fc4f27202c014536c8d3db7b7061b53189e5ed',
+      afterHash: '634c219de809a479bf4a157bc7fc4f27202c014536c8d3db7b7061b53189e5ed',
+      businessStateUnchanged: true
+    }
+
+      at test/h5-orders.e2e-spec.ts:245:13
+
+Test Suites: 1 passed, 1 total
+Tests:       13 skipped, 2 passed, 15 total
+Snapshots:   0 total
+Time:        1.298 s, estimated 2 s
+Ran all test suites matching h5-orders.e2e-spec.ts with tests matching "H5 complementary temporal".

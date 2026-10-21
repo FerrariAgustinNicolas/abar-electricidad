@@ -1,0 +1,8 @@
+
+> abar-backend@0.1.0 prisma:validate
+> prisma validate --config prisma.schema.config.ts
+
+Loaded Prisma config from prisma.schema.config.ts.
+
+Prisma schema loaded from prisma/schema.prisma.
+The schema at prisma/schema.prisma is valid 🚀

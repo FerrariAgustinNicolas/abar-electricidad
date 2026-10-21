@@ -1,0 +1,49 @@
+
+> abar-frontend@0.1.0 start
+> ng serve --host 127.0.0.1 --proxy-config proxy.conf.json --port 43156 --proxy-config /private/tmp/h5-browser-proxy.json
+
+Option 'proxy-config' has been specified multiple times. The value '/private/tmp/h5-browser-proxy.json' will be used.
+❯ Building...
+✔ Building...
+Initial chunk files | Names                             |  Raw size
+main.js             | main                              |  40.45 kB | 
+chunk-Y275ASN3.js   | -                                 |   7.98 kB | 
+styles.css          | styles                            |   6.68 kB | 
+chunk-VUJOFXKG.js   | -                                 | 938 bytes | 
+
+                    | Initial total                     |  56.05 kB
+
+Lazy chunk files    | Names                             |  Raw size
+chunk-U5JZ5Y2I.js   | admin-order-detail-page-component |  67.04 kB | 
+chunk-GWDWFXVF.js   | cart-page-component               |  64.96 kB | 
+chunk-NANIFRZB.js   | admin-product-form-page-component |  61.93 kB | 
+chunk-PDDQKV57.js   | admin-stock-page-component        |  60.34 kB | 
+chunk-YTY2EZIT.js   | checkout-page-component           |  48.98 kB | 
+chunk-6YMUCHBH.js   | order-result-page-component       |  36.55 kB | 
+chunk-SU3HXNUO.js   | product-detail-page-component     |  35.66 kB | 
+chunk-IP4QKP6J.js   | admin-placeholder-page-component  |  33.71 kB | 
+chunk-DNQWE7CW.js   | catalog-page-component            |  33.05 kB | 
+chunk-RGIYPG4N.js   | admin-categories-page-component   |  32.64 kB | 
+chunk-LBKY334L.js   | admin-products-page-component     |  28.13 kB | 
+chunk-KOLM2TIB.js   | home-page-component               |  26.57 kB | 
+chunk-UUL6SMFL.js   | admin-orders-list-page-component  |  25.94 kB | 
+chunk-ZTWKNEWQ.js   | order-lookup-page-component       |  14.75 kB | 
+chunk-M6B333TQ.js   | auth-routes                       |   8.77 kB | 
+...and 10 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [1.054 seconds] - 2026-10-21T13:17:08.126Z
+
+Watch mode enabled. Watching for file changes...
+NOTE: Raw file sizes do not reflect development server per-request transformations.
+  ➜  Local:   http://127.0.0.1:43156/
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Initial chunk files | Names                      | Raw size
+main.js             | main                       | 40.45 kB | 
+
+Lazy chunk files    | Names                      | Raw size
+chunk-NQ4ZZTXZ.js   | admin-stock-page-component | 61.19 kB | 
+
+Application bundle generation complete. [0.621 seconds] - 2026-10-21T13:24:34.459Z
+
+Page reload sent to client(s).

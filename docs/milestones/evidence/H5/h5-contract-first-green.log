@@ -1,0 +1,32 @@
+✖ H5 freezes exactly seven protected admin operations, not arbitrary payment writes (56.458792ms)
+✔ H5 confirmation accepts only full exact ARS minor units and aggregate preconditions (206.571ms)
+✔ H5 cancellation needs a reason; generic status cannot pay or cancel (211.400959ms)
+✔ H5 public views remain closed and expose final statuses without private fields (24.232792ms)
+✔ H5 notes and allowed actions are closed, bounded and versioned (132.38925ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 4
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 696.548166
+
+✖ failing tests:
+
+test at scripts/h5-contract.test.mjs:10:1
+✖ H5 freezes exactly seven protected admin operations, not arbitrary payment writes (56.458792ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file://<worktree>/scripts/h5-contract.test.mjs:14:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -1,0 +1,3 @@
+CAPTURE 360 movements-correct-anchor
+CAPTURE 360 history-final
+Timed out: document.readyState==="complete" && !!document.querySelector("h1")

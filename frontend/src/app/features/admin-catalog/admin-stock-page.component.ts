@@ -26,8 +26,8 @@ interface RollOpeningPair { roll: StockRow; meter: StockRow; }
       @if (loading() && !stock()) { <p role="status">Cargando existencias…</p> }
       @if (stock()?.items?.length === 0) { <p class="empty-state">No hay existencias para estos filtros.</p> }
       @if (stock()?.items?.length) {
-        <div class="table-wrap"><table><caption>Saldo y demanda impaga por presentación</caption><thead><tr><th scope="col">Producto</th><th scope="col">Presentación</th><th scope="col">Saldo disponible</th><th scope="col">Demanda impaga solicitada (informativa)</th><th scope="col">Mínimo</th><th scope="col">Estado</th><th scope="col">Versión</th></tr></thead>
-          <tbody>@for (row of stock()!.items; track row.presentationId) { <tr><td>{{ row.productName }}</td><td>{{ presentationLabel(row) }}</td><td>{{ row.availableQuantity }}</td><td>{{ row.requestedUnpaidQuantity ?? '—' }}</td><td>{{ row.lowStockThreshold }}</td><td>{{ availabilityLabel(row.availability) }}</td><td>{{ row.version }}</td></tr> }</tbody>
+        <div class="table-wrap"><table><caption>Saldo y demanda impaga por presentación</caption><thead><tr><th scope="col">Producto</th><th scope="col">Presentación</th><th scope="col">Saldo disponible</th><th scope="col">Demanda impaga solicitada (informativa)</th><th scope="col">Pagado pendiente de entrega (ya descontado)</th><th scope="col">Mínimo</th><th scope="col">Estado</th><th scope="col">Versión</th></tr></thead>
+          <tbody>@for (row of stock()!.items; track row.presentationId) { <tr><td>{{ row.productName }}</td><td>{{ presentationLabel(row) }}</td><td>{{ row.availableQuantity }}</td><td>{{ row.requestedUnpaidQuantity ?? '—' }}</td><td>{{ row.paidPendingDeliveryQuantity ?? '—' }}</td><td>{{ row.lowStockThreshold }}</td><td>{{ availabilityLabel(row.availability) }}</td><td>{{ row.version }}</td></tr> }</tbody>
         </table></div>
         <nav class="pagination" aria-label="Paginación de existencias"><button class="button-secondary" type="button" (click)="loadStock(page() - 1)" [disabled]="loading() || page() <= 1">Anterior</button>
           <span>Página {{ page() }} de {{ stock()!.pageInfo.totalPages || 1 }} · {{ stock()!.pageInfo.totalItems }} presentaciones</span>
@@ -54,20 +54,20 @@ interface RollOpeningPair { roll: StockRow; meter: StockRow; }
         </article>
       </div>
 
-      @if (lastOperation()) { <section class="panel" aria-labelledby="operation-title"><h2 id="operation-title">Movimiento confirmado · {{ lastOperation()!.type === 'ROLL_OPENING' ? 'Apertura de rollo' : 'Ajuste' }}</h2>
+      @if (lastOperation()) { <section class="panel" aria-labelledby="operation-title"><h2 id="operation-title">Movimiento confirmado · {{ operationLabel(lastOperation()!.type) }}</h2>
         <p>{{ lastOperation()!.reason }} · {{ lastOperation()!.createdAt }}</p><div class="table-wrap"><table><caption>Saldos antes y después del movimiento</caption><thead><tr><th scope="col">Presentación</th><th scope="col">Delta</th><th scope="col">Antes</th><th scope="col">Después</th></tr></thead><tbody>
           @for (entry of lastOperation()!.entries; track entry.presentationId) { <tr><td>{{ stockRow(entry.presentationId) ? presentationLabel(stockRow(entry.presentationId)!) : entry.presentationId }}</td><td>{{ entry.delta > 0 ? '+' : '' }}{{ entry.delta }}</td><td>{{ entry.resultingQuantity - entry.delta }}</td><td>{{ entry.resultingQuantity }}</td></tr> }
         </tbody></table></div></section> }
 
       <section aria-labelledby="movements-title"><header class="page-heading"><div><h2 id="movements-title">Historial de movimientos</h2><p>Operaciones administrativas recientes.</p></div></header>
-        <form class="form-grid" (submit)="$event.preventDefault(); loadMovements(1)" aria-label="Filtros del historial"><label for="movement-type">Tipo<select id="movement-type" [value]="movementFilters().type" (change)="setMovementFilter('type', inputValue($event))"><option value="">Todos</option><option value="ADJUSTMENT">Ajustes</option><option value="ROLL_OPENING">Aperturas</option></select></label>
+        <form class="form-grid" (submit)="$event.preventDefault(); loadMovements(1)" aria-label="Filtros del historial"><label for="movement-type">Tipo<select id="movement-type" [value]="movementFilters().type" (change)="setMovementFilter('type', inputValue($event))"><option value="">Todos</option><option value="ADJUSTMENT">Ajustes</option><option value="ROLL_OPENING">Aperturas</option><option value="PAYMENT_CONFIRMATION">Confirmaciones de pago</option></select></label>
           <label for="movement-presentation">Presentación<select id="movement-presentation" [value]="movementFilters().presentationId" (change)="setMovementFilter('presentationId', inputValue($event))"><option value="">Todas</option>@for (row of stock()?.items ?? []; track row.presentationId) { <option [value]="row.presentationId">{{ row.productName }} · {{ presentationLabel(row) }}</option> }</select></label>
           <button class="button-secondary" type="submit" [disabled]="movementLoading()">Filtrar historial</button></form>
         @if (movementError()) { <p class="form-error" role="alert">{{ movementError() }}</p> }
         @if (movementLoading() && !movements()) { <p role="status">Cargando movimientos…</p> }
         @if (movements()?.items?.length === 0) { <p class="empty-state">No hay movimientos para estos filtros.</p> }
         @if (movements()?.items?.length) { <div class="table-wrap"><table><caption>Movimientos auditables</caption><thead><tr><th scope="col">Fecha</th><th scope="col">Tipo</th><th scope="col">Motivo</th><th scope="col">Cambios</th></tr></thead><tbody>
-          @for (operation of movements()!.items; track operation.id) { <tr><td>{{ operation.createdAt }}</td><td>{{ operation.type === 'ADJUSTMENT' ? 'Ajuste' : 'Apertura de rollo' }}</td><td>{{ operation.reason }}</td><td>@for (entry of operation.entries; track entry.presentationId) { <span class="status-badge">{{ stockRow(entry.presentationId) ? presentationLabel(stockRow(entry.presentationId)!) : entry.presentationId }}: {{ entry.delta > 0 ? '+' : '' }}{{ entry.delta }} → {{ entry.resultingQuantity }}</span> }</td></tr> }
+          @for (operation of movements()!.items; track operation.id) { <tr><td>{{ operation.createdAt }}</td><td>{{ operationLabel(operation.type) }}</td><td>{{ operation.reason }}</td><td>@for (entry of operation.entries; track entry.presentationId) { <span class="status-badge">{{ stockRow(entry.presentationId) ? presentationLabel(stockRow(entry.presentationId)!) : entry.presentationId }}: {{ entry.delta > 0 ? '+' : '' }}{{ entry.delta }} → {{ entry.resultingQuantity }}</span> }</td></tr> }
         </tbody></table></div><nav class="pagination" aria-label="Paginación del historial"><button class="button-secondary" type="button" (click)="loadMovements(movementPage() - 1)" [disabled]="movementLoading() || movementPage() <= 1">Anterior</button><span>Página {{ movementPage() }} de {{ movements()!.pageInfo.totalPages || 1 }}</span><button class="button-secondary" type="button" (click)="loadMovements(movementPage() + 1)" [disabled]="movementLoading() || movementPage() >= movements()!.pageInfo.totalPages">Siguiente</button></nav> }
       </section>
     </section>
@@ -102,6 +102,7 @@ export class AdminStockPageComponent {
   search(): void { void this.loadStock(1); }
   refresh(): void { void this.loadStock(this.page()); void this.loadMovements(this.movementPage()); void this.loadOpeningPairs(); }
   presentationLabel(row: StockRow): string { return row.unit === 'UNIT' ? 'Unidad' : row.unit === 'METER' ? 'Metro' : `Rollo · ${row.rollLengthMeters ?? '—'} m`; }
+  operationLabel(type: StockOperationView['type']): string { return ({ ADJUSTMENT: 'Ajuste', ROLL_OPENING: 'Apertura de rollo', PAYMENT_CONFIRMATION: 'Confirmación de pago' })[type]; }
   availabilityLabel(status: string): string { return status === 'AVAILABLE' ? 'Disponible' : status === 'LOW_STOCK' ? 'Pocas unidades' : 'Sin stock'; }
   stockRow(id: string): StockRow | undefined { return this.stock()?.items.find((row) => row.presentationId === id); }
   rollProducts(): StockRow[] { return this.openingPairs().map((pair) => pair.roll); }

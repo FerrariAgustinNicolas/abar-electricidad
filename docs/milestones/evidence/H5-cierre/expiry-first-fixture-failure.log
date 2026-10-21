@@ -1,0 +1,265 @@
+
+> abar-backend@0.1.0 test:e2e
+> node scripts/copy-catalog-contract.mjs && jest --config ./test/jest-e2e.json --runInBand --testPathPatterns=h5-orders.e2e-spec.ts --testNamePattern=H5 complementary temporal
+
+FAIL test/h5-orders.e2e-spec.ts
+  ● H5 on a newly owned PostgreSQL 17 fixture (required, never skipped) › H5-Q01 deploys seven migrations and upgrades populated H4 without changing historical bytes
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "9440defd-ec92-4b26-9f12-9eb41caa5a7a"
+    Received: undefined
+
+      41 |     const parsed = new URL(url); expect(parsed.hostname).toBe('127.0.0.1'); expect(parsed.pathname).toBe('/h5_orders'); expect(parsed.username).toBe('h5_orders');
+      42 |     const c = JSON.parse(execFileSync('docker', ['--host', 'unix:///Users/agustin/.docker/run/docker.sock', 'inspect', process.env.H5_CONTAINER_ID], { encoding: 'utf8' }))[0];
+    > 43 |     expect(c.Config.Labels['com.abar.h5-owner']).toBe(process.env.H5_OWNER); expect(c.Config.Image).toBe('postgres:17.11-bookworm'); expect(c.Mounts).toHaveLength(0); expect(c.NetworkSettings.Ports['5432/tcp'][0]).toEqual({ HostIp: '127.0.0.1', HostPort: parsed.port });
+         |                                                  ^
+      44 |     prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: url }) });
+      45 |     const admins = new AdminUsersService(prisma as never, cipher, validateAuthConfig({ NODE_ENV: 'test', AUTH_ALLOWED_ORIGINS: origin }), { hash: async () => 'unused' }, { hasDigest: () => false });
+      46 |     const checkout = new CheckoutService(prisma as never);
+
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:43:50)
+
+  ● H5 on a newly owned PostgreSQL 17 fixture (required, never skipped) › H5-Q02/Q03 simulation alone leaves stock intact; full manual confirmation debits UNIT/METER/ROLL once at historical prices
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "9440defd-ec92-4b26-9f12-9eb41caa5a7a"
+    Received: undefined
+
+      41 |     const parsed = new URL(url); expect(parsed.hostname).toBe('127.0.0.1'); expect(parsed.pathname).toBe('/h5_orders'); expect(parsed.username).toBe('h5_orders');
+      42 |     const c = JSON.parse(execFileSync('docker', ['--host', 'unix:///Users/agustin/.docker/run/docker.sock', 'inspect', process.env.H5_CONTAINER_ID], { encoding: 'utf8' }))[0];
+    > 43 |     expect(c.Config.Labels['com.abar.h5-owner']).toBe(process.env.H5_OWNER); expect(c.Config.Image).toBe('postgres:17.11-bookworm'); expect(c.Mounts).toHaveLength(0); expect(c.NetworkSettings.Ports['5432/tcp'][0]).toEqual({ HostIp: '127.0.0.1', HostPort: parsed.port });
+         |                                                  ^
+      44 |     prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: url }) });
+      45 |     const admins = new AdminUsersService(prisma as never, cipher, validateAuthConfig({ NODE_ENV: 'test', AUTH_ALLOWED_ORIGINS: origin }), { hash: async () => 'unused' }, { hasDigest: () => false });
+      46 |     const checkout = new CheckoutService(prisma as never);
+
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:43:50)
+
+  ● H5 on a newly owned PostgreSQL 17 fixture (required, never skipped) › H5-Q04/Q05 rejects invalid amount, historical/rejected/pending attempts and rolls back insufficient multi-line stock
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "9440defd-ec92-4b26-9f12-9eb41caa5a7a"
+    Received: undefined
+
+      41 |     const parsed = new URL(url); expect(parsed.hostname).toBe('127.0.0.1'); expect(parsed.pathname).toBe('/h5_orders'); expect(parsed.username).toBe('h5_orders');
+      42 |     const c = JSON.parse(execFileSync('docker', ['--host', 'unix:///Users/agustin/.docker/run/docker.sock', 'inspect', process.env.H5_CONTAINER_ID], { encoding: 'utf8' }))[0];
+    > 43 |     expect(c.Config.Labels['com.abar.h5-owner']).toBe(process.env.H5_OWNER); expect(c.Config.Image).toBe('postgres:17.11-bookworm'); expect(c.Mounts).toHaveLength(0); expect(c.NetworkSettings.Ports['5432/tcp'][0]).toEqual({ HostIp: '127.0.0.1', HostPort: parsed.port });
+         |                                                  ^
+      44 |     prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: url }) });
+      45 |     const admins = new AdminUsersService(prisma as never, cipher, validateAuthConfig({ NODE_ENV: 'test', AUTH_ALLOWED_ORIGINS: origin }), { hash: async () => 'unused' }, { hasDigest: () => false });
+      46 |     const checkout = new CheckoutService(prisma as never);
+
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:43:50)
+
+  ● H5 on a newly owned PostgreSQL 17 fixture (required, never skipped) › H5-Q06 same key replays exact response; changed body/new key/other actor cannot debit twice
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "9440defd-ec92-4b26-9f12-9eb41caa5a7a"
+    Received: undefined
+
+      41 |     const parsed = new URL(url); expect(parsed.hostname).toBe('127.0.0.1'); expect(parsed.pathname).toBe('/h5_orders'); expect(parsed.username).toBe('h5_orders');
+      42 |     const c = JSON.parse(execFileSync('docker', ['--host', 'unix:///Users/agustin/.docker/run/docker.sock', 'inspect', process.env.H5_CONTAINER_ID], { encoding: 'utf8' }))[0];
+    > 43 |     expect(c.Config.Labels['com.abar.h5-owner']).toBe(process.env.H5_OWNER); expect(c.Config.Image).toBe('postgres:17.11-bookworm'); expect(c.Mounts).toHaveLength(0); expect(c.NetworkSettings.Ports['5432/tcp'][0]).toEqual({ HostIp: '127.0.0.1', HostPort: parsed.port });
+         |                                                  ^
+      44 |     prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: url }) });
+      45 |     const admins = new AdminUsersService(prisma as never, cipher, validateAuthConfig({ NODE_ENV: 'test', AUTH_ALLOWED_ORIGINS: origin }), { hash: async () => 'unused' }, { hasDigest: () => false });
+      46 |     const checkout = new CheckoutService(prisma as never);
+
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:43:50)
+
+  ● H5 on a newly owned PostgreSQL 17 fixture (required, never skipped) › H5-Q07 two admins competing for the last unit really wait on PostgreSQL locks; only one pays
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "9440defd-ec92-4b26-9f12-9eb41caa5a7a"
+    Received: undefined
+
+      41 |     const parsed = new URL(url); expect(parsed.hostname).toBe('127.0.0.1'); expect(parsed.pathname).toBe('/h5_orders'); expect(parsed.username).toBe('h5_orders');
+      42 |     const c = JSON.parse(execFileSync('docker', ['--host', 'unix:///Users/agustin/.docker/run/docker.sock', 'inspect', process.env.H5_CONTAINER_ID], { encoding: 'utf8' }))[0];
+    > 43 |     expect(c.Config.Labels['com.abar.h5-owner']).toBe(process.env.H5_OWNER); expect(c.Config.Image).toBe('postgres:17.11-bookworm'); expect(c.Mounts).toHaveLength(0); expect(c.NetworkSettings.Ports['5432/tcp'][0]).toEqual({ HostIp: '127.0.0.1', HostPort: parsed.port });
+         |                                                  ^
+      44 |     prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: url }) });
+      45 |     const admins = new AdminUsersService(prisma as never, cipher, validateAuthConfig({ NODE_ENV: 'test', AUTH_ALLOWED_ORIGINS: origin }), { hash: async () => 'unused' }, { hasDigest: () => false });
+      46 |     const checkout = new CheckoutService(prisma as never);
+
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:43:50)
+
+  ● H5 on a newly owned PostgreSQL 17 fixture (required, never skipped) › H5-Q08 confirmation races with H4 retry and H2 adjustment/opening without double effects
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "9440defd-ec92-4b26-9f12-9eb41caa5a7a"
+    Received: undefined
+
+      41 |     const parsed = new URL(url); expect(parsed.hostname).toBe('127.0.0.1'); expect(parsed.pathname).toBe('/h5_orders'); expect(parsed.username).toBe('h5_orders');
+      42 |     const c = JSON.parse(execFileSync('docker', ['--host', 'unix:///Users/agustin/.docker/run/docker.sock', 'inspect', process.env.H5_CONTAINER_ID], { encoding: 'utf8' }))[0];
+    > 43 |     expect(c.Config.Labels['com.abar.h5-owner']).toBe(process.env.H5_OWNER); expect(c.Config.Image).toBe('postgres:17.11-bookworm'); expect(c.Mounts).toHaveLength(0); expect(c.NetworkSettings.Ports['5432/tcp'][0]).toEqual({ HostIp: '127.0.0.1', HostPort: parsed.port });
+         |                                                  ^
+      44 |     prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: url }) });
+      45 |     const admins = new AdminUsersService(prisma as never, cipher, validateAuthConfig({ NODE_ENV: 'test', AUTH_ALLOWED_ORIGINS: origin }), { hash: async () => 'unused' }, { hasDigest: () => false });
+      46 |     const checkout = new CheckoutService(prisma as never);
+
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:43:50)
+
+  ● H5 on a newly owned PostgreSQL 17 fixture (required, never skipped) › H5 confirm versus cancel and two actors on the same payment serialize once
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "9440defd-ec92-4b26-9f12-9eb41caa5a7a"
+    Received: undefined
+
+      41 |     const parsed = new URL(url); expect(parsed.hostname).toBe('127.0.0.1'); expect(parsed.pathname).toBe('/h5_orders'); expect(parsed.username).toBe('h5_orders');
+      42 |     const c = JSON.parse(execFileSync('docker', ['--host', 'unix:///Users/agustin/.docker/run/docker.sock', 'inspect', process.env.H5_CONTAINER_ID], { encoding: 'utf8' }))[0];
+    > 43 |     expect(c.Config.Labels['com.abar.h5-owner']).toBe(process.env.H5_OWNER); expect(c.Config.Image).toBe('postgres:17.11-bookworm'); expect(c.Mounts).toHaveLength(0); expect(c.NetworkSettings.Ports['5432/tcp'][0]).toEqual({ HostIp: '127.0.0.1', HostPort: parsed.port });
+         |                                                  ^
+      44 |     prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: url }) });
+      45 |     const admins = new AdminUsersService(prisma as never, cipher, validateAuthConfig({ NODE_ENV: 'test', AUTH_ALLOWED_ORIGINS: origin }), { hash: async () => 'unused' }, { hasDigest: () => false });
+      46 |     const checkout = new CheckoutService(prisma as never);
+
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:43:50)
+
+  ● H5 on a newly owned PostgreSQL 17 fixture (required, never skipped) › H5 database constraints reject second payment-linked operations and history rewrites
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "9440defd-ec92-4b26-9f12-9eb41caa5a7a"
+    Received: undefined
+
+      41 |     const parsed = new URL(url); expect(parsed.hostname).toBe('127.0.0.1'); expect(parsed.pathname).toBe('/h5_orders'); expect(parsed.username).toBe('h5_orders');
+      42 |     const c = JSON.parse(execFileSync('docker', ['--host', 'unix:///Users/agustin/.docker/run/docker.sock', 'inspect', process.env.H5_CONTAINER_ID], { encoding: 'utf8' }))[0];
+    > 43 |     expect(c.Config.Labels['com.abar.h5-owner']).toBe(process.env.H5_OWNER); expect(c.Config.Image).toBe('postgres:17.11-bookworm'); expect(c.Mounts).toHaveLength(0); expect(c.NetworkSettings.Ports['5432/tcp'][0]).toEqual({ HostIp: '127.0.0.1', HostPort: parsed.port });
+         |                                                  ^
+      44 |     prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: url }) });
+      45 |     const admins = new AdminUsersService(prisma as never, cipher, validateAuthConfig({ NODE_ENV: 'test', AUTH_ALLOWED_ORIGINS: origin }), { hash: async () => 'unused' }, { hasDigest: () => false });
+      46 |     const checkout = new CheckoutService(prisma as never);
+
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:43:50)
+
+  ● H5 on a newly owned PostgreSQL 17 fixture (required, never skipped) › H5 aggregates duplicate presentation lines, preserves replay pointer after PAID, and revalidates session under lock
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "9440defd-ec92-4b26-9f12-9eb41caa5a7a"
+    Received: undefined
+
+      41 |     const parsed = new URL(url); expect(parsed.hostname).toBe('127.0.0.1'); expect(parsed.pathname).toBe('/h5_orders'); expect(parsed.username).toBe('h5_orders');
+      42 |     const c = JSON.parse(execFileSync('docker', ['--host', 'unix:///Users/agustin/.docker/run/docker.sock', 'inspect', process.env.H5_CONTAINER_ID], { encoding: 'utf8' }))[0];
+    > 43 |     expect(c.Config.Labels['com.abar.h5-owner']).toBe(process.env.H5_OWNER); expect(c.Config.Image).toBe('postgres:17.11-bookworm'); expect(c.Mounts).toHaveLength(0); expect(c.NetworkSettings.Ports['5432/tcp'][0]).toEqual({ HostIp: '127.0.0.1', HostPort: parsed.port });
+         |                                                  ^
+      44 |     prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: url }) });
+      45 |     const admins = new AdminUsersService(prisma as never, cipher, validateAuthConfig({ NODE_ENV: 'test', AUTH_ALLOWED_ORIGINS: origin }), { hash: async () => 'unused' }, { hasDigest: () => false });
+      46 |     const checkout = new CheckoutService(prisma as never);
+
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:43:50)
+
+  ● H5 on a newly owned PostgreSQL 17 fixture (required, never skipped) › H5-Q09 failure in operation, event or job causes total rollback
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "9440defd-ec92-4b26-9f12-9eb41caa5a7a"
+    Received: undefined
+
+      41 |     const parsed = new URL(url); expect(parsed.hostname).toBe('127.0.0.1'); expect(parsed.pathname).toBe('/h5_orders'); expect(parsed.username).toBe('h5_orders');
+      42 |     const c = JSON.parse(execFileSync('docker', ['--host', 'unix:///Users/agustin/.docker/run/docker.sock', 'inspect', process.env.H5_CONTAINER_ID], { encoding: 'utf8' }))[0];
+    > 43 |     expect(c.Config.Labels['com.abar.h5-owner']).toBe(process.env.H5_OWNER); expect(c.Config.Image).toBe('postgres:17.11-bookworm'); expect(c.Mounts).toHaveLength(0); expect(c.NetworkSettings.Ports['5432/tcp'][0]).toEqual({ HostIp: '127.0.0.1', HostPort: parsed.port });
+         |                                                  ^
+      44 |     prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: url }) });
+      45 |     const admins = new AdminUsersService(prisma as never, cipher, validateAuthConfig({ NODE_ENV: 'test', AUTH_ALLOWED_ORIGINS: origin }), { hash: async () => 'unused' }, { hasDigest: () => false });
+      46 |     const checkout = new CheckoutService(prisma as never);
+
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:43:50)
+
+  ● H5 on a newly owned PostgreSQL 17 fixture (required, never skipped) › H5-Q10/Q11/Q12 unpaid cancellation preserves stock; paid transitions cannot cancel or debit again
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "9440defd-ec92-4b26-9f12-9eb41caa5a7a"
+    Received: undefined
+
+      41 |     const parsed = new URL(url); expect(parsed.hostname).toBe('127.0.0.1'); expect(parsed.pathname).toBe('/h5_orders'); expect(parsed.username).toBe('h5_orders');
+      42 |     const c = JSON.parse(execFileSync('docker', ['--host', 'unix:///Users/agustin/.docker/run/docker.sock', 'inspect', process.env.H5_CONTAINER_ID], { encoding: 'utf8' }))[0];
+    > 43 |     expect(c.Config.Labels['com.abar.h5-owner']).toBe(process.env.H5_OWNER); expect(c.Config.Image).toBe('postgres:17.11-bookworm'); expect(c.Mounts).toHaveLength(0); expect(c.NetworkSettings.Ports['5432/tcp'][0]).toEqual({ HostIp: '127.0.0.1', HostPort: parsed.port });
+         |                                                  ^
+      44 |     prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: url }) });
+      45 |     const admins = new AdminUsersService(prisma as never, cipher, validateAuthConfig({ NODE_ENV: 'test', AUTH_ALLOWED_ORIGINS: origin }), { hash: async () => 'unused' }, { hasDigest: () => false });
+      46 |     const checkout = new CheckoutService(prisma as never);
+
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:43:50)
+
+  ● H5 on a newly owned PostgreSQL 17 fixture (required, never skipped) › H5-Q13/Q14 real H1 auth and HTTP privacy/error envelopes fail closed
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "9440defd-ec92-4b26-9f12-9eb41caa5a7a"
+    Received: undefined
+
+      41 |     const parsed = new URL(url); expect(parsed.hostname).toBe('127.0.0.1'); expect(parsed.pathname).toBe('/h5_orders'); expect(parsed.username).toBe('h5_orders');
+      42 |     const c = JSON.parse(execFileSync('docker', ['--host', 'unix:///Users/agustin/.docker/run/docker.sock', 'inspect', process.env.H5_CONTAINER_ID], { encoding: 'utf8' }))[0];
+    > 43 |     expect(c.Config.Labels['com.abar.h5-owner']).toBe(process.env.H5_OWNER); expect(c.Config.Image).toBe('postgres:17.11-bookworm'); expect(c.Mounts).toHaveLength(0); expect(c.NetworkSettings.Ports['5432/tcp'][0]).toEqual({ HostIp: '127.0.0.1', HostPort: parsed.port });
+         |                                                  ^
+      44 |     prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: url }) });
+      45 |     const admins = new AdminUsersService(prisma as never, cipher, validateAuthConfig({ NODE_ENV: 'test', AUTH_ALLOWED_ORIGINS: origin }), { hash: async () => 'unused' }, { hasDigest: () => false });
+      46 |     const checkout = new CheckoutService(prisma as never);
+
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:43:50)
+
+  ● H5 on a newly owned PostgreSQL 17 fixture (required, never skipped) › H5 complementary temporal absolute expiry rejects confirmation and cancellation without business writes
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "9440defd-ec92-4b26-9f12-9eb41caa5a7a"
+    Received: undefined
+
+      41 |     const parsed = new URL(url); expect(parsed.hostname).toBe('127.0.0.1'); expect(parsed.pathname).toBe('/h5_orders'); expect(parsed.username).toBe('h5_orders');
+      42 |     const c = JSON.parse(execFileSync('docker', ['--host', 'unix:///Users/agustin/.docker/run/docker.sock', 'inspect', process.env.H5_CONTAINER_ID], { encoding: 'utf8' }))[0];
+    > 43 |     expect(c.Config.Labels['com.abar.h5-owner']).toBe(process.env.H5_OWNER); expect(c.Config.Image).toBe('postgres:17.11-bookworm'); expect(c.Mounts).toHaveLength(0); expect(c.NetworkSettings.Ports['5432/tcp'][0]).toEqual({ HostIp: '127.0.0.1', HostPort: parsed.port });
+         |                                                  ^
+      44 |     prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: url }) });
+      45 |     const admins = new AdminUsersService(prisma as never, cipher, validateAuthConfig({ NODE_ENV: 'test', AUTH_ALLOWED_ORIGINS: origin }), { hash: async () => 'unused' }, { hasDigest: () => false });
+      46 |     const checkout = new CheckoutService(prisma as never);
+
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:43:50)
+
+  ● H5 on a newly owned PostgreSQL 17 fixture (required, never skipped) › H5 complementary temporal idle expiry rejects confirmation and cancellation without business writes
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "9440defd-ec92-4b26-9f12-9eb41caa5a7a"
+    Received: undefined
+
+      41 |     const parsed = new URL(url); expect(parsed.hostname).toBe('127.0.0.1'); expect(parsed.pathname).toBe('/h5_orders'); expect(parsed.username).toBe('h5_orders');
+      42 |     const c = JSON.parse(execFileSync('docker', ['--host', 'unix:///Users/agustin/.docker/run/docker.sock', 'inspect', process.env.H5_CONTAINER_ID], { encoding: 'utf8' }))[0];
+    > 43 |     expect(c.Config.Labels['com.abar.h5-owner']).toBe(process.env.H5_OWNER); expect(c.Config.Image).toBe('postgres:17.11-bookworm'); expect(c.Mounts).toHaveLength(0); expect(c.NetworkSettings.Ports['5432/tcp'][0]).toEqual({ HostIp: '127.0.0.1', HostPort: parsed.port });
+         |                                                  ^
+      44 |     prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: url }) });
+      45 |     const admins = new AdminUsersService(prisma as never, cipher, validateAuthConfig({ NODE_ENV: 'test', AUTH_ALLOWED_ORIGINS: origin }), { hash: async () => 'unused' }, { hasDigest: () => false });
+      46 |     const checkout = new CheckoutService(prisma as never);
+
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:43:50)
+
+  ● H5 on a newly owned PostgreSQL 17 fixture (required, never skipped) › Independent public-interface probe: HTTP confirmation replay, rejected side effects, transitions and notes privacy
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "9440defd-ec92-4b26-9f12-9eb41caa5a7a"
+    Received: undefined
+
+      41 |     const parsed = new URL(url); expect(parsed.hostname).toBe('127.0.0.1'); expect(parsed.pathname).toBe('/h5_orders'); expect(parsed.username).toBe('h5_orders');
+      42 |     const c = JSON.parse(execFileSync('docker', ['--host', 'unix:///Users/agustin/.docker/run/docker.sock', 'inspect', process.env.H5_CONTAINER_ID], { encoding: 'utf8' }))[0];
+    > 43 |     expect(c.Config.Labels['com.abar.h5-owner']).toBe(process.env.H5_OWNER); expect(c.Config.Image).toBe('postgres:17.11-bookworm'); expect(c.Mounts).toHaveLength(0); expect(c.NetworkSettings.Ports['5432/tcp'][0]).toEqual({ HostIp: '127.0.0.1', HostPort: parsed.port });
+         |                                                  ^
+      44 |     prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: url }) });
+      45 |     const admins = new AdminUsersService(prisma as never, cipher, validateAuthConfig({ NODE_ENV: 'test', AUTH_ALLOWED_ORIGINS: origin }), { hash: async () => 'unused' }, { hasDigest: () => false });
+      46 |     const checkout = new CheckoutService(prisma as never);
+
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:43:50)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 13 skipped, 15 total
+Snapshots:   0 total
+Time:        1.463 s, estimated 4 s
+Ran all test suites matching h5-orders.e2e-spec.ts with tests matching "H5 complementary temporal".

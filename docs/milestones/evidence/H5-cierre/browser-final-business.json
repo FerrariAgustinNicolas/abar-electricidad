@@ -1,0 +1,133 @@
+{
+  "orders": [
+    {
+      "orderNumber": "ABAR-H5C-1440-CANCEL",
+      "status": "CANCELLED",
+      "version": 2
+    },
+    {
+      "orderNumber": "ABAR-H5C-1440-ERROR",
+      "status": "RECEIVED",
+      "version": 1
+    },
+    {
+      "orderNumber": "ABAR-H5C-1440-PAY",
+      "status": "DELIVERED",
+      "version": 5
+    },
+    {
+      "orderNumber": "ABAR-H5C-360-CANCEL",
+      "status": "CANCELLED",
+      "version": 2
+    },
+    {
+      "orderNumber": "ABAR-H5C-360-ERROR",
+      "status": "RECEIVED",
+      "version": 1
+    },
+    {
+      "orderNumber": "ABAR-H5C-360-PAY",
+      "status": "DELIVERED",
+      "version": 5
+    },
+    {
+      "orderNumber": "ABAR-H5C-768-CANCEL",
+      "status": "CANCELLED",
+      "version": 2
+    },
+    {
+      "orderNumber": "ABAR-H5C-768-ERROR",
+      "status": "RECEIVED",
+      "version": 1
+    },
+    {
+      "orderNumber": "ABAR-H5C-768-PAY",
+      "status": "DELIVERED",
+      "version": 5
+    }
+  ],
+  "payments": [
+    {
+      "status": "PENDING",
+      "count": 6
+    },
+    {
+      "status": "PAID",
+      "count": 3
+    }
+  ],
+  "balances": [
+    {
+      "unit": "UNIT",
+      "availableQuantity": 27,
+      "version": 4
+    },
+    {
+      "unit": "METER",
+      "availableQuantity": 100,
+      "version": 1
+    },
+    {
+      "unit": "ROLL",
+      "availableQuantity": 5,
+      "version": 1
+    }
+  ],
+  "operations": [
+    {
+      "type": "PAYMENT_CONFIRMATION",
+      "count": 3
+    }
+  ],
+  "entryCount": 3,
+  "notes": 3,
+  "events": [
+    {
+      "eventType": "INTERNAL_NOTE_ADDED",
+      "count": 3
+    },
+    {
+      "eventType": "ORDER_CANCELLED",
+      "count": 3
+    },
+    {
+      "eventType": "ORDER_CREATED",
+      "count": 9
+    },
+    {
+      "eventType": "ORDER_DELIVERED",
+      "count": 3
+    },
+    {
+      "eventType": "ORDER_READY",
+      "count": 3
+    },
+    {
+      "eventType": "PAYMENT_CONFIRMED",
+      "count": 3
+    }
+  ],
+  "jobs": [
+    {
+      "kind": "PAYMENT_CONFIRMED_BUYER",
+      "state": "PENDING",
+      "count": 3
+    },
+    {
+      "kind": "PAYMENT_CONFIRMED_ADMIN",
+      "state": "PENDING",
+      "count": 3
+    },
+    {
+      "kind": "ORDER_READY_BUYER",
+      "state": "PENDING",
+      "count": 3
+    },
+    {
+      "kind": "ORDER_CANCELLED_BUYER",
+      "state": "PENDING",
+      "count": 3
+    }
+  ],
+  "balanceSha256": "39415b978292208aa868d784fbadf9418f004443176b6c9ea4f010bacf2f47dd"
+}

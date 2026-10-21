@@ -1,0 +1,196 @@
+{
+  "orders": [
+    {
+      "id": "4593b2c8-1ff7-402f-8d70-ac09a8065284",
+      "orderNumber": "ABAR-20261021-597A60144D",
+      "status": "DELIVERED",
+      "version": 4,
+      "totalMinor": "12500"
+    },
+    {
+      "id": "d6dcc4fd-18ea-4f86-9724-d13360ff72dc",
+      "orderNumber": "ABAR-20261021-8CA9F82059",
+      "status": "CANCELLED",
+      "version": 2,
+      "totalMinor": "12500"
+    }
+  ],
+  "payments": [
+    {
+      "id": "0b0a788b-602c-494d-92fe-f24c580a2053",
+      "orderId": "d6dcc4fd-18ea-4f86-9724-d13360ff72dc",
+      "status": "PENDING",
+      "amountMinor": "12500",
+      "currentAttemptId": "4e39aa20-b8d3-4870-8efa-0486dc2f5538",
+      "confirmedAt": null,
+      "confirmedByAdminUserId": null
+    },
+    {
+      "id": "3c07aa0d-7d34-4359-8e92-7a568371dcfc",
+      "orderId": "4593b2c8-1ff7-402f-8d70-ac09a8065284",
+      "status": "PAID",
+      "amountMinor": "12500",
+      "currentAttemptId": "9a19c3c4-bd1a-4ccc-9ac4-c0c7a88ea837",
+      "confirmedAt": "2026-10-21T13:21:32.516Z",
+      "confirmedByAdminUserId": "4271a063-564f-49ef-acb5-b444d15ed715"
+    }
+  ],
+  "balances": [
+    {
+      "presentationId": "83596a77-5dd5-46b8-9edf-db68763ca066",
+      "availableQuantity": 5,
+      "version": 1
+    },
+    {
+      "presentationId": "a31d944c-e108-4708-a02f-2750170880ff",
+      "availableQuantity": 9,
+      "version": 2
+    },
+    {
+      "presentationId": "a512bbaa-1cb9-4a02-aca3-3c4b6e5a4c83",
+      "availableQuantity": 100,
+      "version": 1
+    }
+  ],
+  "operations": [
+    {
+      "id": "c624812d-d4a5-41b0-8e56-6e8f862cf53f",
+      "type": "PAYMENT_CONFIRMATION",
+      "paymentId": "3c07aa0d-7d34-4359-8e92-7a568371dcfc",
+      "orderId": "4593b2c8-1ff7-402f-8d70-ac09a8065284",
+      "actorAdminUserId": "4271a063-564f-49ef-acb5-b444d15ed715"
+    }
+  ],
+  "entries": [
+    {
+      "operationId": "c624812d-d4a5-41b0-8e56-6e8f862cf53f",
+      "presentationId": "a31d944c-e108-4708-a02f-2750170880ff",
+      "delta": -1,
+      "resultingQuantity": 9,
+      "version": 2
+    }
+  ],
+  "events": [
+    {
+      "id": "06e15a2b-1d95-4859-bd7f-b7b6e59f4fc5",
+      "orderId": "d6dcc4fd-18ea-4f86-9724-d13360ff72dc",
+      "eventType": "PAYMENT_ATTEMPT_CREATED",
+      "actorAdminUserId": null,
+      "details": {
+        "sequence": 1,
+        "methodCode": "DEMO_PAY_ON_PICKUP"
+      }
+    },
+    {
+      "id": "08f8b3e2-d3d5-4316-95a2-ebfdc4586eaa",
+      "orderId": "4593b2c8-1ff7-402f-8d70-ac09a8065284",
+      "eventType": "ORDER_CREATED",
+      "actorAdminUserId": null,
+      "details": {
+        "source": "H4_GUEST_CHECKOUT"
+      }
+    },
+    {
+      "id": "0fbcde7c-226b-4eda-8444-24f8345168ed",
+      "orderId": "d6dcc4fd-18ea-4f86-9724-d13360ff72dc",
+      "eventType": "ORDER_CANCELLED",
+      "actorAdminUserId": "4271a063-564f-49ef-acb5-b444d15ed715",
+      "details": {
+        "reason": "Cancelación académica solicitada antes del pago",
+        "toStatus": "CANCELLED",
+        "fromStatus": "RECEIVED"
+      }
+    },
+    {
+      "id": "2630fd46-39e5-4027-8f46-04c2081d36e3",
+      "orderId": "4593b2c8-1ff7-402f-8d70-ac09a8065284",
+      "eventType": "PAYMENT_ATTEMPT_CREATED",
+      "actorAdminUserId": null,
+      "details": {
+        "sequence": 1,
+        "methodCode": "DEMO_PAY_ON_PICKUP"
+      }
+    },
+    {
+      "id": "5ef86dc5-9bdc-4859-9ad1-e22eaace29ab",
+      "orderId": "d6dcc4fd-18ea-4f86-9724-d13360ff72dc",
+      "eventType": "ORDER_CREATED",
+      "actorAdminUserId": null,
+      "details": {
+        "source": "H4_GUEST_CHECKOUT"
+      }
+    },
+    {
+      "id": "68886594-5015-4d32-b9bc-48bf801833d6",
+      "orderId": "4593b2c8-1ff7-402f-8d70-ac09a8065284",
+      "eventType": "ORDER_DELIVERED",
+      "actorAdminUserId": "4271a063-564f-49ef-acb5-b444d15ed715",
+      "details": {
+        "toStatus": "DELIVERED",
+        "fromStatus": "READY"
+      }
+    },
+    {
+      "id": "c11a0beb-78fa-4019-b11c-cdab73a821d6",
+      "orderId": "4593b2c8-1ff7-402f-8d70-ac09a8065284",
+      "eventType": "PAYMENT_CONFIRMED",
+      "actorAdminUserId": "4271a063-564f-49ef-acb5-b444d15ed715",
+      "details": {
+        "toStatus": "PREPARING",
+        "fromStatus": "RECEIVED"
+      }
+    },
+    {
+      "id": "f8af2eb0-0099-4dd3-8003-5541962a53c2",
+      "orderId": "4593b2c8-1ff7-402f-8d70-ac09a8065284",
+      "eventType": "ORDER_READY",
+      "actorAdminUserId": "4271a063-564f-49ef-acb5-b444d15ed715",
+      "details": {
+        "toStatus": "READY",
+        "fromStatus": "PREPARING"
+      }
+    }
+  ],
+  "jobs": [
+    {
+      "orderId": "4593b2c8-1ff7-402f-8d70-ac09a8065284",
+      "kind": "ORDER_CREATED_ADMIN",
+      "state": "PENDING"
+    },
+    {
+      "orderId": "4593b2c8-1ff7-402f-8d70-ac09a8065284",
+      "kind": "ORDER_CREATED_BUYER",
+      "state": "PENDING"
+    },
+    {
+      "orderId": "4593b2c8-1ff7-402f-8d70-ac09a8065284",
+      "kind": "ORDER_READY_BUYER",
+      "state": "PENDING"
+    },
+    {
+      "orderId": "4593b2c8-1ff7-402f-8d70-ac09a8065284",
+      "kind": "PAYMENT_CONFIRMED_ADMIN",
+      "state": "PENDING"
+    },
+    {
+      "orderId": "4593b2c8-1ff7-402f-8d70-ac09a8065284",
+      "kind": "PAYMENT_CONFIRMED_BUYER",
+      "state": "PENDING"
+    },
+    {
+      "orderId": "d6dcc4fd-18ea-4f86-9724-d13360ff72dc",
+      "kind": "ORDER_CREATED_ADMIN",
+      "state": "PENDING"
+    },
+    {
+      "orderId": "d6dcc4fd-18ea-4f86-9724-d13360ff72dc",
+      "kind": "ORDER_CREATED_BUYER",
+      "state": "PENDING"
+    },
+    {
+      "orderId": "d6dcc4fd-18ea-4f86-9724-d13360ff72dc",
+      "kind": "ORDER_CANCELLED_BUYER",
+      "state": "PENDING"
+    }
+  ]
+}

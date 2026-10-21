@@ -34,6 +34,8 @@ export const appRoutes: Routes = [
       { path: '', pathMatch: 'full', redirectTo: 'usuarios' },
       { path: 'usuarios', loadComponent: () => import('./features/admin/admin-placeholder-page.component').then((module) => module.AdminPlaceholderPageComponent) },
       { path: 'productos', loadComponent: () => import('./features/admin-catalog/admin-products-page.component').then((module) => module.AdminProductsPageComponent) },
+      { path: 'pedidos', loadComponent: () => import('./features/admin-orders/admin-orders-list-page.component').then((module) => module.AdminOrdersListPageComponent) },
+      { path: 'pedidos/:id', loadComponent: () => import('./features/admin-orders/admin-order-detail-page.component').then((module) => module.AdminOrderDetailPageComponent) },
       { path: 'productos/nuevo', canDeactivate: [(component: { canDeactivate(): boolean }) => component.canDeactivate()], loadComponent: () => import('./features/admin-catalog/admin-product-form-page.component').then((module) => module.AdminProductFormPageComponent) },
       { path: 'productos/:id/editar', canDeactivate: [(component: { canDeactivate(): boolean }) => component.canDeactivate()], loadComponent: () => import('./features/admin-catalog/admin-product-form-page.component').then((module) => module.AdminProductFormPageComponent) },
       { path: 'categorias', loadComponent: () => import('./features/admin-catalog/admin-categories-page.component').then((module) => module.AdminCategoriesPageComponent) },

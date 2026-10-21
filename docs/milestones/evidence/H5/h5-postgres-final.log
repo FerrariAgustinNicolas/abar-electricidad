@@ -1,0 +1,102 @@
+Loaded Prisma config from ../../../../../../../var/folders/h5/kkfjlsqs4dg371_bgbs86m080000gn/T/abar-h5-pg.RTR4Qp/full.config.ts.
+
+Prisma schema loaded from prisma/schema.prisma.
+Datasource "db": PostgreSQL database "h5_orders", schema "public" at "127.0.0.1:59644"
+
+7 migrations found in prisma/migrations
+
+Applying migration `20261009000100_h1_admin_user`
+Applying migration `20261009000200_h1_auth_context`
+Applying migration `20261009000300_h1_admin_audit`
+Applying migration `20261020000100_h2_catalog_stock`
+Applying migration `20261020190000_h3_checkout_quotes`
+Applying migration `20261020200000_h4_orders`
+Applying migration `20261021000100_h5_manual_confirmation`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20261009000100_h1_admin_user/
+    └─ migration.sql
+  └─ 20261009000200_h1_auth_context/
+    └─ migration.sql
+  └─ 20261009000300_h1_admin_audit/
+    └─ migration.sql
+  └─ 20261020000100_h2_catalog_stock/
+    └─ migration.sql
+  └─ 20261020190000_h3_checkout_quotes/
+    └─ migration.sql
+  └─ 20261020200000_h4_orders/
+    └─ migration.sql
+  └─ 20261021000100_h5_manual_confirmation/
+    └─ migration.sql
+
+All migrations have been successfully applied.
+Loaded Prisma config from ../../../../../../../var/folders/h5/kkfjlsqs4dg371_bgbs86m080000gn/T/abar-h5-pg.RTR4Qp/h4.config.ts.
+
+Prisma schema loaded from prisma/schema.prisma.
+Datasource "db": PostgreSQL database "h5_upgrade", schema "public" at "127.0.0.1:59644"
+
+6 migrations found in prisma/migrations
+
+Applying migration `20261009000100_h1_admin_user`
+Applying migration `20261009000200_h1_auth_context`
+Applying migration `20261009000300_h1_admin_audit`
+Applying migration `20261020000100_h2_catalog_stock`
+Applying migration `20261020190000_h3_checkout_quotes`
+Applying migration `20261020200000_h4_orders`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20261009000100_h1_admin_user/
+    └─ migration.sql
+  └─ 20261009000200_h1_auth_context/
+    └─ migration.sql
+  └─ 20261009000300_h1_admin_audit/
+    └─ migration.sql
+  └─ 20261020000100_h2_catalog_stock/
+    └─ migration.sql
+  └─ 20261020190000_h3_checkout_quotes/
+    └─ migration.sql
+  └─ 20261020200000_h4_orders/
+    └─ migration.sql
+
+All migrations have been successfully applied.
+
+> abar-backend@0.1.0 test:e2e
+> node scripts/copy-catalog-contract.mjs && jest --config ./test/jest-e2e.json --runInBand --testPathPatterns=h5-orders.e2e-spec.ts
+
+  console.log
+    H5-Q03 balances hashes 07607f192a4b2402c5eb18b036a1e5cbe27f04b9253bdb331d7783c015eacf60 7cbeade4b11675bde0e1550dabea328546b64918c833166cb5b4113ec81fdc42
+
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:110:13)
+
+  console.log
+    H5-Q07 observed lock waiters 2
+
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:130:324)
+
+FAIL test/h5-orders.e2e-spec.ts
+  ● H5 on a newly owned PostgreSQL 17 fixture (required, never skipped) › H5-Q01 deploys seven migrations and upgrades populated H4 without changing historical bytes
+
+    error: column "updatedAt" of relation "Category" does not exist
+
+      85 |       const snapshot = async () => (await upgrade.query(`SELECT jsonb_build_object('order',(SELECT to_jsonb(t) FROM "Order" t WHERE id=$1),'payment',(SELECT to_jsonb(t)-'confirmedAt'-'confirmedByAdminUserId' FROM "Payment" t WHERE id=$2),'attempt',(SELECT to_jsonb(t) FROM "PaymentAttempt" t WHERE id=$3),'events',(SELECT jsonb_agg(to_jsonb(t)-'actorAdminUserId') FROM "OrderEvent" t WHERE "orderId"=$1))::text value`, [oid, pid, aid])).rows[0].value;
+      86 |       const cat = randomUUID(), prod = randomUUID(), pres = randomUUID();
+    > 87 |       await upgrade.query(`INSERT INTO "Category"(id,name,slug,"updatedAt") VALUES($1,'H4 preserved',$2,now())`, [cat, `h4-${cat}`]);
+         |       ^
+      88 |       await upgrade.query(`INSERT INTO "Product"(id,"categoryId",name,slug,"updatedAt") VALUES($1,$2,'H4 frozen cable',$3,now())`, [prod, cat, `h4-${prod}`]);
+      89 |       await upgrade.query(`INSERT INTO "ProductPresentation"(id,"productId",unit,"amountMinor") VALUES($1,$2,'UNIT',1234)`, [pres, prod]);
+      90 |       await upgrade.query(`INSERT INTO "StockBalance"("presentationId","availableQuantity") VALUES($1,7)`, [pres]);
+
+      at node_modules/pg/lib/client.js:694:17
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:87:7)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 11 passed, 12 total
+Snapshots:   0 total
+Time:        1.844 s, estimated 3 s
+Ran all test suites matching h5-orders.e2e-spec.ts.
+Owned private fixture manifest omitted (ephemeral credentials).
+Scratch retained for parent cleanup: /var/folders/h5/kkfjlsqs4dg371_bgbs86m080000gn/T/abar-h5-pg.RTR4Qp

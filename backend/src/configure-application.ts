@@ -19,7 +19,7 @@ export function configureApplication(app: NestExpressApplication): void {
   const options = new DocumentBuilder()
     .setTitle('ABAR Electricidad API — transversal candidate')
     .setDescription('H1 authentication, H2 catalog/stock, H3 demo quotes, and H4 guest orders/demo attempts for local verification. No external approval or production readiness is implied.')
-    .setVersion('0.7.0')
+    .setVersion('0.8.0')
     .setOpenAPIVersion('3.0.3')
     .addCookieAuth('abar_auth_context', { type: 'apiKey', in: 'cookie' }, 'AuthPreauthCookie')
     .addCookieAuth('abar_admin_session', { type: 'apiKey', in: 'cookie' }, 'AdminSessionCookie')

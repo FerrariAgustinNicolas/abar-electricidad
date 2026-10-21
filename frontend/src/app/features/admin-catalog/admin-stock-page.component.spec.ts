@@ -24,6 +24,30 @@ describe('AdminStockPageComponent', () => {
   ] }));
   afterEach(() => { vi.restoreAllMocks(); TestBed.resetTestingModule(); });
 
+  it('renders PAYMENT_CONFIRMATION distinctly while preserving adjustment and roll-opening labels', async () => {
+    const fixture = TestBed.createComponent(AdminStockPageComponent);
+    await fixture.whenStable();
+    const items = ['ADJUSTMENT', 'ROLL_OPENING', 'PAYMENT_CONFIRMATION'].map((type, i) => ({ id: `movement-${i}`, type, reason: 'Synthetic audit', actorAdminUserId: 'admin-1', createdAt: '2026-10-21T00:00:00Z', entries: [] } as unknown as StockOperationView));
+    fixture.componentInstance.movements.set({ items, pageInfo: { page: 1, pageSize: 20, totalItems: 3, totalPages: 1 } });
+    fixture.detectChanges();
+    const text = fixture.nativeElement.textContent;
+    expect(text).toContain('Confirmación de pago');
+    expect(text).toContain('Ajuste');
+    expect(text).toContain('Apertura de rollo');
+    expect(fixture.nativeElement.querySelector('option[value="PAYMENT_CONFIRMATION"]')).not.toBeNull();
+  });
+
+  it('shows paid pending delivery demand separately without subtracting it from the available balance', async () => {
+    const fixture = TestBed.createComponent(AdminStockPageComponent);
+    await fixture.whenStable();
+    const row = { presentationId: 'unit', productId: 'p1', productName: 'Cable', unit: 'UNIT' as const, rollLengthMeters: null, active: true, availableQuantity: 4, requestedUnpaidQuantity: 2, paidPendingDeliveryQuantity: 3, lowStockThreshold: 0, version: 2, availability: 'AVAILABLE' as const };
+    fixture.componentInstance.stock.set({ items: [row], pageInfo: { page: 1, pageSize: 20, totalItems: 1, totalPages: 1 } });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain('Pagado pendiente de entrega (ya descontado)');
+    const cells = [...fixture.nativeElement.querySelectorAll('tbody tr:first-child td')].map((e: unknown) => (e as HTMLElement).textContent?.trim());
+    expect(cells.slice(2, 5)).toEqual(['4', '2', '3']);
+  });
+
   it('projects roll openings from the configured roll length, not a fixed default', () => {
     const component = TestBed.createComponent(AdminStockPageComponent).componentInstance;
     component.openingPairs.set([{ roll: { presentationId: 'roll', productId: 'p1', productName: 'Cable', unit: 'ROLL', rollLengthMeters: 75, active: true, availableQuantity: 3, lowStockThreshold: 1, version: 2, availability: 'AVAILABLE' },

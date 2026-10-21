@@ -1,0 +1,24 @@
+{
+  "contractCandidate": "45c78cf4f3b29e64d4d1982b5c7057850edbc424",
+  "consent": "granted",
+  "lineage": "review-dd37ccd89c8cd691",
+  "target": "sha256:e0c254ea81cda9cdfcd7e1123538db0971296259ac7c5562b91511ab88bb1cff",
+  "lenses": [
+    "risk",
+    "readability",
+    "reliability"
+  ],
+  "outcome": "approved",
+  "ack": {
+    "schema": "gentle-ai.review-acknowledged/v1",
+    "action": "acknowledged",
+    "consumed_revision": "sha256:18811b3142fc46977c2920a255ee30928b4df7bf859750f42d146c04f84a8fcc",
+    "authority": "burned"
+  },
+  "runtimeApproval": false,
+  "advisories": [
+    "H3/H4 version error messages remain legacy",
+    "operation-count error message remains H1-only",
+    "validator does not assert no-store enum value"
+  ]
+}

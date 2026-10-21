@@ -1,0 +1,14 @@
+
+    ╔═══════════════════════════════════════════════════════╗
+    ║                                                       ║
+    ║  A new version of Redocly CLI (2.65.1) is available.  ║
+    ║  Update now: `npm i -g @redocly/cli@latest`.          ║
+    ║  Changelog: https://redocly.com/docs/cli/changelog/   ║
+    ║                                                       ║
+    ╚═══════════════════════════════════════════════════════╝
+
+validating contracts/openapi.yaml...
+contracts/openapi.yaml: validated in 29ms
+
+Woohoo! Your API description is valid. 🎉
+

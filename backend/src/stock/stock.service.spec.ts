@@ -20,13 +20,13 @@ describe('StockService adjustment contract', () => {
     expect(response.items).toEqual([{
       presentationId, productId: 'product', productName: 'Cable', unit: 'METER', rollLengthMeters: null,
       active: true, availableQuantity: 0, lowStockThreshold: 2, version: 1, availability: 'OUT_OF_STOCK',
-      requestedUnpaidQuantity: 5,
+      requestedUnpaidQuantity: 5, paidPendingDeliveryQuantity: 5,
     }]);
     expect(prisma.productPresentation.findMany).toHaveBeenCalledTimes(1);
     expect(prisma.productPresentation.count).toHaveBeenCalledTimes(1);
     expect(prisma.orderItem.groupBy).toHaveBeenCalledWith(expect.objectContaining({
       by: ['presentationId'],
-      where: expect.objectContaining({ order: { is: { payment: { is: { status: { in: ['PENDING', 'REJECTED'] } } } } } }),
+      where: expect.objectContaining({ order: { is: { status: 'RECEIVED', payment: { is: { status: { in: ['PENDING', 'REJECTED'] } } } } } }),
     }));
     expect(prisma).not.toHaveProperty('stockBalance');
   });

@@ -1,0 +1,1556 @@
+{
+  "browser": "Chrome for Testing127.0.6533.88 headless, fresh profile, CDP",
+  "source": "7712c45ac8c98a04644d2e6bcbdf68c5abec70ce (only added expiry tests after candidate)",
+  "origin": "http://127.0.0.1:43176",
+  "widths": [
+    360,
+    768,
+    1440
+  ],
+  "zoom": "Emulation viewport reflow at deviceScaleFactor1/visualViewport.scale1; NOT native200% zoom",
+  "measurements": [
+    {
+      "width": 360,
+      "stage": "list",
+      "innerWidth": 360,
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "bodyScrollWidth": 360,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 0,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 326,
+          "scrollWidth": 723,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 360,
+      "stage": "detail",
+      "innerWidth": 360,
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "bodyScrollWidth": 360,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 0,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 292,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 292,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 360,
+      "stage": "payment-review",
+      "innerWidth": 360,
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "bodyScrollWidth": 360,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 2098,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 292,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 292,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 360,
+      "stage": "preparing",
+      "innerWidth": 360,
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "bodyScrollWidth": 360,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 1760,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 292,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 292,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 360,
+      "stage": "notes-history",
+      "innerWidth": 360,
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "bodyScrollWidth": 360,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 2509,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 292,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 292,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 360,
+      "stage": "ready",
+      "innerWidth": 360,
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "bodyScrollWidth": 360,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 0,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 292,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 292,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 360,
+      "stage": "delivered",
+      "innerWidth": 360,
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "bodyScrollWidth": 360,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 0,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 292,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 292,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 360,
+      "stage": "cancel-review",
+      "innerWidth": 360,
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "bodyScrollWidth": 360,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 2495.5,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 292,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 292,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 360,
+      "stage": "cancelled",
+      "innerWidth": 360,
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "bodyScrollWidth": 360,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 0,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 292,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 292,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 360,
+      "stage": "insufficient-error",
+      "innerWidth": 360,
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "bodyScrollWidth": 360,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 2134,
+      "alerts": [
+        "El saldo actual no cubre todas las líneas. Actualice y revise antes de intentar confirmar."
+      ],
+      "internalScrollers": [
+        {
+          "clientWidth": 292,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 292,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 360,
+      "stage": "stock",
+      "innerWidth": 360,
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "bodyScrollWidth": 360,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 0,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 326,
+          "scrollWidth": 843,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 326,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 360,
+      "stage": "movements",
+      "innerWidth": 360,
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "bodyScrollWidth": 360,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 1881.5,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 326,
+          "scrollWidth": 843,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 326,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 768,
+      "stage": "list",
+      "innerWidth": 768,
+      "clientWidth": 768,
+      "scrollWidth": 768,
+      "bodyScrollWidth": 768,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 0,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 734,
+          "scrollWidth": 734,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 768,
+      "stage": "detail",
+      "innerWidth": 768,
+      "clientWidth": 768,
+      "scrollWidth": 768,
+      "bodyScrollWidth": 768,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 0,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 700,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 700,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 768,
+      "stage": "payment-review",
+      "innerWidth": 768,
+      "clientWidth": 768,
+      "scrollWidth": 768,
+      "bodyScrollWidth": 768,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 1490.5,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 700,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 700,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 768,
+      "stage": "preparing",
+      "innerWidth": 768,
+      "clientWidth": 768,
+      "scrollWidth": 768,
+      "bodyScrollWidth": 768,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 1212.5,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 700,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 700,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 768,
+      "stage": "notes-history",
+      "innerWidth": 768,
+      "clientWidth": 768,
+      "scrollWidth": 768,
+      "bodyScrollWidth": 768,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 1748,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 700,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 700,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 768,
+      "stage": "ready",
+      "innerWidth": 768,
+      "clientWidth": 768,
+      "scrollWidth": 768,
+      "bodyScrollWidth": 768,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 0,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 700,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 700,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 768,
+      "stage": "delivered",
+      "innerWidth": 768,
+      "clientWidth": 768,
+      "scrollWidth": 768,
+      "bodyScrollWidth": 768,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 0,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 700,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 700,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 768,
+      "stage": "cancel-review",
+      "innerWidth": 768,
+      "clientWidth": 768,
+      "scrollWidth": 768,
+      "bodyScrollWidth": 768,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 1744.5,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 700,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 700,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 768,
+      "stage": "cancelled",
+      "innerWidth": 768,
+      "clientWidth": 768,
+      "scrollWidth": 768,
+      "bodyScrollWidth": 768,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 0,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 700,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 700,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 768,
+      "stage": "insufficient-error",
+      "innerWidth": 768,
+      "clientWidth": 768,
+      "scrollWidth": 768,
+      "bodyScrollWidth": 768,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 1490.5,
+      "alerts": [
+        "El saldo actual no cubre todas las líneas. Actualice y revise antes de intentar confirmar."
+      ],
+      "internalScrollers": [
+        {
+          "clientWidth": 700,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 700,
+          "scrollWidth": 704,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 768,
+      "stage": "stock",
+      "innerWidth": 768,
+      "clientWidth": 768,
+      "scrollWidth": 768,
+      "bodyScrollWidth": 768,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 0,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 734,
+          "scrollWidth": 843,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 734,
+          "scrollWidth": 734,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 768,
+      "stage": "movements",
+      "innerWidth": 768,
+      "clientWidth": 768,
+      "scrollWidth": 768,
+      "bodyScrollWidth": 768,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 1428,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 734,
+          "scrollWidth": 843,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 734,
+          "scrollWidth": 734,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 1440,
+      "stage": "list",
+      "innerWidth": 1440,
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "bodyScrollWidth": 1440,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 0,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 844,
+          "scrollWidth": 844,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 1440,
+      "stage": "detail",
+      "innerWidth": 1440,
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "bodyScrollWidth": 1440,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 0,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 810,
+          "scrollWidth": 810,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 810,
+          "scrollWidth": 810,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 1440,
+      "stage": "payment-review",
+      "innerWidth": 1440,
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "bodyScrollWidth": 1440,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 1330.5,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 810,
+          "scrollWidth": 810,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 810,
+          "scrollWidth": 810,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 1440,
+      "stage": "preparing",
+      "innerWidth": 1440,
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "bodyScrollWidth": 1440,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 1052.5,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 810,
+          "scrollWidth": 810,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 810,
+          "scrollWidth": 810,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 1440,
+      "stage": "notes-history",
+      "innerWidth": 1440,
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "bodyScrollWidth": 1440,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 1588,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 810,
+          "scrollWidth": 810,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 810,
+          "scrollWidth": 810,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 1440,
+      "stage": "ready",
+      "innerWidth": 1440,
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "bodyScrollWidth": 1440,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 0,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 810,
+          "scrollWidth": 810,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 810,
+          "scrollWidth": 810,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 1440,
+      "stage": "delivered",
+      "innerWidth": 1440,
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "bodyScrollWidth": 1440,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 0,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 810,
+          "scrollWidth": 810,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 810,
+          "scrollWidth": 810,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 1440,
+      "stage": "cancel-review",
+      "innerWidth": 1440,
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "bodyScrollWidth": 1440,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 1584.5,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 810,
+          "scrollWidth": 810,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 810,
+          "scrollWidth": 810,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 1440,
+      "stage": "cancelled",
+      "innerWidth": 1440,
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "bodyScrollWidth": 1440,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 0,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 810,
+          "scrollWidth": 810,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 810,
+          "scrollWidth": 810,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 1440,
+      "stage": "insufficient-error",
+      "innerWidth": 1440,
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "bodyScrollWidth": 1440,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 1330.5,
+      "alerts": [
+        "El saldo actual no cubre todas las líneas. Actualice y revise antes de intentar confirmar."
+      ],
+      "internalScrollers": [
+        {
+          "clientWidth": 810,
+          "scrollWidth": 810,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 810,
+          "scrollWidth": 810,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 1440,
+      "stage": "stock",
+      "innerWidth": 1440,
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "bodyScrollWidth": 1440,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 0,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 844,
+          "scrollWidth": 844,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 844,
+          "scrollWidth": 844,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    },
+    {
+      "width": 1440,
+      "stage": "movements",
+      "innerWidth": 1440,
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "bodyScrollWidth": 1440,
+      "documentOverflow": false,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "scrollX": 0,
+      "scrollY": 1254.5,
+      "alerts": [],
+      "internalScrollers": [
+        {
+          "clientWidth": 844,
+          "scrollWidth": 844,
+          "overflowX": "auto"
+        },
+        {
+          "clientWidth": 844,
+          "scrollWidth": 844,
+          "overflowX": "auto"
+        }
+      ],
+      "overflowElements": []
+    }
+  ],
+  "keyboard": [
+    {
+      "width": 360,
+      "stage": "list",
+      "first": {
+        "tag": "A",
+        "id": "",
+        "text": "Saltar al contenido",
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(8, 77, 125)",
+        "boxShadow": "none",
+        "visible": true,
+        "focusVisible": true,
+        "rect": {
+          "x": 16,
+          "y": 16,
+          "width": 148.53125,
+          "height": 44
+        }
+      },
+      "second": {
+        "tag": "A",
+        "id": "",
+        "text": "ABAR Electricidad · Administración",
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "none",
+        "visible": true,
+        "focusVisible": true,
+        "rect": {
+          "x": 16,
+          "y": 16,
+          "width": 270.578125,
+          "height": 44
+        }
+      },
+      "reverse": {
+        "tag": "A",
+        "id": "",
+        "text": "Saltar al contenido",
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(8, 77, 125)",
+        "boxShadow": "none",
+        "visible": true,
+        "focusVisible": true,
+        "rect": {
+          "x": 16,
+          "y": 16,
+          "width": 148.53125,
+          "height": 44
+        }
+      },
+      "shiftTabReturned": true
+    },
+    {
+      "width": 360,
+      "stage": "detail",
+      "first": {
+        "tag": "A",
+        "id": "",
+        "text": "Saltar al contenido",
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(8, 77, 125)",
+        "boxShadow": "none",
+        "visible": true,
+        "focusVisible": true,
+        "rect": {
+          "x": 16,
+          "y": 16,
+          "width": 148.53125,
+          "height": 44
+        }
+      },
+      "second": {
+        "tag": "A",
+        "id": "",
+        "text": "ABAR Electricidad · Administración",
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "none",
+        "visible": true,
+        "focusVisible": true,
+        "rect": {
+          "x": 16,
+          "y": 16,
+          "width": 270.578125,
+          "height": 44
+        }
+      },
+      "reverse": {
+        "tag": "A",
+        "id": "",
+        "text": "Saltar al contenido",
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(8, 77, 125)",
+        "boxShadow": "none",
+        "visible": true,
+        "focusVisible": true,
+        "rect": {
+          "x": 16,
+          "y": 16,
+          "width": 148.53125,
+          "height": 44
+        }
+      },
+      "shiftTabReturned": true
+    },
+    {
+      "width": 360,
+      "stage": "stock",
+      "first": {
+        "tag": "A",
+        "id": "",
+        "text": "Saltar al contenido",
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(8, 77, 125)",
+        "boxShadow": "none",
+        "visible": true,
+        "focusVisible": true,
+        "rect": {
+          "x": 16,
+          "y": 16,
+          "width": 148.53125,
+          "height": 44
+        }
+      },
+      "second": {
+        "tag": "A",
+        "id": "",
+        "text": "ABAR Electricidad · Administración",
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "none",
+        "visible": true,
+        "focusVisible": true,
+        "rect": {
+          "x": 16,
+          "y": 16,
+          "width": 270.578125,
+          "height": 44
+        }
+      },
+      "reverse": {
+        "tag": "A",
+        "id": "",
+        "text": "Saltar al contenido",
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(8, 77, 125)",
+        "boxShadow": "none",
+        "visible": true,
+        "focusVisible": true,
+        "rect": {
+          "x": 16,
+          "y": 16,
+          "width": 148.53125,
+          "height": 44
+        }
+      },
+      "shiftTabReturned": true
+    },
+    {
+      "width": 768,
+      "stage": "list",
+      "first": {
+        "tag": "A",
+        "id": "",
+        "text": "Saltar al contenido",
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(8, 77, 125)",
+        "boxShadow": "none",
+        "visible": true,
+        "focusVisible": true,
+        "rect": {
+          "x": 16,
+          "y": 16,
+          "width": 148.53125,
+          "height": 44
+        }
+      },
+      "second": {
+        "tag": "A",
+        "id": "",
+        "text": "ABAR Electricidad · Administración",
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "none",
+        "visible": true,
+        "focusVisible": true,
+        "rect": {
+          "x": 16,
+          "y": 16,
+          "width": 270.578125,
+          "height": 44
+        }
+      },
+      "reverse": {
+        "tag": "A",
+        "id": "",
+        "text": "Saltar al contenido",
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(8, 77, 125)",
+        "boxShadow": "none",
+        "visible": true,
+        "focusVisible": true,
+        "rect": {
+          "x": 16,
+          "y": 16,
+          "width": 148.53125,
+          "height": 44
+        }
+      },
+      "shiftTabReturned": true
+    },
+    {
+      "width": 768,
+      "stage": "detail",
+      "first": {
+        "tag": "A",
+        "id": "",
+        "text": "Saltar al contenido",
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(8, 77, 125)",
+        "boxShadow": "none",
+        "visible": true,
+        "focusVisible": true,
+        "rect": {
+          "x": 16,
+          "y": 16,
+          "width": 148.53125,
+          "height": 44
+        }
+      },
+      "second": {
+        "tag": "A",
+        "id": "",
+        "text": "ABAR Electricidad · Administración",
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "none",
+        "visible": true,
+        "focusVisible": true,
+        "rect": {
+          "x": 16,
+          "y": 16,
+          "width": 270.578125,
+          "height": 44
+        }
+      },
+      "reverse": {
+        "tag": "A",
+        "id": "",
+        "text": "Saltar al contenido",
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(8, 77, 125)",
+        "boxShadow": "none",
+        "visible": true,
+        "focusVisible": true,
+        "rect": {
+          "x": 16,
+          "y": 16,
+          "width": 148.53125,
+          "height": 44
+        }
+      },
+      "shiftTabReturned": true
+    },
+    {
+      "width": 768,
+      "stage": "stock",
+      "first": {
+        "tag": "A",
+        "id": "",
+        "text": "Saltar al contenido",
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(8, 77, 125)",
+        "boxShadow": "none",
+        "visible": true,
+        "focusVisible": true,
+        "rect": {
+          "x": 16,
+          "y": 16,
+          "width": 148.53125,
+          "height": 44
+        }
+      },
+      "second": {
+        "tag": "A",
+        "id": "",
+        "text": "ABAR Electricidad · Administración",
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "none",
+        "visible": true,
+        "focusVisible": true,
+        "rect": {
+          "x": 16,
+          "y": 16,
+          "width": 270.578125,
+          "height": 44
+        }
+      },
+      "reverse": {
+        "tag": "A",
+        "id": "",
+        "text": "Saltar al contenido",
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(8, 77, 125)",
+        "boxShadow": "none",
+        "visible": true,
+        "focusVisible": true,
+        "rect": {
+          "x": 16,
+          "y": 16,
+          "width": 148.53125,
+          "height": 44
+        }
+      },
+      "shiftTabReturned": true
+    },
+    {
+      "width": 1440,
+      "stage": "list",
+      "first": {
+        "tag": "A",
+        "id": "",
+        "text": "Saltar al contenido",
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(8, 77, 125)",
+        "boxShadow": "none",
+        "visible": true,
+        "focusVisible": true,
+        "rect": {
+          "x": 16,
+          "y": 16,
+          "width": 148.53125,
+          "height": 44
+        }
+      },
+      "second": {
+        "tag": "A",
+        "id": "",
+        "text": "ABAR Electricidad · Administración",
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "none",
+        "visible": true,
+        "focusVisible": true,
+        "rect": {
+          "x": 144,
+          "y": 16,
+          "width": 270.578125,
+          "height": 44
+        }
+      },
+      "reverse": {
+        "tag": "A",
+        "id": "",
+        "text": "Saltar al contenido",
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(8, 77, 125)",
+        "boxShadow": "none",
+        "visible": true,
+        "focusVisible": true,
+        "rect": {
+          "x": 16,
+          "y": 16,
+          "width": 148.53125,
+          "height": 44
+        }
+      },
+      "shiftTabReturned": true
+    },
+    {
+      "width": 1440,
+      "stage": "detail",
+      "first": {
+        "tag": "A",
+        "id": "",
+        "text": "Saltar al contenido",
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(8, 77, 125)",
+        "boxShadow": "none",
+        "visible": true,
+        "focusVisible": true,
+        "rect": {
+          "x": 16,
+          "y": 16,
+          "width": 148.53125,
+          "height": 44
+        }
+      },
+      "second": {
+        "tag": "A",
+        "id": "",
+        "text": "ABAR Electricidad · Administración",
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "none",
+        "visible": true,
+        "focusVisible": true,
+        "rect": {
+          "x": 144,
+          "y": 16,
+          "width": 270.578125,
+          "height": 44
+        }
+      },
+      "reverse": {
+        "tag": "A",
+        "id": "",
+        "text": "Saltar al contenido",
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(8, 77, 125)",
+        "boxShadow": "none",
+        "visible": true,
+        "focusVisible": true,
+        "rect": {
+          "x": 16,
+          "y": 16,
+          "width": 148.53125,
+          "height": 44
+        }
+      },
+      "shiftTabReturned": true
+    },
+    {
+      "width": 1440,
+      "stage": "stock",
+      "first": {
+        "tag": "A",
+        "id": "",
+        "text": "Saltar al contenido",
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(8, 77, 125)",
+        "boxShadow": "none",
+        "visible": true,
+        "focusVisible": true,
+        "rect": {
+          "x": 16,
+          "y": 16,
+          "width": 148.53125,
+          "height": 44
+        }
+      },
+      "second": {
+        "tag": "A",
+        "id": "",
+        "text": "ABAR Electricidad · Administración",
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "none",
+        "visible": true,
+        "focusVisible": true,
+        "rect": {
+          "x": 144,
+          "y": 16,
+          "width": 270.578125,
+          "height": 44
+        }
+      },
+      "reverse": {
+        "tag": "A",
+        "id": "",
+        "text": "Saltar al contenido",
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(8, 77, 125)",
+        "boxShadow": "none",
+        "visible": true,
+        "focusVisible": true,
+        "rect": {
+          "x": 16,
+          "y": 16,
+          "width": 148.53125,
+          "height": 44
+        }
+      },
+      "shiftTabReturned": true
+    }
+  ],
+  "actions": [
+    {
+      "width": 360,
+      "action": "paymentReviewEnterEscape",
+      "enterOpened": true,
+      "escapeLeavesInlineReview": true,
+      "escapeApplicable": "No modal/dialog; inline review has explicit back button"
+    },
+    {
+      "width": 360,
+      "action": "confirm-note-ready-delivered",
+      "completed": true
+    },
+    {
+      "width": 360,
+      "action": "cancelBackEnter",
+      "returned": true
+    },
+    {
+      "width": 768,
+      "action": "paymentReviewEnterEscape",
+      "enterOpened": true,
+      "escapeLeavesInlineReview": true,
+      "escapeApplicable": "No modal/dialog; inline review has explicit back button"
+    },
+    {
+      "width": 768,
+      "action": "confirm-note-ready-delivered",
+      "completed": true
+    },
+    {
+      "width": 768,
+      "action": "cancelBackEnter",
+      "returned": true
+    },
+    {
+      "width": 1440,
+      "action": "paymentReviewEnterEscape",
+      "enterOpened": true,
+      "escapeLeavesInlineReview": true,
+      "escapeApplicable": "No modal/dialog; inline review has explicit back button"
+    },
+    {
+      "width": 1440,
+      "action": "confirm-note-ready-delivered",
+      "completed": true
+    },
+    {
+      "width": 1440,
+      "action": "cancelBackEnter",
+      "returned": true
+    }
+  ],
+  "errors": [
+    {
+      "width": 360,
+      "type": "insufficient-stock",
+      "alertPresent": true,
+      "confirmationDisabled": true
+    },
+    {
+      "width": 768,
+      "type": "insufficient-stock",
+      "alertPresent": true,
+      "confirmationDisabled": true
+    },
+    {
+      "width": 1440,
+      "type": "insufficient-stock",
+      "alertPresent": true,
+      "confirmationDisabled": true
+    }
+  ],
+  "completed": true
+}

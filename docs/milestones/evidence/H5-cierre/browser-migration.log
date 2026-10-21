@@ -1,0 +1,31 @@
+Datasource "db": PostgreSQL database "h5_browser", schema "public" at "127.0.0.1:61807"
+
+7 migrations found in prisma/migrations
+
+Applying migration `20261009000100_h1_admin_user`
+Applying migration `20261009000200_h1_auth_context`
+Applying migration `20261009000300_h1_admin_audit`
+Applying migration `20261020000100_h2_catalog_stock`
+Applying migration `20261020190000_h3_checkout_quotes`
+Applying migration `20261020200000_h4_orders`
+Applying migration `20261021000100_h5_manual_confirmation`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20261009000100_h1_admin_user/
+    └─ migration.sql
+  └─ 20261009000200_h1_auth_context/
+    └─ migration.sql
+  └─ 20261009000300_h1_admin_audit/
+    └─ migration.sql
+  └─ 20261020000100_h2_catalog_stock/
+    └─ migration.sql
+  └─ 20261020190000_h3_checkout_quotes/
+    └─ migration.sql
+  └─ 20261020200000_h4_orders/
+    └─ migration.sql
+  └─ 20261021000100_h5_manual_confirmation/
+    └─ migration.sql
+
+All migrations have been successfully applied.

@@ -1,0 +1,103 @@
+Loaded Prisma config from ../../../../../../var/folders/h5/kkfjlsqs4dg371_bgbs86m080000gn/T/abar-h5-pg.b6YnQc/full.config.ts.
+
+Prisma schema loaded from backend/prisma/schema.prisma.
+Datasource "db": PostgreSQL database "h5_browser", schema "public" at "127.0.0.1:59686"
+
+7 migrations found in prisma/migrations
+
+Applying migration `20261009000100_h1_admin_user`
+Applying migration `20261009000200_h1_auth_context`
+Applying migration `20261009000300_h1_admin_audit`
+Applying migration `20261020000100_h2_catalog_stock`
+Applying migration `20261020190000_h3_checkout_quotes`
+Applying migration `20261020200000_h4_orders`
+Applying migration `20261021000100_h5_manual_confirmation`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20261009000100_h1_admin_user/
+    └─ migration.sql
+  └─ 20261009000200_h1_auth_context/
+    └─ migration.sql
+  └─ 20261009000300_h1_admin_audit/
+    └─ migration.sql
+  └─ 20261020000100_h2_catalog_stock/
+    └─ migration.sql
+  └─ 20261020190000_h3_checkout_quotes/
+    └─ migration.sql
+  └─ 20261020200000_h4_orders/
+    └─ migration.sql
+  └─ 20261021000100_h5_manual_confirmation/
+    └─ migration.sql
+
+All migrations have been successfully applied.
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [NestFactory] Starting Nest application...
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [InstanceLoader] AppModule dependencies initialized +18ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [InstanceLoader] AuthRuntimeModule dependencies initialized +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [InstanceLoader] ConfigHostModule dependencies initialized +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [InstanceLoader] ConfigModule dependencies initialized +3ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [InstanceLoader] PrismaModule dependencies initialized +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [InstanceLoader] HealthModule dependencies initialized +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [InstanceLoader] CheckoutModule dependencies initialized +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [InstanceLoader] AuthModule dependencies initialized +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [InstanceLoader] StockModule dependencies initialized +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [InstanceLoader] CatalogModule dependencies initialized +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [InstanceLoader] OrdersModule dependencies initialized +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RoutesResolver] AuthController {/api/v1/auth}: +78ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/auth/me, GET} route +1ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/auth/csrf, GET} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/auth/login, POST} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/auth/logout, POST} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/auth/change-password, POST} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RoutesResolver] AdminUsersController {/api/v1/admin/users}: +2ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/admin/users, GET} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/admin/users, POST} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/admin/users/:id, PATCH} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/admin/users/:id/reset-password, POST} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RoutesResolver] HealthController {/health}: +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/health, GET} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RoutesResolver] CatalogController {/}: +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/public/home, GET} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/public/categories, GET} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/public/products, GET} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/public/products/:slug, GET} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/public/products/:slug/images/:imageId, GET} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/admin/categories, GET} route +1ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/admin/categories, POST} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/admin/categories/order, PATCH} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/admin/categories/:id, PATCH} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/admin/products, GET} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/admin/products/:id, GET} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/admin/products, POST} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/admin/products/:id, PATCH} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/admin/products/:id/images, POST} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/admin/products/:id/images/:imageId, GET} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/admin/products/:id/images/:imageId, PATCH} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/admin/products/:id/images/:imageId, DELETE} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RoutesResolver] CheckoutController {/}: +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/public/settings, GET} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/public/payment-methods, GET} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/public/checkout/quotes, POST} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RoutesResolver] OrdersController {/}: +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/public/checkout/terms, GET} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/public/orders, POST} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/public/orders/lookup, POST} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/public/orders/:id, GET} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/public/orders/:id/payment-attempts, POST} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RoutesResolver] AdminOrdersController {/api/v1/admin/orders}: +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/admin/orders, GET} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/admin/orders/:id, GET} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/admin/orders/:id/history, GET} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/admin/orders/:id/payment-confirmation, POST} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/admin/orders/:id/status, PATCH} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/admin/orders/:id/cancel, POST} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/admin/orders/:id/notes, POST} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RoutesResolver] StockController {/api/v1/admin/stock}: +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/admin/stock, GET} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/admin/stock/movements, GET} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/admin/stock/adjustments, POST} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [RouterExplorer] Mapped {/api/v1/admin/stock/roll-openings, POST} route +0ms
+[Nest] 37344  - 10/21/2026, 10:17:04 AM     LOG [NestApplication] Nest application successfully started +1ms
+unknown format "email" ignored in schema at path "#/$defs/H4Customer/properties/email"
+unknown format "email" ignored in schema at path "#/$defs/H4Customer/properties/email"

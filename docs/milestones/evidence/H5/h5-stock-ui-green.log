@@ -1,0 +1,26 @@
+
+> abar-frontend@0.1.0 test
+> ng test --watch=false --include=src/app/features/admin-catalog/admin-stock-page.component.spec.ts
+
+❯ Building...
+✔ Building...
+Initial chunk files                                           | Names                                                      |  Raw size
+spec-app-features-admin-catalog-admin-stock-page.component.js | spec-app-features-admin-catalog-admin-stock-page.component |  89.24 kB | 
+styles.css                                                    | styles                                                     |   6.64 kB | 
+chunk-RSTWSNOR.js                                             | -                                                          |   4.75 kB | 
+init-testbed.js                                               | init-testbed                                               |   1.21 kB | 
+vitest-mock-patch.js                                          | vitest-mock-patch                                          | 974 bytes | 
+
+                                                              | Initial total                                              | 102.82 kB
+
+Application bundle generation complete. [1.282 seconds] - 2026-10-21T13:24:35.114Z
+
+
+ RUN  v4.1.11 <worktree>/frontend
+
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  10:24:35
+   Duration  425ms (transform 41ms, setup 83ms, import 50ms, tests 70ms, environment 163ms)
+

@@ -30,6 +30,8 @@ export interface CreateOrderResponse {
 }
 
 export type PaymentAttemptStatus = 'APPROVED' | 'PENDING' | 'REJECTED';
+export type PublicOrderStatus = 'RECEIVED' | 'PREPARING' | 'READY' | 'DELIVERED' | 'CANCELLED';
+export type PublicPaymentStatus = 'PENDING' | 'REJECTED' | 'PAID';
 export interface PaymentAttempt {
   id: string;
   methodCode: PaymentMethodCode;
@@ -47,8 +49,8 @@ export interface PublicOrderView {
   deliveryFee: Money;
   total: Money;
   deliveryMode: DeliveryMode;
-  orderStatus: 'RECEIVED';
-  paymentStatus: 'PENDING' | 'REJECTED';
+  orderStatus: PublicOrderStatus;
+  paymentStatus: PublicPaymentStatus;
   currentAttempt: PaymentAttempt;
   nextActions: Array<'VIEW_ORDER' | 'RETRY_PAYMENT' | 'LOOKUP_ORDER'>;
   demoMode: true;
@@ -57,8 +59,8 @@ export interface OrderLookupRequest { orderNumber: string; contact: string }
 export interface OrderLookupResponse {
   orderNumber: string;
   createdAt: string;
-  orderStatus: 'RECEIVED';
-  paymentStatus: 'PENDING' | 'REJECTED';
+  orderStatus: PublicOrderStatus;
+  paymentStatus: PublicPaymentStatus;
   currentAttemptStatus: PaymentAttemptStatus;
   demoMode: true;
 }

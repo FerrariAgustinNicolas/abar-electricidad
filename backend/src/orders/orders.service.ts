@@ -22,7 +22,7 @@ function canonical(value: any): any {
   if (value && typeof value === 'object') return Object.fromEntries(Object.keys(value).sort().map((key) => [key, canonical(value[key])]));
   return value;
 }
-function fingerprint(value: unknown): string { return createHash('sha256').update(JSON.stringify(canonical(value))).digest('hex'); }
+export function orderFingerprint(value: unknown): string { return createHash('sha256').update(JSON.stringify(canonical(value))).digest('hex'); }
 function digest(value: string): Buffer { return createHash('sha256').update(value).digest(); }
 function constantEqual(a: Buffer, b: Buffer): boolean { return a.length === b.length && timingSafeEqual(a, b); }
 function normalizedContact(value: string): string { return value.trim().toLowerCase(); }
@@ -47,7 +47,7 @@ export class OrdersService {
       firstName: body.customer.firstName.trim(), lastName: body.customer.lastName.trim(), email: normalizedContact(body.customer.email), phone: body.customer.phone.trim() },
       ...(body.customerNote !== undefined ? { customerNote: body.customerNote.trim() } : {}),
       ...(body.deliveryDetails ? { deliveryDetails: { ...body.deliveryDetails, addressLine: body.deliveryDetails.addressLine.trim(), locality: body.deliveryDetails.locality.trim(), ...(body.deliveryDetails.instructions !== undefined ? { instructions: body.deliveryDetails.instructions.trim() } : {}) } } : {}) };
-    const requestFingerprint = fingerprint(normalizedBody);
+    const requestFingerprint = orderFingerprint(normalizedBody);
     const keyBytes = this.replayKey();
     try {
       return await this.prisma.$transaction(async (tx) => {
@@ -138,7 +138,7 @@ export class OrdersService {
     const body = validateCatalogBody<AttemptInput>('AttemptRequest', input);
     if (body.methodCode === 'DEMO_SIMULATION' && !this.config.get<boolean>('H4_DEMO_SIMULATION_ENABLED', false)) fail(403, 'DEMO_DISABLED');
     if (body.methodCode !== 'DEMO_SIMULATION' && body.scenario !== undefined) fail(400, 'VALIDATION_ERROR');
-    const requestFingerprint = fingerprint({ orderId: canonicalOrderId, body });
+    const requestFingerprint = orderFingerprint({ orderId: canonicalOrderId, body });
     const keyBytes = this.replayKey();
     const scope = `attempt:${canonicalOrderId}`;
     try {
@@ -149,13 +149,14 @@ export class OrdersService {
         await this.lockKey(tx, scope, key);
         const existing = await tx.orderIdempotencyKey.findUnique({ where: { scope_key: { scope, key } } });
         if (existing) return this.replay(existing, requestFingerprint, scope, key, keyBytes);
-        if (order!.status !== 'RECEIVED') fail(409, 'ORDER_CANCELLED');
+        if (order!.status !== 'RECEIVED' || order!.payment!.status === 'PAID' || order!.version >= 2147483647) fail(409, 'ORDER_CANCELLED');
         const methods = await this.checkout.getOrderPaymentMethods(tx, order!.deliveryMode, body.methodCode);
         if (!methods) fail(409, 'METHOD_UNAVAILABLE');
         const scenario = body.methodCode === 'DEMO_SIMULATION' ? body.scenario ?? 'PENDING' : 'PENDING';
         const attempt = await tx.paymentAttempt.create({ data: { paymentId: order!.payment!.id, methodCode: body.methodCode,
           status: scenario, demoScenario: body.methodCode === 'DEMO_SIMULATION' ? scenario : null,
           sequence: (order!.payment!.currentAttempt?.sequence ?? 0) + 1, createdAt: new Date(), updatedAt: new Date() } });
+        await tx.order.update({ where: { id: canonicalOrderId }, data: { version: { increment: 1 } } });
         const paymentStatus = scenario === 'REJECTED' ? 'REJECTED' : 'PENDING';
         await tx.payment.update({ where: { id: order!.payment!.id }, data: { currentAttemptId: attempt.id, status: paymentStatus } });
         await tx.orderEvent.create({ data: { orderId: canonicalOrderId, attemptId: attempt.id, eventType: 'PAYMENT_ATTEMPT_CREATED', details: { sequence: attempt.sequence, methodCode: body.methodCode } } });
@@ -181,7 +182,7 @@ export class OrdersService {
       items: order.items.map((item: any) => item.snapshot), subtotal: { amountMinor: order.subtotalMinor.toString(), currency: 'ARS' },
       deliveryFee: { amountMinor: order.deliveryFeeMinor.toString(), currency: 'ARS' }, total: { amountMinor: order.totalMinor.toString(), currency: 'ARS' },
       deliveryMode: order.deliveryMode, orderStatus: order.status, paymentStatus: payment.status,
-      currentAttempt: this.attemptView(payment.currentAttempt), nextActions: ['VIEW_ORDER', 'RETRY_PAYMENT', 'LOOKUP_ORDER'], demoMode: true };
+      currentAttempt: this.attemptView(payment.currentAttempt), nextActions: order.status === 'RECEIVED' && payment.status !== 'PAID' ? ['VIEW_ORDER', 'RETRY_PAYMENT', 'LOOKUP_ORDER'] : ['VIEW_ORDER', 'LOOKUP_ORDER'], demoMode: true };
   }
 
   private attemptView(attempt: any) { return { id: attempt.id, methodCode: attempt.methodCode, status: attempt.status,
@@ -192,7 +193,7 @@ export class OrdersService {
     return constantEqual(digest(token), Buffer.from(order.accessTokenHash, 'hex'));
   }
 
-  private replayKey(): Buffer {
+  replayKey(): Buffer {
     const encoded = this.config.get<string>('H4_REPLAY_KEY_BASE64');
     if (!encoded) fail(503, SIMULATION_ERROR);
     const key = Buffer.from(encoded, 'base64');
@@ -219,16 +220,16 @@ export class OrdersService {
     } catch { return fail(503, SIMULATION_ERROR); }
   }
 
-  private replay(row: any, requestHash: string, scope: string, key: string, replayKey: Buffer) {
+  replay(row: any, requestHash: string, scope: string, key: string, replayKey: Buffer) {
     if (row.fingerprint !== requestHash) fail(409, 'IDEMPOTENCY_CONFLICT');
     return this.decrypt(row, scope, key, replayKey);
   }
 
-  private async lockKey(tx: Prisma.TransactionClient, scope: string, key: string): Promise<void> {
+  async lockKey(tx: Prisma.TransactionClient, scope: string, key: string): Promise<void> {
     await tx.$queryRaw`SELECT 1 AS locked FROM pg_advisory_xact_lock(hashtextextended(${`${scope}:${key}`}, 0))`;
   }
 
-  private async storeReplay(tx: Prisma.TransactionClient, row: { kind: any; scope: string; key: string; fingerprint: string; responseStatus: number; orderId?: string; attemptId?: string; response: unknown }, replayKey: Buffer) {
+  async storeReplay(tx: Prisma.TransactionClient, row: { kind: any; scope: string; key: string; fingerprint: string; responseStatus: number; orderId?: string; attemptId?: string; response: unknown }, replayKey: Buffer) {
     const encrypted = this.encrypt(row.response, row.scope, row.key, row.fingerprint, replayKey);
     await tx.orderIdempotencyKey.create({ data: { kind: row.kind, scope: row.scope, key: row.key,
       fingerprint: row.fingerprint, responseStatus: row.responseStatus, ...encrypted,

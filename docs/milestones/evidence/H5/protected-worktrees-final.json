@@ -1,0 +1,7 @@
+{
+  "count": 15,
+  "unchanged": 15,
+  "changes": 0,
+  "check": "HEAD/status/staged diff/working diff/untracked file SHA256 compared with preflight",
+  "originalDiffSha256": "00cbe4677d1db6c9f1b7547dbf6d3e59bc966b67c3ebec99e8a19f09be5271e7"
+}

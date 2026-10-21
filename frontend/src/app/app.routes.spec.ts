@@ -8,3 +8,13 @@ describe('H4 public routes', () => {
     expect(routes.map((route) => route.path)).toContain('consultar-pedido');
   });
 });
+
+describe('H5 admin order routes', () => {
+  it('registers the paginated order list and parameterized detail behind the admin layout guard', () => {
+    const admin = appRoutes.find((route) => route.path === 'admin');
+    const children = admin?.children ?? [];
+    expect(admin?.canActivate).toBeTruthy();
+    expect(children.map((route) => route.path)).toContain('pedidos');
+    expect(children.map((route) => route.path)).toContain('pedidos/:id');
+  });
+});

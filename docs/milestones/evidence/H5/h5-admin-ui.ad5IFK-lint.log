@@ -1,0 +1,16 @@
+
+> abar-frontend@0.1.0 lint
+> ng lint
+
+
+Linting "abar-frontend"...
+
+<worktree>/frontend/src/app/features/admin-orders/admin-order-detail-page.component.spec.ts
+  25:28  error  '_id' is defined but never used     @typescript-eslint/no-unused-vars
+  25:41  error  '_input' is defined but never used  @typescript-eslint/no-unused-vars
+  25:77  error  '_key' is defined but never used    @typescript-eslint/no-unused-vars
+
+✖ 3 problems (3 errors, 0 warnings)
+
+Lint errors found in the listed files.
+

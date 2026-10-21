@@ -1,0 +1,63 @@
+LOGIN_FORM {"valid":true,"disabled":false,"focused":"BUTTON"}
+CAPTURE 360 list
+CAPTURE 360 detail
+CAPTURE 360 payment-review
+CAPTURE 360 preparing
+CAPTURE 360 notes-history
+CAPTURE 360 ready
+CAPTURE 360 delivered
+CAPTURE 360 cancel-review
+CAPTURE 360 cancelled
+CAPTURE 360 insufficient-error
+CAPTURE 360 stock
+CAPTURE 360 movements
+CAPTURE 768 list
+CAPTURE 768 detail
+CAPTURE 768 payment-review
+CAPTURE 768 preparing
+CAPTURE 768 notes-history
+CAPTURE 768 ready
+CAPTURE 768 delivered
+CAPTURE 768 cancel-review
+CAPTURE 768 cancelled
+CAPTURE 768 insufficient-error
+CAPTURE 768 stock
+CAPTURE 768 movements
+CAPTURE 1440 list
+CAPTURE 1440 detail
+CAPTURE 1440 payment-review
+CAPTURE 1440 preparing
+CAPTURE 1440 notes-history
+CAPTURE 1440 ready
+CAPTURE 1440 delivered
+CAPTURE 1440 cancel-review
+CAPTURE 1440 cancelled
+CAPTURE 1440 insufficient-error
+CAPTURE 1440 stock
+CAPTURE 1440 movements
+{
+  "completed": true,
+  "measurements": 36,
+  "documentOverflows": [],
+  "keyboardChecks": 9,
+  "errors": [
+    {
+      "width": 360,
+      "type": "insufficient-stock",
+      "alertPresent": true,
+      "confirmationDisabled": true
+    },
+    {
+      "width": 768,
+      "type": "insufficient-stock",
+      "alertPresent": true,
+      "confirmationDisabled": true
+    },
+    {
+      "width": 1440,
+      "type": "insufficient-stock",
+      "alertPresent": true,
+      "confirmationDisabled": true
+    }
+  ]
+}

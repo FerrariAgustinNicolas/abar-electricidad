@@ -1,0 +1,17 @@
+
+> abar-backend@0.1.0 test:e2e
+> node scripts/copy-catalog-contract.mjs && jest --config ./test/jest-e2e.json --runInBand --testPathPatterns=h5-orders.e2e-spec.ts
+
+FAIL test/h5-orders.e2e-spec.ts
+  ● Test suite failed to run
+
+    [96mtest/h5-orders.e2e-spec.ts[0m:[93m1[0m:[93m36[0m - [91merror[0m[90m TS2307: [0mCannot find module '../src/orders/admin-orders.service' or its corresponding type declarations.
+
+    [7m1[0m import { AdminOrdersService } from '../src/orders/admin-orders.service';
+    [7m [0m [91m                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+Test Suites: 1 failed, 1 total
+Tests:       0 total
+Snapshots:   0 total
+Time:        0.879 s
+Ran all test suites matching h5-orders.e2e-spec.ts.

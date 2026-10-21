@@ -47,11 +47,11 @@ export interface CatalogHome {
 export interface StockRow {
   presentationId: string; productId: string; productName: string; unit: PresentationUnit;
   rollLengthMeters: number | null; active: boolean; availableQuantity: number;
-  lowStockThreshold: number; version: number; availability: Availability; requestedUnpaidQuantity?: number;
+  lowStockThreshold: number; version: number; availability: Availability; requestedUnpaidQuantity?: number; paidPendingDeliveryQuantity?: number;
 }
 export interface StockEntryView { presentationId: string; delta: number; resultingQuantity: number; version: number }
 export interface StockOperationView {
-  id: string; type: 'ADJUSTMENT' | 'ROLL_OPENING'; reason: string; actorAdminUserId: string;
+  id: string; type: 'ADJUSTMENT' | 'ROLL_OPENING' | 'PAYMENT_CONFIRMATION'; paymentId?: string; orderId?: string; reason: string; actorAdminUserId: string;
   createdAt: string; entries: StockEntryView[];
 }
 export interface StockAdjustmentRequest { presentationId: string; delta: number; reason: string; expectedVersion: number }

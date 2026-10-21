@@ -1,0 +1,19 @@
+{
+  "schema": "gentle-ai.review-assessment/v1",
+  "risk": "medium",
+  "reasons": [
+    {
+      "code": "executable_change",
+      "path": "backend/test/h5-orders.e2e-spec.ts"
+    }
+  ],
+  "changed_paths": 1,
+  "changed_lines": 27,
+  "candidate": {
+    "kind": "base-diff",
+    "base_ref": "c0f87b402cec0a5a7c0df5b9f6391ab3a71408ba",
+    "consumed": false
+  },
+  "review_due": false,
+  "review_due_reason": "under_budget"
+}
