@@ -59,3 +59,17 @@ test('H5 movement reads preserve both H2 types and add payment linkage', async (
   assert.equal(d.components.schemas.StockOperationView.properties.paymentId.$ref, '#/components/schemas/OpaqueId');
   assert.equal(d.components.schemas.StockRow.properties.requestedUnpaidQuantity.minimum, 0);
 });
+test('H5 movement linkage is mandatory only for confirmation and H2 limits remain unchanged', async () => {
+  const original = JSON.parse(await readFile(new URL('../contracts/examples/h2-roll-opening.json', import.meta.url), 'utf8'));
+  const check = value => validateExample(file, { schema: 'StockOperationView', value });
+  assert.equal((await check(original)).valid, true);
+  assert.equal((await check({ ...original, entries: [...original.entries, original.entries[0]] })).valid, false);
+  const paymentId = '40000000-0000-4000-8000-000000000001';
+  const orderId = '40000000-0000-4000-8000-000000000002';
+  assert.equal((await check({ ...original, paymentId, orderId })).valid, false);
+  const confirmation = { ...original, type: 'PAYMENT_CONFIRMATION' };
+  assert.equal((await check(confirmation)).valid, false);
+  assert.equal((await check({ ...confirmation, paymentId })).valid, false);
+  assert.equal((await check({ ...confirmation, orderId })).valid, false);
+  assert.equal((await check({ ...confirmation, paymentId, orderId, entries: [...original.entries, original.entries[0]] })).valid, true);
+});

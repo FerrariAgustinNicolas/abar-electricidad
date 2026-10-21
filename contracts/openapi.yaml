@@ -6043,6 +6043,27 @@ components:
           $ref: "#/components/schemas/OpaqueId"
       description: H5 confirmation has required paymentId/orderId; historical adjustments/openings omit both. One operation
         per confirmed payment, entries aggregated by presentation. Unchanged historical result snapshots remain valid.
+      oneOf:
+        - properties:
+            type:
+              enum:
+                - ADJUSTMENT
+                - ROLL_OPENING
+            entries:
+              maxItems: 2
+          not:
+            anyOf:
+              - required:
+                  - paymentId
+              - required:
+                  - orderId
+        - required:
+            - paymentId
+            - orderId
+          properties:
+            type:
+              enum:
+                - PAYMENT_CONFIRMATION
     StockOperationList:
       type: object
       additionalProperties: false
