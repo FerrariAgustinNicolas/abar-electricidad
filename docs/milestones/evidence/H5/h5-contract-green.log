@@ -1,0 +1,13 @@
+✔ H5 freezes exactly seven protected admin operations, not arbitrary payment writes (57.7635ms)
+✔ H5 confirmation accepts only full exact ARS minor units and aggregate preconditions (206.330458ms)
+✔ H5 cancellation needs a reason; generic status cannot pay or cancel (239.869917ms)
+✔ H5 public views remain closed and expose final statuses without private fields (23.733042ms)
+✔ H5 notes and allowed actions are closed, bounded and versioned (99.917458ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 704.941208

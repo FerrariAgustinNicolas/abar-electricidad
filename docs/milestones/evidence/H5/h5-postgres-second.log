@@ -1,0 +1,126 @@
+Loaded Prisma config from ../../../../../../../var/folders/h5/kkfjlsqs4dg371_bgbs86m080000gn/T/abar-h5-pg.4FgX9Q/full.config.ts.
+
+Prisma schema loaded from prisma/schema.prisma.
+Datasource "db": PostgreSQL database "h5_orders", schema "public" at "127.0.0.1:59394"
+
+7 migrations found in prisma/migrations
+
+Applying migration `20261009000100_h1_admin_user`
+Applying migration `20261009000200_h1_auth_context`
+Applying migration `20261009000300_h1_admin_audit`
+Applying migration `20261020000100_h2_catalog_stock`
+Applying migration `20261020190000_h3_checkout_quotes`
+Applying migration `20261020200000_h4_orders`
+Applying migration `20261021000100_h5_manual_confirmation`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20261009000100_h1_admin_user/
+    └─ migration.sql
+  └─ 20261009000200_h1_auth_context/
+    └─ migration.sql
+  └─ 20261009000300_h1_admin_audit/
+    └─ migration.sql
+  └─ 20261020000100_h2_catalog_stock/
+    └─ migration.sql
+  └─ 20261020190000_h3_checkout_quotes/
+    └─ migration.sql
+  └─ 20261020200000_h4_orders/
+    └─ migration.sql
+  └─ 20261021000100_h5_manual_confirmation/
+    └─ migration.sql
+
+All migrations have been successfully applied.
+Loaded Prisma config from ../../../../../../../var/folders/h5/kkfjlsqs4dg371_bgbs86m080000gn/T/abar-h5-pg.4FgX9Q/h4.config.ts.
+
+Prisma schema loaded from prisma/schema.prisma.
+Datasource "db": PostgreSQL database "h5_upgrade", schema "public" at "127.0.0.1:59394"
+
+6 migrations found in prisma/migrations
+
+Applying migration `20261009000100_h1_admin_user`
+Applying migration `20261009000200_h1_auth_context`
+Applying migration `20261009000300_h1_admin_audit`
+Applying migration `20261020000100_h2_catalog_stock`
+Applying migration `20261020190000_h3_checkout_quotes`
+Applying migration `20261020200000_h4_orders`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20261009000100_h1_admin_user/
+    └─ migration.sql
+  └─ 20261009000200_h1_auth_context/
+    └─ migration.sql
+  └─ 20261009000300_h1_admin_audit/
+    └─ migration.sql
+  └─ 20261020000100_h2_catalog_stock/
+    └─ migration.sql
+  └─ 20261020190000_h3_checkout_quotes/
+    └─ migration.sql
+  └─ 20261020200000_h4_orders/
+    └─ migration.sql
+
+All migrations have been successfully applied.
+
+> abar-backend@0.1.0 test:e2e
+> node scripts/copy-catalog-contract.mjs && jest --config ./test/jest-e2e.json --runInBand --testPathPatterns=h5-orders.e2e-spec.ts
+
+FAIL test/h5-orders.e2e-spec.ts
+  ● Test suite failed to run
+
+    [96mtest/h5-orders.e2e-spec.ts[0m:[93m35[0m:[93m84[0m - [91merror[0m[90m TS2322: [0mType 'Buffer<ArrayBufferLike>' is not assignable to type 'Uint8Array<ArrayBuffer>'.
+      Types of property 'buffer' are incompatible.
+        Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+          Type 'SharedArrayBuffer' is not assignable to type 'ArrayBuffer'.
+            Types of property '[Symbol.toStringTag]' are incompatible.
+              Type '"SharedArrayBuffer"' is not assignable to type '"ArrayBuffer"'.
+
+    [7m35[0m     await prisma.authSession.create({ data: { id: sessionId, adminUserId: user.id, nonceCiphertext: e.ciphertext, nonceIv: e.iv, nonceTag: e.tag, lastActivityAt: now, absoluteExpiresAt: new Date(Date.now() + 3600000), idleExpiresAt: new Date(Date.now() + 3600000) } });
+    [7m  [0m [91m                                                                                   ~~~~~~~~~~~~~~~[0m
+
+      [96msrc/generated/prisma/models/AuthSession.ts[0m:[93m356[0m:[93m3[0m
+        [7m356[0m   nonceCiphertext: runtime.Bytes
+        [7m   [0m [96m  ~~~~~~~~~~~~~~~[0m
+        The expected type comes from property 'nonceCiphertext' which is declared here on type '((Without<AuthSessionCreateInput, AuthSessionUncheckedCreateInput> & AuthSessionUncheckedCreateInput) | (Without<...> & AuthSessionCreateInput)) & object'
+    [96mtest/h5-orders.e2e-spec.ts[0m:[93m35[0m:[93m115[0m - [91merror[0m[90m TS2322: [0mType 'Buffer<ArrayBufferLike>' is not assignable to type 'Uint8Array<ArrayBuffer>'.
+      Types of property 'buffer' are incompatible.
+        Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+          Type 'SharedArrayBuffer' is not assignable to type 'ArrayBuffer'.
+            Types of property '[Symbol.toStringTag]' are incompatible.
+              Type '"SharedArrayBuffer"' is not assignable to type '"ArrayBuffer"'.
+
+    [7m35[0m     await prisma.authSession.create({ data: { id: sessionId, adminUserId: user.id, nonceCiphertext: e.ciphertext, nonceIv: e.iv, nonceTag: e.tag, lastActivityAt: now, absoluteExpiresAt: new Date(Date.now() + 3600000), idleExpiresAt: new Date(Date.now() + 3600000) } });
+    [7m  [0m [91m                                                                                                                  ~~~~~~~[0m
+
+      [96msrc/generated/prisma/models/AuthSession.ts[0m:[93m357[0m:[93m3[0m
+        [7m357[0m   nonceIv: runtime.Bytes
+        [7m   [0m [96m  ~~~~~~~[0m
+        The expected type comes from property 'nonceIv' which is declared here on type '((Without<AuthSessionCreateInput, AuthSessionUncheckedCreateInput> & AuthSessionUncheckedCreateInput) | (Without<...> & AuthSessionCreateInput)) & object'
+    [96mtest/h5-orders.e2e-spec.ts[0m:[93m35[0m:[93m130[0m - [91merror[0m[90m TS2322: [0mType 'Buffer<ArrayBufferLike>' is not assignable to type 'Uint8Array<ArrayBuffer>'.
+      Types of property 'buffer' are incompatible.
+        Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+          Type 'SharedArrayBuffer' is not assignable to type 'ArrayBuffer'.
+            Types of property '[Symbol.toStringTag]' are incompatible.
+              Type '"SharedArrayBuffer"' is not assignable to type '"ArrayBuffer"'.
+
+    [7m35[0m     await prisma.authSession.create({ data: { id: sessionId, adminUserId: user.id, nonceCiphertext: e.ciphertext, nonceIv: e.iv, nonceTag: e.tag, lastActivityAt: now, absoluteExpiresAt: new Date(Date.now() + 3600000), idleExpiresAt: new Date(Date.now() + 3600000) } });
+    [7m  [0m [91m                                                                                                                                 ~~~~~~~~[0m
+
+      [96msrc/generated/prisma/models/AuthSession.ts[0m:[93m358[0m:[93m3[0m
+        [7m358[0m   nonceTag: runtime.Bytes
+        [7m   [0m [96m  ~~~~~~~~[0m
+        The expected type comes from property 'nonceTag' which is declared here on type '((Without<AuthSessionCreateInput, AuthSessionUncheckedCreateInput> & AuthSessionUncheckedCreateInput) | (Without<...> & AuthSessionCreateInput)) & object'
+    [96mtest/h5-orders.e2e-spec.ts[0m:[93m46[0m:[93m59[0m - [91merror[0m[90m TS2554: [0mExpected 1 arguments, but got 2.
+
+    [7m46[0m     const checkout = new CheckoutService(prisma as never, config as any);
+    [7m  [0m [91m                                                          ~~~~~~~~~~~~~[0m
+
+Test Suites: 1 failed, 1 total
+Tests:       0 total
+Snapshots:   0 total
+Time:        0.987 s
+Ran all test suites matching h5-orders.e2e-spec.ts.
+Owned private fixture manifest omitted (ephemeral credentials).
+Scratch retained for parent cleanup: /var/folders/h5/kkfjlsqs4dg371_bgbs86m080000gn/T/abar-h5-pg.4FgX9Q

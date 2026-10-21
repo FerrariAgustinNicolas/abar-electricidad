@@ -1,0 +1,107 @@
+✖ H5 freezes exactly seven protected admin operations, not arbitrary payment writes (39.467ms)
+✖ H5 confirmation accepts only full exact ARS minor units and aggregate preconditions (31.111792ms)
+✖ H5 cancellation needs a reason; generic status cannot pay or cancel (23.267459ms)
+✖ H5 public views remain closed and expose final statuses without private fields (24.843167ms)
+✖ H5 notes and allowed actions are closed, bounded and versioned (34.75425ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 0
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 230.532292
+
+✖ failing tests:
+
+test at scripts/h5-contract.test.mjs:10:1
+✖ H5 freezes exactly seven protected admin operations, not arbitrary payment writes (39.467ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  '0.7.0' !== '0.8.0'
+  
+      at TestContext.<anonymous> (file://<worktree>/scripts/h5-contract.test.mjs:12:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '0.7.0',
+    expected: '0.8.0',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts/h5-contract.test.mjs:20:1
+✖ H5 confirmation accepts only full exact ARS minor units and aggregate preconditions (31.111792ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file://<worktree>/scripts/h5-contract.test.mjs:22:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts/h5-contract.test.mjs:30:1
+✖ H5 cancellation needs a reason; generic status cannot pay or cancel (23.267459ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file://<worktree>/scripts/h5-contract.test.mjs:32:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts/h5-contract.test.mjs:37:1
+✖ H5 public views remain closed and expose final statuses without private fields (24.843167ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      'RECEIVED',
+  -   'PREPARING',
+  -   'READY',
+  -   'DELIVERED',
+  -   'CANCELLED'
+    ]
+  
+      at TestContext.<anonymous> (file://<worktree>/scripts/h5-contract.test.mjs:42:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'RECEIVED' ],
+    expected: [ 'RECEIVED', 'PREPARING', 'READY', 'DELIVERED', 'CANCELLED' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at scripts/h5-contract.test.mjs:47:1
+✖ H5 notes and allowed actions are closed, bounded and versioned (34.75425ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file://<worktree>/scripts/h5-contract.test.mjs:49:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

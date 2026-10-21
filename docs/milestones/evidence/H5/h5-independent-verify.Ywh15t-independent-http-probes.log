@@ -1,0 +1,96 @@
+Loaded Prisma config from ../../../../var/folders/h5/kkfjlsqs4dg371_bgbs86m080000gn/T/abar-h5-pg.cvvg2p/full.config.ts.
+
+Prisma schema loaded from prisma/schema.prisma.
+Datasource "db": PostgreSQL database "h5_orders", schema "public" at "127.0.0.1:60093"
+
+7 migrations found in prisma/migrations
+
+Applying migration `20261009000100_h1_admin_user`
+Applying migration `20261009000200_h1_auth_context`
+Applying migration `20261009000300_h1_admin_audit`
+Applying migration `20261020000100_h2_catalog_stock`
+Applying migration `20261020190000_h3_checkout_quotes`
+Applying migration `20261020200000_h4_orders`
+Applying migration `20261021000100_h5_manual_confirmation`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20261009000100_h1_admin_user/
+    └─ migration.sql
+  └─ 20261009000200_h1_auth_context/
+    └─ migration.sql
+  └─ 20261009000300_h1_admin_audit/
+    └─ migration.sql
+  └─ 20261020000100_h2_catalog_stock/
+    └─ migration.sql
+  └─ 20261020190000_h3_checkout_quotes/
+    └─ migration.sql
+  └─ 20261020200000_h4_orders/
+    └─ migration.sql
+  └─ 20261021000100_h5_manual_confirmation/
+    └─ migration.sql
+
+All migrations have been successfully applied.
+Loaded Prisma config from ../../../../var/folders/h5/kkfjlsqs4dg371_bgbs86m080000gn/T/abar-h5-pg.cvvg2p/h4.config.ts.
+
+Prisma schema loaded from prisma/schema.prisma.
+Datasource "db": PostgreSQL database "h5_upgrade", schema "public" at "127.0.0.1:60093"
+
+6 migrations found in prisma/migrations
+
+Applying migration `20261009000100_h1_admin_user`
+Applying migration `20261009000200_h1_auth_context`
+Applying migration `20261009000300_h1_admin_audit`
+Applying migration `20261020000100_h2_catalog_stock`
+Applying migration `20261020190000_h3_checkout_quotes`
+Applying migration `20261020200000_h4_orders`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20261009000100_h1_admin_user/
+    └─ migration.sql
+  └─ 20261009000200_h1_auth_context/
+    └─ migration.sql
+  └─ 20261009000300_h1_admin_audit/
+    └─ migration.sql
+  └─ 20261020000100_h2_catalog_stock/
+    └─ migration.sql
+  └─ 20261020190000_h3_checkout_quotes/
+    └─ migration.sql
+  └─ 20261020200000_h4_orders/
+    └─ migration.sql
+
+All migrations have been successfully applied.
+
+> abar-backend@0.1.0 test:e2e
+> node scripts/copy-catalog-contract.mjs && jest --config ./test/jest-e2e.json --runInBand --testPathPatterns=h5-orders.e2e-spec.ts
+
+  console.log
+    H5-Q01 historical hash 90e63cb4102bfcec74e0400d19edcdb5bafb2472ac98f0e4f89f193d48436fee item snapshot 62b3e1bdabe81186ae49eae7d065fd85c216b4d8c2541ac6e1c01d54127e41f7
+
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:98:15)
+
+  console.log
+    H5-Q03 balances hashes b957780c0b4439f913bfdb08cb31c3da5dcc656867a73a7f90dedcf37e512185 0cc6f46b55bdcd0f01417efdd7faac35e1bf148093c9fa1feddded6ec414ed5d
+
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:110:13)
+
+  console.log
+    H5-Q07 observed lock waiters 2
+
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:130:324)
+
+  console.log
+    Independent HTTP rejected-state hash 613c3a9a46ad3b2493b0ecffed5ea654c00eabe73f46582d44bded3770cf5416
+
+      at Object.<anonymous> (test/h5-orders.e2e-spec.ts:243:13)
+
+Test Suites: 1 passed, 1 total
+Tests:       13 passed, 13 total
+Snapshots:   0 total
+Time:        2.971 s, estimated 4 s
+Ran all test suites matching h5-orders.e2e-spec.ts.
+Owned private fixture manifest omitted (ephemeral credentials).
+Scratch retained for parent cleanup: /var/folders/h5/kkfjlsqs4dg371_bgbs86m080000gn/T/abar-h5-pg.cvvg2p

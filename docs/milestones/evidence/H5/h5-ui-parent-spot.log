@@ -1,0 +1,26 @@
+
+> abar-frontend@0.1.0 test
+> ng test --watch=false --include=src/app/features/admin-orders/admin-orders-api.service.spec.ts
+
+❯ Building...
+✔ Building...
+Initial chunk files                                        | Names                                                   |  Raw size
+spec-app-features-admin-orders-admin-orders-api.service.js | spec-app-features-admin-orders-admin-orders-api.service |  12.59 kB | 
+styles.css                                                 | styles                                                  |   6.64 kB | 
+chunk-CGZBV6BD.js                                          | -                                                       |   4.07 kB | 
+init-testbed.js                                            | init-testbed                                            |   1.21 kB | 
+vitest-mock-patch.js                                       | vitest-mock-patch                                       | 974 bytes | 
+
+                                                           | Initial total                                           |  25.48 kB
+
+Application bundle generation complete. [1.176 seconds] - 2026-10-21T13:12:49.747Z
+
+
+ RUN  v4.1.11 <worktree>/frontend
+
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  10:12:49
+   Duration  470ms (transform 24ms, setup 96ms, import 27ms, tests 12ms, environment 268ms)
+

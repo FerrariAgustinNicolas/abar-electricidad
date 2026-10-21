@@ -1,0 +1,10 @@
+
+> abar-backend@0.1.0 build
+> prisma generate --config prisma.schema.config.ts && tsc -p tsconfig.build.json && node scripts/copy-auth-resources-cli.mjs && node scripts/copy-catalog-contract.mjs
+
+Loaded Prisma config from prisma.schema.config.ts.
+
+Prisma schema loaded from prisma/schema.prisma.
+
+✔ Generated Prisma Client (7.10.0) to ./src/generated/prisma in 65ms
+

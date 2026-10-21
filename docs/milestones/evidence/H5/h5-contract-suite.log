@@ -1,0 +1,56 @@
+✔ H1 freezes exactly nine auth/admin operations alongside unprefixed health (78.175083ms)
+✔ strict H1 static validation rejects missing operations, headers, DTO fields and security (94.187958ms)
+✔ full H1 fixture semantics reject operation/header/security/request/DTO constraint drift (297.238084ms)
+✔ H1 public DTO examples reject secret metadata, invalid UTC and fieldErrors input echoes (590.25525ms)
+✔ normative OpenAPI loads and validates (555.749291ms)
+✔ missing and invalid contract documents fail explicitly (0.19275ms)
+✔ external examples validate against their OpenAPI schemas (147.065291ms)
+✔ projected API and transversal conventions stay explicitly candidate (493.295917ms)
+✔ invalid external JSON examples keep validateContractFile and CLI invalid (1133.242375ms)
+✔ health schema comparison preserves constraints and canonicalizes unordered schema sets (0.4235ms)
+✔ live Swagger health contract matches actual health operations and response semantics (0.14625ms)
+✔ H2 freezes only its explicit catalog, image and stock operations while preserving H1 (79.764166ms)
+✔ every admin catalog mutation keeps H1 session, Origin and CSRF, with stock idempotency required (103.16475ms)
+✔ public presentations cannot expose exact stock and Money remains a decimal ARS string (309.057583ms)
+✔ stock requests disallow fractional or zero deltas, client-computed meters and direct balances (547.732125ms)
+✔ frozen H2 validator rejects removal of endpoints, error schemas and multipart content (35.505875ms)
+✖ legacy H1-only contract remains accepted by the same public validator interface (26.152792ms)
+✔ H3 additive freeze is accepted and remains closed to future order/payment routes (97.115542ms)
+✔ H3 requires quote security, request/response and all safe conflicts (232.595292ms)
+✔ quote request rejects client money, malformed quantities and oversize input (356.489959ms)
+✔ H4 additive freeze explicitly authorizes only the bounded order operations (75.957292ms)
+✔ H4 creation accepts buyer and terms, never client totals or payment states (443.921417ms)
+✔ H4 requires possession header and durable idempotency on mutations (31.119875ms)
+✔ H4 manual attempts forbid scenarios; public views cannot carry private buyer fields (167.927833ms)
+✔ H5 freezes exactly seven protected admin operations, not arbitrary payment writes (97.489875ms)
+✔ H5 confirmation accepts only full exact ARS minor units and aggregate preconditions (330.091959ms)
+✔ H5 cancellation needs a reason; generic status cannot pay or cancel (313.532125ms)
+✔ H5 public views remain closed and expose final statuses without private fields (27.7765ms)
+✔ H5 notes and allowed actions are closed, bounded and versioned (121.97175ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 28
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3460.68075
+
+✖ failing tests:
+
+test at scripts/h2-contract.test.mjs:91:1
+✖ legacy H1-only contract remains accepted by the same public validator interface (26.152792ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file://<worktree>/scripts/h2-contract.test.mjs:100:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

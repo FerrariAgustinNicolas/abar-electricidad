@@ -1,0 +1,34 @@
+✔ H5 freezes exactly seven protected admin operations, not arbitrary payment writes (59.812917ms)
+✔ H5 confirmation accepts only full exact ARS minor units and aggregate preconditions (221.275834ms)
+✔ H5 cancellation needs a reason; generic status cannot pay or cancel (212.553584ms)
+✔ H5 public views remain closed and expose final statuses without private fields (24.915584ms)
+✔ H5 notes and allowed actions are closed, bounded and versioned (139.091375ms)
+✔ H5 movement reads preserve both H2 types and add payment linkage (24.48725ms)
+✖ H5 movement linkage is mandatory only for confirmation and H2 limits remain unchanged (55.20725ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 6
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 819.63425
+
+✖ failing tests:
+
+test at scripts/h5-contract.test.mjs:62:1
+✖ H5 movement linkage is mandatory only for confirmation and H2 limits remain unchanged (55.20725ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file://<worktree>/scripts/h5-contract.test.mjs:66:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -1,0 +1,10 @@
+
+> abar-backend@0.1.0 test
+> node scripts/copy-catalog-contract.mjs && jest --runInBand
+
+
+Test Suites: 1 skipped, 30 passed, 30 of 31 total
+Tests:       1 skipped, 1252 passed, 1253 total
+Snapshots:   0 total
+Time:        5.786 s, estimated 7 s
+Ran all test suites.

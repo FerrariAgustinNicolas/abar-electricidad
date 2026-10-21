@@ -1,0 +1,829 @@
+
+> abar-backend@0.1.0 test
+> node scripts/copy-catalog-contract.mjs && jest --runInBand
+
+[Nest] 37186  - 10/21/2026, 10:16:59 AM   ERROR [NestApplication] Error: listen EPERM: operation not permitted 127.0.0.1
+FAIL src/auth/change-password.http.spec.ts
+  ● change-password HTTP transport and parser boundary › returns an empty 204 with exact carriers and forwards unmodified request data
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › preserves the existing login response and no-store behavior
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps public service-owned invalid body metadata to a safe HTTP response
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps public service-owned policy rejection metadata to a safe HTTP response
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps public service-owned expired session metadata to a safe HTTP response
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps public service-owned wrong current password metadata to a safe HTTP response
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps public service-owned invalid CSRF proof metadata to a safe HTTP response
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps public service-owned invalid origin metadata to a safe HTTP response
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps public service-owned dependency failure metadata to a safe HTTP response
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps JSON null exclusively on this endpoint to exact validation response and no-store
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps malformed JSON exclusively on this endpoint to exact validation response and no-store
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+[Nest] 37186  - 10/21/2026, 10:17:02 AM   ERROR [NestApplication] Error: listen EPERM: operation not permitted 127.0.0.1
+FAIL src/auth/admin-users.http.spec.ts
+  ● admin users HTTP contract › serves sanitized bounded list results with no-store
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › forwards create proof and request body unchanged and returns 201 without sensitive fields
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › forwards patch and reset operations on the frozen route shapes
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › normalizes malformed JSON before post /api/v1/admin/users reaches any service
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › normalizes malformed JSON before patch /api/v1/admin/users/00000000-0000-4000-8000-000000000001 reaches any service
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › normalizes malformed JSON before post /api/v1/admin/users/00000000-0000-4000-8000-000000000001/reset-password reaches any service
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › declares the frozen session-cookie security requirement on every admin operation
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › maps owned route errors to safe no-store API envelopes
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for list unclassified dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for list framework dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for list owned dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for create unclassified dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for create framework dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for create owned dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for patch unclassified dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for patch framework dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for patch owned dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for resetPassword unclassified dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for resetPassword framework dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for resetPassword owned dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › preserves framework client-error status 400
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › preserves framework client-error status 404
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+[Nest] 37186  - 10/21/2026, 10:17:02 AM   ERROR [NestApplication] Error: listen EPERM: operation not permitted 127.0.0.1
+FAIL src/common/change-password-json.http.spec.ts
+  ● change-password JSON parser public HTTP boundary › returns the owned public validation contract for JSON null on the exact POST route
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › returns the owned public validation contract for malformed JSON on the exact POST route
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › leaves valid JSON handling and dependency forwarding unchanged
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › preserves the other auth route parser response without no-store classification
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for wrong method as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for suffixed path as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for prefix lookalike as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for raw URL query spoof as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for admin wrong method as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for admin patch suffix as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for admin reset suffix as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for admin prefix lookalike as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for admin raw URL query spoof as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+FAIL src/configure-application.openapi.spec.ts
+  ● production Swagger projection of the frozen H1-H5 interface › keeps exactly the implemented H1-H5 routes and all three security schemes
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/admin/orders schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/admin/orders/{id} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/admin/orders/{id}/payment-confirmation schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches PATCH /api/v1/admin/orders/{id}/status schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/admin/orders/{id}/cancel schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/admin/orders/{id}/notes schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/admin/orders/{id}/history schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/public/checkout/terms schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/public/orders schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/public/orders/lookup schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/public/orders/{id} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/public/orders/{id}/payment-attempts schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/public/settings schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/public/payment-methods schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/public/checkout/quotes schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /health schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/auth/csrf schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/auth/login schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/auth/me schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/auth/logout schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/auth/change-password schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/admin/users schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/admin/users schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches PATCH /api/v1/admin/users/{id} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/admin/users/{id}/reset-password schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/public/home schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/public/categories schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/public/products schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/public/products/{slug} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/public/products/{slug}/images/{imageId} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/admin/categories schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/admin/categories schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches PATCH /api/v1/admin/categories/{id} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches PATCH /api/v1/admin/categories/order schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/admin/products schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/admin/products schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/admin/products/{id} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches PATCH /api/v1/admin/products/{id} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/admin/products/{id}/images schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/admin/products/{id}/images/{imageId} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches PATCH /api/v1/admin/products/{id}/images/{imageId} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches DELETE /api/v1/admin/products/{id}/images/{imageId} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/admin/stock schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/admin/stock/movements schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/admin/stock/adjustments schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/admin/stock/roll-openings schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › uses current metadata without presenting the historical H0 projection as runtime state
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+FAIL test/h3-checkout-http.spec.ts
+  ● H3 public checkout HTTP routes › serves settings and demo methods with no-store and rejects unexpected query keys
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● H3 public checkout HTTP routes › accepts a public quote without session or CSRF and bounds the peer quota with a sanitized envelope
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● H3 public checkout HTTP routes › keeps contract 4xx codes and standard messages safe
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+FAIL src/catalog-shared/catalog-error.spec.ts
+  ● Nest multipart error translation › preserves the frozen IMAGE_TOO_LARGE code after Multer transformation
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+FAIL test/h3-checkout-json.middleware.spec.ts
+  ● H3 quote JSON parser › maps malformed or oversized quote JSON to a private 400 validation envelope
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● H3 quote JSON parser › leaves other routes to the ordinary JSON parser
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+
+Summary of all failing tests
+FAIL src/auth/change-password.http.spec.ts
+  ● change-password HTTP transport and parser boundary › returns an empty 204 with exact carriers and forwards unmodified request data
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › preserves the existing login response and no-store behavior
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps public service-owned invalid body metadata to a safe HTTP response
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps public service-owned policy rejection metadata to a safe HTTP response
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps public service-owned expired session metadata to a safe HTTP response
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps public service-owned wrong current password metadata to a safe HTTP response
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps public service-owned invalid CSRF proof metadata to a safe HTTP response
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps public service-owned invalid origin metadata to a safe HTTP response
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps public service-owned dependency failure metadata to a safe HTTP response
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps JSON null exclusively on this endpoint to exact validation response and no-store
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps malformed JSON exclusively on this endpoint to exact validation response and no-store
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+FAIL src/auth/admin-users.http.spec.ts
+  ● admin users HTTP contract › serves sanitized bounded list results with no-store
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › forwards create proof and request body unchanged and returns 201 without sensitive fields
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › forwards patch and reset operations on the frozen route shapes
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › normalizes malformed JSON before post /api/v1/admin/users reaches any service
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › normalizes malformed JSON before patch /api/v1/admin/users/00000000-0000-4000-8000-000000000001 reaches any service
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › normalizes malformed JSON before post /api/v1/admin/users/00000000-0000-4000-8000-000000000001/reset-password reaches any service
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › declares the frozen session-cookie security requirement on every admin operation
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › maps owned route errors to safe no-store API envelopes
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for list unclassified dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for list framework dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for list owned dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for create unclassified dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for create framework dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for create owned dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for patch unclassified dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for patch framework dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for patch owned dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for resetPassword unclassified dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for resetPassword framework dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for resetPassword owned dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › preserves framework client-error status 400
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › preserves framework client-error status 404
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+FAIL src/common/change-password-json.http.spec.ts
+  ● change-password JSON parser public HTTP boundary › returns the owned public validation contract for JSON null on the exact POST route
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › returns the owned public validation contract for malformed JSON on the exact POST route
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › leaves valid JSON handling and dependency forwarding unchanged
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › preserves the other auth route parser response without no-store classification
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for wrong method as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for suffixed path as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for prefix lookalike as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for raw URL query spoof as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for admin wrong method as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for admin patch suffix as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for admin reset suffix as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for admin prefix lookalike as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for admin raw URL query spoof as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+FAIL src/configure-application.openapi.spec.ts
+  ● production Swagger projection of the frozen H1-H5 interface › keeps exactly the implemented H1-H5 routes and all three security schemes
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/admin/orders schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/admin/orders/{id} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/admin/orders/{id}/payment-confirmation schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches PATCH /api/v1/admin/orders/{id}/status schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/admin/orders/{id}/cancel schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/admin/orders/{id}/notes schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/admin/orders/{id}/history schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/public/checkout/terms schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/public/orders schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/public/orders/lookup schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/public/orders/{id} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/public/orders/{id}/payment-attempts schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/public/settings schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/public/payment-methods schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/public/checkout/quotes schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /health schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/auth/csrf schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/auth/login schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/auth/me schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/auth/logout schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/auth/change-password schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/admin/users schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/admin/users schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches PATCH /api/v1/admin/users/{id} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/admin/users/{id}/reset-password schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/public/home schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/public/categories schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/public/products schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/public/products/{slug} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/public/products/{slug}/images/{imageId} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/admin/categories schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/admin/categories schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches PATCH /api/v1/admin/categories/{id} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches PATCH /api/v1/admin/categories/order schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/admin/products schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/admin/products schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/admin/products/{id} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches PATCH /api/v1/admin/products/{id} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/admin/products/{id}/images schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/admin/products/{id}/images/{imageId} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches PATCH /api/v1/admin/products/{id}/images/{imageId} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches DELETE /api/v1/admin/products/{id}/images/{imageId} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/admin/stock schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches GET /api/v1/admin/stock/movements schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/admin/stock/adjustments schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › matches POST /api/v1/admin/stock/roll-openings schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H5 interface › uses current metadata without presenting the historical H0 projection as runtime state
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+FAIL test/h3-checkout-http.spec.ts
+  ● H3 public checkout HTTP routes › serves settings and demo methods with no-store and rejects unexpected query keys
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● H3 public checkout HTTP routes › accepts a public quote without session or CSRF and bounds the peer quota with a sanitized envelope
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● H3 public checkout HTTP routes › keeps contract 4xx codes and standard messages safe
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+FAIL src/catalog-shared/catalog-error.spec.ts
+  ● Nest multipart error translation › preserves the frozen IMAGE_TOO_LARGE code after Multer transformation
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+FAIL test/h3-checkout-json.middleware.spec.ts
+  ● H3 quote JSON parser › maps malformed or oversized quote JSON to a private 400 validation envelope
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● H3 quote JSON parser › leaves other routes to the ordinary JSON parser
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+
+Test Suites: 7 failed, 1 skipped, 23 passed, 30 of 31 total
+Tests:       100 failed, 1 skipped, 1152 passed, 1253 total
+Snapshots:   0 total
+Time:        7.099 s
+Ran all test suites.

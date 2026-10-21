@@ -1,0 +1,9 @@
+
+> abar-frontend@0.1.0 lint
+> ng lint
+
+
+Linting "abar-frontend"...
+
+All files pass linting.
+
