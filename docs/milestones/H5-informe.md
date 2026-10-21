@@ -21,6 +21,8 @@
 | Corrección de movimientos/indicador de stock | `f8325b918d721a707d34ac0b80de4dee22d73d95` |
 | Probe HTTP independiente fijado como regresión | `7712c45ac8c98a04644d2e6bcbdf68c5abec70ce` |
 
+**Checkpoint documental con las77 evidencias completas:** commit `3639ba0ec11008cbadecda4bed7634bf2cde3a6d`, árbol `1fe85e636ad39ae46309798015570b5078f43007`; precedido por `70902f23c0a20806bb9cc9a5eb97c1374ee94fd6`, árbol `b2a36198bc5a05ed0b2ba394f3aed36f9a7a05f4`. La última actualización solo anota estas identidades y la evaluación documental, sin cambiar evidencia ni runtime.
+
 El commit documental que contiene este informe y su árbol se identifican mediante `git log -1 --format='%H %T' -- docs/milestones/H5-informe.md`; no se inventa una identidad autorreferente. Su SHA se entrega por separado al finalizar. El manifiesto SHA256 de evidencia está [versionado aquí](evidence/H5/manifest.json).
 
 ## 2. Alcance, contrato y responsables
@@ -131,6 +133,8 @@ El navegador detectó PAYMENT_CONFIRMATION mostrado como “Apertura de rollo”
 Resiliencia devolvió exit1, `gentle-ai.review-integration.failure/v2`, `invalid_request`, `mutation_outcome:not_started`, causa `invoke provider reviewer: codex reviewer transport failed: exit status 1: Reading prompt from stdin...`. STATUS exacto ligado reofreció idéntico slot; se ejecutó **una vez** y repitió el fallo. STATUS final continúa `collect/reviewer_results_required` con solo resiliencia pendiente. **No approved, no ACK, no autoridad consumida; sin corrección nativa aplicada.** No hubo `lens_context_budget_exceeded` ni cambio de modo. No más reintentos automáticos, no se reutilizó excepción H4. [Resultado y fallos](evidence/H5/native-runtime-summary.json). Se conservan comandos exactos privados fuera de Git para eventual continuidad solo tras decisión externa.
 
 **Verify:** gpt-6.1-sol/medium, scratch propio sobre `2de9336`, sin editar implementación: backend build/lint/unit1252+1skip, contratos31/estática13/Prisma, PG12 y probe HTTP adicional13, frontend129/build/lint. Sin blocker técnico reproducido. Probe copiado **byte por byte** a7712 y padre repitió PG13; deltaf832 tuvo recheck independiente8/8/build/lint. Suite final frontend131 por padre. H5-Q15 y recepción del informe no se atribuyen a Verify. Logs `h5-independent-verify.*` y `h5-stock-delta-verify.*` en el manifiesto. No se sustituye Review con Verify.
+
+Evaluación nativa del rango **solo documental**7712..3639: `risk:medium` por `cleanup.json`, `review_due:false`, `review_due_reason:under_budget`,79paths/4889líneas (incluye logs generados). No abrió Review ni concede aprobación al runtime; structural readback verificó links y77 hashes.
 
 ## 7. Fallos conservados, omisiones y cierre
 
