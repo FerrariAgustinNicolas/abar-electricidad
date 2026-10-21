@@ -1,0 +1,74 @@
+{
+  "candidateCommit": "7712c45ac8c98a04644d2e6bcbdf68c5abec70ce",
+  "baseTree": "d43afd58d8df48218e56b454cbcfc76873c85dae",
+  "candidateTree": "ce1218d765d5a60891b92b6084c9a07ab83747da",
+  "lineage": "review-c62cd2c64c186b83",
+  "target": "sha256:7530aca94e5f6e07ef55ad244f9c7d1055591485b26269b26539c9a01e8a2127",
+  "consent": "granted",
+  "frozen": {
+    "tier": "high",
+    "original_changed_lines": 1397,
+    "correction_budget": 200,
+    "changed_path_manifest_sha256": "sha256:d721d394ebaeb0f88b9bfde25caceea120f958e948b08524160583db804b8a88"
+  },
+  "admittedArtifacts": [
+    {
+      "lens": "review-risk",
+      "selected_order": 0,
+      "sha256": "sha256:7b3cbbdf76b42d21eef321ceea6b16ab23430ebcfc7a7a374d6ce8e0603c2206",
+      "admission_decision": "completed"
+    },
+    {
+      "lens": "review-readability",
+      "selected_order": 2,
+      "sha256": "sha256:46013b017f0eb561c68820507cd879e7b280b4e41c61a128f0ce338335e95ae2",
+      "admission_decision": "completed"
+    },
+    {
+      "lens": "review-reliability",
+      "selected_order": 3,
+      "sha256": "sha256:acb84e52596a723566e2db8469ca92a418aa62a23e10fa292fe996a9e18ab290",
+      "admission_decision": "completed"
+    }
+  ],
+  "resilienceAttempts": [
+    {
+      "schema": "gentle-ai.review-integration.failure/v2",
+      "contract": "gentle-ai.review-integration/v2",
+      "operation": "review.capture-result",
+      "phase": "preflight",
+      "code": "invalid_request",
+      "message": "The negotiated review request is invalid.",
+      "mutation_outcome": "not_started",
+      "authority_applicability": "not_evaluated",
+      "retry_safe": true,
+      "replayability": "not_replayable",
+      "lineage_id": "review-c62cd2c64c186b83",
+      "required_inputs": [],
+      "next_action": "correct_request",
+      "cause": "invoke provider reviewer: codex reviewer transport failed: exit status 1: Reading prompt from stdin..."
+    },
+    {
+      "schema": "gentle-ai.review-integration.failure/v2",
+      "contract": "gentle-ai.review-integration/v2",
+      "operation": "review.capture-result",
+      "phase": "preflight",
+      "code": "invalid_request",
+      "message": "The negotiated review request is invalid.",
+      "mutation_outcome": "not_started",
+      "authority_applicability": "not_evaluated",
+      "retry_safe": true,
+      "replayability": "not_replayable",
+      "lineage_id": "review-c62cd2c64c186b83",
+      "required_inputs": [],
+      "next_action": "correct_request",
+      "cause": "invoke provider reviewer: codex reviewer transport failed: exit status 1: Reading prompt from stdin..."
+    }
+  ],
+  "finalAction": "collect",
+  "nextReason": "reviewer_results_required",
+  "remainingLens": "review-resilience",
+  "overallVerdict": "UNAVAILABLE / INCOMPLETE",
+  "ack": null,
+  "retryPolicy": "Initial capture and one identical explicitly reoffered capture; no more retries, no authority burn, no mode change."
+}

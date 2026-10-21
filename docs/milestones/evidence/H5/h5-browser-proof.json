@@ -1,0 +1,42 @@
+{
+  "scope": "owned fictitious browser DB only",
+  "beforeStockHash": "ba95f1a37bbacbfebda2d629bb9e264b5176241636078fa7905dfee7063ab1b8",
+  "confirmedStockHash": "c1f3898364eafc102d67f80c92e4aa6ff2f2a4ba28355c2bb20106185bc8b89e",
+  "deliveredStockHash": "c1f3898364eafc102d67f80c92e4aa6ff2f2a4ba28355c2bb20106185bc8b89e",
+  "afterCancelledStockHash": "c1f3898364eafc102d67f80c92e4aa6ff2f2a4ba28355c2bb20106185bc8b89e",
+  "readyToDeliveredStockUnchanged": true,
+  "cancelStockAndVersionsUnchanged": true,
+  "confirmationOperations": 1,
+  "confirmationEntries": 1,
+  "openingOperations": 0,
+  "finalOrderStates": [
+    {
+      "orderNumber": "ABAR-20261021-597A60144D",
+      "status": "DELIVERED",
+      "version": 4
+    },
+    {
+      "orderNumber": "ABAR-20261021-8CA9F82059",
+      "status": "CANCELLED",
+      "version": 2
+    }
+  ],
+  "finalPaymentStates": [
+    {
+      "orderId": "d6dcc4fd-18ea-4f86-9724-d13360ff72dc",
+      "status": "PENDING"
+    },
+    {
+      "orderId": "4593b2c8-1ff7-402f-8d70-ac09a8065284",
+      "status": "PAID"
+    }
+  ],
+  "viewport": {
+    "width": 1280,
+    "height": 720,
+    "responsive3607681440": "not executed: viewport resizing not exposed by selected browser control capability"
+  },
+  "keyboard": "Tab moved focus to skip-to-content link on public result",
+  "sourceBeforeStockDelta": "2de9336c9e33b783417311e0594ce364f253abc5",
+  "sourceAfterStockDelta": "f8325b918d721a707d34ac0b80de4dee22d73d95"
+}
