@@ -3,7 +3,7 @@ info:
   title: ABAR Electricidad API — transversal candidate
   version: 0.8.0
   x-abar-h5-freeze: manual-confirmation-v1
-  x-abar-h5-runtime-stage: contract-only-not-implemented
+  x-abar-h5-runtime-stage: implemented-local-verification-pending
   x-abar-h5-decisions:
     P01: user-confirmed-academic-unpaid-only-cancellation
   x-abar-h4-freeze: orders-demo-v1

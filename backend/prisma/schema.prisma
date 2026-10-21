@@ -20,6 +20,9 @@ model AdminUser {
   updatedAt           DateTime @updatedAt @db.Timestamptz(3)
   sessions            AuthSession[]
   stockOperations     StockOperation[]
+  confirmedPayments   Payment[]
+  orderEvents         OrderEvent[]
+  orderNotes          OrderNote[]
 }
 
 model AuthSession {
@@ -75,6 +78,7 @@ enum PresentationUnit {
 enum StockOperationType {
   ADJUSTMENT
   ROLL_OPENING
+  PAYMENT_CONFIRMATION
 }
 
 model Category {
@@ -167,6 +171,10 @@ model StockOperation {
   metadata         Json               @default("{}") @db.JsonB
   result           Json               @default("{}") @db.JsonB
   actor            AdminUser          @relation(fields: [actorAdminUserId], references: [id], onDelete: Restrict)
+  paymentId        String?            @unique(map: "StockOperation_paymentId_key") @db.Uuid
+  orderId          String?            @db.Uuid
+  payment          Payment?           @relation(fields: [paymentId, orderId], references: [id, orderId], onDelete: Restrict)
+  order            Order?             @relation(fields: [orderId], references: [id], onDelete: Restrict)
   entries          StockEntry[]
 
   @@unique([actorAdminUserId, idempotencyKey])
@@ -212,10 +220,15 @@ model CheckoutQuote {
 
 enum H4OrderStatus {
   RECEIVED
+  PREPARING
+  READY
+  DELIVERED
+  CANCELLED
 }
 enum H4PaymentStatus {
   PENDING
   REJECTED
+  PAID
 }
 enum H4AttemptStatus {
   APPROVED
@@ -230,10 +243,18 @@ enum H4PaymentMethod {
 enum H4IdempotencyKind {
   CREATE_ORDER
   PAYMENT_ATTEMPT
+  PAYMENT_CONFIRMATION
+  ORDER_STATUS
+  ORDER_CANCEL
+  ORDER_NOTE
 }
 enum H4NotificationKind {
   ORDER_CREATED_BUYER
   ORDER_CREATED_ADMIN
+  PAYMENT_CONFIRMED_BUYER
+  PAYMENT_CONFIRMED_ADMIN
+  ORDER_READY_BUYER
+  ORDER_CANCELLED_BUYER
 }
 enum H4NotificationState {
   PENDING
@@ -267,6 +288,8 @@ model Order {
   events                OrderEvent[]
   idempotencyKeys       OrderIdempotencyKey[]
   notifications         NotificationJob[]
+  stockOperations       StockOperation[]
+  notes                 OrderNote[]
 
   @@index([createdAt, id])
   @@index([customerEmail])
@@ -302,6 +325,12 @@ model Payment {
   attempts          PaymentAttempt[] @relation("PaymentAttempts")
   currentAttempt    PaymentAttempt?  @relation("CurrentPaymentAttempt", fields: [currentAttemptId], references: [id], onDelete: Restrict)
 
+  confirmedAt       DateTime?        @db.Timestamptz(3)
+  confirmedByAdminUserId String?      @db.Uuid
+  confirmedBy       AdminUser?       @relation(fields: [confirmedByAdminUserId], references: [id], onDelete: Restrict)
+  stockOperations   StockOperation[]
+
+  @@unique([id, orderId])
   @@index([status])
 }
 
@@ -327,6 +356,8 @@ model OrderEvent {
   id          String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   orderId     String         @db.Uuid
   attemptId   String?        @db.Uuid
+  actorAdminUserId String?     @db.Uuid
+  actor       AdminUser?     @relation(fields: [actorAdminUserId], references: [id], onDelete: Restrict)
   eventType   String         @db.VarChar(48)
   createdAt   DateTime       @default(now()) @db.Timestamptz(3)
   details     Json           @default("{}") @db.JsonB
@@ -368,4 +399,17 @@ model NotificationJob {
   order       Order               @relation(fields: [orderId], references: [id], onDelete: Restrict)
 
   @@index([state, createdAt])
+}
+
+model OrderNote {
+  id               String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orderId          String @db.Uuid
+  actorAdminUserId  String @db.Uuid
+  text             String @db.VarChar(2000)
+  version          Int
+  createdAt        DateTime @default(now()) @db.Timestamptz(3)
+  order            Order @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  actor            AdminUser @relation(fields: [actorAdminUserId], references: [id], onDelete: Restrict)
+
+  @@index([orderId, createdAt, id])
 }

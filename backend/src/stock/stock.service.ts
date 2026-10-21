@@ -91,7 +91,7 @@ export class StockService {
       ]);
       const demandRows = rows.length ? await this.prisma.orderItem.groupBy({
         by: ['presentationId'],
-        where: { presentationId: { in: rows.map((row: any) => row.id) }, order: { is: { payment: { is: { status: { in: ['PENDING', 'REJECTED'] } } } } } },
+        where: { presentationId: { in: rows.map((row: any) => row.id) }, order: { is: { status: 'RECEIVED', payment: { is: { status: { in: ['PENDING', 'REJECTED'] } } } } } },
         _sum: { quantity: true },
       }) : [];
       const demandByPresentation = new Map<string, number>();
@@ -100,6 +100,11 @@ export class StockService {
         if (!Number.isSafeInteger(quantity) || quantity < 0) fail(503, 'SERVICE_UNAVAILABLE');
         demandByPresentation.set(demand.presentationId, quantity);
       }
+      const paidRows = rows.length ? await this.prisma.orderItem.groupBy({
+        by: ['presentationId'], where: { presentationId: { in: rows.map((r: any) => r.id) },
+          order: { is: { status: { in: ['PREPARING', 'READY'] }, payment: { is: { status: 'PAID' } } } } }, _sum: { quantity: true },
+      }) : [];
+      const paid = new Map(paidRows.map(r => [r.presentationId, r._sum.quantity ?? 0]));
       await auth.recheck(this.prisma as never);
       const filtered = rows.map((row: any) => {
         const quantity = row.balance?.availableQuantity ?? 0;
@@ -110,6 +115,7 @@ export class StockService {
           availableQuantity: quantity, lowStockThreshold: row.lowStockThreshold,
           version: row.balance?.version ?? 1, availability: derived,
           requestedUnpaidQuantity: demandByPresentation.get(row.id) ?? 0,
+          paidPendingDeliveryQuantity: paid.get(row.id) ?? 0,
         };
       }).filter((item: any) => state === undefined || item.availability === state);
       const totalItems = state === undefined ? count : filtered.length;
@@ -130,7 +136,7 @@ export class StockService {
     const actorAdminUserId = optionalText(query.actorAdminUserId, 36);
     for (const id of [presentationId, productId, actorAdminUserId]) if (id !== undefined && !UUID.test(id)) fail(400, 'VALIDATION_ERROR');
     const type = optionalText(query.type, 20);
-    if (type !== undefined && !['ADJUSTMENT', 'ROLL_OPENING'].includes(type)) fail(400, 'VALIDATION_ERROR');
+    if (type !== undefined && !['ADJUSTMENT', 'ROLL_OPENING', 'PAYMENT_CONFIRMATION'].includes(type)) fail(400, 'VALIDATION_ERROR');
     const from = dateFilter(query.from);
     const to = dateFilter(query.to);
     if (from && to && from > to) fail(400, 'VALIDATION_ERROR');

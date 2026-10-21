@@ -1,6 +1,6 @@
 # H5 — Confirmación manual y gestión de pedidos
 
-**Estado: contrato congelado; implementación y validación PostgreSQL pendientes.** OpenAPI 0.8.0 es la única norma de DTOs. Esta decisión no declara aprobación externa, pago real ni disponibilidad productiva.
+**Estado: implementación local H5; Review/Verify final y auditoría externa pendientes.** OpenAPI 0.8.0 es la única norma de DTOs. Esta decisión no declara aprobación externa, pago real ni disponibilidad productiva.
 
 ## Decisiones académicas confirmadas
 
@@ -46,3 +46,7 @@ Todas las demás transiciones se rechazan. Cancelación y confirmación compiten
 Pendientes H5-Q01–Q16 del prompt: migración limpia/upgrade H4 poblado, carreras reales, rollback inyectado, replay, auth y navegador. El freeze solo tiene evidencia estática; no demuestra atomicidad ni disponibilidad de rutas. Se conserva la falla inicial de pruebas y cualquier fallo posterior. Review nativo por candidato inmutable y Verify independientes son barreras distintas; la excepción H4 no se hereda.
 
 Jobs pendientes para confirmación, listo y cancelación, insertados en la transacción, con destinatarios ficticios/de entorno. Sin SMTP, gateway real, conciliación, reembolso ni panel H6. Sin push, PR, merge ni tags; detener para auditoría externa al cierre.
+
+## Evidencia local de implementación (sin aprobación global)
+
+El backend aplica `ReadCommitted` y bloqueos explícitos, más unicidad SQL por identidad de pago. La migración H5 agrega checks/FKs, metadatos de confirmación y auditoría append-only; Prisma validate/generate y migrate deploy limpios/upgrade poblado se prueban en PostgreSQL 17 nuevo. Se observó contención real con dos transacciones esperando locks sobre el último saldo; una confirma y otra pierde sin débito parcial. Hay rollback con triggers de fallo en operación, evento o job, y revocación H1 después de autenticar pero antes de adquirir el lock. Resultados detallados y límites se registran en el informe H5 al cerrar; estos checks no sustituyen Review nativo del runtime ni auditoría externa.

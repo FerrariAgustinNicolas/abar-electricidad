@@ -12,6 +12,10 @@ export function createOrdersJsonRouter(): ReturnType<typeof Router> {
     response.status(400).json({ code: 'VALIDATION_ERROR', message: 'No se pudo completar la operación solicitada',
       requestId: (request as typeof request & { requestId?: string }).requestId ?? randomUUID() });
   });
+  router.post('/api/v1/admin/orders/:id/payment-confirmation', safeParser);
+  router.post('/api/v1/admin/orders/:id/cancel', safeParser);
+  router.post('/api/v1/admin/orders/:id/notes', safeParser);
+  router.patch('/api/v1/admin/orders/:id/status', safeParser);
   router.post('/api/v1/public/orders', safeParser);
   router.post('/api/v1/public/orders/lookup', safeParser);
   router.post('/api/v1/public/orders/:id/payment-attempts', safeParser);

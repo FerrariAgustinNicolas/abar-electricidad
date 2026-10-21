@@ -324,3 +324,15 @@ fixture (`H2_IMAGE_CLEANUP_OWNED=1`, URL explícita e imagen directory) y coordi
 la eliminación de hasta cien archivos huérfanos con las publicaciones. Consultar
 [política de imágenes](docs/decisions/H2-images.md); no ejecutar limpieza sobre
 archivos ajenos ni interpretar un fallo de transacción como rollback confirmado.
+
+## H5 — Confirmación manual y pedidos (candidato local)
+
+OpenAPI 0.8.0 agrega `/api/v1/admin/orders`: listado/detalle/historial, confirmación manual completa, notas, cancelación impaga y transiciones READY/DELIVERED. Solo confirmar pago descuenta stock, una vez por pago/presentación; APPROVED de simulación no es PAID. Cancelar un pago confirmado está prohibido; no hay devoluciones automáticas ni despacho H6. Sesión H1 y Origin/CSRF siguen siendo obligatorios. [Decisión H5](docs/decisions/H5-manual-confirmation.md). No implica aprobación externa ni disponibilidad productiva.
+
+Verificación propia sobre PostgreSQL 17 nuevo, con Docker local e imagen `postgres:17.11-bookworm` previamente instalada:
+
+```sh
+node backend/scripts/h5-postgres.mjs
+```
+
+El runner crea dos bases aisladas en un contenedor con ownership y puerto loopback aleatorio, despliega migraciones y comprueba upgrade H4 poblado, snapshots, drift, confirmación/rollback, locks reales, replay, transiciones y seguridad H1. No acepta DATABASE_URL como destino ni reutiliza bases ajenas. `--keep` conserva exclusivamente el contenedor de esa ejecución para evidencia local; verificar su manifest privado/labels antes de detenerlo. Los manifests temporales contienen credenciales efímeras: nunca versionarlos, capturarlos ni incluirlos en informes. Fallar el runner no constituye PASS ni autoriza fallback a otra base.
