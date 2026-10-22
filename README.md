@@ -354,6 +354,10 @@ npm --prefix backend run notifications:dispatch -- --help
 node backend/scripts/h6-postgres.mjs
 ```
 
+The fixture runner resolves `DOCKER_CONTEXT`, then `DOCKER_HOST`, or the active
+Docker context. Only local Unix sockets are accepted; remote/TCP endpoints are
+rejected before fixture creation. No developer-specific socket is assumed.
+
 `H6_SMTP_HOST` must be `127.0.0.1`; `H6_SMTP_PORT` defaults to `1025` (an isolated
 fixture may use another loopback port). The transport accepts only Mailpit and
 fictitious `example.test` recipients. The administrator notification recipient

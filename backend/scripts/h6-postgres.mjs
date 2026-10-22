@@ -1,3 +1,4 @@
+import { localDockerHost } from './h6-docker-endpoint.mjs';
 import { spawnSync } from 'node:child_process';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { mkdtempSync, writeFileSync, mkdirSync, cpSync, readdirSync } from 'node:fs';
@@ -16,9 +17,11 @@ const require = createRequire(resolve(backend, 'package.json'));
 const { Client } = require('pg');
 const owner = randomUUID(), password = randomBytes(32).toString('base64url');
 const scratch = mkdtempSync(resolve(tmpdir(), 'abar-h6-owned.'));
-const dockerHost = 'unix:///Users/agustin/.docker/run/docker.sock';
+const dockerHost = localDockerHost();
 const containers = [];
-const docker = args => spawnSync('docker', ['--host', dockerHost, ...args], {encoding:'utf8', env:{...process.env, POSTGRES_PASSWORD:password}});
+const dockerEnvironment = { ...process.env, POSTGRES_PASSWORD: password };
+delete dockerEnvironment.DOCKER_CONTEXT;
+const docker = args => spawnSync('docker', ['--host', dockerHost, ...args], {encoding:'utf8', env:dockerEnvironment});
 const inspect = id => { const r=docker(['inspect',id]); if(r.status!==0) throw Error('Owned fixture inspection failed'); return JSON.parse(r.stdout)[0]; };
 function start(name, image, args) {
   const r = docker(['run','--pull=never','-d','--name',`abar-h6-${name}-${owner}`,'--label',`com.abar.h6-owner=${owner}`,'--label','com.abar.h6-purpose=integration',...args,image]);
