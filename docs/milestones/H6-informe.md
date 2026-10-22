@@ -147,7 +147,15 @@ Las cuatro lentes pertinentes se lanzaron concurrentemente en orden del proveedo
 | `0fb85fb46e67160bcddf294c8c1a694edb1a78e7` | `15a40b6167bb64044574dd07dbea3d2dd5a2cd8d` | fix(h6): preserve commercial drafts across async requests |
 | `a3560e4b18e1271757a93f20a4859ae021617df2` | `0ba49afb979816ea296c784f840c409440d26528` | fix(h6): serialize notification retry refreshes |
 
-## 8. Deuda, límites y horas
+## 8. Control del cierre documental
+
+El cierre documental inicial fue `22c76728f0fb9237e71bcc7c20805afcd1290dea`, árbol `ba5abeb9a831ba579fc341f06e1c95995fffeaf3`. La reparación de extensiones fue `3e51f867e8ec6aa3d77f53b92355b73438cdb6b8`, árbol `9a8eba8dee1ec86ae1ac2783209fb2ca635f0839`. La identidad del commit que incorpora esta constancia adicional se entrega en el chat, por el límite de autorreferencia explicado arriba.
+
+La evaluación nativa del delta exclusivamente documental/evidencias desde a356 devolvió `risk: medium`, `review_due: false`, `review_due_reason: under_budget` (275líneas); el JSON de prueba se clasificó heurísticamente como configuración. No se inició otra revisión ni se atribuye aprobación nativa a ese delta: las cuatro aprobaciones terminales corresponden a las unidades funcionales anteriores.
+
+El `git diff --check` de toda la rama señaló tres espacios finales en las líneas3–5 de `docs/milestones/H6-prompt.md`, copiados literalmente del prompt original (saltos de línea Markdown). Se conservan para no reescribir la fuente aprobada. La comprobación excluyendo ese único archivo pasa; el control completo no se informa como PASS. La comparación final de16HEAD/índices/status siguió sin diferencias y main/origin/main/tag conservaron la base.
+
+## 9. Deuda, límites y horas
 
 1. Zoom nativo200%, auditoría WCAG integral y test H1 PostgreSQL omitido; tampoco se afirma nuevo browser E2E completo para cada escenario H4 o CI remoto.
 2. SMTP puede duplicar tras aceptación/pérdida ACK. La lease/at-least-once y exit1 no lo convierten en exactly-once.
