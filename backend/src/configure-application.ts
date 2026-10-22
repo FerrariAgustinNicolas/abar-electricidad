@@ -1,3 +1,4 @@
+import { createH6JsonRouter } from './common/h6-json.middleware';
 import { createCheckoutJsonRouter } from './checkout/checkout-json.middleware';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -12,14 +13,15 @@ export function configureApplication(app: NestExpressApplication): void {
   app.use(requestIdMiddleware.use.bind(requestIdMiddleware));
   app.use(createCheckoutJsonRouter());
   app.use(createOrdersJsonRouter());
+  app.use(createH6JsonRouter());
   app.use(createChangePasswordJsonRouter());
   app.useGlobalPipes(createBaseValidationPipe());
   app.useGlobalFilters(new ApiExceptionFilter());
 
   const options = new DocumentBuilder()
     .setTitle('ABAR Electricidad API — transversal candidate')
-    .setDescription('H1 authentication, H2 catalog/stock, H3 demo quotes, and H4 guest orders/demo attempts for local verification. No external approval or production readiness is implied.')
-    .setVersion('0.8.0')
+    .setDescription('H1 authentication, H2 catalog/stock, H3 demo quotes, H4 guest orders/demo attempts, H5 manual confirmation, and H6 local notifications/settings for local verification. No external approval or production readiness is implied.')
+    .setVersion('0.9.0')
     .setOpenAPIVersion('3.0.3')
     .addCookieAuth('abar_auth_context', { type: 'apiKey', in: 'cookie' }, 'AuthPreauthCookie')
     .addCookieAuth('abar_admin_session', { type: 'apiKey', in: 'cookie' }, 'AdminSessionCookie')

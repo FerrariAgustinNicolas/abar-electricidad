@@ -1,7 +1,9 @@
 openapi: 3.0.3
 info:
   title: ABAR Electricidad API — transversal candidate
-  version: 0.8.0
+  version: 0.9.0
+  x-abar-h6-freeze: notifications-settings-v1
+  x-abar-h6-runtime-stage: contract-frozen-implementation-pending
   x-abar-h5-freeze: manual-confirmation-v1
   x-abar-h5-runtime-stage: implemented-local-verification-pending
   x-abar-h5-decisions:
@@ -20,14 +22,14 @@ info:
   x-abar-integrated-runtime-stage: h1
   x-abar-integrated-commit: 18c39e9b86b7b7bf45263fe5bad4fe77125a6386
   description: |
-    Single normative candidate contract, version 0.8.0. H5 operations are contract-only until implemented. H4 guest orders/demo attempts extend H3 additively. H2 catalog/stock schemas are frozen;
+    Single normative candidate contract, version 0.9.0. H6 is frozen before implementation. H1–H5 are academically integrated with recorded verification debt; this is not production approval. H4 guest orders/demo attempts extend H3 additively. H2 catalog/stock schemas are frozen;
     local H2 implementation and bounded independent checks are recorded in H2-informe.md.
     External milestone audit remains pending; this metadata is not production approval. H1 authentication and
     administrative-user operations are integrated alongside GET /health at the
     commit identified above. No external approval or production readiness is implied.
     The h0 runtime marker and projected-area list are historical freeze metadata,
     retained for validator compatibility, not current runtime availability claims.
-    Historical H0 projected metadata below is retained; scoped H4 P02/P03 academic confirmations are explicit in x-abar-h4-decisions. H4 runtime awaits independent verification and external audit.
+    Historical H0 projected metadata below is retained; scoped H4 P02/P03 academic confirmations are explicit in x-abar-h4-decisions. That historical H4 marker is not a current availability statement; H4/H5 academic integration and debt are recorded in milestone reports.
     All H1 responses use Cache-Control: no-store. No passwords, cookie values or runtime
     nonces are provided as examples. Required response headers use x-required: true.
     Cookie authentication does not replace Origin/CSRF checks. See docs/decisions/H1-auth.md.
@@ -37,6 +39,12 @@ info:
     - /api/v1/auth
     - /api/v1/admin
   x-abar-examples:
+    - file: examples/h6-settings-write.json
+      schema: H6SettingsWrite
+    - file: examples/h6-payment-method-write.json
+      schema: H6PaymentMethodWrite
+    - file: examples/h6-notification-retry.json
+      schema: H6NotificationRetry
     - file: examples/h5-confirmation-request.json
       schema: PaymentConfirmationRequest
     - file: examples/h4-order-request.json
@@ -68,8 +76,12 @@ servers:
     description: Local development only; production transport must use HTTPS.
 security: []
 tags:
+  - name: commercial-admin
+    description: H6 authenticated DEMO settings and notification operations.
+  - name: commercial-public
+    description: Minimal DEMO contact only; no private administrative data.
   - name: orders-admin
-    description: H5 frozen academic manual operations; implementation pending.
+    description: H5 academically integrated manual operations; verification debt is recorded separately.
   - name: checkout-public
     description: H3 public demo quotes; no order, payment or reservation.
   - name: catalog-public
@@ -85,6 +97,520 @@ tags:
   - name: admin
     description: Frozen H1 administrative users; equal capabilities, no roles.
 paths:
+  /api/v1/admin/settings:
+    get:
+      tags:
+        - commercial-admin
+      operationId: getH6Settings
+      summary: getH6Settings
+      description: DEMO policy authority. CAS updates affect only future quotes; old quotes require
+        explicit reacceptance. Orders and snapshots remain immutable.
+      security:
+        - AdminSessionCookie: []
+      responses:
+        "200":
+          description: Successful DEMO operation.
+          headers: &a1
+            Cache-Control:
+              x-required: true
+              description: Never cache this response.
+              schema:
+                type: string
+                enum:
+                  - no-store
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/H6SettingsView"
+        "400":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+        "503":
+          - SERVICE_UNAVAILABLE
+    patch:
+      tags:
+        - commercial-admin
+      operationId: patchH6Settings
+      summary: patchH6Settings
+      description: DEMO policy authority. CAS updates affect only future quotes; old quotes require
+        explicit reacceptance. Orders and snapshots remain immutable.
+      security:
+        - AdminSessionCookie: []
+      parameters:
+        - $ref: "#/components/parameters/Origin"
+        - $ref: "#/components/parameters/CsrfToken"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/H6SettingsWrite"
+      responses:
+        "200":
+          description: Successful DEMO operation.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/H6SettingsView"
+        "400":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+          - ORIGIN_INVALID
+          - CSRF_INVALID
+        "409":
+          - VERSION_CONFLICT
+          - NO_VALID_CHECKOUT_COMBINATION
+        "503":
+          - SERVICE_UNAVAILABLE
+  /api/v1/admin/payment-methods/{code}:
+    get:
+      tags:
+        - commercial-admin
+      operationId: getH6PaymentMethod
+      summary: getH6PaymentMethod
+      description: DEMO-only local H6 operation; no real payment providers or external messaging.
+      security:
+        - AdminSessionCookie: []
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: &a2
+              - DEMO_PAY_ON_PICKUP
+              - DEMO_TRANSFER
+              - DEMO_SIMULATION
+      responses:
+        "200":
+          description: Successful DEMO operation.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/H6PaymentMethodView"
+        "400":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+        "404":
+          - METHOD_NOT_FOUND
+        "503":
+          - SERVICE_UNAVAILABLE
+    patch:
+      tags:
+        - commercial-admin
+      operationId: patchH6PaymentMethod
+      summary: patchH6PaymentMethod
+      description: DEMO-only local H6 operation; no real payment providers or external messaging.
+      security:
+        - AdminSessionCookie: []
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: *a2
+        - $ref: "#/components/parameters/Origin"
+        - $ref: "#/components/parameters/CsrfToken"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/H6PaymentMethodWrite"
+      responses:
+        "200":
+          description: Successful DEMO operation.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/H6PaymentMethodView"
+        "400":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+          - ORIGIN_INVALID
+          - CSRF_INVALID
+        "404":
+          - METHOD_NOT_FOUND
+        "409":
+          - VERSION_CONFLICT
+          - NO_VALID_CHECKOUT_COMBINATION
+        "503":
+          - SERVICE_UNAVAILABLE
+  /api/v1/admin/notifications:
+    get:
+      tags:
+        - commercial-admin
+      operationId: listH6Notifications
+      summary: listH6Notifications
+      description: DEMO-only local H6 operation; no real payment providers or external messaging.
+      security:
+        - AdminSessionCookie: []
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: pageSize
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: state
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/H6NotificationState"
+        - name: orderId
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/OpaqueId"
+        - name: from
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/UtcDateTime"
+        - name: to
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/UtcDateTime"
+      responses:
+        "200":
+          description: Successful DEMO operation.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/H6NotificationList"
+        "400":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+        "503":
+          - SERVICE_UNAVAILABLE
+  /api/v1/admin/notifications/{id}/retry:
+    post:
+      tags:
+        - commercial-admin
+      operationId: retryH6Notification
+      summary: retryH6Notification
+      description: Requeue an eligible existing job only. Repeated/stale versions conflict without
+        duplicating jobs or business events. SMTP acceptance is not exactly-once.
+      security:
+        - AdminSessionCookie: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/OpaqueId"
+        - $ref: "#/components/parameters/Origin"
+        - $ref: "#/components/parameters/CsrfToken"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/H6NotificationRetry"
+      responses:
+        "202":
+          description: Successful DEMO operation.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/H6NotificationView"
+        "400":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+          - ORIGIN_INVALID
+          - CSRF_INVALID
+        "404":
+          - NOTIFICATION_NOT_FOUND
+        "409":
+          - VERSION_CONFLICT
+          - NOT_RETRYABLE
+        "503":
+          - SERVICE_UNAVAILABLE
+  /api/v1/public/contact:
+    get:
+      tags:
+        - commercial-public
+      operationId: getH6PublicContact
+      summary: getH6PublicContact
+      description: DEMO-only local H6 operation; no real payment providers or external messaging.
+      security: []
+      responses:
+        "200":
+          description: Successful DEMO operation.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/H6PublicContact"
+        "400":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Sanitized failure; no internal details.
+          headers: *a1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "503":
+          - SERVICE_UNAVAILABLE
   /api/v1/admin/orders:
     get:
       tags:
@@ -3913,6 +4439,247 @@ components:
         type: string
         format: uuid
   schemas:
+    H6Contact:
+      type: object
+      additionalProperties: false
+      required:
+        - displayName
+        - email
+        - phone
+        - whatsapp
+        - hours
+        - address
+      properties:
+        displayName:
+          type: string
+          minLength: 1
+          maxLength: 100
+        email:
+          type: string
+          minLength: 1
+          maxLength: 254
+          pattern: ^[A-Za-z0-9._%+-]+@example\.test$
+        phone:
+          type: string
+          minLength: 0
+          maxLength: 32
+        whatsapp:
+          type: string
+          minLength: 0
+          maxLength: 16
+          pattern: ^(|\+[1-9][0-9]{7,14})$
+        hours:
+          type: string
+          minLength: 0
+          maxLength: 300
+        address:
+          type: string
+          minLength: 0
+          maxLength: 300
+    H6PublicContact:
+      type: object
+      additionalProperties: false
+      required:
+        - demo
+        - version
+        - contact
+      properties:
+        demo:
+          type: boolean
+          enum:
+            - true
+        version: &a1
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        contact:
+          $ref: "#/components/schemas/H6Contact"
+    H6SettingsView:
+      type: object
+      additionalProperties: false
+      required:
+        - version
+        - feeMinor
+        - enabledDeliveryModes
+        - contact
+        - paymentMethods
+      properties:
+        version: *a1
+        feeMinor:
+          type: string
+          pattern: ^(0|[1-9][0-9]{0,17}|[1-8][0-9]{18}|9[0-1][0-9]{17}|92[0-1][0-9]{16}|922[0-2][0-9]{15}|9223[0-2][0-9]{14}|92233[0-6][0-9]{13}|922337[0-1][0-9]{12}|92233720[0-2][0-9]{10}|922337203[0-5][0-9]{9}|9223372036[0-7][0-9]{8}|92233720368[0-4][0-9]{7}|922337203685[0-3][0-9]{6}|9223372036854[0-6][0-9]{5}|92233720368547[0-6][0-9]{4}|922337203685477[0-4][0-9]{3}|9223372036854775[0-7][0-9]{2}|922337203685477580[0-6]|9223372036854775807)$
+        enabledDeliveryModes: &a2
+          type: array
+          minItems: 1
+          maxItems: 2
+          uniqueItems: true
+          items:
+            $ref: "#/components/schemas/DeliveryMode"
+        contact:
+          $ref: "#/components/schemas/H6Contact"
+        paymentMethods:
+          type: array
+          minItems: 3
+          maxItems: 3
+          items:
+            $ref: "#/components/schemas/H6PaymentMethodView"
+    H6SettingsWrite:
+      type: object
+      additionalProperties: false
+      required:
+        - expectedVersion
+        - feeMinor
+        - enabledDeliveryModes
+        - contact
+      properties:
+        expectedVersion: *a1
+        feeMinor:
+          type: string
+          pattern: ^(0|[1-9][0-9]{0,17}|[1-8][0-9]{18}|9[0-1][0-9]{17}|92[0-1][0-9]{16}|922[0-2][0-9]{15}|9223[0-2][0-9]{14}|92233[0-6][0-9]{13}|922337[0-1][0-9]{12}|92233720[0-2][0-9]{10}|922337203[0-5][0-9]{9}|9223372036[0-7][0-9]{8}|92233720368[0-4][0-9]{7}|922337203685[0-3][0-9]{6}|9223372036854[0-6][0-9]{5}|92233720368547[0-6][0-9]{4}|922337203685477[0-4][0-9]{3}|9223372036854775[0-7][0-9]{2}|922337203685477580[0-6]|9223372036854775807)$
+          description: Canonical ARS minor-unit string, 0..9223372036854775807 inclusive; exact schema bound, no floating-point conversion.
+        enabledDeliveryModes: *a2
+        contact:
+          $ref: "#/components/schemas/H6Contact"
+    H6PaymentMethodView:
+      type: object
+      additionalProperties: false
+      required:
+        - code
+        - version
+        - enabled
+        - label
+        - instructions
+        - demo
+        - deliveryModes
+      properties:
+        code:
+          type: string
+          enum:
+            - DEMO_PAY_ON_PICKUP
+            - DEMO_TRANSFER
+            - DEMO_SIMULATION
+        version: *a1
+        enabled:
+          type: boolean
+        label:
+          type: string
+          minLength: 1
+          maxLength: 100
+        instructions:
+          type: string
+          minLength: 1
+          maxLength: 500
+        demo:
+          type: boolean
+          enum:
+            - true
+        deliveryModes: *a2
+    H6PaymentMethodWrite:
+      type: object
+      additionalProperties: false
+      required:
+        - expectedVersion
+        - enabled
+        - instructions
+        - deliveryModes
+      properties:
+        expectedVersion: *a1
+        enabled:
+          type: boolean
+        instructions:
+          type: string
+          minLength: 1
+          maxLength: 500
+        deliveryModes: *a2
+    H6NotificationState:
+      type: string
+      enum:
+        - PENDING
+        - PROCESSING
+        - RETRY_WAIT
+        - SENT
+        - FAILED
+      description: "Finite lifecycle: PENDING -> PROCESSING -> SENT, RETRY_WAIT or FAILED. Expired leases
+        are reclaimed; maximum five attempts per retry cycle. FAILED or RETRY_WAIT may be manually
+        requeued; SENT and live PROCESSING are never manually retried."
+    H6NotificationKind:
+      type: string
+      enum:
+        - ORDER_CREATED_BUYER
+        - ORDER_CREATED_ADMIN
+        - PAYMENT_CONFIRMED_BUYER
+        - PAYMENT_CONFIRMED_ADMIN
+        - ORDER_READY_BUYER
+        - ORDER_CANCELLED_BUYER
+        - ORDER_CANCELLED_ADMIN
+    H6NotificationView:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - orderId
+        - kind
+        - state
+        - version
+        - attemptCount
+        - nextAttemptAt
+        - sentAt
+        - lastError
+        - createdAt
+      properties:
+        id:
+          $ref: "#/components/schemas/OpaqueId"
+        orderId:
+          $ref: "#/components/schemas/OpaqueId"
+        kind:
+          $ref: "#/components/schemas/H6NotificationKind"
+        state:
+          $ref: "#/components/schemas/H6NotificationState"
+        version: *a1
+        attemptCount:
+          type: integer
+          minimum: 0
+          maximum: 5
+        nextAttemptAt:
+          type: string
+          format: date-time
+          nullable: true
+        sentAt:
+          type: string
+          format: date-time
+          nullable: true
+        lastError:
+          type: string
+          nullable: true
+          enum:
+            - null
+            - SMTP_UNAVAILABLE
+            - SMTP_REJECTED
+            - INVALID_JOB
+            - LEASE_EXPIRED
+        createdAt:
+          $ref: "#/components/schemas/UtcDateTime"
+    H6NotificationList:
+      type: object
+      additionalProperties: false
+      required:
+        - items
+        - pageInfo
+      properties:
+        items:
+          type: array
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/H6NotificationView"
+        pageInfo:
+          $ref: "#/components/schemas/PageInfo"
+    H6NotificationRetry:
+      type: object
+      additionalProperties: false
+      required:
+        - expectedVersion
+      properties:
+        expectedVersion: *a1
     AllowedOrderActions:
       type: object
       additionalProperties: false

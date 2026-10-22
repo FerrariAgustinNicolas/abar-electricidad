@@ -202,6 +202,7 @@ model CheckoutPolicy {
   quoteTtlSeconds       Int      @default(600)
   enabledDeliveryModes  Json     @db.JsonB
   paymentMethods        Json     @db.JsonB
+  contact               Json     @default("{\"displayName\":\"ABAR DEMO\",\"email\":\"contact@example.test\",\"phone\":\"\",\"whatsapp\":\"\",\"hours\":\"DEMO - hours not confirmed\",\"address\":\"DEMO - address not confirmed\"}") @db.JsonB
   version               Int      @default(1)
   updatedAt             DateTime @default(now()) @db.Timestamptz(3)
 }
@@ -255,9 +256,14 @@ enum H4NotificationKind {
   PAYMENT_CONFIRMED_ADMIN
   ORDER_READY_BUYER
   ORDER_CANCELLED_BUYER
+  ORDER_CANCELLED_ADMIN
 }
 enum H4NotificationState {
   PENDING
+  PROCESSING
+  RETRY_WAIT
+  SENT
+  FAILED
 }
 
 model Order {
@@ -394,11 +400,23 @@ model NotificationJob {
   recipient   String              @db.VarChar(254)
   dedupeKey   String              @unique(map: "NotificationJob_dedupeKey_key") @db.VarChar(200)
   state       H4NotificationState @default(PENDING)
+  version     Int                 @default(1)
+  attemptCount Int                @default(0)
+  totalAttemptCount Int           @default(0)
+  lastAttemptAt DateTime?         @db.Timestamptz(3)
+  nextAttemptAt DateTime?         @default(now()) @db.Timestamptz(3)
+  sentAt      DateTime?           @db.Timestamptz(3)
+  lastError   String?             @db.VarChar(32)
+  leaseToken  String?             @db.Uuid
+  leaseUntil  DateTime?           @db.Timestamptz(3)
   createdAt   DateTime            @default(now()) @db.Timestamptz(3)
   payload     Json                @db.JsonB
   order       Order               @relation(fields: [orderId], references: [id], onDelete: Restrict)
 
   @@index([state, createdAt])
+  @@index([state, nextAttemptAt, createdAt])
+  @@index([state, leaseUntil])
+  @@index([orderId, createdAt])
 }
 
 model OrderNote {

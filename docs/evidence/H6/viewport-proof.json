@@ -1,0 +1,74 @@
+[
+  {
+    "page": "methods",
+    "requested": 360,
+    "scroll": 360,
+    "width": 360
+  },
+  {
+    "page": "methods",
+    "requested": 768,
+    "scroll": 768,
+    "width": 768
+  },
+  {
+    "page": "methods",
+    "requested": 1440,
+    "scroll": 1440,
+    "width": 1440
+  },
+  {
+    "page": "notifications",
+    "requested": 360,
+    "scroll": 360,
+    "width": 360
+  },
+  {
+    "page": "notifications",
+    "requested": 768,
+    "scroll": 768,
+    "width": 768
+  },
+  {
+    "page": "notifications",
+    "requested": 1440,
+    "scroll": 1440,
+    "width": 1440
+  },
+  {
+    "page": "settings",
+    "requested": 360,
+    "scroll": 360,
+    "width": 360
+  },
+  {
+    "page": "settings",
+    "requested": 768,
+    "scroll": 768,
+    "width": 768
+  },
+  {
+    "page": "settings",
+    "requested": 1440,
+    "scroll": 1440,
+    "width": 1440
+  },
+  {
+    "page": "contact",
+    "requested": 360,
+    "scroll": 360,
+    "width": 360
+  },
+  {
+    "page": "contact",
+    "requested": 768,
+    "scroll": 768,
+    "width": 768
+  },
+  {
+    "page": "contact",
+    "requested": 1440,
+    "scroll": 1440,
+    "width": 1440
+  }
+]

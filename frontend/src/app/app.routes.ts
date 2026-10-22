@@ -19,6 +19,7 @@ export const appRoutes: Routes = [
       { path: 'pedido/:id/resultado', loadComponent: () => import('./features/orders/order-result-page.component').then((module) => module.OrderResultPageComponent) },
       { path: 'consultar-pedido', loadComponent: () => import('./features/orders/order-lookup-page.component').then((module) => module.OrderLookupPageComponent) },
       { path: 'estado', loadComponent: () => import('./features/status/status-page.component').then((module) => module.StatusPageComponent) },
+      { path: 'contacto', loadComponent: () => import('./features/commercial/contact-page.component').then((module) => module.ContactPageComponent) },
     ],
   },
   {
@@ -40,6 +41,9 @@ export const appRoutes: Routes = [
       { path: 'productos/:id/editar', canDeactivate: [(component: { canDeactivate(): boolean }) => component.canDeactivate()], loadComponent: () => import('./features/admin-catalog/admin-product-form-page.component').then((module) => module.AdminProductFormPageComponent) },
       { path: 'categorias', loadComponent: () => import('./features/admin-catalog/admin-categories-page.component').then((module) => module.AdminCategoriesPageComponent) },
       { path: 'stock', loadComponent: () => import('./features/admin-catalog/admin-stock-page.component').then((module) => module.AdminStockPageComponent) },
+      { path: 'configuracion', loadComponent: () => import('./features/commercial/admin-settings-page.component').then((module) => module.AdminSettingsPageComponent) },
+      { path: 'metodos-pago', loadComponent: () => import('./features/commercial/admin-payment-methods-page.component').then((module) => module.AdminPaymentMethodsPageComponent) },
+      { path: 'notificaciones', loadComponent: () => import('./features/commercial/admin-notifications-page.component').then((module) => module.AdminNotificationsPageComponent) },
       { path: 'change-password', component: ChangePasswordPageComponent },
     ],
   },

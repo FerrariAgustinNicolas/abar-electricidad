@@ -12,7 +12,7 @@ export function validateH5Contract(document) {
   const errors = [];
   const check = (valid, message) => { if (!valid) errors.push(message); };
   const schemas = document.components?.schemas ?? {};
-  check(document.info?.version === '0.8.0', 'H5 version must be 0.8.0');
+  check(document.info?.version === (document.info?.['x-abar-h6-freeze'] === 'notifications-settings-v1' ? '0.9.0' : '0.8.0'), 'H5 version must be 0.8.0');
   check(document.info?.['x-abar-h5-decisions']?.P01 === 'user-confirmed-academic-unpaid-only-cancellation', 'H5 requires explicit academic P01');
   for (const [route, method, output, input] of H5_OPERATIONS) {
     const operation = document.paths?.[route]?.[method];

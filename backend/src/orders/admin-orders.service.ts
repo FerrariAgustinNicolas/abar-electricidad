@@ -178,7 +178,7 @@ export class AdminOrdersService {
           const jobs: any[] = [];
           if (confirmation) jobs.push({ kind: 'PAYMENT_CONFIRMED_BUYER', recipient: o.customerEmail }, { kind: 'PAYMENT_CONFIRMED_ADMIN', recipient: this.config.get<string>('H4_ADMIN_NOTIFICATION_EMAIL') ?? 'orders-admin@example.test' });
           if (status === 'READY') jobs.push({ kind: 'ORDER_READY_BUYER', recipient: o.customerEmail });
-          if (status === 'CANCELLED') jobs.push({ kind: 'ORDER_CANCELLED_BUYER', recipient: o.customerEmail });
+          if (status === 'CANCELLED') jobs.push({ kind: 'ORDER_CANCELLED_BUYER', recipient: o.customerEmail }, { kind: 'ORDER_CANCELLED_ADMIN', recipient: this.config.get<string>('H4_ADMIN_NOTIFICATION_EMAIL') ?? 'orders-admin@example.test' });
           if (jobs.length) await tx.notificationJob.createMany({ data: jobs.map(j => ({ ...j, orderId: order, dedupeKey: `${order}:${j.kind}`, payload: { template: eventType, orderNumber: o.orderNumber }, state: 'PENDING' })) });
           const updated = { ...o, status, version, payment: { ...o.payment, ...(confirmation ? { status: 'PAID' } : {}) } };
           result = { orderId: order, version, orderStatus: status, paymentStatus: updated.payment.status, allowedActions: this.allowed(updated), ...confirmation };

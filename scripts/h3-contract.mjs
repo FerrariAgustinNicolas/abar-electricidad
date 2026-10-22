@@ -6,7 +6,7 @@ export const H3_OPERATIONS = [
 ];
 export function validateH3Contract(document) {
  const errors=[];const check=(valid,message)=>{if(!valid)errors.push(message);};
- check(document.info?.version===(document.info?.['x-abar-h5-freeze']==='manual-confirmation-v1'?'0.8.0':document.info?.['x-abar-h4-freeze']==='orders-demo-v1'?'0.7.0':'0.6.0'),'H3 version must be 0.6.0');
+ check(document.info?.version===(document.info?.['x-abar-h6-freeze']==='notifications-settings-v1'?'0.9.0':document.info?.['x-abar-h5-freeze']==='manual-confirmation-v1'?'0.8.0':document.info?.['x-abar-h4-freeze']==='orders-demo-v1'?'0.7.0':'0.6.0'),'H3 version must be 0.6.0');
  for(const [route,method,name] of H3_OPERATIONS){
   const op=document.paths?.[route]?.[method];
   check(!!op,`Missing H3 ${method} ${route}`);

@@ -1,0 +1,11 @@
+{
+  "before": "a54aaa2253a341ddcba238484c4ef273faa532d155417218cabd6d5ea1440545",
+  "after": "a54aaa2253a341ddcba238484c4ef273faa532d155417218cabd6d5ea1440545",
+  "states": [
+    {
+      "state": "SENT",
+      "count": 21
+    }
+  ],
+  "mailpitMessages": 21
+}

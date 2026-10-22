@@ -12,6 +12,9 @@ describe('validated local configuration', () => {
       H4_ACCESS_TTL_SECONDS: 86400,
       H4_DEMO_SIMULATION_ENABLED: false,
       H4_REPLAY_KEY_BASE64: undefined,
+      H4_ADMIN_NOTIFICATION_EMAIL: 'orders-admin@example.test',
+      H6_SMTP_HOST: '127.0.0.1',
+      H6_SMTP_PORT: 1025,
     });
   });
 
@@ -38,5 +41,27 @@ describe('validated local configuration', () => {
     [{ DATABASE_URL: databaseUrl, NODE_ENV: 'staging' }, 'NODE_ENV'],
   ])('rejects an invalid configuration (%s)', (input, key) => {
     expect(() => validateEnvironment(input as Record<string, unknown>)).toThrow(key);
+  });
+});
+
+describe('H6 local-only Mailpit configuration', () => {
+  it('defaults to loopback Mailpit and a fictitious administrator recipient', () => {
+    expect(validateEnvironment({ DATABASE_URL: databaseUrl })).toMatchObject({
+      H6_SMTP_HOST: '127.0.0.1', H6_SMTP_PORT: 1025, H4_ADMIN_NOTIFICATION_EMAIL: 'orders-admin@example.test',
+    });
+  });
+  it('allows an isolated loopback port without changing the SMTP destination host', () => {
+    expect(validateEnvironment({ DATABASE_URL: databaseUrl, H6_SMTP_PORT: '56123' })).toMatchObject({H6_SMTP_HOST:'127.0.0.1', H6_SMTP_PORT:56123});
+  });
+  it.each([
+    [{H6_SMTP_HOST:'smtp.external.invalid'}, 'H6_SMTP_HOST'],
+    [{H6_SMTP_HOST:'localhost'}, 'H6_SMTP_HOST'],
+    [{H6_SMTP_PORT:'0'}, 'H6_SMTP_PORT'],
+    [{H6_SMTP_PORT:'65536'}, 'H6_SMTP_PORT'],
+    [{H6_SMTP_PORT:'1.5'}, 'H6_SMTP_PORT'],
+    [{H4_ADMIN_NOTIFICATION_EMAIL:'real@external.invalid'}, 'H4_ADMIN_NOTIFICATION_EMAIL'],
+    [{H4_ADMIN_NOTIFICATION_EMAIL:'admin@example.test\r\nBcc: other@example.test'}, 'H4_ADMIN_NOTIFICATION_EMAIL'],
+  ])('fails closed for unsafe SMTP or administrator configuration (%s)', (extra, field) => {
+    expect(() => validateEnvironment({ DATABASE_URL: databaseUrl, ...extra })).toThrow(field);
   });
 });
