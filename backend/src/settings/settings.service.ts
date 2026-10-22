@@ -26,10 +26,10 @@ const DEFAULT_CONTACT: Contact = {
 };
 const fail = (status: number, code: string): never => { throw new CatalogException(status, code); };
 const isObject = (value: unknown): value is Record<string, unknown> => value !== null && typeof value === 'object' && !Array.isArray(value);
-const hasControl = (value: string): boolean => {
+const hasControl = (value: string, allowLineBreaks = false): boolean => {
   for (let index = 0; index < value.length; index++) {
     const code = value.charCodeAt(index);
-    if (code < 32 || (code >= 127 && code <= 159)) return true;
+    if ((code < 32 && !(allowLineBreaks && (code === 10 || code === 13))) || (code >= 127 && code <= 159)) return true;
   }
   return false;
 };
@@ -40,7 +40,7 @@ function readMethods(value: unknown): StoredMethod[] {
   for (const raw of value) {
     if (!isObject(raw) || typeof raw.code !== 'string' || !CODES.includes(raw.code as MethodCode) || byCode.has(raw.code as MethodCode) ||
         typeof raw.label !== 'string' || raw.label.trim().length === 0 || raw.label.length > 120 || hasControl(raw.label) ||
-        typeof raw.instructions !== 'string' || raw.instructions.trim().length === 0 || raw.instructions.length > 500 || hasControl(raw.instructions) ||
+        typeof raw.instructions !== 'string' || raw.instructions.trim().length === 0 || raw.instructions.length > 500 || hasControl(raw.instructions, true) ||
         raw.demo !== true || typeof (raw.enabled ?? true) !== 'boolean' || !Array.isArray(raw.deliveryModes) ||
         raw.deliveryModes.length < 1 || raw.deliveryModes.length > 2 || raw.deliveryModes.some((mode) => typeof mode !== 'string' || !MODES.has(mode as DeliveryMode)) ||
         new Set(raw.deliveryModes).size !== raw.deliveryModes.length) return fail(503, 'SERVICE_UNAVAILABLE');
@@ -73,11 +73,11 @@ function validCombination(modes: DeliveryMode[], methods: StoredMethod[], simula
     (method.code !== 'DEMO_SIMULATION' || simulationEnabled) && method.deliveryModes.some((mode) => modes.includes(mode)));
 }
 
-function assertWriteStrings(value: unknown, fields: readonly string[]): void {
+function assertWriteStrings(value: unknown, fields: readonly string[], allowEmpty = false): void {
   if (!isObject(value)) return;
   for (const field of fields) {
     const entry = value[field];
-    if (typeof entry === 'string' && (hasControl(entry) || entry.trim().length === 0)) fail(400, 'VALIDATION_ERROR');
+    if (typeof entry === 'string' && (hasControl(entry) || (!allowEmpty && entry.trim().length === 0))) fail(400, 'VALIDATION_ERROR');
   }
 }
 
@@ -122,7 +122,8 @@ export class SettingsService {
 
   async patchSettings(auth: Authorization, input: unknown) {
     const body = validateCatalogBody<{ expectedVersion: number; feeMinor: string; enabledDeliveryModes: DeliveryMode[]; contact: Contact }>('H6SettingsWrite', input);
-    assertWriteStrings(body.contact, ['displayName', 'email', 'phone', 'whatsapp', 'hours', 'address']);
+    assertWriteStrings(body.contact, ['displayName', 'email']);
+    assertWriteStrings(body.contact, ['phone', 'whatsapp', 'hours', 'address'], true);
     const feeMinor = BigInt(body.feeMinor);
     if (feeMinor < 0n || feeMinor > MAX_MINOR) return fail(400, 'VALIDATION_ERROR');
     return this.mutate(auth, body.expectedVersion, (state) => {

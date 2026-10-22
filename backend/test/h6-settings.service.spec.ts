@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { CheckoutService } from '../src/checkout/checkout.service';
 import { SettingsService } from '../src/settings/settings.service';
 import { CatalogException } from '../src/catalog-shared/catalog-error';
@@ -19,6 +21,16 @@ function checkout(paymentMethods?: ReturnType<typeof policy>['paymentMethods']) 
 }
 
 describe('H6 checkout payment-method compatibility', () => {
+  it('still rejects non-line-break controls in persisted instructions', async () => {
+    const methods = policy().paymentMethods.map((method) => ({ ...method, instructions: 'DEMO\u0000invalid' }));
+    await expect(checkout(methods).service.getPublicPaymentMethods('PICKUP')).rejects.toMatchObject({ message: 'SERVICE_UNAVAILABLE' });
+  });
+  it('preserves historically valid multiline instructions in the closed public DTO', async () => {
+    const methods = policy().paymentMethods.map((method) => ({ ...method, instructions: 'DEMO transfer.\nNo real payments.' }));
+    const result = await checkout(methods).service.getPublicPaymentMethods('PICKUP');
+    expect(result.items).toEqual(methods);
+  });
+
   it('hides disabled methods from new public choices while preserving the closed H3 DTO', async () => {
     const methods = policy().paymentMethods.map((method) => method.code === 'DEMO_TRANSFER'
       ? { ...method, enabled: false }
@@ -78,6 +90,22 @@ describe('SettingsService', () => {
     const service = new SettingsService(prisma as never, {} as never, config as never);
     return { service: service as SettingsService, tx, row, auth };
   }
+
+  it.each([false, true])('saves normative DEMO contact and permits clearing optional fields (%s)', async (clear) => {
+    const { service, auth, row } = fixture();
+    const input = JSON.parse(readFileSync(resolve(__dirname, '../../contracts/examples/h6-settings-write.json'), 'utf8'));
+    input.feeMinor = '750';
+    if (clear) for (const key of ['phone', 'whatsapp', 'hours', 'address']) input.contact[key] = '';
+    const saved = await service.patchSettings(auth as never, input);
+    expect(saved.version).toBe(2);expect(saved.feeMinor).toBe('750');
+    expect(saved.contact).toEqual(input.contact);expect(row.contact).toEqual(input.contact);expect(row.feeMinor).toBe(750n);
+  });
+
+  it('preserves historical multiline instructions in administrative reads', async () => {
+    const multiline = methods.map((method) => ({ ...method, instructions: 'DEMO transfer.\nNo real payments.' }));
+    const { service, auth } = fixture({ paymentMethods: multiline });
+    expect((await service.getSettings(auth as never)).paymentMethods[0].instructions).toBe(multiline[0].instructions);
+  });
 
   it('projects all fixed methods, with missing entries disabled and fictitious DEMO contact', async () => {
     const { service, auth } = fixture({ paymentMethods: [] });
