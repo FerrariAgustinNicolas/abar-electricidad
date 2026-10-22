@@ -1,0 +1,16 @@
+{
+  "expectedVersion": 1,
+  "feeMinor": "0",
+  "enabledDeliveryModes": [
+    "PICKUP",
+    "COORDINATED"
+  ],
+  "contact": {
+    "displayName": "ABAR DEMO",
+    "email": "contact@example.test",
+    "phone": "",
+    "whatsapp": "",
+    "hours": "DEMO - hours not confirmed",
+    "address": "DEMO - address not confirmed"
+  }
+}

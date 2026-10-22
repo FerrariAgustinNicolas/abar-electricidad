@@ -9,7 +9,7 @@ const document = async () => require('yaml').parse(await readFile(file, 'utf8'))
 const confirmation = { expectedVersion: 1, attemptId: '40000000-0000-4000-8000-000000000001', confirmedAmount: { amountMinor: '5000', currency: 'ARS' } };
 test('H5 freezes exactly seven protected admin operations, not arbitrary payment writes', async () => {
   const d = await document();
-  assert.equal(d.info.version, '0.8.0');
+  assert.equal(d.info.version, '0.9.0');
   assert.equal(d.info['x-abar-h5-freeze'], 'manual-confirmation-v1');
   assert.equal(validateContractDocument(d).valid, true);
   const route = '/api/v1/admin/orders/{id}/payment-confirmation';

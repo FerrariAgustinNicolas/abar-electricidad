@@ -1,5 +1,13 @@
 # Historial del contrato candidato
 
+## 0.9.0 — H6 local DEMO freeze (2026-10-22)
+
+- Add closed settings/payment-method administration, paginated notification reads and versioned retry (202), and minimal public contact.
+- Require H1 sessions for every admin read; Origin/CSRF and CAS for writes; no-store and safe errors throughout.
+- Preserve all H1–H5 payloads; extend the static route allowlist and version checks without weakening historical validation.
+- Public contact is a new endpoint: existing closed public settings DTO is unchanged. Only DEMO/example.test contact examples; no production SMTP.
+- Contract only: H6 runtime, migration, real PostgreSQL/Mailpit proof, and independent review/verify remain pending.
+
 [OpenAPI](openapi.yaml) es la única norma; las entradas documentan alcance, no aprobación externa ni disponibilidad productiva. No se asignan fechas o versiones históricas sin evidencia.
 
 ## 0.5.0 — H2 catálogo/stock: implementación local, auditoría externa pendiente
