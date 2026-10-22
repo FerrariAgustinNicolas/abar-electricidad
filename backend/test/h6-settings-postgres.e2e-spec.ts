@@ -143,6 +143,15 @@ describeOwnedPostgres('H6 commercial settings PostgreSQL invariants', () => {
     }
   });
 
+  it('rejects browser enabling simulation when server capability is off without changing policy', async () => {
+    const actor = await createSession();
+    const before = await prisma.checkoutPolicy.findUniqueOrThrow({ where: { id: 'default' } });
+    await http('patch', '/api/v1/admin/payment-methods/DEMO_SIMULATION', actor).send({
+      expectedVersion: before.version, enabled: true, instructions: 'DEMO simulation.', deliveryModes: ['PICKUP', 'COORDINATED'],
+    }).expect(400).expect((response) => expect(response.body.code).toBe('VALIDATION_ERROR'));
+    expect(serialize(await prisma.checkoutPolicy.findUniqueOrThrow({ where: { id: 'default' } }))).toBe(serialize(before));
+  });
+
   it('rejects an H1 mutation leaving only disabled server simulation and preserves policy state', async () => {
     const actor = await createSession();
     const original = await prisma.checkoutPolicy.findUniqueOrThrow({ where: { id: 'default' } });
@@ -190,8 +199,8 @@ describeOwnedPostgres('H6 commercial settings PostgreSQL invariants', () => {
         settings.patchPaymentMethod(auth as never, 'DEMO_TRANSFER', {
           expectedVersion, enabled: true, instructions: 'DEMO transfer instructions.', deliveryModes: ['PICKUP', 'COORDINATED'],
         }),
-        settings.patchPaymentMethod(auth as never, 'DEMO_SIMULATION', {
-          expectedVersion, enabled: true, instructions: 'DEMO simulation instructions.', deliveryModes: ['PICKUP', 'COORDINATED'],
+        settings.patchPaymentMethod(auth as never, 'DEMO_TRANSFER', {
+          expectedVersion, enabled: true, instructions: 'DEMO alternative transfer instructions.', deliveryModes: ['PICKUP', 'COORDINATED'],
         }),
       ]);
       expect(updates.filter((result) => result.status === 'fulfilled')).toHaveLength(1);

@@ -123,6 +123,19 @@ describe('SettingsService', () => {
     expect(tx.checkoutPolicy.updateMany).not.toHaveBeenCalled();
   });
 
+  it.each([false, true])('requires server capability when enabling simulation despite another valid method (%s)', async (capability) => {
+    const disabledSimulation = methods.map((method) => ({ ...method, enabled: method.code !== 'DEMO_SIMULATION' }));
+    const { service, auth, tx, row } = fixture({ paymentMethods: disabledSimulation }, capability);
+    const input = { expectedVersion: 1, enabled: true, instructions: 'DEMO simulation.', deliveryModes: ['PICKUP', 'COORDINATED'] };
+    if (capability) {
+      await expect(service.patchPaymentMethod(auth as never, 'DEMO_SIMULATION', input)).resolves.toMatchObject({ enabled: true, version: 2 });
+    } else {
+      const before = JSON.stringify(row, (_key, value) => typeof value === 'bigint' ? value.toString() : value);
+      await expect(service.patchPaymentMethod(auth as never, 'DEMO_SIMULATION', input)).rejects.toMatchObject({ message: 'VALIDATION_ERROR' });
+      expect(tx.checkoutPolicy.updateMany).not.toHaveBeenCalled();expect(JSON.stringify(row, (_key, value) => typeof value === 'bigint' ? value.toString() : value)).toBe(before);
+    }
+  });
+
   it('rejects simulation as the only method when the server feature flag is disabled without persisting', async () => {
     const simulationOnly = methods.map((method) => ({ ...method, enabled: method.code === 'DEMO_SIMULATION' }));
     const { service, auth, tx, row } = fixture({ paymentMethods: simulationOnly });

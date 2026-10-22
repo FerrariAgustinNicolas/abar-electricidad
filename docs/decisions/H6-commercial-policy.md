@@ -15,6 +15,8 @@ No second pricing or payment-method store is introduced.
   method DTO never gains this internal flag.
 - A write cannot leave zero usable mode/method combinations. Server-owned
   simulation capability is considered; the browser cannot enable that capability.
+  An enable-simulation write while the server flag is off returns the frozen
+  `400 VALIDATION_ERROR` and does not change the policy or its version.
 - Existing quotes and order snapshots are not rewritten. H4 revalidates old
   quotes; H5 may confirm an eligible historical attempt after its method is
   disabled for new purchases. H5 remains the only stock-debit authority.

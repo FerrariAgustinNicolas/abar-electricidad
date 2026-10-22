@@ -140,6 +140,7 @@ export class SettingsService {
     assertWriteStrings(body, ['instructions']);
     const result = await this.mutate(auth, body.expectedVersion, (state) => {
       const modes = readModes(body.deliveryModes);
+      if (methodCode === 'DEMO_SIMULATION' && body.enabled && !this.simulationEnabled()) fail(400, 'VALIDATION_ERROR');
       if (methodCode === 'DEMO_PAY_ON_PICKUP' && (modes.length !== 1 || modes[0] !== 'PICKUP')) fail(400, 'VALIDATION_ERROR');
       const methods = state.methods.map((method) => method.code === methodCode
         ? { ...method, enabled: body.enabled, instructions: body.instructions, deliveryModes: modes } : method);
