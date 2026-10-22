@@ -6,6 +6,9 @@ export type AppEnvironment = {
   H4_ACCESS_TTL_SECONDS: number;
   H4_DEMO_SIMULATION_ENABLED: boolean;
   H4_REPLAY_KEY_BASE64?: string;
+  H4_ADMIN_NOTIFICATION_EMAIL: string;
+  H6_SMTP_HOST: '127.0.0.1';
+  H6_SMTP_PORT: number;
 };
 
 function h4Integer(input: unknown, fallback: number, min: number, max: number, name: string): number {
@@ -60,6 +63,15 @@ export function validateEnvironment(input: Record<string, unknown>): AppEnvironm
     }
   }
 
+  const smtpHost = input.H6_SMTP_HOST ?? '127.0.0.1';
+  if (smtpHost !== '127.0.0.1') throw new Error('H6_SMTP_HOST must be 127.0.0.1 for local Mailpit');
+  const smtpPort = h4Integer(input.H6_SMTP_PORT, 1025, 1, 65535, 'H6_SMTP_PORT');
+  const adminEmail = input.H4_ADMIN_NOTIFICATION_EMAIL ?? 'orders-admin@example.test';
+  if (typeof adminEmail !== 'string' || adminEmail.length > 254 || adminEmail.trim() !== adminEmail ||
+      !/^[A-Za-z0-9._%+-]{1,64}@example\.test$/.test(adminEmail)) {
+    throw new Error('H4_ADMIN_NOTIFICATION_EMAIL must be a fictitious example.test address');
+  }
+
   return {
     DATABASE_URL: databaseUrl,
     HOST: '127.0.0.1',
@@ -67,6 +79,9 @@ export function validateEnvironment(input: Record<string, unknown>): AppEnvironm
     PORT: port,
     H4_ACCESS_TTL_SECONDS: accessTtl,
     H4_DEMO_SIMULATION_ENABLED: simulationEnabled,
+    H4_ADMIN_NOTIFICATION_EMAIL: adminEmail,
+    H6_SMTP_HOST: '127.0.0.1',
+    H6_SMTP_PORT: smtpPort,
     H4_REPLAY_KEY_BASE64: typeof replayKey === 'string' ? replayKey : undefined,
   };
 }

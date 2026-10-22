@@ -13,7 +13,7 @@ OpenAPI 0.9.0 is the single normative contract. This initial candidate freezes r
 ## Durable dispatch design (implementation pending)
 
 - One Prisma owner adds lifecycle fields and `ORDER_CANCELLED_ADMIN` additively, after this freeze; historical migrations are immutable. No synthetic backfill of missing business events.
-- States: PENDING -> PROCESSING -> SENT, RETRY_WAIT or FAILED. Claims use database locks and a recoverable lease; at most five attempts per cycle and a bounded foreground run.
+- States: PENDING -> PROCESSING -> SENT, RETRY_WAIT or FAILED. Claims use database locks and a recoverable lease; at most five attempts per cycle and a bounded foreground run. Manual retry resets the per-cycle count; lifetime attempts remain persisted. SMTP has a hard five-second deadline, shorter than the 60-second claim lease.
 - Retry accepts only an expected version for the existing eligible job. It never changes recipient/payload, recreates a business event or modifies order/payment/stock. A repeated stale request conflicts without another side effect.
 - SMTP is outside the business transaction and restricted to validated loopback Mailpit. Finite retries and safe error categories never leak SMTP responses or environment values.
 - A crash after SMTP acceptance but before database acknowledgement can duplicate delivery. Business jobs are deduplicated; exactly-once SMTP is NOT claimed.

@@ -27,7 +27,7 @@ try {
   if (!ready) throw Error('Owned PostgreSQL did not become ready');
   const c = new Client({ connectionString: url }); await c.connect(); await c.query('CREATE DATABASE h5_upgrade'); await c.end();
   const config = resolve(scratch, 'full.config.ts'), historical = resolve(scratch, 'h4-migrations'); mkdirSync(historical);
-  for (const m of readdirSync(resolve(backend, 'prisma/migrations'))) if (/^\d+_/.test(m) && !m.includes('_h5_')) cpSync(resolve(backend, 'prisma/migrations', m), resolve(historical, m), { recursive: true });
+  for (const m of readdirSync(resolve(backend, 'prisma/migrations'))) if (/^\d+_/.test(m) && !m.includes('_h5_') && !m.includes('_h6_')) cpSync(resolve(backend, 'prisma/migrations', m), resolve(historical, m), { recursive: true });
   const source = migrationPath => `import { defineConfig } from ${JSON.stringify(resolve(backend, 'node_modules/prisma/config.js'))};\nexport default defineConfig({ schema:${JSON.stringify(resolve(backend, 'prisma/schema.prisma'))},migrations:{path:${JSON.stringify(migrationPath)}},datasource:{url:process.env.H5_DATABASE_URL} });\n`;
   writeFileSync(config, source(resolve(backend, 'prisma/migrations'))); const oldConfig = resolve(scratch, 'h4.config.ts'); writeFileSync(oldConfig, source(historical));
   const upgradeUrl = new URL(url); upgradeUrl.pathname = '/h5_upgrade';

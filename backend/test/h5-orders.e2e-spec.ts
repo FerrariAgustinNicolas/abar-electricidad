@@ -72,8 +72,8 @@ describe('H5 on a newly owned PostgreSQL 17 fixture (required, never skipped)', 
   const hash = (v: any) => digest(JSON.stringify(v, (_, value) => typeof value === 'bigint' ? value.toString() : value));
   async function reject(p: Promise<unknown>, status: number, code?: string) { try { await p; throw Error('Expected rejection'); } catch (e: any) { expect(e.getStatus?.()).toBe(status); if (code) expect(e.message).toBe(code); } }
 
-  it('H5-Q01 deploys seven migrations and upgrades populated H4 without changing historical bytes', async () => {
-    const ledger: any[] = await prisma.$queryRaw`SELECT migration_name FROM _prisma_migrations WHERE finished_at IS NOT NULL ORDER BY migration_name`; expect(ledger).toHaveLength(7);
+  it('H5-Q01 preserves its seven migrations and upgrades populated H4 without changing historical bytes', async () => {
+    const ledger: any[] = await prisma.$queryRaw`SELECT migration_name FROM _prisma_migrations WHERE finished_at IS NOT NULL ORDER BY migration_name`; expect(ledger.filter(row => row.migration_name !== '20261022000000_h6_notifications_settings')).toHaveLength(7); expect(ledger.filter(row => row.migration_name.includes('_h6_')).map(row => row.migration_name)).toEqual(ledger.length === 8 ? ['20261022000000_h6_notifications_settings'] : []); expect([7, 8]).toContain(ledger.length);
     const upgrade = new pg.Client({ connectionString: process.env.H5_UPGRADE_DATABASE_URL }); await upgrade.connect();
     try {
       const quote = randomUUID(), oid = randomUUID(), pid = randomUUID(), aid = randomUUID();
@@ -94,7 +94,7 @@ describe('H5 on a newly owned PostgreSQL 17 fixture (required, never skipped)', 
       const before = hash(await snapshot());
       execFileSync(process.execPath, [require.resolve('prisma/build/index.js'), 'migrate', 'deploy', '--config', process.env.H5_CONFIG!], { env: { ...process.env, H5_DATABASE_URL: process.env.H5_UPGRADE_DATABASE_URL }, stdio: 'pipe' });
       expect(hash(await frozenItems())).toBe(itemsBefore);
-      expect(hash(await snapshot())).toBe(before); const after = await upgrade.query('SELECT count(*)::int count FROM _prisma_migrations WHERE finished_at IS NOT NULL'); expect(after.rows[0].count).toBe(7);
+      expect(hash(await snapshot())).toBe(before); const after = await upgrade.query('SELECT count(*)::int count FROM _prisma_migrations WHERE finished_at IS NOT NULL'); expect(after.rows[0].count).toBe(ledger.length);
       console.log('H5-Q01 historical hash', before, 'item snapshot', itemsBefore);
       execFileSync(process.execPath, [require.resolve('prisma/build/index.js'), 'migrate', 'diff', '--from-config-datasource', '--to-schema', 'prisma/schema.prisma', '--exit-code', '--config', process.env.H5_CONFIG!], { cwd: require('node:path').resolve(__dirname, '..'), stdio: 'pipe' });
     } finally { await upgrade.end(); }
@@ -199,6 +199,7 @@ describe('H5 on a newly owned PostgreSQL 17 fixture (required, never skipped)', 
     for (const scenario of ['PENDING', 'REJECTED']) {
       const o = await order([{ ...p[0], quantity: 1 }], 'DEMO_SIMULATION', scenario); const before = hash(await balances(p.map(x => x.id))); const k = key(); const r = req({ expectedVersion: 1, reason: 'Customer request' }, actor, k);
       const result = await admin.mutate(o.id, 'ORDER_CANCEL', r); expect(await admin.mutate(o.id, 'ORDER_CANCEL', r)).toEqual(result); expect(hash(await balances(p.map(x => x.id)))).toBe(before); await reject(orders.createAttempt(o.id, o.token, key(), { methodCode: 'DEMO_TRANSFER' }), 409);
+      expect((await prisma.notificationJob.findMany({ where: { orderId: o.id }, orderBy: { kind: 'asc' } })).map(job => job.kind).sort()).toEqual(['ORDER_CANCELLED_ADMIN', 'ORDER_CANCELLED_BUYER']);
       expect((await orders.get(o.id, o.token) as any).nextActions).not.toContain('RETRY_PAYMENT');
     }
     const o = await order([{ ...p[0], quantity: 1 }]); await reject(admin.mutate(o.id, 'ORDER_STATUS', req({ expectedVersion: 1, status: 'READY' })), 409); await confirm(o); const before = hash(await balances(p.map(x => x.id)));

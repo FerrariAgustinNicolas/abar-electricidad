@@ -7,6 +7,7 @@
     "build": "prisma generate --config prisma.schema.config.ts && tsc -p tsconfig.build.json && node scripts/copy-auth-resources-cli.mjs && node scripts/copy-catalog-contract.mjs",
     "lint": "eslint \"{src,test}/**/*.ts\"",
     "start": "node dist/main.js",
+    "notifications:dispatch": "node dist/h6-notifications-cli.js",
     "start:dev": "node scripts/copy-catalog-contract.mjs && nest start --watch",
     "test": "node scripts/copy-catalog-contract.mjs && jest",
     "test:e2e": "node scripts/copy-catalog-contract.mjs && jest --config ./test/jest-e2e.json",

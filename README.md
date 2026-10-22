@@ -336,3 +336,41 @@ node backend/scripts/h5-postgres.mjs
 ```
 
 El runner crea dos bases aisladas en un contenedor con ownership y puerto loopback aleatorio, despliega migraciones y comprueba upgrade H4 poblado, snapshots, drift, confirmación/rollback, locks reales, replay, transiciones y seguridad H1. No acepta DATABASE_URL como destino ni reutiliza bases ajenas. `--keep` conserva exclusivamente el contenedor de esa ejecución para evidencia local; verificar su manifest privado/labels antes de detenerlo. Los manifests temporales contienen credenciales efímeras: nunca versionarlos, capturarlos ni incluirlos en informes. Fallar el runner no constituye PASS ni autoriza fallback a otra base.
+
+## H6 local notification verification
+
+H6 extends the existing transactional notification outbox. This is a local DEMO,
+not production email or payment approval. Only a separately invoked foreground
+worker dispatches committed jobs; order/payment/stock transactions never send SMTP.
+
+```sh
+# Run from the repository root with the pinned project Node/npm versions.
+npm --prefix backend run build
+# Supply the ordinary local H1/application environment and an owned fixture DATABASE_URL.
+npm --prefix backend run notifications:dispatch -- --limit 20
+# Show help without opening a database connection.
+npm --prefix backend run notifications:dispatch -- --help
+# Create fresh owned PostgreSQL/Mailpit fixtures and run H6 integration tests.
+node backend/scripts/h6-postgres.mjs
+```
+
+`H6_SMTP_HOST` must be `127.0.0.1`; `H6_SMTP_PORT` defaults to `1025` (an isolated
+fixture may use another loopback port). The transport accepts only Mailpit and
+fictitious `example.test` recipients. The administrator notification recipient
+comes from validated `H4_ADMIN_NOTIFICATION_EMAIL`, falling back to
+`orders-admin@example.test`. An already-created job retains its original recipient.
+Do not use real business contact data or an external SMTP server.
+
+Runs claim at most 20 jobs, one at a time, with recoverable 60-second leases and
+five attempts per retry cycle. SIGINT/SIGTERM stops before the next claim after
+the current bounded SMTP attempt finishes. Manual retry only requeues an eligible
+existing job: it does not recreate an order/payment or touch inventory. The cycle
+attempt count resets; its lifetime count remains persisted. SMTP acceptance
+followed by a lost database acknowledgement can cause a duplicate on recovery;
+exactly-once SMTP delivery is not claimed.
+
+The fixture runner creates only new labelled, loopback-bound services, checks a
+populated H5 upgrade and Prisma drift, and never reuses existing databases or
+Mailpit stores. `--setup-only --keep` supports further local validation and clearly
+reports that runtime tests were not run. Its printed manifest path is private:
+never commit its credentials. Cleanup must verify its exact ownership labels.

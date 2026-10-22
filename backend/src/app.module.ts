@@ -6,6 +6,7 @@ import { CatalogModule } from './catalog/catalog.module';
 import { CheckoutModule } from './checkout/checkout.module';
 import { StockModule } from './stock/stock.module';
 import { OrdersModule } from './orders/orders.module';
+import { NotificationsModule } from './notifications/notifications.module';
 import { validateEnvironment } from './config/environment';
 import { HealthModule } from './health/health.module';
 import { PrismaModule } from './prisma/prisma.module';
@@ -20,6 +21,7 @@ import { PrismaModule } from './prisma/prisma.module';
     CatalogModule,
     CheckoutModule,
     OrdersModule,
+    NotificationsModule,
     StockModule,
   ],
 })
