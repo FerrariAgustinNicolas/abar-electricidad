@@ -23,17 +23,17 @@ import {
       <p>Estado de avisos registrados. Los destinatarios y contenidos privados no se muestran.</p>
       <form class="filters" (ngSubmit)="search()">
         <label>Estado
-          <select name="state" [(ngModel)]="state">
+          <select name="state" [disabled]="loading() || !!retrying()" [(ngModel)]="state">
             <option value="">Todos</option>
             @for (value of states; track value) {
               <option [value]="value">{{ value }}</option>
             }
           </select>
         </label>
-        <label>Pedido<input name="orderId" [(ngModel)]="orderId" maxlength="64"></label>
-        <label>Desde<input name="from" type="date" [(ngModel)]="from"></label>
-        <label>Hasta<input name="to" type="date" [(ngModel)]="to"></label>
-        <button type="submit" [disabled]="loading()">Filtrar</button>
+        <label>Pedido<input name="orderId" [disabled]="loading() || !!retrying()" [(ngModel)]="orderId" maxlength="64"></label>
+        <label>Desde<input name="from" type="date" [disabled]="loading() || !!retrying()" [(ngModel)]="from"></label>
+        <label>Hasta<input name="to" type="date" [disabled]="loading() || !!retrying()" [(ngModel)]="to"></label>
+        <button type="submit" [disabled]="loading() || !!retrying()">Filtrar</button>
       </form>
       @if (error()) {
         <p role="alert" class="alert">{{ error() }}</p>
@@ -64,7 +64,7 @@ import {
                   <td>{{ formatDate(row.createdAt) }}</td>
                   <td>
                     @if (canRetry(row)) {
-                      <button type="button" [disabled]="retrying() === row.id" (click)="retry(row)">
+                      <button type="button" [disabled]="loading() || !!retrying()" (click)="retry(row)">
                         {{ retrying() === row.id ? 'Reintentando…' : 'Reintentar' }}
                       </button>
                     } @else {
@@ -80,9 +80,9 @@ import {
           <p>No hay avisos para estos filtros.</p>
         }
         <nav class="paging" aria-label="Paginación">
-          <button type="button" [disabled]="data.pageInfo.page <= 1 || loading()"
+          <button type="button" [disabled]="data.pageInfo.page <= 1 || loading() || !!retrying()"
             (click)="load(data.pageInfo.page - 1)">Anterior</button>
-          <button type="button" [disabled]="data.pageInfo.page >= data.pageInfo.totalPages || loading()"
+          <button type="button" [disabled]="data.pageInfo.page >= data.pageInfo.totalPages || loading() || !!retrying()"
             (click)="load(data.pageInfo.page + 1)">Siguiente</button>
         </nav>
       }
@@ -126,7 +126,7 @@ export class AdminNotificationsPageComponent {
   }
 
   async load(page: number): Promise<void> {
-    if (this.loading()) return;
+    if (this.loading() || this.retrying()) return;
 
     this.loading.set(true);
     this.error.set('');
@@ -152,12 +152,13 @@ export class AdminNotificationsPageComponent {
   }
 
   async retry(row: NotificationView): Promise<void> {
-    if (!this.canRetry(row) || this.retrying()) return;
+    if (!this.canRetry(row) || this.retrying() || this.loading()) return;
 
     this.retrying.set(row.id);
     this.error.set('');
     try {
       await firstValueFrom(this.api.retryNotification(row.id, row.version));
+      this.retrying.set('');
       await this.load(this.result()?.pageInfo.page ?? 1);
     } catch (error: unknown) {
       const message = error instanceof HttpErrorResponse && error.status === 409

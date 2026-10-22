@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { CommercialApiService } from '../../core/commercial/commercial-api.service';
 import { NotificationList, NotificationView } from '../../core/commercial/commercial.models';
 import { AdminNotificationsPageComponent } from './admin-notifications-page.component';
@@ -19,4 +19,19 @@ describe('AdminNotificationsPageComponent', () => {
    await fixture.componentInstance.retry(failed);
    expect(api.retryNotification).toHaveBeenCalledWith('job-1', 3);
  });
+ it('serializes list changes with retry and refreshes the completed job', async () => {
+   const fixture = TestBed.createComponent(AdminNotificationsPageComponent);await fixture.whenStable();
+   const component = fixture.componentInstance,pending = new Subject<NotificationView>();
+   api.retryNotification.mockReturnValueOnce(pending);
+   const retry = component.retry(failed);fixture.detectChanges();await fixture.whenStable();
+   const calls = api.listNotifications.mock.calls.length;
+   await component.load(2);await component.search();expect(api.listNotifications.mock.calls.length).toBe(calls);
+   expect(fixture.nativeElement.querySelector('button[type="submit"]').disabled).toBe(true);
+   api.listNotifications.mockReturnValueOnce(of({ ...listing,items:[{...failed,state:'PENDING',version:4}] }));
+   pending.next({...failed,state:'PENDING',version:4});pending.complete();await retry;fixture.detectChanges();
+   expect(api.listNotifications.mock.calls.length).toBe(calls+1);
+   expect(component.result()?.items[0].state).toBe('PENDING');
+   expect(fixture.nativeElement.querySelectorAll('tbody button')).toHaveLength(0);
+ });
+
 });
