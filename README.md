@@ -380,3 +380,16 @@ populated H5 upgrade and Prisma drift, and never reuses existing databases or
 Mailpit stores. `--setup-only --keep` supports further local validation and clearly
 reports that runtime tests were not run. Its printed manifest path is private:
 never commit its credentials. Cleanup must verify its exact ownership labels.
+
+### H6 commercial interface (DEMO)
+
+With the local API and frontend running, sign in through the ordinary H1 form.
+`/admin/configuracion` edits the versioned flat delivery fee, allowed modes and
+fictional contact. `/admin/metodos-pago` edits only fixed demo methods; server
+simulation capability cannot be enabled from the browser. Conflicts preserve
+unsaved values and require an explicit reload before replacing the draft.
+`/admin/notificaciones` lists safe job metadata with state/order/date filters,
+pagination and eligible retry actions. It never exposes recipients or payloads.
+The separate foreground worker delivers jobs; retrying in the interface does not
+send SMTP synchronously. `/contacto` reads minimal public DEMO contact; WhatsApp
+is a manual link only when a validated configured value exists.

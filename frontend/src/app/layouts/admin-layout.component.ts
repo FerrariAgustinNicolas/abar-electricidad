@@ -22,6 +22,9 @@ import { AuthSessionService } from '../core/auth/auth-session.service';
         <a routerLink="/admin/productos">Productos</a>
         <a routerLink="/admin/categorias">Categorías</a>
         <a routerLink="/admin/stock">Stock y movimientos</a>
+        <a routerLink="/admin/configuracion" routerLinkActive="active" ariaCurrentWhenActive="page">Configuración comercial DEMO</a>
+        <a routerLink="/admin/metodos-pago" routerLinkActive="active" ariaCurrentWhenActive="page">Métodos de pago DEMO</a>
+        <a routerLink="/admin/notificaciones" routerLinkActive="active" ariaCurrentWhenActive="page">Notificaciones</a>
         <a routerLink="/admin/change-password" routerLinkActive="active" ariaCurrentWhenActive="page">Cambiar contraseña</a>
       </nav>
       <main #content id="admin-content" tabindex="-1" class="admin-content"><router-outlet /></main>

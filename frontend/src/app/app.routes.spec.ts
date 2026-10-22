@@ -18,3 +18,17 @@ describe('H5 admin order routes', () => {
     expect(children.map((route) => route.path)).toContain('pedidos/:id');
   });
 });
+
+describe('H6 commercial routes', () => {
+  it('registers protected settings, payment methods, and notifications under admin', () => {
+    const admin = appRoutes.find((route) => route.path === 'admin');
+    const children = admin?.children ?? [];
+    expect(admin?.canActivate).toBeTruthy();
+    expect(children.map((route) => route.path)).toEqual(expect.arrayContaining(['configuracion', 'metodos-pago', 'notificaciones']));
+  });
+
+  it('registers public contact under the public layout', () => {
+    const routes = appRoutes.find((route) => route.path === '')?.children ?? [];
+    expect(routes.map((route) => route.path)).toContain('contacto');
+  });
+});
