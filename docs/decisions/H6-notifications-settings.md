@@ -6,7 +6,7 @@ OpenAPI 0.9.0 is the single normative contract. This initial candidate freezes r
 
 - The H6 prompt takes precedence over the older plan sketch: payment methods use GET/PATCH `/api/v1/admin/payment-methods/{code}`.
 - `CheckoutPolicy` remains the only authority for tariff, enabled delivery modes, methods and optimistic version. Settings reads include all three fixed DEMO methods, including disabled ones.
-- `H6SettingsWrite` replaces the editable settings atomically at `expectedVersion`; method writes share that same policy version. Overflow beyond signed bigint is rejected in runtime, without floating-point conversion.
+- `H6SettingsWrite` replaces the editable settings atomically at `expectedVersion`; method writes share that same policy version. The contract rejects overflow beyond signed bigint (9223372036854775807) in both write and view fee schemas, without floating-point conversion.
 - No setting write changes existing quote responses or order snapshots. H4 rejects stale quotes; users explicitly accept a new quote. H5 confirmation remains governed by historical attempts and snapshots.
 - Existing H1–H5 closed DTOs and operation schemas are unchanged. Public contact has its own minimal endpoint. No H7 routes are added.
 

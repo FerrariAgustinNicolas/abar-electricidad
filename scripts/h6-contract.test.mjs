@@ -28,3 +28,22 @@ test('H6 request examples are closed and reject malformed money and unsafe recip
   assert.equal((await validateExample(file, {schema:'H6SettingsWrite',value:{...body,contact:{...body.contact,email:'real@external.invalid'}}})).valid, false);
   assert.equal((await validateExample(file, {schema:'H6NotificationRetry',value:{expectedVersion:1,recipient:'arbitrary@example.test'}})).valid, false);
 });
+test('H6 fee schemas accept the signed-bigint maximum and reject its immediate successor', async () => {
+  const { validateExample } = await import('./h0-contract-validate.mjs');
+  const file = new URL('../contracts/openapi.yaml', import.meta.url);
+  const write = JSON.parse(readFileSync(new URL('../contracts/examples/h6-settings-write.json', import.meta.url), 'utf8'));
+  const view = {
+    version: 1, feeMinor: '0', enabledDeliveryModes: write.enabledDeliveryModes, contact: write.contact,
+    paymentMethods: ['DEMO_PAY_ON_PICKUP', 'DEMO_TRANSFER', 'DEMO_SIMULATION'].map(code => ({
+      code, version: 1, enabled: true, label: 'DEMO', instructions: 'DEMO only', demo: true, deliveryModes: ['PICKUP'],
+    })),
+  };
+  for (const [schema, body] of [['H6SettingsWrite', write], ['H6SettingsView', view]]) {
+    for (const feeMinor of ['0', '1', '999999999999999999', '9223372036854775799', '9223372036854775806', '9223372036854775807']) {
+      assert.equal((await validateExample(file, {schema, value: {...body, feeMinor}})).valid, true, `${schema} accepts ${feeMinor}`);
+    }
+    for (const feeMinor of ['9223372036854775808', '9999999999999999999']) {
+      assert.equal((await validateExample(file, {schema, value: {...body, feeMinor}})).valid, false, `${schema} rejects ${feeMinor}`);
+    }
+  }
+});
