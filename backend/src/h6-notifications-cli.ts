@@ -1,4 +1,4 @@
-const USAGE = 'Usage: npm run notifications:dispatch -- [--limit 1..20]\nRuns committed jobs once through local Mailpit only. SIGINT/SIGTERM stops before the next claim after the current bounded SMTP operation finishes. No external email is sent.';
+const USAGE = 'Usage: npm run notifications:dispatch -- [--limit 1..20]\nRuns committed jobs once through local Mailpit only. SIGINT/SIGTERM stops before the next claim after the current bounded SMTP operation finishes. No external email is sent. Exit 1 reports incomplete acknowledgement; durable jobs remain available for lease recovery.';
 type DispatchArguments = {help: true} | {limit: number};
 
 export function parseDispatchArguments(args: string[]): DispatchArguments {
@@ -8,7 +8,7 @@ export function parseDispatchArguments(args: string[]): DispatchArguments {
   throw new Error(USAGE);
 }
 
-async function main(): Promise<void> {
+export async function main(): Promise<void> {
   let args: DispatchArguments;
   try { args = parseDispatchArguments(process.argv.slice(2)); }
   catch { console.error(USAGE); process.exitCode = 2; return; }
@@ -26,9 +26,13 @@ async function main(): Promise<void> {
     for (let count=0; count<args.limit && !stopping; count++) {
       const result = await dispatcher.run(1);
       for (const key of ['claimed','sent','failed','retried'] as const) total[key] += result[key];
-      if (!result.claimed) break;
+      if (!result.claimed || result.claimed !== result.sent + result.failed + result.retried) break;
     }
     console.log(JSON.stringify({...total, stopped:stopping}));
+    if (total.claimed !== total.sent + total.failed + total.retried) {
+      console.error('Local notification dispatch incomplete. Jobs retain their durable state for lease recovery; inspect sanitized job status.');
+      process.exitCode = 1;
+    }
   } finally {
     process.removeListener('SIGINT',stop); process.removeListener('SIGTERM',stop);
     await app.close();

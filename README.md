@@ -371,7 +371,9 @@ the current bounded SMTP attempt finishes. Manual retry only requeues an eligibl
 existing job: it does not recreate an order/payment or touch inventory. The cycle
 attempt count resets; its lifetime count remains persisted. SMTP acceptance
 followed by a lost database acknowledgement can cause a duplicate on recovery;
-exactly-once SMTP delivery is not claimed.
+exactly-once SMTP delivery is not claimed. If completion acknowledgement is
+missing, the foreground command stops claiming, prints its observed counters and
+a sanitized diagnostic, exits with status 1, and leaves durable recovery unchanged.
 
 The fixture runner creates only new labelled, loopback-bound services, checks a
 populated H5 upgrade and Prisma drift, and never reuses existing databases or
