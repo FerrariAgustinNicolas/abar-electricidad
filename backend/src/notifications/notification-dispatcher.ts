@@ -9,7 +9,7 @@ export const NOTIFICATION_CLOCK = Symbol('NOTIFICATION_CLOCK');
 const RUN_LIMIT = 20;
 const SMTP_DEADLINE_MS = 5000;
 const BACKOFF_MS = [30_000, 120_000, 600_000, 1_800_000] as const;
-const RECIPIENT = /^[A-Za-z0-9._+-]{1,64}@example\.test$/;
+const RECIPIENT = /^[A-Za-z0-9._%+-]{1,64}@example\.test$/;
 const ORDER_NUMBER = /^[A-Za-z0-9][A-Za-z0-9-]{0,63}$/;
 
 export type NotificationKind = 'ORDER_CREATED_BUYER' | 'ORDER_CREATED_ADMIN' | 'PAYMENT_CONFIRMED_BUYER' |

@@ -1,3 +1,4 @@
+import { validateEnvironment } from '../src/config/environment';
 import { NotificationDeliveryError, NotificationDispatcher, NotificationMessage, notificationMessage } from '../src/notifications/notification-dispatcher';
 import { createServer } from 'node:net';
 import { LocalMailpitSmtpTransport } from '../src/notifications/notification-dispatcher';
@@ -26,10 +27,23 @@ function fixture(send: () => Promise<void>) {
   const transport = { send: jest.fn(async (recipient: string, message: NotificationMessage) => { sent.push([recipient, message]); await send(); }) };
   const config = { get: (key: string) => ({ H6_SMTP_HOST: '127.0.0.1', H6_SMTP_PORT: 1025 } as any)[key] };
   const dispatcher = new NotificationDispatcher(prisma as never, config as never, transport, () => now);
-  return { dispatcher, prisma, tx, transport, sql, data, sent };
+  return { dispatcher, prisma, tx, transport, sql, data, sent, job };
 }
 
 describe('H6 durable notification dispatcher', () => {
+  it('dispatches the percent alias accepted by administrator email configuration', async () => {
+    const environment = validateEnvironment({
+      DATABASE_URL: 'postgresql://demo:demo@127.0.0.1:5432/demo',
+      H4_ADMIN_NOTIFICATION_EMAIL: 'orders%demo@example.test',
+    });
+    const f = fixture(async () => undefined);
+    f.job.kind = 'ORDER_CREATED_ADMIN';
+    f.job.recipient = environment.H4_ADMIN_NOTIFICATION_EMAIL;
+    await expect(f.dispatcher.run(1)).resolves.toEqual({ claimed: 1, sent: 1, failed: 0, retried: 0 });
+    expect(f.transport.send).toHaveBeenCalledWith('orders%demo@example.test', expect.objectContaining({ subject: expect.stringContaining('DEMO') }));
+    expect(f.data[0].data).toMatchObject({ state: 'SENT', lastError: null });
+  });
+
   it('claims one job at a time with SKIP LOCKED, fences completion, and omits private payload data', async () => {
     const f = fixture(async () => undefined);
     await expect(f.dispatcher.run(1)).resolves.toEqual({ claimed: 1, sent: 1, failed: 0, retried: 0 });
