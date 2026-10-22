@@ -32,7 +32,7 @@ import {
         <section class="conflict" role="alert">
           <h2>La configuración cambió en otra sesión</h2>
           <p>El borrador se conservó. Recargue solo si desea reemplazarlo por la versión actual del servidor.</p>
-          <button type="button" (click)="reload()">Descartar borrador y recargar</button>
+          <button type="button" [disabled]="saving()" (click)="reload()">Descartar borrador y recargar</button>
         </section>
       }
       @if (settings()) {
@@ -40,18 +40,18 @@ import {
           <p>Versión del servidor: {{ settings()!.version }}</p>
           <label>
             Tarifa fija de entrega coordinada (ARS, unidades menores)
-            <input name="feeMinor" required pattern="^(0|[1-9][0-9]{0,18})$" [(ngModel)]="feeMinor"
+            <input name="feeMinor" required pattern="^(0|[1-9][0-9]{0,18})$" [disabled]="saving()" [(ngModel)]="feeMinor"
               inputmode="numeric" aria-describedby="fee-help">
           </label>
           <small id="fee-help">Ingrese centavos como texto entero; no se redondean valores.</small>
-          <fieldset>
+          <fieldset [disabled]="saving()">
             <legend>Modalidades habilitadas</legend>
             <label><input type="checkbox" [checked]="hasMode('PICKUP')"
               (change)="toggleMode('PICKUP', $event)"> Retiro en el local</label>
             <label><input type="checkbox" [checked]="hasMode('COORDINATED')"
               (change)="toggleMode('COORDINATED', $event)"> Entrega coordinada</label>
           </fieldset>
-          <fieldset>
+          <fieldset [disabled]="saving()">
             <legend>Contacto comercial DEMO</legend>
             <label>Nombre visible
               <input name="displayName" required maxlength="100" [(ngModel)]="contact.displayName">
@@ -133,6 +133,7 @@ export class AdminSettingsPageComponent {
   }
 
   async load(): Promise<void> {
+    if (this.saving()) return;
     this.loading.set(true);
     this.error.set('');
     try {

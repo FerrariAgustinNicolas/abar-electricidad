@@ -35,27 +35,27 @@ const CODES: PaymentMethodCode[] = [
       }
       <nav aria-label="Métodos de pago">
         @for (code of codes; track code) {
-          <button type="button" (click)="select(code)">{{ labels[code] }}</button>
+          <button type="button" [disabled]="saving()" (click)="select(code)">{{ labels[code] }}</button>
         }
       </nav>
       @if (method()) {
         <form (ngSubmit)="save()" #form="ngForm">
           <h2>{{ method()!.label }}</h2>
           <p>Versión {{ method()!.version }} · DEMO</p>
-          <label><input name="enabled" type="checkbox" [(ngModel)]="enabled">
+          <label><input name="enabled" type="checkbox" [disabled]="saving() || loading()" [(ngModel)]="enabled">
             Habilitado para nuevas compras</label>
           <label>Instrucciones ficticias
             <textarea name="instructions" required minlength="1" maxlength="500"
-              [(ngModel)]="instructions"></textarea>
+              [disabled]="saving() || loading()" [(ngModel)]="instructions"></textarea>
           </label>
-          <fieldset>
+          <fieldset [disabled]="saving() || loading()">
             <legend>Modalidades permitidas</legend>
             <label><input type="checkbox" [checked]="modes.includes('PICKUP')"
               (change)="toggle('PICKUP', $event)"> Retiro</label>
             <label><input type="checkbox" [checked]="modes.includes('COORDINATED')"
               (change)="toggle('COORDINATED', $event)"> Entrega coordinada</label>
           </fieldset>
-          <button type="submit" [disabled]="saving() || form.invalid || !modes.length">
+          <button type="submit" [disabled]="saving() || loading() || form.invalid || !modes.length">
             {{ saving() ? 'Guardando…' : 'Guardar método' }}
           </button>
         </form>
@@ -96,19 +96,24 @@ export class AdminPaymentMethodsPageComponent {
     void this.select(CODES[0]);
   }
 
+  private selectionGeneration = 0;
+
   async select(code: PaymentMethodCode): Promise<void> {
+    if (this.saving()) return;
+    const generation = ++this.selectionGeneration;
     this.loading.set(true);
     this.error.set('');
     try {
       const row = await firstValueFrom(this.api.getPaymentMethod(code));
+      if (generation !== this.selectionGeneration) return;
       this.method.set(row);
       this.enabled = row.enabled;
       this.instructions = row.instructions;
       this.modes = [...row.deliveryModes];
     } catch (error: unknown) {
-      await this.handle(error, 'No se pudo cargar el método.');
+      if (generation === this.selectionGeneration) await this.handle(error, 'No se pudo cargar el método.');
     } finally {
-      this.loading.set(false);
+      if (generation === this.selectionGeneration) this.loading.set(false);
     }
   }
 
@@ -121,7 +126,7 @@ export class AdminPaymentMethodsPageComponent {
 
   async save(): Promise<void> {
     const current = this.method();
-    if (!current || !this.modes.length || this.saving()) return;
+    if (!current || !this.modes.length || this.saving() || this.loading()) return;
 
     this.saving.set(true);
     this.error.set('');

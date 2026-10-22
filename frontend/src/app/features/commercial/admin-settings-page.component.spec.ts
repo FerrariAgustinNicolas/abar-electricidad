@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { of, throwError } from 'rxjs';
+import { of, throwError, Subject } from 'rxjs';
 import { CommercialApiService } from '../../core/commercial/commercial-api.service';
 import { SettingsView } from '../../core/commercial/commercial.models';
 import { AdminSettingsPageComponent } from './admin-settings-page.component';
@@ -16,4 +16,14 @@ describe('AdminSettingsPageComponent', () => {
    component.feeMinor = '9007199254740995'; await component.save();
    expect(component.feeMinor).toBe('9007199254740995'); expect(component.conflict()).toBe(true); expect(api.updateSettings).toHaveBeenCalledWith(expect.objectContaining({ feeMinor: '9007199254740995', expectedVersion: 2 }));
  });
+ it('locks editable controls while saving and re-enables them after success', async () => {
+   const fixture = TestBed.createComponent(AdminSettingsPageComponent);await fixture.whenStable();
+   const pending = new Subject<SettingsView>();api.updateSettings.mockReturnValueOnce(pending);
+   const saving = fixture.componentInstance.save();fixture.detectChanges();await fixture.whenStable();
+   const controls = [...fixture.nativeElement.querySelectorAll('form input, form textarea')];
+   expect(controls.length).toBeGreaterThan(0);expect(controls.every((control: HTMLElement) => control.matches(':disabled'))).toBe(true);
+   pending.next(data);pending.complete();await saving;fixture.detectChanges();await fixture.whenStable();
+   expect(controls.every((control: HTMLElement) => !control.matches(':disabled'))).toBe(true);
+ });
+
 });
