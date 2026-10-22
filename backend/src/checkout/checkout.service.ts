@@ -19,8 +19,9 @@ type QuoteResponse = {
   deliveryMode: DeliveryMode; paymentMethod: DemoPaymentMethod; policyVersion: number; stateFingerprint: string; warnings: string[];
 };
 type DemoPaymentMethod = { code: MethodCode; label: string; instructions: string; demo: true; deliveryModes: DeliveryMode[] };
+type PolicyMethod = DemoPaymentMethod & { enabled: boolean };
 type QuoteRequest = { items: Array<{ presentationId: string; quantity: number }>; deliveryMode: DeliveryMode; paymentMethodCode: MethodCode };
-type Policy = { id: string; feeMinor: bigint; quoteTtlSeconds: number; enabledDeliveryModes: DeliveryMode[]; paymentMethods: DemoPaymentMethod[]; version: number };
+type Policy = { id: string; feeMinor: bigint; quoteTtlSeconds: number; enabledDeliveryModes: DeliveryMode[]; paymentMethods: PolicyMethod[]; version: number };
 const MAX_MINOR = 9_223_372_036_854_775_807n;
 const MAX_LINES = 100;
 const MAX_QUANTITY = 1_000_000;
@@ -31,6 +32,13 @@ const DEMO_ONLY = 'DEMO_PAYMENT_METHODS_ONLY';
 const unavailable = () => new CatalogException(503, 'SERVICE_UNAVAILABLE');
 const money = (amountMinor: bigint): Money => ({ amountMinor: amountMinor.toString(), currency: 'ARS' });
 const isObject = (value: unknown): value is Record<string, unknown> => value !== null && typeof value === 'object' && !Array.isArray(value);
+const hasControl = (value: string): boolean => {
+  for (let index = 0; index < value.length; index++) {
+    const code = value.charCodeAt(index);
+    if (code < 32 || (code >= 127 && code <= 159)) return true;
+  }
+  return false;
+};
 export function checkoutStateFingerprint(reference: object): string {
   return createHash('sha256').update(JSON.stringify(reference)).digest('hex');
 }
@@ -57,14 +65,14 @@ export class CheckoutService {
     const policy = await this.readPolicy();
     const mode = deliveryMode as DeliveryMode;
     if (!policy.enabledDeliveryModes.includes(mode)) return { items: [] as DemoPaymentMethod[] };
-    return { items: policy.paymentMethods.filter((method) => method.deliveryModes.includes(mode) && policy.enabledDeliveryModes.includes(mode)) };
+    return { items: policy.paymentMethods.filter((method) => method.enabled && method.deliveryModes.includes(mode) && policy.enabledDeliveryModes.includes(mode)).map(this.publicMethod) };
   }
 
   async getOrderPaymentMethods(tx: Prisma.TransactionClient, deliveryMode: unknown, methodCode: unknown): Promise<boolean> {
     if (typeof deliveryMode !== 'string' || !DELIVERY_MODES.has(deliveryMode) || typeof methodCode !== 'string' || !METHOD_CODES.has(methodCode)) return false;
     const policy = await this.readPolicy(tx);
     return policy.enabledDeliveryModes.includes(deliveryMode as DeliveryMode) &&
-      policy.paymentMethods.some((method) => method.code === methodCode && method.deliveryModes.includes(deliveryMode as DeliveryMode));
+      policy.paymentMethods.some((method) => method.enabled && method.code === methodCode && method.deliveryModes.includes(deliveryMode as DeliveryMode));
   }
 
   async createQuote(input: unknown): Promise<QuoteResponse> {
@@ -82,8 +90,9 @@ export class CheckoutService {
       return await this.prisma.$transaction(async (tx) => {
         const policy = await this.readPolicy(tx);
         if (!policy.enabledDeliveryModes.includes(body.deliveryMode)) throw new CatalogException(409, 'DELIVERY_UNAVAILABLE');
-        const paymentMethod = policy.paymentMethods.find((method) => method.code === body.paymentMethodCode && method.deliveryModes.includes(body.deliveryMode));
-        if (!paymentMethod) throw new CatalogException(409, 'METHOD_UNAVAILABLE');
+        const selectedMethod = policy.paymentMethods.find((method) => method.enabled && method.code === body.paymentMethodCode && method.deliveryModes.includes(body.deliveryMode));
+        if (!selectedMethod) throw new CatalogException(409, 'METHOD_UNAVAILABLE');
+        const paymentMethod = this.publicMethod(selectedMethod);
         const rows = await tx.productPresentation.findMany({
           where: { id: { in: ids } },
           include: { product: { include: { category: true } }, balance: true },
@@ -161,7 +170,7 @@ export class CheckoutService {
     const mode = raw.deliveryMode as DeliveryMode;
     const methodCode = raw.paymentMethod.code;
     if (!policy.enabledDeliveryModes.includes(mode)) throw new CatalogException(409, 'DELIVERY_UNAVAILABLE');
-    const method = policy.paymentMethods.find((entry) => entry.code === methodCode && entry.deliveryModes.includes(mode));
+    const method = policy.paymentMethods.find((entry) => entry.enabled && entry.code === methodCode && entry.deliveryModes.includes(mode));
     if (!method) throw new CatalogException(409, 'METHOD_UNAVAILABLE');
     const ids: string[] = [];
     const quantities = new Map<string, number>();
@@ -219,17 +228,20 @@ export class CheckoutService {
       if (!Array.isArray(modesValue) || modesValue.length < 1 || modesValue.some((mode) => typeof mode !== 'string' || !DELIVERY_MODES.has(mode)) || new Set(modesValue).size !== modesValue.length) throw unavailable();
       const methodsValue: unknown = row.paymentMethods;
       if (!Array.isArray(methodsValue) || methodsValue.length < 1 || methodsValue.length > 3) throw unavailable();
-      const methods: DemoPaymentMethod[] = [];
+      const methods: PolicyMethod[] = [];
       const seenCodes = new Set<string>();
       for (const value of methodsValue) {
         if (!isObject(value) || typeof value.code !== 'string' || !METHOD_CODES.has(value.code) || seenCodes.has(value.code) ||
             typeof value.label !== 'string' || value.label.trim().length < 1 || value.label.length > 120 ||
-            typeof value.instructions !== 'string' || value.instructions.trim().length < 1 || value.instructions.length > 300 ||
+            typeof value.instructions !== 'string' || value.instructions.trim().length < 1 || value.instructions.length > 500 ||
+            hasControl(value.instructions) ||
+            (value.enabled !== undefined && typeof value.enabled !== 'boolean') ||
             value.demo !== true || !Array.isArray(value.deliveryModes) || value.deliveryModes.length < 1 || value.deliveryModes.length > 2 ||
             value.deliveryModes.some((mode) => typeof mode !== 'string' || !DELIVERY_MODES.has(mode)) || new Set(value.deliveryModes).size !== value.deliveryModes.length) throw unavailable();
         if (value.code === 'DEMO_PAY_ON_PICKUP' && (value.deliveryModes.length !== 1 || value.deliveryModes[0] !== 'PICKUP')) throw unavailable();
         seenCodes.add(value.code);
-        methods.push({ code: value.code as MethodCode, label: value.label, instructions: value.instructions, demo: true, deliveryModes: value.deliveryModes as DeliveryMode[] });
+        methods.push({ code: value.code as MethodCode, label: value.label, instructions: value.instructions, demo: true,
+          deliveryModes: value.deliveryModes as DeliveryMode[], enabled: value.enabled !== false });
       }
       return { id: row.id, feeMinor: row.feeMinor, quoteTtlSeconds: row.quoteTtlSeconds,
         enabledDeliveryModes: modesValue as DeliveryMode[], paymentMethods: methods, version: row.version };
@@ -237,5 +249,9 @@ export class CheckoutService {
       if (error instanceof CatalogException) throw error;
       throw unavailable();
     }
+  }
+
+  private publicMethod(method: PolicyMethod): DemoPaymentMethod {
+    return { code: method.code, label: method.label, instructions: method.instructions, demo: true, deliveryModes: method.deliveryModes };
   }
 }

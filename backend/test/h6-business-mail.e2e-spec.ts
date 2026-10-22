@@ -1,3 +1,5 @@
+import { SettingsService } from '../src/settings/settings.service';
+import { SettingsController } from '../src/settings/settings.controller';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
@@ -57,10 +59,11 @@ describe('H6 committed business events, real H1 HTTP guards and local Mailpit re
     const checkout = new CheckoutService(prisma as never), orders = new OrdersService(prisma as never,checkout,cfg as never);
     const adminOrders = new AdminOrdersService(prisma as never,admins,orders,cfg as never);
     const notifications = new NotificationsService(prisma as never,admins);
+    const settings = new SettingsService(prisma as never,admins,cfg as never);
     dispatcher = new NotificationDispatcher(prisma as never,cfg as never,new LocalMailpitSmtpTransport(cfg as never));
-    const module = await Test.createTestingModule({controllers:[CheckoutController,OrdersController,AdminOrdersController,NotificationsController],providers:[
+    const module = await Test.createTestingModule({controllers:[CheckoutController,OrdersController,AdminOrdersController,NotificationsController,SettingsController],providers:[
       {provide:CheckoutService,useValue:checkout},{provide:OrdersService,useValue:orders},{provide:AdminOrdersService,useValue:adminOrders},
-      {provide:NotificationsService,useValue:notifications},{provide:PrismaService,useValue:prisma},{provide:ConfigService,useValue:cfg},PublicCheckoutRateLimiter,
+      {provide:SettingsService,useValue:settings},{provide:AdminUsersService,useValue:admins},{provide:NotificationsService,useValue:notifications},{provide:PrismaService,useValue:prisma},{provide:ConfigService,useValue:cfg},PublicCheckoutRateLimiter,
     ]}).compile();
     app = module.createNestApplication(); app.use(createOrdersJsonRouter()); app.use(createH6JsonRouter()); await app.init();
     actor = await session();
@@ -186,6 +189,49 @@ describe('H6 committed business events, real H1 HTTP guards and local Mailpit re
     expect(receipts).toBe(3);
     expect(await prisma.notificationJob.count({where:{orderId:order.orderId}})).toBe(2);
     console.log('H6 lost-ACK receipt proof: two business jobs, three captured messages, unchanged business hash',before);
+  },30000);
+
+  it('applies new policy to fresh quotes/retries while preserving historical confirmation and snapshots', async () => {
+    const original = await prisma.checkoutPolicy.findUniqueOrThrow({where:{id:'default'}});
+    const quoteBody = {items:[{presentationId,quantity:1}],deliveryMode:'COORDINATED',paymentMethodCode:'DEMO_TRANSFER'};
+    const oldQuote = await request(app.getHttpServer()).post('/api/v1/public/checkout/quotes').send(quoteBody).expect(201);
+    const historical = await createOrder();
+    const frozen = await prisma.order.findUniqueOrThrow({where:{id:historical.orderId},include:{items:true}});
+    try {
+      const current = await request(app.getHttpServer()).get('/api/v1/admin/settings').set(headers()).expect(200);
+      await request(app.getHttpServer()).patch('/api/v1/admin/settings').set(headers()).send({
+        expectedVersion:current.body.version,feeMinor:'750',enabledDeliveryModes:['PICKUP','COORDINATED'],contact:current.body.contact,
+      }).expect(200);
+      const fresh = await request(app.getHttpServer()).post('/api/v1/public/checkout/quotes').send(quoteBody).expect(201);
+      expect(fresh.body.deliveryFee.amountMinor).toBe('750');
+      expect(fresh.body.policyVersion).toBe(current.body.version+1);
+      expect((await prisma.checkoutQuote.findUniqueOrThrow({where:{id:oldQuote.body.quoteId}})).response).toEqual(oldQuote.body);
+      const stale = await request(app.getHttpServer()).post('/api/v1/public/orders').set('Idempotency-Key',key()).send({
+        quoteId:oldQuote.body.quoteId,customer:{firstName:'DEMO',lastName:'Buyer',email:buyerEmail,phone:'+541155550000'},
+        deliveryDetails:{addressLine:'DEMO address',locality:'DEMO locality'},acceptedTermsVersion:'demo-2026-10-20-v1',
+      }).expect(409);
+      expect(stale.body.code).toBe('QUOTE_CHANGED');
+      const pickup = await request(app.getHttpServer()).post('/api/v1/public/checkout/quotes').send({...quoteBody,deliveryMode:'PICKUP'}).expect(201);
+      expect(pickup.body.deliveryFee.amountMinor).toBe('0');
+      await request(app.getHttpServer()).patch('/api/v1/admin/payment-methods/DEMO_TRANSFER').set(headers()).send({
+        expectedVersion:current.body.version+1,enabled:false,instructions:'DEMO disabled for new purchases.',deliveryModes:['PICKUP','COORDINATED'],
+      }).expect(200);
+      const beforeRetry = await businessHash();
+      const retry = await request(app.getHttpServer()).post(`/api/v1/public/orders/${historical.orderId}/payment-attempts`)
+        .set('X-Order-Access-Token',historical.accessToken).set('Idempotency-Key',key()).send({methodCode:'DEMO_TRANSFER'}).expect(409);
+      expect(retry.body.code).toBe('METHOD_UNAVAILABLE');
+      expect(await businessHash()).toBe(beforeRetry);
+      const afterPolicy = await prisma.order.findUniqueOrThrow({where:{id:historical.orderId},include:{items:true}});
+      expect(afterPolicy).toEqual(frozen);
+      await request(app.getHttpServer()).post(`/api/v1/admin/orders/${historical.orderId}/payment-confirmation`).set(headers()).set('Idempotency-Key',key())
+        .send({expectedVersion:1,attemptId:historical.currentAttemptId,confirmedAmount:historical.total}).expect(200);
+      const paid = await prisma.order.findUniqueOrThrow({where:{id:historical.orderId},include:{items:true,payment:true}});
+      expect(paid.totalMinor).toBe(frozen.totalMinor);expect(paid.items).toEqual(frozen.items);expect(paid.payment?.status).toBe('PAID');
+      await dispatch(4);
+    } finally {
+      await prisma.checkoutPolicy.update({where:{id:'default'},data:{feeMinor:original.feeMinor,version:original.version,
+        enabledDeliveryModes:original.enabledDeliveryModes as never,paymentMethods:original.paymentMethods as never,contact:original.contact as never}});
+    }
   },30000);
 
 });

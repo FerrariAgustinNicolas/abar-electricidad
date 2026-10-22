@@ -1,3 +1,7 @@
+import { NotificationsController } from './notifications/notifications.controller';
+import { NotificationsService } from './notifications/notifications.service';
+import { SettingsController } from './settings/settings.controller';
+import { SettingsService } from './settings/settings.service';
 import { AdminOrdersController } from './orders/admin-orders.controller';
 import { AdminOrdersService } from './orders/admin-orders.service';
 import { CheckoutController } from './checkout/checkout.controller';
@@ -59,15 +63,15 @@ function semantics(value: unknown, document: InterfaceDocument): unknown {
     .map((key) => [key, semantics(object[key], document)]));
 }
 
-describe('production Swagger projection of the frozen H1-H5 interface', () => {
+describe('production Swagger projection of the frozen H1-H6 interface', () => {
   let app: NestExpressApplication;
   let document: InterfaceDocument;
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      controllers: [AuthController, AdminUsersController, HealthController, CatalogController, StockController, CheckoutController, OrdersController, AdminOrdersController],
+      controllers: [AuthController, AdminUsersController, HealthController, CatalogController, StockController, CheckoutController, OrdersController, AdminOrdersController, NotificationsController, SettingsController],
       providers: [CsrfService, LoginService, SessionService, LogoutService,
-        ChangePasswordService, AdminUsersService, HealthService, CatalogService, StockService, CheckoutService, OrdersService, AdminOrdersService, PublicCheckoutRateLimiter]
+        ChangePasswordService, AdminUsersService, HealthService, CatalogService, StockService, CheckoutService, OrdersService, AdminOrdersService, NotificationsService, SettingsService, PublicCheckoutRateLimiter]
         .map((provide) => ({ provide, useValue: {} })),
     }).compile();
     app = module.createNestApplication<NestExpressApplication>();
@@ -80,7 +84,7 @@ describe('production Swagger projection of the frozen H1-H5 interface', () => {
 
   afterAll(async () => { if (app) await app.close(); });
 
-  it('keeps exactly the implemented H1-H5 routes and all three security schemes', () => {
+  it('keeps exactly the implemented H1-H6 routes and all three security schemes', () => {
     expect(Object.keys(document.paths).sort()).toEqual(Object.keys(contract.paths).sort());
     expect(semantics(document.components.securitySchemes, document))
       .toEqual(semantics(contract.components.securitySchemes, contract));
