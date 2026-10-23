@@ -1,0 +1,19 @@
+{
+  "sanitizedDerivative": true,
+  "sourceEvidencePath": "docs/evidence/h7/native-documentary-review-unavailable.json",
+  "privacyNote": "Native command arguments, replay transitions, opaque repository/result handles and control tokens omitted. This derivative does not grant review authority or represent a new review.",
+  "schema": "gentle-ai.review-integration.failure/v2",
+  "contract": "gentle-ai.review-integration/v2",
+  "operation": "review.start",
+  "phase": "preflight",
+  "code": "lens_context_budget_exceeded",
+  "message": "The candidate's complete reviewer evidence exceeds the native context budget, so no review authority was created; review this change as smaller candidates that each fit under it.",
+  "mutation_outcome": "not_started",
+  "authority_applicability": "not_evaluated",
+  "retry_safe": true,
+  "replayability": "not_replayable",
+  "lineage_id": "review-75705fabaf2e3bc8",
+  "required_inputs": [],
+  "next_action": "stop",
+  "cause": "lens_context_budget_exceeded: provider-owned reviewer lens context was not produced; no review authority was created, so nothing has to be abandoned or repaired; immutable candidate evidence is never truncated and retrying this exact candidate cannot succeed, so split it into a chained sequence of smaller reviewable commits, each under the budget, then refresh the exact native next transition by running gentle-ai review status --cwd <repo> --contract gentle-ai.review-integration/v2 --next-transition and execute the returned transition for the reduced scope"
+}

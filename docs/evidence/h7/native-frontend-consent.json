@@ -1,0 +1,38 @@
+{
+  "sanitizedDerivative": true,
+  "sourceEvidencePath": "docs/evidence/h7/native-frontend-consent.json",
+  "privacyNote": "Native command arguments, replay transitions, opaque repository/result handles and control tokens omitted. This derivative does not grant review authority or represent a new review.",
+  "schema": "gentle-ai.review-integration.consent/v3",
+  "contract": "gentle-ai.review-integration/v2",
+  "operation": "review.start",
+  "action": "consent_required",
+  "agent": "codex",
+  "blocking": true,
+  "target_identity": "sha256:529ef67d42cd0e65538375bf71b62533a22733c12d4676f042c07198b9dc8c88",
+  "projection": "workspace",
+  "risk_level": "medium",
+  "changed_files": 14,
+  "changed_lines": 706,
+  "headline": "Gentle AI can review this change before you call it done.",
+  "reason": "Review can help detect regressions in these changes.",
+  "value": "Reviewing takes a little longer and makes the result safer.",
+  "risk_evidence": [
+    "this change is not purely passive documentation, so it gets one consolidated review.",
+    "an executable change in frontend/src/app/app.routes.ts"
+  ],
+  "choices": [
+    {
+      "answer": "granted",
+      "label": "Review this change",
+      "effect": "Reviews only this change; later medium- or high-risk changes ask again, and delivery needs separate approval."
+    },
+    {
+      "answer": "declined",
+      "label": "Skip this time",
+      "effect": "Skips only this change; no review record is created, and future reviews stay enabled."
+    }
+  ],
+  "off_path": {
+    "note": "To turn reviews off for good, run 'gentle-ai review mode disable'."
+  }
+}

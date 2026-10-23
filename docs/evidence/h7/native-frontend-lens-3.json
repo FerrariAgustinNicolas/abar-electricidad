@@ -1,0 +1,53 @@
+{
+  "sanitizedDerivative": true,
+  "sourceEvidencePath": "docs/evidence/h7/native-frontend-lens-3.json",
+  "privacyNote": "Native command arguments, replay transitions, opaque repository/result handles and control tokens omitted. This derivative does not grant review authority or represent a new review.",
+  "schema": "gentle-ai.review-last-event-closure/v1",
+  "operation": "review/capture-result",
+  "lineage_id": "review-047ff832a270e9ae",
+  "state": "approved",
+  "action": "the approved review completed on the last admitted event and awaits its exact acknowledgement",
+  "reviewer_results": [
+    {
+      "lens": "review-risk",
+      "findings": [],
+      "evidence": [
+        "The complete candidate patch was inspected. The new dashboard and report pages remain children of the existing admin route guarded by adminGuard in frontend/src/app/app.routes.ts:30-37, and their API requests preserve credentialed same-origin calls in frontend/src/app/features/reports/h7-reports-api.service.ts:12-24. No candidate-caused, realistically reachable security, authorization, data-exposure, destructive-input, secret, or dependency vulnerability is demonstrated by the supplied immutable patches."
+      ],
+      "result_hash": "sha256:4181ea0f822268f06d5870ab4d901cdbbcf36d8d62ae825bd2d855d286dd6b68"
+    },
+    {
+      "lens": "review-resilience",
+      "findings": [],
+      "evidence": [
+        "Inspected the complete immutable patch for all 14 manifest paths. Request replacement and filter changes cancel stale subscriptions; asynchronous CSV error classification is guarded by a generation token; component destruction cancels active report and export requests; authentication, authorization, password-change, and generic transport failures have explicit user-visible handling and retry paths. No candidate-caused resilience defect with a concrete reachable production failure mode was established."
+      ],
+      "result_hash": "sha256:75e2d280c1f111354f2552763b9d496df27b62e586542c5df6e4fc8db5fbfdf1"
+    },
+    {
+      "lens": "review-readability",
+      "findings": [],
+      "evidence": [
+        "Inspected the complete immutable patch for all 14 manifest paths; names, request-state handling, error routing, period semantics, API mapping, models, tests, routes, navigation, and README context reveal no candidate-caused maintainability defect meeting the readability reporting threshold."
+      ],
+      "result_hash": "sha256:f64fe40a5ddc936ae14971b6bce91491d4e0c0dc188e8d1d308dc769ff73e8ea"
+    },
+    {
+      "lens": "review-reliability",
+      "findings": [],
+      "evidence": [
+        "Inspected all 14 manifest paths. The candidate tests observable routing, exact filter serialization, Buenos Aires month boundaries, large minor-unit monetary values, stale request cancellation, stale asynchronous CSV-error suppression, destruction cleanup, authentication failure paths, and presentation grouping; no candidate-caused reliability defect with realistic observable harm was established."
+      ],
+      "result_hash": "sha256:652e1f8b821a24d12ebf722a0b81d5984077751abd4827d653adb465caa61598"
+    }
+  ],
+  "acknowledgement": {
+    "operation": "review.acknowledge-approved",
+    "binding": {
+      "lineage_id": "review-047ff832a270e9ae",
+      "revision": "sha256:cdbfc187f4a08c9082dfca5bea0978ea56ec2d7e12d1b71ecaf2eca4ff73488f",
+      "target_identity": "sha256:529ef67d42cd0e65538375bf71b62533a22733c12d4676f042c07198b9dc8c88"
+    }
+  },
+  "store_revision": "sha256:cdbfc187f4a08c9082dfca5bea0978ea56ec2d7e12d1b71ecaf2eca4ff73488f"
+}

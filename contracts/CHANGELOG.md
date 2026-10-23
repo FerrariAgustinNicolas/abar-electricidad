@@ -1,5 +1,12 @@
 # Historial del contrato candidato
 
+## 0.10.0 — H7 dashboard/report freeze (2026-10-22)
+
+- Add three H1-protected read-only GET operations: dashboard, sales JSON and reconciliable UTF-8 CSV.
+- Freeze exact ARS minor-unit strings, confirmation versus creation dates, local exclusive bounds (2000–2099, maximum 366 days), current-state filters, deterministic half-up ticket rounding and per-presentation quantities.
+- Shared closed report DTO; no PII. CSV quoting, formula neutralization, fixed columns and no-store/error headers are normative.
+- Preserve H1–H6 operations and historical metadata; no Prisma migration required. Runtime and Q01–Q16 verification remain pending.
+
 ## 0.9.0 — H6 local DEMO freeze (2026-10-22)
 
 - Add closed settings/payment-method administration, paginated notification reads and versioned retry (202), and minimal public contact.

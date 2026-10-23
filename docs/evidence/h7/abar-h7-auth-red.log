@@ -1,0 +1,26 @@
+SANITIZED DERIVATIVE — historical output, not a new execution. Local paths and operational identifiers are replaced; original retained privately on the audited branch.
+
+FAIL test/h7-reports.e2e-spec.ts
+  ● H7 H1 revalidation failures › preserves real H1 session errors from the snapshot recheck
+
+    expect(received).rejects.toBe(expected) // Object.is equality
+
+    Expected: [AdminUsersRouteException: SESSION_EXPIRED]
+    Received: [CatalogException: SERVICE_UNAVAILABLE]
+
+      160 |     const fixture = serviceForRows(aggregateRows());
+      161 |     fixture.auth.recheck.mockRejectedValue(authError);
+    > 162 |     await expect(fixture.service.getReport(fixture.auth as any, valid)).rejects.toBe(authError);
+          |                                                                                 ^
+      163 |   });
+      164 | });
+      165 |
+
+      at Object.toBe (../../../abar-electricidad/backend/node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (test/h7-reports.e2e-spec.ts:162:81)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 3 skipped, 5 passed, 9 total
+Snapshots:   0 total
+Time:        1.319 s, estimated 2 s
+Ran all test suites within paths "test/h7-reports.e2e-spec.ts".

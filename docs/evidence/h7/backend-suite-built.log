@@ -1,0 +1,12 @@
+SANITIZED DERIVATIVE — historical output, not a new execution. Local paths and operational identifiers are replaced; original retained privately on the audited branch.
+
+
+> abar-backend@0.1.0 test
+> node scripts/copy-catalog-contract.mjs && jest --runInBand
+
+
+Test Suites: 1 skipped, 36 passed, 36 of 37 total
+Tests:       1 skipped, 1313 passed, 1314 total
+Snapshots:   0 total
+Time:        7.239 s
+Ran all test suites.

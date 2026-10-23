@@ -1,7 +1,9 @@
 openapi: 3.0.3
 info:
   title: ABAR Electricidad API — transversal candidate
-  version: 0.9.0
+  version: 0.10.0
+  x-abar-h7-freeze: dashboard-reports-v1
+  x-abar-h7-runtime-stage: contract-frozen-implementation-pending
   x-abar-h6-freeze: notifications-settings-v1
   x-abar-h6-runtime-stage: contract-frozen-implementation-pending
   x-abar-h5-freeze: manual-confirmation-v1
@@ -22,7 +24,7 @@ info:
   x-abar-integrated-runtime-stage: h1
   x-abar-integrated-commit: 18c39e9b86b7b7bf45263fe5bad4fe77125a6386
   description: |
-    Single normative candidate contract, version 0.9.0. H6 is frozen before implementation. H1–H5 are academically integrated with recorded verification debt; this is not production approval. H4 guest orders/demo attempts extend H3 additively. H2 catalog/stock schemas are frozen;
+    Single normative candidate contract, version 0.10.0. H7 is frozen before implementation; H6 is academically integrated. H1–H5 are academically integrated with recorded verification debt; this is not production approval. H4 guest orders/demo attempts extend H3 additively. H2 catalog/stock schemas are frozen;
     local H2 implementation and bounded independent checks are recorded in H2-informe.md.
     External milestone audit remains pending; this metadata is not production approval. H1 authentication and
     administrative-user operations are integrated alongside GET /health at the
@@ -76,6 +78,8 @@ servers:
     description: Local development only; production transport must use HTTPS.
 security: []
 tags:
+  - name: reports-admin
+    description: H7 read-only academic DEMO metrics; H1 administrative session.
   - name: commercial-admin
     description: H6 authenticated DEMO settings and notification operations.
   - name: commercial-public
@@ -97,6 +101,416 @@ tags:
   - name: admin
     description: Frozen H1 administrative users; equal capabilities, no roles.
 paths:
+  /api/v1/admin/dashboard:
+    get:
+      tags:
+        - reports-admin
+      operationId: getH7Dashboard
+      summary: Read academic DEMO metrics
+      description: Required explicit local date bounds; see H7Period and H7Filters. A simulated APPROVED
+        attempt does not imply a sale. Reject unknown/repeated/nested query keys. No cross-site write
+        or CSRF operation is introduced.
+      security:
+        - AdminSessionCookie: []
+      parameters:
+        - name: from
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/H7LocalDate"
+          description: Included local calendar start.
+        - name: to
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/H7LocalDate"
+          description: Excluded local calendar end; maximum range 366 days.
+        - name: methodCode
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - DEMO_SIMULATION
+              - DEMO_PAY_ON_PICKUP
+              - DEMO_TRANSFER
+          description: Exact current-state filter, applied to both creations and confirmations.
+        - name: orderStatus
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/OrderStatus"
+          description: Exact current-state filter, applied to both creations and confirmations.
+        - name: paymentStatus
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/PaymentStatus"
+          description: Exact current-state filter, applied to both creations and confirmations.
+      responses:
+        "200":
+          description: Academic DEMO metrics for the exact normalized filters.
+          headers:
+            Cache-Control:
+              x-required: true
+              description: Never cache administrative metrics.
+              schema:
+                type: string
+                enum:
+                  - no-store
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/H7SalesReport"
+        "400":
+          description: Sanitized error; no SQL, stack or private information.
+          headers:
+            Cache-Control:
+              x-required: true
+              description: Never cache administrative metrics.
+              schema:
+                type: string
+                enum:
+                  - no-store
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: Sanitized error; no SQL, stack or private information.
+          headers:
+            Cache-Control:
+              x-required: true
+              description: Never cache administrative metrics.
+              schema:
+                type: string
+                enum:
+                  - no-store
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: Sanitized error; no SQL, stack or private information.
+          headers:
+            Cache-Control:
+              x-required: true
+              description: Never cache administrative metrics.
+              schema:
+                type: string
+                enum:
+                  - no-store
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Sanitized error; no SQL, stack or private information.
+          headers:
+            Cache-Control:
+              x-required: true
+              description: Never cache administrative metrics.
+              schema:
+                type: string
+                enum:
+                  - no-store
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+        "503":
+          - SERVICE_UNAVAILABLE
+  /api/v1/admin/reports/sales:
+    get:
+      tags:
+        - reports-admin
+      operationId: getH7SalesReport
+      summary: Read academic DEMO metrics
+      description: Required explicit local date bounds; see H7Period and H7Filters. A simulated APPROVED
+        attempt does not imply a sale. Reject unknown/repeated/nested query keys. No cross-site write
+        or CSRF operation is introduced.
+      security:
+        - AdminSessionCookie: []
+      parameters:
+        - name: from
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/H7LocalDate"
+          description: Included local calendar start.
+        - name: to
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/H7LocalDate"
+          description: Excluded local calendar end; maximum range 366 days.
+        - name: methodCode
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - DEMO_SIMULATION
+              - DEMO_PAY_ON_PICKUP
+              - DEMO_TRANSFER
+          description: Exact current-state filter, applied to both creations and confirmations.
+        - name: orderStatus
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/OrderStatus"
+          description: Exact current-state filter, applied to both creations and confirmations.
+        - name: paymentStatus
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/PaymentStatus"
+          description: Exact current-state filter, applied to both creations and confirmations.
+      responses:
+        "200":
+          description: Academic DEMO metrics for the exact normalized filters.
+          headers:
+            Cache-Control:
+              x-required: true
+              description: Never cache administrative metrics.
+              schema:
+                type: string
+                enum:
+                  - no-store
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/H7SalesReport"
+        "400":
+          description: Sanitized error; no SQL, stack or private information.
+          headers:
+            Cache-Control:
+              x-required: true
+              description: Never cache administrative metrics.
+              schema:
+                type: string
+                enum:
+                  - no-store
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: Sanitized error; no SQL, stack or private information.
+          headers:
+            Cache-Control:
+              x-required: true
+              description: Never cache administrative metrics.
+              schema:
+                type: string
+                enum:
+                  - no-store
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: Sanitized error; no SQL, stack or private information.
+          headers:
+            Cache-Control:
+              x-required: true
+              description: Never cache administrative metrics.
+              schema:
+                type: string
+                enum:
+                  - no-store
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Sanitized error; no SQL, stack or private information.
+          headers:
+            Cache-Control:
+              x-required: true
+              description: Never cache administrative metrics.
+              schema:
+                type: string
+                enum:
+                  - no-store
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+        "503":
+          - SERVICE_UNAVAILABLE
+  /api/v1/admin/reports/sales/export:
+    get:
+      tags:
+        - reports-admin
+      operationId: exportH7SalesCsv
+      summary: Export reconciliable academic DEMO sales CSV
+      description: "Same H7SalesReport and filters as JSON. UTF-8 without BOM, comma separator, CRLF, all
+        cells double-quoted and internal quotes doubled. Exact header:
+        section,from,to,timeZone,methodFilter,orderStatusFilter,paymentStatusFilter,key,productId,pre\
+        sentationId,productName,unit,rollLengthMeters,quantity,count,productsSubtotalMinor,deliveryFe\
+        esMinor,confirmedTotalMinor,averageTicketMinor,activeUnpaidCount,cancelledUnpaidCount,rejectedPaymentCount,rejectedCurrentAttemptCount,currency. Sections in order: totals (one row),
+        orders (one row), orderStatus (five rows), series (every local day), method, delivery,
+        presentation. Unused cells empty; currency ARS; amounts are decimal INTEGER MINOR-UNIT
+        strings, never floating point. Orders row count=createdCount and explicit activeUnpaidCount, cancelledUnpaidCount, rejectedPaymentCount and rejectedCurrentAttemptCount columns; orderStatus rows key=status/count=count. Series key=date, method
+        key=methodCode, delivery key=deliveryMode. Presentation rows quantity=exact presentation
+        quantity, productsSubtotalMinor=line totals only; deliveryFeesMinor is EMPTY (never duplicate
+        order delivery). Totals row is authoritative grand total; do not sum across sections. Every
+        row repeats normalized period/filters. Before CSV quoting, prefix an apostrophe to any textual
+        cell whose first non-space character is =,+,-,@ or which contains ASCII control characters. No
+        PII."
+      security:
+        - AdminSessionCookie: []
+      parameters:
+        - name: from
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/H7LocalDate"
+          description: Included local calendar start.
+        - name: to
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/H7LocalDate"
+          description: Excluded local calendar end; maximum range 366 days.
+        - name: methodCode
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - DEMO_SIMULATION
+              - DEMO_PAY_ON_PICKUP
+              - DEMO_TRANSFER
+          description: Exact current-state filter, applied to both creations and confirmations.
+        - name: orderStatus
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/OrderStatus"
+          description: Exact current-state filter, applied to both creations and confirmations.
+        - name: paymentStatus
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/PaymentStatus"
+          description: Exact current-state filter, applied to both creations and confirmations.
+      responses:
+        "200":
+          description: Academic DEMO metrics for the exact normalized filters.
+          headers:
+            Cache-Control:
+              x-required: true
+              description: Never cache administrative metrics.
+              schema:
+                type: string
+                enum:
+                  - no-store
+            Content-Disposition:
+              x-required: true
+              description: Static safe filename.
+              schema:
+                type: string
+                enum:
+                  - attachment; filename="abar-demo-sales.csv"
+            X-Content-Type-Options:
+              x-required: true
+              description: Do not sniff spreadsheet content.
+              schema:
+                type: string
+                enum:
+                  - nosniff
+            Content-Type:
+              x-required: true
+              description: UTF-8 CSV, no BOM.
+              schema:
+                type: string
+                enum:
+                  - text/csv; charset=utf-8
+          content:
+            text/csv:
+              schema:
+                type: string
+        "400":
+          description: Sanitized error; no SQL, stack or private information.
+          headers:
+            Cache-Control:
+              x-required: true
+              description: Never cache administrative metrics.
+              schema:
+                type: string
+                enum:
+                  - no-store
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: Sanitized error; no SQL, stack or private information.
+          headers:
+            Cache-Control:
+              x-required: true
+              description: Never cache administrative metrics.
+              schema:
+                type: string
+                enum:
+                  - no-store
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: Sanitized error; no SQL, stack or private information.
+          headers:
+            Cache-Control:
+              x-required: true
+              description: Never cache administrative metrics.
+              schema:
+                type: string
+                enum:
+                  - no-store
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Sanitized error; no SQL, stack or private information.
+          headers:
+            Cache-Control:
+              x-required: true
+              description: Never cache administrative metrics.
+              schema:
+                type: string
+                enum:
+                  - no-store
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      x-abar-errors:
+        "400":
+          - VALIDATION_ERROR
+        "401":
+          - SESSION_EXPIRED
+        "403":
+          - PASSWORD_CHANGE_REQUIRED
+        "503":
+          - SERVICE_UNAVAILABLE
   /api/v1/admin/settings:
     get:
       tags:
@@ -4439,6 +4853,272 @@ components:
         type: string
         format: uuid
   schemas:
+    H7LocalDate:
+      type: string
+      pattern: ^(20[0-9]{2})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$
+      description: Valid Gregorian calendar date, years 2000–2099, in America/Argentina/Buenos_Aires.
+        Impossible dates are rejected. Both bounds required; maximum 366 local days.
+    H7Period:
+      type: object
+      additionalProperties: false
+      description: Start inclusive; end exclusive local midnight converted with the IANA zone, never the
+        server zone.
+      required:
+        - from
+        - to
+        - timeZone
+        - semantics
+      properties:
+        from:
+          $ref: "#/components/schemas/H7LocalDate"
+        to:
+          $ref: "#/components/schemas/H7LocalDate"
+        timeZone:
+          type: string
+          enum:
+            - America/Argentina/Buenos_Aires
+        semantics:
+          type: string
+          enum:
+            - "[from,to)"
+    H7Filters:
+      type: object
+      additionalProperties: false
+      description: Explicit null means no filter. All filters apply to BOTH dimensions using current
+        status and current attempt method. PAID plus confirmedAt remains mandatory for sales; PENDING
+        yields zero sales.
+      required:
+        - methodCode
+        - orderStatus
+        - paymentStatus
+      properties:
+        methodCode:
+          type: string
+          nullable: true
+          enum:
+            - DEMO_SIMULATION
+            - DEMO_PAY_ON_PICKUP
+            - DEMO_TRANSFER
+            - null
+        orderStatus:
+          type: string
+          nullable: true
+          enum:
+            - RECEIVED
+            - PREPARING
+            - READY
+            - DELIVERED
+            - CANCELLED
+            - null
+        paymentStatus:
+          type: string
+          nullable: true
+          enum:
+            - PENDING
+            - REJECTED
+            - PAID
+            - null
+    H7SalesTotals:
+      type: object
+      additionalProperties: false
+      description: Persisted Order totals for PAID payments with valid confirmedAt in the period. Exact
+        nonnegative ARS minor units. Average rounds half up to the nearest cent using integer
+        arithmetic; empty yields zero and empty=true.
+      required:
+        - confirmedOrderCount
+        - productsSubtotal
+        - deliveryFees
+        - confirmedTotal
+        - averageTicket
+        - empty
+      properties:
+        confirmedOrderCount: &a1
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        productsSubtotal:
+          $ref: "#/components/schemas/Money"
+        deliveryFees:
+          $ref: "#/components/schemas/Money"
+        confirmedTotal:
+          $ref: "#/components/schemas/Money"
+        averageTicket:
+          $ref: "#/components/schemas/Money"
+        empty:
+          type: boolean
+    H7OrderStatusCount:
+      type: object
+      additionalProperties: false
+      description: Current status of orders CREATED in the period, not a historical status reconstruction.
+      required:
+        - orderStatus
+        - count
+      properties:
+        orderStatus:
+          $ref: "#/components/schemas/OrderStatus"
+        count: *a1
+    H7OrderIndicators:
+      type: object
+      additionalProperties: false
+      description: Orders selected by Order.createdAt, separately from confirmations. Active unpaid means
+        RECEIVED and PENDING/REJECTED payment; cancelled unpaid means CANCELLED and payment not PAID.
+        Rejected counts refer to commercial Payment and current PaymentAttempt respectively. Fixed enum
+        order, including zero states.
+      required:
+        - createdCount
+        - activeUnpaidCount
+        - cancelledUnpaidCount
+        - rejectedPaymentCount
+        - rejectedCurrentAttemptCount
+        - byStatus
+      properties:
+        createdCount: *a1
+        activeUnpaidCount: *a1
+        cancelledUnpaidCount: *a1
+        rejectedPaymentCount: *a1
+        rejectedCurrentAttemptCount: *a1
+        byStatus:
+          type: array
+          maxItems: 5
+          items:
+            $ref: "#/components/schemas/H7OrderStatusCount"
+    H7SeriesPoint:
+      type: object
+      additionalProperties: false
+      description: Confirmed sales by local calendar day, ascending with zero-filled gaps.
+      required:
+        - date
+        - confirmedOrderCount
+        - confirmedTotal
+      properties:
+        date:
+          $ref: "#/components/schemas/H7LocalDate"
+        confirmedOrderCount: *a1
+        confirmedTotal:
+          $ref: "#/components/schemas/Money"
+    H7MethodSales:
+      type: object
+      additionalProperties: false
+      description: The current confirmed attempt method, never an earlier attempt. Sort by confirmedTotal
+        descending then methodCode ascending.
+      required:
+        - methodCode
+        - confirmedOrderCount
+        - confirmedTotal
+      properties:
+        methodCode:
+          type: string
+          enum:
+            - DEMO_SIMULATION
+            - DEMO_PAY_ON_PICKUP
+            - DEMO_TRANSFER
+        confirmedOrderCount: *a1
+        confirmedTotal:
+          $ref: "#/components/schemas/Money"
+    H7DeliverySales:
+      type: object
+      additionalProperties: false
+      description: Confirmed orders; fee counted once per order. Sort by confirmedTotal descending then
+        deliveryMode ascending.
+      required:
+        - deliveryMode
+        - confirmedOrderCount
+        - deliveryFees
+        - confirmedTotal
+      properties:
+        deliveryMode:
+          $ref: "#/components/schemas/DeliveryMode"
+        confirmedOrderCount: *a1
+        deliveryFees:
+          $ref: "#/components/schemas/Money"
+        confirmedTotal:
+          $ref: "#/components/schemas/Money"
+    H7PresentationSales:
+      type: object
+      additionalProperties: false
+      description: Group by stable product/presentation IDs and historical unit/roll length. If a label
+        varies, use the latest confirmed snapshot (confirmedAt descending, orderId then itemId
+        ascending). Never read current catalog names/prices. Quantity is an exact integer string for
+        this presentation only. Sort by productsSubtotal descending, productId, presentationId, unit and
+        rollLengthMeters ascending; null length first.
+      required:
+        - productId
+        - presentationId
+        - productName
+        - unit
+        - rollLengthMeters
+        - quantity
+        - productsSubtotal
+      properties:
+        productId:
+          $ref: "#/components/schemas/OpaqueId"
+        presentationId:
+          $ref: "#/components/schemas/OpaqueId"
+        productName:
+          type: string
+          maxLength: 200
+        unit:
+          $ref: "#/components/schemas/PresentationUnit"
+        rollLengthMeters:
+          type: integer
+          minimum: 1
+          nullable: true
+        quantity:
+          type: string
+          pattern: ^(0|[1-9][0-9]*)$
+        productsSubtotal:
+          $ref: "#/components/schemas/Money"
+    H7SalesReport:
+      type: object
+      additionalProperties: false
+      description: Academic DEMO only; not accounting, invoices or real banking revenue. Dashboard and
+        sales report are the exact SAME calculation and closed DTO. At most 10000 presentation groups;
+        reject with sanitized 503 rather than truncate. Read-only consistent database snapshot, followed
+        by H1 access revalidation before returning. No PII or notification payloads. No migration
+        required.
+      required:
+        - demoMode
+        - period
+        - filters
+        - totals
+        - orders
+        - series
+        - byMethod
+        - byDelivery
+        - presentations
+      properties:
+        demoMode:
+          type: boolean
+          enum:
+            - true
+        period:
+          $ref: "#/components/schemas/H7Period"
+        filters:
+          $ref: "#/components/schemas/H7Filters"
+        totals:
+          $ref: "#/components/schemas/H7SalesTotals"
+        orders:
+          $ref: "#/components/schemas/H7OrderIndicators"
+        series:
+          type: array
+          maxItems: 366
+          items:
+            $ref: "#/components/schemas/H7SeriesPoint"
+        byMethod:
+          type: array
+          maxItems: 3
+          items:
+            $ref: "#/components/schemas/H7MethodSales"
+        byDelivery:
+          type: array
+          maxItems: 2
+          items:
+            $ref: "#/components/schemas/H7DeliverySales"
+        presentations:
+          type: array
+          maxItems: 10000
+          items:
+            $ref: "#/components/schemas/H7PresentationSales"
     H6Contact:
       type: object
       additionalProperties: false

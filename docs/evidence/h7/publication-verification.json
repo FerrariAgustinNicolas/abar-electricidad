@@ -1,0 +1,37 @@
+{
+  "schema": "h7-sanitized-candidate-verification/v1",
+  "sourceCommit": "ba27cfaa8b9c6553ae01c8cdc113f1c287958468",
+  "sourceTree": "4f24ce639ab95f874a99b234ab4757d92164affc",
+  "baseCommit": "8ff38e932eae7a09ffb1c531d4d040d4ca6ed9e8",
+  "functionalFilesByteAndModeIdentical": 336,
+  "allFunctionalFilesIdentical": true,
+  "screenshotsByteAndModeIdentical": 6,
+  "syntheticEvidenceByteAndModeIdentical": [
+    "docs/evidence/h7/dataset-expected.json",
+    "docs/evidence/h7/api-report-known-period.json",
+    "docs/evidence/h7/sales-known-period.csv"
+  ],
+  "transformationHashesVerified": 72,
+  "preservation": {
+    "existingWorktreesChecked": 18,
+    "allExistingWorktreesUnchanged": true,
+    "totalWithNewIsolatedCandidate": 19,
+    "auditedBranchUnchanged": true
+  },
+  "historyIsolation": "Snapshot will be committed directly on H6. Source H7 commit is not an ancestor; no original raw H7 evidence history inherited.",
+  "functionalTestsRerun": false,
+  "newNativeApproval": false,
+  "publicationAuthorized": false,
+  "note": "Checks compare all functional Git blob IDs and modes, not only an allowlisted subset. These are new structural/privacy checks; historical test results remain derivative evidence.",
+  "independentVerification": {
+    "initialVerdict": "partial",
+    "initialCandidateTree": "3cd18e2105f882f58c0ed40571a7b4349e067343",
+    "functionalFilesVerified": 336,
+    "existingWorktreesVerified": 18,
+    "correctionBatch": "One bounded documentary batch; raw capture ref omitted, report manifest coverage complete, derivative labels corrected.",
+    "notPublicationApproval": true,
+    "correctedCandidateTree": "5bf76a4831fa4bc26d6e76f0c19cb92acb889c44",
+    "limitedRecheckVerdict": "All three reported blockers resolved;72/72manifestentriesvalid; no fresh sweep or functional execution.",
+    "scopeQualification": "Initial comprehensive independent audit plus limited three-blocker recheck. Final commit identity/history is checked by the parent; this is not external approval or publication authorization."
+  }
+}

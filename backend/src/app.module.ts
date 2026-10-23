@@ -1,3 +1,4 @@
+import { ReportsModule } from './reports/reports.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AuthRuntimeModule } from './auth/auth-runtime.module';
@@ -24,6 +25,7 @@ import { PrismaModule } from './prisma/prisma.module';
     OrdersModule,
     NotificationsModule,
     SettingsModule,
+    ReportsModule,
     StockModule,
   ],
 })

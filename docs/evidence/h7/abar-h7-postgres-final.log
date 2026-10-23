@@ -1,0 +1,49 @@
+SANITIZED DERIVATIVE — historical output, not a new execution. Local paths and operational identifiers are replaced; original retained privately on the audited branch.
+
+Loaded Prisma config from ../../../../../../..<LOCAL_PATH>
+
+Prisma schema loaded from prisma/schema.prisma.
+Datasource "db": PostgreSQL database "h7_reports", schema "public" at "<LOOPBACK_ENDPOINT>"
+
+8 migrations found in prisma/migrations
+
+Applying migration `20261009000100_h1_admin_user`
+Applying migration `20261009000200_h1_auth_context`
+Applying migration `20261009000300_h1_admin_audit`
+Applying migration `20261020000100_h2_catalog_stock`
+Applying migration `20261020190000_h3_checkout_quotes`
+Applying migration `20261020200000_h4_orders`
+Applying migration `20261021000100_h5_manual_confirmation`
+Applying migration `20261022000000_h6_notifications_settings`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20261009000100_h1_admin_user/
+    └─ migration.sql
+  └─ 20261009000200_h1_auth_context/
+    └─ migration.sql
+  └─ 20261009000300_h1_admin_audit/
+    └─ migration.sql
+  └─ 20261020000100_h2_catalog_stock/
+    └─ migration.sql
+  └─ 20261020190000_h3_checkout_quotes/
+    └─ migration.sql
+  └─ 20261020200000_h4_orders/
+    └─ migration.sql
+  └─ 20261021000100_h5_manual_confirmation/
+    └─ migration.sql
+  └─ 20261022000000_h6_notifications_settings/
+    └─ migration.sql
+
+All migrations have been successfully applied.
+Loaded Prisma config from ../../../../../../..<LOCAL_PATH>
+
+No difference detected.
+
+Test Suites: 1 passed, 1 total
+Tests:       9 passed, 9 total
+Snapshots:   0 total
+Time:        1.374 s
+Ran all test suites within paths "<LOCAL_PATH>".
+Private fixture manifest retained for parent-owned checks: <LOCAL_PATH>

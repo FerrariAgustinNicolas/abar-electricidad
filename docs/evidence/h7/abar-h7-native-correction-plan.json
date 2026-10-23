@@ -1,0 +1,13 @@
+{
+  "sanitizedDerivative": true,
+  "sourceEvidencePath": "docs/evidence/h7/abar-h7-native-correction-plan.json",
+  "privacyNote": "Native command arguments, replay transitions, opaque repository/result handles and control tokens omitted. This derivative does not grant review authority or represent a new review.",
+  "schema": "gentle-ai.review-last-event-closure/v1",
+  "operation": "review.capture-correction-plan",
+  "lineage_id": "review-0301a7be05401e1f",
+  "target_identity": "sha256:8bb228c35d570392fb31d22c10e4748e3077c7690cc2efb37def65064fa48a93",
+  "request_hash": "sha256:e9fe6b14221e1fd16d716e0b11740ec9a767c02f844d754569dca1f417d9937c",
+  "correction_lines": 70,
+  "state": "correction_required",
+  "store_revision": "sha256:35d8a1d24895103c6b2e8c54b19c624abfbe37059b975cec190f35bb02a8e860"
+}

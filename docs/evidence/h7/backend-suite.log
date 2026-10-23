@@ -1,0 +1,1503 @@
+SANITIZED DERIVATIVE — historical output, not a new execution. Local paths and operational identifiers are replaced; original retained privately on the audited branch.
+
+
+> abar-backend@0.1.0 test
+> node scripts/copy-catalog-contract.mjs && jest --runInBand
+
+[Nest] 6700  - 10/22/2026, 8:24:09 PM   ERROR [NestApplication] Error: listen EPERM: operation not permitted 127.0.0.1
+FAIL src/auth/change-password.http.spec.ts
+  ● change-password HTTP transport and parser boundary › returns an empty 204 with exact carriers and forwards unmodified request data
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › preserves the existing login response and no-store behavior
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps public service-owned invalid body metadata to a safe HTTP response
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps public service-owned policy rejection metadata to a safe HTTP response
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps public service-owned expired session metadata to a safe HTTP response
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps public service-owned wrong current password metadata to a safe HTTP response
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps public service-owned invalid CSRF proof metadata to a safe HTTP response
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps public service-owned invalid origin metadata to a safe HTTP response
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps public service-owned dependency failure metadata to a safe HTTP response
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps JSON null exclusively on this endpoint to exact validation response and no-store
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps malformed JSON exclusively on this endpoint to exact validation response and no-store
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+FAIL src/auth/auth-runtime.module.spec.ts
+  ● AuthRuntimeModule source DI (build prerequisite) › snapshots full raw AUTH settings once and shares one real packaged runtime
+
+    PasswordPolicyError: Password policy is unavailable
+
+      17 | const SECLISTS_SHA = '3dbdc93d5f8829de0941744841730a09c106d0732e5ae0e98ca1d77be7ded66c';
+      18 |
+    > 19 | function fail(): never { throw new PasswordPolicyError('unavailable'); }
+         |                                ^
+      20 | function sha256(bytes: Buffer): string { return createHash('sha256').update(bytes).digest('hex'); }
+      21 |
+      22 | function validateManifest(bytes: Buffer): void {
+
+      at fail (src/auth/password-blocklist.ts:19:32)
+      at loadPasswordBlocklist (src/auth/password-blocklist.ts:144:12)
+      at InstanceWrapper.useFactory [as metatype] (src/auth/auth-runtime.module.ts:21:46)
+      at TestingInjector.instantiateClass (../../../../../../../../..<LOCAL_PATH>
+      at callback (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.resolveConstructorParams (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.loadInstance (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.loadProvider (../../../../../../../../..<LOCAL_PATH>
+      at ../../../../../../../../..<LOCAL_PATH>
+          at async Promise.all (index 3)
+      at TestingInstanceLoader.createInstancesOfProviders (../../../../../../../../..<LOCAL_PATH>
+      at ../../../../../../../../..<LOCAL_PATH>
+          at async Promise.all (index 2)
+      at TestingInstanceLoader.createInstances (../../../../../../../../..<LOCAL_PATH>
+      at TestingInstanceLoader.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingInstanceLoader.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingModuleBuilder.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingModuleBuilder.compile (../../../../../../../../..<LOCAL_PATH>
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:58:20)
+
+  ● AuthRuntimeModule source DI (build prerequisite) › keeps H0 runtime construction independent of a missing or synthetic CSRF key and never serializes it
+
+    PasswordPolicyError: Password policy is unavailable
+
+      17 | const SECLISTS_SHA = '3dbdc93d5f8829de0941744841730a09c106d0732e5ae0e98ca1d77be7ded66c';
+      18 |
+    > 19 | function fail(): never { throw new PasswordPolicyError('unavailable'); }
+         |                                ^
+      20 | function sha256(bytes: Buffer): string { return createHash('sha256').update(bytes).digest('hex'); }
+      21 |
+      22 | function validateManifest(bytes: Buffer): void {
+
+      at fail (src/auth/password-blocklist.ts:19:32)
+      at loadPasswordBlocklist (src/auth/password-blocklist.ts:144:12)
+      at InstanceWrapper.useFactory [as metatype] (src/auth/auth-runtime.module.ts:21:46)
+      at TestingInjector.instantiateClass (../../../../../../../../..<LOCAL_PATH>
+      at callback (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.resolveConstructorParams (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.loadInstance (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.loadProvider (../../../../../../../../..<LOCAL_PATH>
+      at ../../../../../../../../..<LOCAL_PATH>
+          at async Promise.all (index 3)
+      at TestingInstanceLoader.createInstancesOfProviders (../../../../../../../../..<LOCAL_PATH>
+      at ../../../../../../../../..<LOCAL_PATH>
+          at async Promise.all (index 2)
+      at TestingInstanceLoader.createInstances (../../../../../../../../..<LOCAL_PATH>
+      at TestingInstanceLoader.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingInstanceLoader.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingModuleBuilder.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingModuleBuilder.compile (../../../../../../../../..<LOCAL_PATH>
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:86:21)
+
+  ● AuthRuntimeModule source DI (build prerequisite) › creates a separate runtime and hasher per container
+
+    PasswordPolicyError: Password policy is unavailable
+
+      17 | const SECLISTS_SHA = '3dbdc93d5f8829de0941744841730a09c106d0732e5ae0e98ca1d77be7ded66c';
+      18 |
+    > 19 | function fail(): never { throw new PasswordPolicyError('unavailable'); }
+         |                                ^
+      20 | function sha256(bytes: Buffer): string { return createHash('sha256').update(bytes).digest('hex'); }
+      21 |
+      22 | function validateManifest(bytes: Buffer): void {
+
+      at fail (src/auth/password-blocklist.ts:19:32)
+      at loadPasswordBlocklist (src/auth/password-blocklist.ts:144:12)
+      at InstanceWrapper.useFactory [as metatype] (src/auth/auth-runtime.module.ts:21:46)
+      at TestingInjector.instantiateClass (../../../../../../../../..<LOCAL_PATH>
+      at callback (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.resolveConstructorParams (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.loadInstance (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.loadProvider (../../../../../../../../..<LOCAL_PATH>
+      at ../../../../../../../../..<LOCAL_PATH>
+          at async Promise.all (index 3)
+      at TestingInstanceLoader.createInstancesOfProviders (../../../../../../../../..<LOCAL_PATH>
+      at ../../../../../../../../..<LOCAL_PATH>
+          at async Promise.all (index 2)
+      at TestingInstanceLoader.createInstances (../../../../../../../../..<LOCAL_PATH>
+      at TestingInstanceLoader.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingInstanceLoader.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingModuleBuilder.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingModuleBuilder.compile (../../../../../../../../..<LOCAL_PATH>
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:106:19)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › resolves the packaged code-owned path from unrelated cwd with singleton identity
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects config before creation returns 0
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects config before creation returns 1
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely password-blocklist.bin missing before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely password-blocklist.bin corrupt before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely password-blocklist.manifest.json missing before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely password-blocklist.manifest.json corrupt before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely LICENSE.pwdb.txt missing before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely LICENSE.pwdb.txt corrupt before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely LICENSE.seclists.txt missing before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely LICENSE.seclists.txt corrupt before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+[Nest] 6700  - 10/22/2026, 8:24:10 PM   ERROR [NestApplication] Error: listen EPERM: operation not permitted 127.0.0.1
+FAIL src/auth/admin-users.http.spec.ts
+  ● admin users HTTP contract › serves sanitized bounded list results with no-store
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › forwards create proof and request body unchanged and returns 201 without sensitive fields
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › forwards patch and reset operations on the frozen route shapes
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › normalizes malformed JSON before post /api/v1/admin/users reaches any service
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › normalizes malformed JSON before patch /api/v1/admin/users/00000000-0000-4000-8000-000000000001 reaches any service
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › normalizes malformed JSON before post /api/v1/admin/users/00000000-0000-4000-8000-000000000001/reset-password reaches any service
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › declares the frozen session-cookie security requirement on every admin operation
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › maps owned route errors to safe no-store API envelopes
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for list unclassified dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for list framework dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for list owned dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for create unclassified dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for create framework dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for create owned dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for patch unclassified dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for patch framework dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for patch owned dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for resetPassword unclassified dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for resetPassword framework dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for resetPassword owned dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › preserves framework client-error status 400
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › preserves framework client-error status 404
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+FAIL test/h6-notifications-dispatcher.spec.ts (5.052 s)
+  ● H6 durable notification dispatcher › requires a Mailpit greeting and fails promptly on malformed greeting or early close
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● H6 durable notification dispatcher › requires a Mailpit greeting and fails promptly on malformed greeting or early close
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      at _getError (../../../../../../../../..<LOCAL_PATH>
+          at Array.map (<anonymous>)
+
+    Cause:
+        thrown: "Exceeded timeout of 5000 ms for a test.
+        Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+          93 |   });
+          94 |
+        > 95 |   it('requires a Mailpit greeting and fails promptly on malformed greeting or early close', async () => {
+             |   ^
+          96 |     async function withServer(onConnection: (socket: import('node:net').Socket) => void, verify: (port: number) => Promise<void>) {
+          97 |       const server = createServer(onConnection);
+          98 |       await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
+
+          at test/h6-notifications-dispatcher.spec.ts:95:3
+          at Object.<anonymous> (test/h6-notifications-dispatcher.spec.ts:33:1)
+
+[Nest] 6700  - 10/22/2026, 8:24:15 PM   ERROR [NestApplication] Error: listen EPERM: operation not permitted 127.0.0.1
+FAIL src/common/change-password-json.http.spec.ts
+  ● change-password JSON parser public HTTP boundary › returns the owned public validation contract for JSON null on the exact POST route
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › returns the owned public validation contract for malformed JSON on the exact POST route
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › leaves valid JSON handling and dependency forwarding unchanged
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › preserves the other auth route parser response without no-store classification
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for wrong method as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for suffixed path as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for prefix lookalike as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for raw URL query spoof as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for admin wrong method as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for admin patch suffix as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for admin reset suffix as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for admin prefix lookalike as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for admin raw URL query spoof as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+FAIL src/configure-application.openapi.spec.ts
+  ● production Swagger projection of the frozen H1-H7 interface › keeps exactly the implemented H1-H7 routes and all three security schemes
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/dashboard schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/reports/sales schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/reports/sales/export schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/settings schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches PATCH /api/v1/admin/settings schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/payment-methods/{code} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches PATCH /api/v1/admin/payment-methods/{code} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/notifications schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/admin/notifications/{id}/retry schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/public/contact schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/orders schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/orders/{id} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/admin/orders/{id}/payment-confirmation schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches PATCH /api/v1/admin/orders/{id}/status schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/admin/orders/{id}/cancel schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/admin/orders/{id}/notes schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/orders/{id}/history schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/public/checkout/terms schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/public/orders schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/public/orders/lookup schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/public/orders/{id} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/public/orders/{id}/payment-attempts schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/public/settings schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/public/payment-methods schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/public/checkout/quotes schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /health schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/auth/csrf schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/auth/login schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/auth/me schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/auth/logout schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/auth/change-password schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/users schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/admin/users schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches PATCH /api/v1/admin/users/{id} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/admin/users/{id}/reset-password schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/public/home schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/public/categories schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/public/products schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/public/products/{slug} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/public/products/{slug}/images/{imageId} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/categories schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/admin/categories schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches PATCH /api/v1/admin/categories/{id} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches PATCH /api/v1/admin/categories/order schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/products schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/admin/products schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/products/{id} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches PATCH /api/v1/admin/products/{id} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/admin/products/{id}/images schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/products/{id}/images/{imageId} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches PATCH /api/v1/admin/products/{id}/images/{imageId} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches DELETE /api/v1/admin/products/{id}/images/{imageId} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/stock schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/stock/movements schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/admin/stock/adjustments schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/admin/stock/roll-openings schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › uses current metadata without presenting the historical H0 projection as runtime state
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+FAIL test/h3-checkout-http.spec.ts
+  ● H3 public checkout HTTP routes › serves settings and demo methods with no-store and rejects unexpected query keys
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● H3 public checkout HTTP routes › accepts a public quote without session or CSRF and bounds the peer quota with a sanitized envelope
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● H3 public checkout HTTP routes › keeps contract 4xx codes and standard messages safe
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+FAIL src/catalog-shared/catalog-error.spec.ts
+  ● Nest multipart error translation › preserves the frozen IMAGE_TOO_LARGE code after Multer transformation
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+FAIL test/h3-checkout-json.middleware.spec.ts
+  ● H3 quote JSON parser › maps malformed or oversized quote JSON to a private 400 validation envelope
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● H3 quote JSON parser › leaves other routes to the ordinary JSON parser
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+FAIL test/h6-json.spec.ts
+  ● bounded H6 JSON parser › returns a safe no-store validation error for malformed patch /api/v1/admin/settings
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● bounded H6 JSON parser › returns a safe no-store validation error for malformed patch /api/v1/admin/payment-methods/DEMO_TRANSFER
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● bounded H6 JSON parser › returns a safe no-store validation error for malformed post /api/v1/admin/notifications/demo/retry
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● bounded H6 JSON parser › accepts valid bounded JSON and rejects oversized bodies
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+
+Summary of all failing tests
+FAIL src/auth/change-password.http.spec.ts
+  ● change-password HTTP transport and parser boundary › returns an empty 204 with exact carriers and forwards unmodified request data
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › preserves the existing login response and no-store behavior
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps public service-owned invalid body metadata to a safe HTTP response
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps public service-owned policy rejection metadata to a safe HTTP response
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps public service-owned expired session metadata to a safe HTTP response
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps public service-owned wrong current password metadata to a safe HTTP response
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps public service-owned invalid CSRF proof metadata to a safe HTTP response
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps public service-owned invalid origin metadata to a safe HTTP response
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps public service-owned dependency failure metadata to a safe HTTP response
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps JSON null exclusively on this endpoint to exact validation response and no-store
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password HTTP transport and parser boundary › maps malformed JSON exclusively on this endpoint to exact validation response and no-store
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+FAIL src/auth/auth-runtime.module.spec.ts
+  ● AuthRuntimeModule source DI (build prerequisite) › snapshots full raw AUTH settings once and shares one real packaged runtime
+
+    PasswordPolicyError: Password policy is unavailable
+
+      17 | const SECLISTS_SHA = '3dbdc93d5f8829de0941744841730a09c106d0732e5ae0e98ca1d77be7ded66c';
+      18 |
+    > 19 | function fail(): never { throw new PasswordPolicyError('unavailable'); }
+         |                                ^
+      20 | function sha256(bytes: Buffer): string { return createHash('sha256').update(bytes).digest('hex'); }
+      21 |
+      22 | function validateManifest(bytes: Buffer): void {
+
+      at fail (src/auth/password-blocklist.ts:19:32)
+      at loadPasswordBlocklist (src/auth/password-blocklist.ts:144:12)
+      at InstanceWrapper.useFactory [as metatype] (src/auth/auth-runtime.module.ts:21:46)
+      at TestingInjector.instantiateClass (../../../../../../../../..<LOCAL_PATH>
+      at callback (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.resolveConstructorParams (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.loadInstance (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.loadProvider (../../../../../../../../..<LOCAL_PATH>
+      at ../../../../../../../../..<LOCAL_PATH>
+          at async Promise.all (index 3)
+      at TestingInstanceLoader.createInstancesOfProviders (../../../../../../../../..<LOCAL_PATH>
+      at ../../../../../../../../..<LOCAL_PATH>
+          at async Promise.all (index 2)
+      at TestingInstanceLoader.createInstances (../../../../../../../../..<LOCAL_PATH>
+      at TestingInstanceLoader.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingInstanceLoader.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingModuleBuilder.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingModuleBuilder.compile (../../../../../../../../..<LOCAL_PATH>
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:58:20)
+
+  ● AuthRuntimeModule source DI (build prerequisite) › keeps H0 runtime construction independent of a missing or synthetic CSRF key and never serializes it
+
+    PasswordPolicyError: Password policy is unavailable
+
+      17 | const SECLISTS_SHA = '3dbdc93d5f8829de0941744841730a09c106d0732e5ae0e98ca1d77be7ded66c';
+      18 |
+    > 19 | function fail(): never { throw new PasswordPolicyError('unavailable'); }
+         |                                ^
+      20 | function sha256(bytes: Buffer): string { return createHash('sha256').update(bytes).digest('hex'); }
+      21 |
+      22 | function validateManifest(bytes: Buffer): void {
+
+      at fail (src/auth/password-blocklist.ts:19:32)
+      at loadPasswordBlocklist (src/auth/password-blocklist.ts:144:12)
+      at InstanceWrapper.useFactory [as metatype] (src/auth/auth-runtime.module.ts:21:46)
+      at TestingInjector.instantiateClass (../../../../../../../../..<LOCAL_PATH>
+      at callback (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.resolveConstructorParams (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.loadInstance (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.loadProvider (../../../../../../../../..<LOCAL_PATH>
+      at ../../../../../../../../..<LOCAL_PATH>
+          at async Promise.all (index 3)
+      at TestingInstanceLoader.createInstancesOfProviders (../../../../../../../../..<LOCAL_PATH>
+      at ../../../../../../../../..<LOCAL_PATH>
+          at async Promise.all (index 2)
+      at TestingInstanceLoader.createInstances (../../../../../../../../..<LOCAL_PATH>
+      at TestingInstanceLoader.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingInstanceLoader.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingModuleBuilder.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingModuleBuilder.compile (../../../../../../../../..<LOCAL_PATH>
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:86:21)
+
+  ● AuthRuntimeModule source DI (build prerequisite) › creates a separate runtime and hasher per container
+
+    PasswordPolicyError: Password policy is unavailable
+
+      17 | const SECLISTS_SHA = '3dbdc93d5f8829de0941744841730a09c106d0732e5ae0e98ca1d77be7ded66c';
+      18 |
+    > 19 | function fail(): never { throw new PasswordPolicyError('unavailable'); }
+         |                                ^
+      20 | function sha256(bytes: Buffer): string { return createHash('sha256').update(bytes).digest('hex'); }
+      21 |
+      22 | function validateManifest(bytes: Buffer): void {
+
+      at fail (src/auth/password-blocklist.ts:19:32)
+      at loadPasswordBlocklist (src/auth/password-blocklist.ts:144:12)
+      at InstanceWrapper.useFactory [as metatype] (src/auth/auth-runtime.module.ts:21:46)
+      at TestingInjector.instantiateClass (../../../../../../../../..<LOCAL_PATH>
+      at callback (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.resolveConstructorParams (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.loadInstance (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.loadProvider (../../../../../../../../..<LOCAL_PATH>
+      at ../../../../../../../../..<LOCAL_PATH>
+          at async Promise.all (index 3)
+      at TestingInstanceLoader.createInstancesOfProviders (../../../../../../../../..<LOCAL_PATH>
+      at ../../../../../../../../..<LOCAL_PATH>
+          at async Promise.all (index 2)
+      at TestingInstanceLoader.createInstances (../../../../../../../../..<LOCAL_PATH>
+      at TestingInstanceLoader.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingInstanceLoader.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingModuleBuilder.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingModuleBuilder.compile (../../../../../../../../..<LOCAL_PATH>
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:106:19)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › resolves the packaged code-owned path from unrelated cwd with singleton identity
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects config before creation returns 0
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects config before creation returns 1
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely password-blocklist.bin missing before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely password-blocklist.bin corrupt before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely password-blocklist.manifest.json missing before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely password-blocklist.manifest.json corrupt before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely LICENSE.pwdb.txt missing before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely LICENSE.pwdb.txt corrupt before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely LICENSE.seclists.txt missing before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely LICENSE.seclists.txt corrupt before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+FAIL src/auth/admin-users.http.spec.ts
+  ● admin users HTTP contract › serves sanitized bounded list results with no-store
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › forwards create proof and request body unchanged and returns 201 without sensitive fields
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › forwards patch and reset operations on the frozen route shapes
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › normalizes malformed JSON before post /api/v1/admin/users reaches any service
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › normalizes malformed JSON before patch /api/v1/admin/users/00000000-0000-4000-8000-000000000001 reaches any service
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › normalizes malformed JSON before post /api/v1/admin/users/00000000-0000-4000-8000-000000000001/reset-password reaches any service
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › declares the frozen session-cookie security requirement on every admin operation
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › maps owned route errors to safe no-store API envelopes
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for list unclassified dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for list framework dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for list owned dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for create unclassified dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for create framework dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for create owned dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for patch unclassified dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for patch framework dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for patch owned dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for resetPassword unclassified dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for resetPassword framework dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › returns documented 503 for resetPassword owned dependency failure
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › preserves framework client-error status 400
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● admin users HTTP contract › preserves framework client-error status 404
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+FAIL test/h6-notifications-dispatcher.spec.ts (5.052 s)
+  ● H6 durable notification dispatcher › requires a Mailpit greeting and fails promptly on malformed greeting or early close
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● H6 durable notification dispatcher › requires a Mailpit greeting and fails promptly on malformed greeting or early close
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      at _getError (../../../../../../../../..<LOCAL_PATH>
+          at Array.map (<anonymous>)
+
+    Cause:
+        thrown: "Exceeded timeout of 5000 ms for a test.
+        Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+          93 |   });
+          94 |
+        > 95 |   it('requires a Mailpit greeting and fails promptly on malformed greeting or early close', async () => {
+             |   ^
+          96 |     async function withServer(onConnection: (socket: import('node:net').Socket) => void, verify: (port: number) => Promise<void>) {
+          97 |       const server = createServer(onConnection);
+          98 |       await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
+
+          at test/h6-notifications-dispatcher.spec.ts:95:3
+          at Object.<anonymous> (test/h6-notifications-dispatcher.spec.ts:33:1)
+
+FAIL src/common/change-password-json.http.spec.ts
+  ● change-password JSON parser public HTTP boundary › returns the owned public validation contract for JSON null on the exact POST route
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › returns the owned public validation contract for malformed JSON on the exact POST route
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › leaves valid JSON handling and dependency forwarding unchanged
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › preserves the other auth route parser response without no-store classification
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for wrong method as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for suffixed path as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for prefix lookalike as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for raw URL query spoof as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for admin wrong method as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for admin patch suffix as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for admin reset suffix as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for admin prefix lookalike as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● change-password JSON parser public HTTP boundary › does not classify parser failures for admin raw URL query spoof as change-password failures
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+FAIL src/configure-application.openapi.spec.ts
+  ● production Swagger projection of the frozen H1-H7 interface › keeps exactly the implemented H1-H7 routes and all three security schemes
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/dashboard schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/reports/sales schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/reports/sales/export schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/settings schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches PATCH /api/v1/admin/settings schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/payment-methods/{code} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches PATCH /api/v1/admin/payment-methods/{code} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/notifications schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/admin/notifications/{id}/retry schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/public/contact schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/orders schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/orders/{id} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/admin/orders/{id}/payment-confirmation schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches PATCH /api/v1/admin/orders/{id}/status schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/admin/orders/{id}/cancel schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/admin/orders/{id}/notes schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/orders/{id}/history schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/public/checkout/terms schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/public/orders schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/public/orders/lookup schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/public/orders/{id} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/public/orders/{id}/payment-attempts schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/public/settings schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/public/payment-methods schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/public/checkout/quotes schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /health schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/auth/csrf schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/auth/login schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/auth/me schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/auth/logout schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/auth/change-password schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/users schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/admin/users schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches PATCH /api/v1/admin/users/{id} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/admin/users/{id}/reset-password schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/public/home schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/public/categories schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/public/products schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/public/products/{slug} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/public/products/{slug}/images/{imageId} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/categories schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/admin/categories schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches PATCH /api/v1/admin/categories/{id} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches PATCH /api/v1/admin/categories/order schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/products schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/admin/products schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/products/{id} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches PATCH /api/v1/admin/products/{id} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/admin/products/{id}/images schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/products/{id}/images/{imageId} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches PATCH /api/v1/admin/products/{id}/images/{imageId} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches DELETE /api/v1/admin/products/{id}/images/{imageId} schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/stock schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches GET /api/v1/admin/stock/movements schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/admin/stock/adjustments schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › matches POST /api/v1/admin/stock/roll-openings schemas, headers, errors and security
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● production Swagger projection of the frozen H1-H7 interface › uses current metadata without presenting the historical H0 projection as runtime state
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+FAIL test/h3-checkout-http.spec.ts
+  ● H3 public checkout HTTP routes › serves settings and demo methods with no-store and rejects unexpected query keys
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● H3 public checkout HTTP routes › accepts a public quote without session or CSRF and bounds the peer quota with a sanitized envelope
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● H3 public checkout HTTP routes › keeps contract 4xx codes and standard messages safe
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+FAIL src/catalog-shared/catalog-error.spec.ts
+  ● Nest multipart error translation › preserves the frozen IMAGE_TOO_LARGE code after Multer transformation
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+FAIL test/h3-checkout-json.middleware.spec.ts
+  ● H3 quote JSON parser › maps malformed or oversized quote JSON to a private 400 validation envelope
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● H3 quote JSON parser › leaves other routes to the ordinary JSON parser
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+FAIL test/h6-json.spec.ts
+  ● bounded H6 JSON parser › returns a safe no-store validation error for malformed patch /api/v1/admin/settings
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● bounded H6 JSON parser › returns a safe no-store validation error for malformed patch /api/v1/admin/payment-methods/DEMO_TRANSFER
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● bounded H6 JSON parser › returns a safe no-store validation error for malformed post /api/v1/admin/notifications/demo/retry
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+  ● bounded H6 JSON parser › accepts valid bounded JSON and rejects oversized bodies
+
+    listen EPERM: operation not permitted 127.0.0.1
+
+
+Test Suites: 10 failed, 1 skipped, 26 passed, 36 of 37 total
+Tests:       129 failed, 1 skipped, 1184 passed, 1314 total
+Snapshots:   0 total
+Time:        13.595 s
+Ran all test suites.

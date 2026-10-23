@@ -1,0 +1,12 @@
+SANITIZED DERIVATIVE — historical output, not a new execution. Local paths and operational identifiers are replaced; original retained privately on the audited branch.
+
+
+> abar-backend@0.1.0 test
+> node scripts/copy-catalog-contract.mjs && jest --runInBand src/auth/login.service.spec.ts src/configure-application.openapi.spec.ts
+
+
+Test Suites: 2 passed, 2 total
+Tests:       132 passed, 132 total
+Snapshots:   0 total
+Time:        3.354 s
+Ran all test suites matching src/auth/login.service.spec.ts|src/configure-application.openapi.spec.ts.

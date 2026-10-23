@@ -1,0 +1,26 @@
+{
+  "sanitizedDerivative": true,
+  "sourceEvidencePath": "docs/evidence/h7/native-frontend-assessment.json",
+  "privacyNote": "Native command arguments, replay transitions, opaque repository/result handles and control tokens omitted. This derivative does not grant review authority or represent a new review.",
+  "schema": "gentle-ai.review-assessment/v1",
+  "risk": "high",
+  "reasons": [
+    {
+      "code": "executable_change",
+      "path": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "code": "agent_escalation",
+      "detail": "item 4 (concurrency): Report request ordering and delayed Blob error continuations must not overwrite newer results or redirect a newer request"
+    }
+  ],
+  "changed_paths": 14,
+  "changed_lines": 706,
+  "candidate": {
+    "kind": "base-diff",
+    "base_ref": "ed55dce8ac972143916b0b58a65682bb415b8c31",
+    "consumed": false
+  },
+  "review_due": true,
+  "review_due_reason": "high_risk"
+}

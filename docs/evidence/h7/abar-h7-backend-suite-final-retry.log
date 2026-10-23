@@ -1,0 +1,66 @@
+SANITIZED DERIVATIVE — historical output, not a new execution. Local paths and operational identifiers are replaced; original retained privately on the audited branch.
+
+
+> abar-backend@0.1.0 test
+> node scripts/copy-catalog-contract.mjs && jest --runInBand
+
+FAIL src/auth/login.service.spec.ts
+  ● production-configured login OpenAPI metadata › retains integrated H1/H2/H3 document identity and existing login response contract
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 2
+    + Received  + 2
+
+      Object {
+    -   "description": "H1 authentication, H2 catalog/stock, H3 demo quotes, H4 guest orders/demo attempts, H5 manual confirmation, and H6 local notifications/settings for local verification. No external approval or production readiness is implied.",
+    +   "description": "H1 authentication, H2 catalog/stock, H3 demo quotes, H4 guest orders/demo attempts, H5 manual confirmation, H6 local notifications/settings, and H7 read-only academic DEMO reports for local verification. No external approval or production readiness is implied.",
+        "title": "ABAR Electricidad API — transversal candidate",
+    -   "version": "0.9.0",
+    +   "version": "0.10.0",
+      }
+
+      294 |
+      295 |   it('retains integrated H1/H2/H3 document identity and existing login response contract', () => {
+    > 296 |     expect(document?.info).toMatchObject({
+          |                            ^
+      297 |       title: 'ABAR Electricidad API — transversal candidate',
+      298 |       description: 'H1 authentication, H2 catalog/stock, H3 demo quotes, H4 guest orders/demo attempts, H5 manual confirmation, and H6 local notifications/settings for local verification. No external approval or production readiness is implied.',
+      299 |       version: '0.9.0',
+
+      at Object.<anonymous> (src/auth/login.service.spec.ts:296:28)
+
+
+Summary of all failing tests
+FAIL src/auth/login.service.spec.ts
+  ● production-configured login OpenAPI metadata › retains integrated H1/H2/H3 document identity and existing login response contract
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 2
+    + Received  + 2
+
+      Object {
+    -   "description": "H1 authentication, H2 catalog/stock, H3 demo quotes, H4 guest orders/demo attempts, H5 manual confirmation, and H6 local notifications/settings for local verification. No external approval or production readiness is implied.",
+    +   "description": "H1 authentication, H2 catalog/stock, H3 demo quotes, H4 guest orders/demo attempts, H5 manual confirmation, H6 local notifications/settings, and H7 read-only academic DEMO reports for local verification. No external approval or production readiness is implied.",
+        "title": "ABAR Electricidad API — transversal candidate",
+    -   "version": "0.9.0",
+    +   "version": "0.10.0",
+      }
+
+      294 |
+      295 |   it('retains integrated H1/H2/H3 document identity and existing login response contract', () => {
+    > 296 |     expect(document?.info).toMatchObject({
+          |                            ^
+      297 |       title: 'ABAR Electricidad API — transversal candidate',
+      298 |       description: 'H1 authentication, H2 catalog/stock, H3 demo quotes, H4 guest orders/demo attempts, H5 manual confirmation, and H6 local notifications/settings for local verification. No external approval or production readiness is implied.',
+      299 |       version: '0.9.0',
+
+      at Object.<anonymous> (src/auth/login.service.spec.ts:296:28)
+
+
+Test Suites: 1 failed, 1 skipped, 35 passed, 36 of 37 total
+Tests:       1 failed, 1 skipped, 1312 passed, 1314 total
+Snapshots:   0 total
+Time:        8.742 s
+Ran all test suites.

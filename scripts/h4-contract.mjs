@@ -8,7 +8,7 @@ export const H4_OPERATIONS = [
 export function validateH4Contract(document) {
   const errors = [];
   const check = (valid, message) => { if (!valid) errors.push(message); };
-  check(document.info?.version === (document.info?.['x-abar-h6-freeze'] === 'notifications-settings-v1' ? '0.9.0' : document.info?.['x-abar-h5-freeze'] === 'manual-confirmation-v1' ? '0.8.0' : '0.7.0'), 'H4 version must be 0.7.0');
+  check(document.info?.version === (document.info?.['x-abar-h7-freeze'] === 'dashboard-reports-v1' ? '0.10.0' : document.info?.['x-abar-h6-freeze'] === 'notifications-settings-v1' ? '0.9.0' : document.info?.['x-abar-h5-freeze'] === 'manual-confirmation-v1' ? '0.8.0' : '0.7.0'), 'H4 version must be 0.7.0');
   for (const [route, method, output] of H4_OPERATIONS) {
     const op = document.paths?.[route]?.[method];
     const status = method === 'post' && !route.endsWith('/lookup') ? '201' : '200';

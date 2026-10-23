@@ -32,7 +32,9 @@ export const appRoutes: Routes = [
     component: AdminLayoutComponent,
     canActivate: [adminGuard],
     children: [
-      { path: '', pathMatch: 'full', redirectTo: 'usuarios' },
+      { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
+      { path: 'dashboard', loadComponent: () => import('./features/reports/admin-dashboard-page.component').then((module) => module.AdminDashboardPageComponent) },
+      { path: 'reportes', loadComponent: () => import('./features/reports/admin-reports-page.component').then((module) => module.AdminReportsPageComponent) },
       { path: 'usuarios', loadComponent: () => import('./features/admin/admin-placeholder-page.component').then((module) => module.AdminPlaceholderPageComponent) },
       { path: 'productos', loadComponent: () => import('./features/admin-catalog/admin-products-page.component').then((module) => module.AdminProductsPageComponent) },
       { path: 'pedidos', loadComponent: () => import('./features/admin-orders/admin-orders-list-page.component').then((module) => module.AdminOrdersListPageComponent) },

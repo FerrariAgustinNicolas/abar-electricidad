@@ -1,0 +1,105 @@
+{
+  "fixture": "isolated-H7-owned",
+  "cases": [
+    {
+      "path": "/api/v1/admin/dashboard?from=2026-10-01&to=2026-10-04",
+      "status": 401,
+      "noStore": true
+    },
+    {
+      "path": "/api/v1/admin/reports/sales?from=2026-10-01&to=2026-10-04",
+      "status": 401,
+      "noStore": true
+    },
+    {
+      "path": "/api/v1/admin/reports/sales/export?from=2026-10-01&to=2026-10-04",
+      "status": 401,
+      "noStore": true
+    },
+    {
+      "path": "/api/v1/admin/dashboard?from=2026-10-01&to=2026-10-04",
+      "status": 200,
+      "noStore": true
+    },
+    {
+      "path": "/api/v1/admin/reports/sales?from=2026-10-01&to=2026-10-04",
+      "status": 200,
+      "noStore": true
+    },
+    {
+      "path": "/api/v1/admin/reports/sales/export?from=2026-10-01&to=2026-10-04",
+      "status": 200,
+      "noStore": true
+    },
+    {
+      "path": "/api/v1/admin/reports/sales?from=2026-10-01&to=2026-10-04&unknown=x",
+      "status": 400,
+      "noStore": true
+    },
+    {
+      "path": "/api/v1/admin/reports/sales?from=2026-10-01&to=2026-10-04&methodCode=DEMO_TRANSFER&methodCode=DEMO_SIMULATION",
+      "status": 400,
+      "noStore": true
+    },
+    {
+      "path": "/api/v1/admin/reports/sales?from=2026-10-01&to=2026-10-04&paymentStatus[bad]=PAID",
+      "status": 400,
+      "noStore": true
+    },
+    {
+      "path": "/api/v1/admin/reports/sales?from=2026-02-30&to=2026-03-02",
+      "status": 400,
+      "noStore": true
+    },
+    {
+      "path": "/api/v1/admin/reports/sales?from=2026-01-01&to=2027-01-03",
+      "status": 400,
+      "noStore": true
+    },
+    {
+      "path": "/api/v1/admin/reports/sales?from=2026-10-01&to=2026-10-04&methodCode=DEMO_TRANSFER&paymentStatus=PAID",
+      "status": 200,
+      "noStore": true
+    },
+    {
+      "path": "/api/v1/admin/reports/sales/export?from=2026-10-01&to=2026-10-04&methodCode=DEMO_TRANSFER&paymentStatus=PAID",
+      "status": 200,
+      "noStore": true
+    },
+    {
+      "path": "/api/v1/admin/reports/sales?from=2026-10-01&to=2026-10-04&paymentStatus=PENDING",
+      "status": 200,
+      "noStore": true
+    },
+    {
+      "path": "/api/v1/admin/reports/sales/export?from=2026-10-01&to=2026-10-04&paymentStatus=PENDING",
+      "status": 200,
+      "noStore": true
+    },
+    {
+      "path": "/api/v1/admin/reports/sales?from=2026-10-20&to=2026-10-21",
+      "status": 200,
+      "noStore": true
+    },
+    {
+      "path": "/api/v1/admin/reports/sales?from=2026-10-01&to=2026-10-04",
+      "status": 401,
+      "noStore": true
+    },
+    {
+      "path": "/api/v1/admin/reports/sales?from=2026-10-01&to=2026-10-04",
+      "status": 401,
+      "noStore": true
+    },
+    {
+      "path": "/api/v1/admin/reports/sales?from=2026-10-01&to=2026-10-04",
+      "status": 403,
+      "noStore": true
+    }
+  ],
+  "businessFactsSha256Before": "a1af414b20be5d313a24c3302efbaf6f151a0e3ad9dcd2d7909a0e76d393ee04",
+  "businessFactsSha256After": "a1af414b20be5d313a24c3302efbaf6f151a0e3ad9dcd2d7909a0e76d393ee04",
+  "browserCsvIdenticalToApi": true,
+  "expectedConfirmedTotalMinor": "15000",
+  "schemaValid": true
+}

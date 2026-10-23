@@ -1,0 +1,14 @@
+SANITIZED DERIVATIVE — historical output, not a new execution. Local paths and operational identifiers are replaced; original retained privately on the audited branch.
+
+✔ H7 freezes three protected read-only operations, exact money and dates (6.63025ms)
+✔ H7 rejects missing session security, open DTOs and CSV cache drift (5.452875ms)
+✔ H7 methods match persisted H4 codes and CSV counts have explicit columns (0.170916ms)
+✔ pre-H7 invalid versions retain the exact H6 public diagnostic (1.809583ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 152.479083

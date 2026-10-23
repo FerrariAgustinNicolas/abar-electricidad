@@ -1,0 +1,35 @@
+SANITIZED DERIVATIVE — historical output, not a new execution. Local paths and operational identifiers are replaced; original retained privately on the audited branch.
+
+✔ H7 freezes three protected read-only operations, exact money and dates (7.161792ms)
+✔ H7 rejects missing session security, open DTOs and CSV cache drift (5.859209ms)
+✔ H7 methods match persisted H4 codes and CSV counts have explicit columns (0.177542ms)
+✔ pre-H7 invalid versions retain the exact H6 public diagnostic (2.2545ms)
+✖ H7 rejects cacheable responses and missing or unsafe CSV headers (1.378625ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 4
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 170.51825
+
+✖ failing tests:
+
+test at scripts/h7-contract.test.mjs:42:1
+✖ H7 rejects cacheable responses and missing or unsafe CSV headers (1.378625ms)
+  AssertionError [ERR_ASSERTION]: /api/v1/admin/dashboard 200 must be no-store
+      at TestContext.<anonymous> (<LOCAL_PATH>
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

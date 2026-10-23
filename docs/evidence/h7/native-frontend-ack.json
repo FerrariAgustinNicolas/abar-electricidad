@@ -1,0 +1,12 @@
+{
+  "sanitizedDerivative": true,
+  "sourceEvidencePath": "docs/evidence/h7/native-frontend-ack.json",
+  "privacyNote": "Native command arguments, replay transitions, opaque repository/result handles and control tokens omitted. This derivative does not grant review authority or represent a new review.",
+  "schema": "gentle-ai.review-acknowledged/v1",
+  "operation": "review/acknowledge-approved",
+  "action": "acknowledged",
+  "lineage_id": "review-047ff832a270e9ae",
+  "target_identity": "sha256:529ef67d42cd0e65538375bf71b62533a22733c12d4676f042c07198b9dc8c88",
+  "consumed_revision": "sha256:cdbfc187f4a08c9082dfca5bea0978ea56ec2d7e12d1b71ecaf2eca4ff73488f",
+  "authority": "burned"
+}

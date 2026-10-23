@@ -1,0 +1,14 @@
+{
+  "sanitizedDerivative": true,
+  "sourceEvidencePath": "docs/evidence/h7/native-frontend-lens-1.json",
+  "privacyNote": "Native command arguments, replay transitions, opaque repository/result handles and control tokens omitted. This derivative does not grant review authority or represent a new review.",
+  "schema": "gentle-ai.review-result-artifact/v2",
+  "capability": "review.native_result_artifact",
+  "sha256": "sha256:11e55f45631ff7a358538c24bff3ce5aad2c4c39a9fc8be650cac902ba44c7f9",
+  "lineage_id": "review-047ff832a270e9ae",
+  "target_identity": "sha256:529ef67d42cd0e65538375bf71b62533a22733c12d4676f042c07198b9dc8c88",
+  "lens": "review-resilience",
+  "selected_order": 1,
+  "subject_hash": "sha256:6c9a095a07c446a08f47f8535d1ebe50059c12f4d739407f27001416bf2ab06a",
+  "admission_decision": "completed"
+}

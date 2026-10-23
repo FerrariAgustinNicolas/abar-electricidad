@@ -1,0 +1,137 @@
+{
+  "sanitizedDerivative": true,
+  "sourceEvidencePath": "docs/evidence/h7/abar-h7-native-validation.json",
+  "privacyNote": "Native command arguments, replay transitions, opaque repository/result handles and control tokens omitted. This derivative does not grant review authority or represent a new review.",
+  "schema": "gentle-ai.review-last-event-closure/v1",
+  "operation": "review/capture-validation",
+  "lineage_id": "review-0301a7be05401e1f",
+  "state": "approved",
+  "action": "the approved review completed on the last admitted event and awaits its exact acknowledgement",
+  "advisory_findings": {
+    "statement": "This review is approved and its receipt stands. Every finding listed here is non-blocking: none opened a correction, none reopens this review, and no correction transition is offered for this candidate. Treat them as separate later work, never as a reason to re-run review on this candidate.",
+    "findings": [
+      {
+        "id": "R1-local-environment-disclosure",
+        "lens": "risk",
+        "location": "docs/evidence/h7/preservation-before.json:5",
+        "severity": "WARNING",
+        "disposition": "informational"
+      },
+      {
+        "id": "R2-misleading-operation-diagnostic",
+        "lens": "readability",
+        "location": "scripts/h0-contract-validate.mjs:89",
+        "severity": "WARNING",
+        "disposition": "informational"
+      },
+      {
+        "id": "R2-misleading-version-diagnostics",
+        "lens": "readability",
+        "location": "scripts/h6-contract.mjs:14",
+        "severity": "WARNING",
+        "disposition": "informational"
+      }
+    ]
+  },
+  "reviewer_results": [
+    {
+      "lens": "review-risk",
+      "findings": [
+        {
+          "id": "R1-local-environment-disclosure",
+          "lens": "risk",
+          "location": "docs/evidence/h7/preservation-before.json:5",
+          "severity": "WARNING",
+          "claim": "The candidate commits host-specific absolute paths, a local username, worktree topology, branch and reference inventory, and repository-state metadata. Publishing or sharing the repository would disclose unnecessary developer-environment information; the retained failed-test log independently exposes the same local identity and directory layout.",
+          "proof_refs": [
+            "docs/evidence/h7/preservation-before.json:5",
+            "docs/evidence/h7/preservation-before.json:6-147",
+            "docs/evidence/h7/abar-h7-contract-red.log:5-17"
+          ],
+          "evidence_class": "deterministic",
+          "causal_disposition": "introduced"
+        }
+      ],
+      "evidence": [
+        "All 21 manifest paths were inspected from the supplied immutable patches.",
+        "The newly added preservation artifact contains host-specific absolute locations and extensive local Git/worktree inventory throughout docs/evidence/h7/preservation-before.json:5-147.",
+        "The newly added failed-test evidence repeats host-specific absolute module locations in docs/evidence/h7/abar-h7-contract-red.log:5-17.",
+        "The H7 API contract requires backend administrative-session security, sanitized errors, no-store responses, bounded date ranges, closed response DTOs, no PII fields, static CSV disposition, nosniff, and spreadsheet-formula neutralization in contracts/openapi.yaml:101-516 and contracts/openapi.yaml:4853-5124."
+      ],
+      "result_hash": "sha256:0d54a466c7e1b98b966d9a5abdc805fa3994b735f44d676721c53ed34c4bd5b6"
+    },
+    {
+      "lens": "review-readability",
+      "findings": [
+        {
+          "id": "R2-misleading-version-diagnostics",
+          "lens": "readability",
+          "location": "scripts/h6-contract.mjs:14",
+          "severity": "WARNING",
+          "claim": "The legacy validators now accept the H7 version while retaining error messages that state only the older milestone version is valid. These diagnostics misdescribe the implemented rules and will send maintainers toward the wrong correction when a version or marker check fails.",
+          "proof_refs": [
+            "scripts/h3-contract.mjs:9",
+            "scripts/h4-contract.mjs:11",
+            "scripts/h5-contract.mjs:15",
+            "scripts/h6-contract.mjs:14"
+          ],
+          "evidence_class": "deterministic",
+          "causal_disposition": "worsened"
+        },
+        {
+          "id": "R2-misleading-operation-diagnostic",
+          "lens": "readability",
+          "location": "scripts/h0-contract-validate.mjs:89",
+          "severity": "WARNING",
+          "claim": "The expected operation set is expanded through H7, but the mismatch diagnostic still says that H1 requires exactly nine operations plus health. A missing or extra H7 operation therefore produces a misleading H1-only explanation that obscures the actual invariant being enforced.",
+          "proof_refs": [
+            "scripts/h0-contract-validate.mjs:89",
+            "scripts/h0-contract-validate.mjs:95"
+          ],
+          "evidence_class": "deterministic",
+          "causal_disposition": "worsened"
+        }
+      ],
+      "evidence": [
+        "The complete immutable patch for all 21 manifest paths was inspected.",
+        "scripts/h3-contract.mjs:9, scripts/h4-contract.mjs:11, scripts/h5-contract.mjs:15, and scripts/h6-contract.mjs:14 each add acceptance of version 0.10.0 without updating their corresponding version-error text.",
+        "scripts/h0-contract-validate.mjs:89 adds H7 operations to the exact expected set while scripts/h0-contract-validate.mjs:95 retains an H1-only mismatch message."
+      ],
+      "result_hash": "sha256:9d0d0649319020ff9fe6d6fdbe6bd0ebba5b4ff73587034e5e2aeb6cf3c9fbe8"
+    },
+    {
+      "lens": "review-reliability",
+      "findings": [
+        {
+          "id": "R3-cache-header-semantics",
+          "lens": "reliability",
+          "location": "scripts/h7-contract.mjs:19",
+          "severity": "BLOCKER",
+          "claim": "The H7 validator checks only that Cache-Control is marked x-required, so a contract mutation that changes its allowed value from no-store to a cacheable value is silently accepted. It also never validates the export's required Content-Disposition, X-Content-Type-Options, or Content-Type values. This leaves the frozen administrative-report and CSV response-header behavior unprotected despite those exact headers being an explicit security and reliability requirement.",
+          "proof_refs": [
+            "scripts/h7-contract.mjs:18-20",
+            "scripts/h7-contract.test.mjs:15-24",
+            "contracts/openapi.yaml:101"
+          ],
+          "evidence_class": "deterministic",
+          "causal_disposition": "introduced"
+        }
+      ],
+      "evidence": [
+        "scripts/h7-contract.mjs:19 validates only the Cache-Control x-required marker and does not inspect its enum value; the surrounding validator has no assertions for the other mandatory CSV response headers.",
+        "scripts/h7-contract.test.mjs:19 deletes the entire Cache-Control header as its sole CSV-header mutation, so it does not prove rejection of semantic header drift while x-required remains present.",
+        "contracts/openapi.yaml:101 introduces H7 administrative report operations whose normative responses require no-store, and the export additionally declares fixed attachment, nosniff, and UTF-8 CSV headers."
+      ],
+      "result_hash": "sha256:8080bfdf09ff0873b2f5630030189232f7fc7f09483b1f2d64796044e9993005"
+    }
+  ],
+  "acknowledgement": {
+    "operation": "review.acknowledge-approved",
+    "binding": {
+      "lineage_id": "review-0301a7be05401e1f",
+      "revision": "sha256:2d262b7c3bfbe9f8c6d1c28e4d9f2bc71d1e805985f341a12c1186db49215653",
+      "target_identity": "sha256:f341bb2222b782626a02f4d55ca022900daade40ace419d9ca7feee10737f137"
+    }
+  },
+  "store_revision": "sha256:2d262b7c3bfbe9f8c6d1c28e4d9f2bc71d1e805985f341a12c1186db49215653"
+}

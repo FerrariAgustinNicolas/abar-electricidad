@@ -20,8 +20,8 @@ export function configureApplication(app: NestExpressApplication): void {
 
   const options = new DocumentBuilder()
     .setTitle('ABAR Electricidad API — transversal candidate')
-    .setDescription('H1 authentication, H2 catalog/stock, H3 demo quotes, H4 guest orders/demo attempts, H5 manual confirmation, and H6 local notifications/settings for local verification. No external approval or production readiness is implied.')
-    .setVersion('0.9.0')
+    .setDescription('H1 authentication, H2 catalog/stock, H3 demo quotes, H4 guest orders/demo attempts, H5 manual confirmation, H6 local notifications/settings, and H7 read-only academic DEMO reports for local verification. No external approval or production readiness is implied.')
+    .setVersion('0.10.0')
     .setOpenAPIVersion('3.0.3')
     .addCookieAuth('abar_auth_context', { type: 'apiKey', in: 'cookie' }, 'AuthPreauthCookie')
     .addCookieAuth('abar_admin_session', { type: 'apiKey', in: 'cookie' }, 'AdminSessionCookie')

@@ -1,0 +1,268 @@
+{
+  "dataset": "h7-reports-known-values-v3",
+  "period": {
+    "from": "2026-10-01",
+    "to": "2026-10-04",
+    "timeZone": "America/Argentina/Buenos_Aires",
+    "semantics": "[from,to)"
+  },
+  "records": [
+    {
+      "key": "paid-current",
+      "createdLocal": "2026-10-01",
+      "confirmedLocal": "2026-10-01",
+      "includedSale": true,
+      "status": "PREPARING",
+      "paymentStatus": "PAID",
+      "currentMethod": "DEMO_TRANSFER",
+      "subtotalMinor": "9000",
+      "deliveryFeeMinor": "500",
+      "totalMinor": "9500"
+    },
+    {
+      "key": "paid-cross-period",
+      "createdLocal": "2026-09-30",
+      "confirmedLocal": "2026-10-02",
+      "includedSale": true,
+      "status": "DELIVERED",
+      "paymentStatus": "PAID",
+      "currentMethod": "DEMO_PAY_ON_PICKUP",
+      "subtotalMinor": "5500",
+      "deliveryFeeMinor": "0",
+      "totalMinor": "5500"
+    },
+    {
+      "key": "approved-pending",
+      "createdLocal": "2026-10-02",
+      "confirmedLocal": null,
+      "includedSale": false,
+      "status": "RECEIVED",
+      "paymentStatus": "PENDING",
+      "currentMethod": "DEMO_SIMULATION",
+      "currentAttempt": "APPROVED",
+      "totalMinor": "1200"
+    },
+    {
+      "key": "rejected-current",
+      "createdLocal": "2026-10-02",
+      "confirmedLocal": null,
+      "includedSale": false,
+      "status": "RECEIVED",
+      "paymentStatus": "REJECTED",
+      "currentMethod": "DEMO_TRANSFER",
+      "currentAttempt": "REJECTED",
+      "totalMinor": "800"
+    },
+    {
+      "key": "cancelled-unpaid",
+      "createdLocal": "2026-10-03",
+      "confirmedLocal": null,
+      "includedSale": false,
+      "status": "CANCELLED",
+      "paymentStatus": "PENDING",
+      "currentMethod": "DEMO_PAY_ON_PICKUP",
+      "currentAttempt": "PENDING",
+      "totalMinor": "400"
+    },
+    {
+      "key": "paid-at-exclusive-end",
+      "createdLocal": "2026-10-02",
+      "confirmedLocal": "2026-10-04",
+      "includedSale": false,
+      "status": "READY",
+      "paymentStatus": "PAID",
+      "currentMethod": "DEMO_TRANSFER",
+      "totalMinor": "700"
+    },
+    {
+      "key": "created-at-exclusive-end",
+      "createdLocal": "2026-10-04",
+      "confirmedLocal": null,
+      "includedSale": false,
+      "status": "RECEIVED",
+      "paymentStatus": "PENDING",
+      "currentMethod": "DEMO_SIMULATION",
+      "currentAttempt": "APPROVED",
+      "totalMinor": "300"
+    },
+    {
+      "key": "paid-large-exact",
+      "createdLocal": "2026-10-05",
+      "confirmedLocal": "2026-10-05",
+      "includedSale": true,
+      "status": "DELIVERED",
+      "paymentStatus": "PAID",
+      "currentMethod": "DEMO_SIMULATION",
+      "subtotalMinor": "9007199254740993",
+      "deliveryFeeMinor": "0",
+      "totalMinor": "9007199254740993"
+    },
+    {
+      "key": "paid-rounding-two",
+      "createdLocal": "2026-10-06",
+      "confirmedLocal": "2026-10-06",
+      "includedSale": true,
+      "status": "DELIVERED",
+      "paymentStatus": "PAID",
+      "currentMethod": "DEMO_SIMULATION",
+      "subtotalMinor": "2",
+      "deliveryFeeMinor": "0",
+      "totalMinor": "2"
+    },
+    {
+      "key": "paid-rounding-three",
+      "createdLocal": "2026-10-06",
+      "confirmedLocal": "2026-10-06",
+      "includedSale": true,
+      "status": "DELIVERED",
+      "paymentStatus": "PAID",
+      "currentMethod": "DEMO_SIMULATION",
+      "subtotalMinor": "3",
+      "deliveryFeeMinor": "0",
+      "totalMinor": "3"
+    }
+  ],
+  "expected": {
+    "confirmedOrders": 2,
+    "productsSubtotalMinor": "14500",
+    "deliveryFeesMinor": "500",
+    "confirmedTotalMinor": "15000",
+    "averageTicketMinor": "7500",
+    "createdOrders": 5,
+    "activeUnpaid": 2,
+    "cancelledUnpaid": 1,
+    "rejectedPayments": 1,
+    "rejectedCurrentAttempts": 1,
+    "byStatus": {
+      "RECEIVED": 2,
+      "PREPARING": 1,
+      "READY": 1,
+      "DELIVERED": 0,
+      "CANCELLED": 1
+    },
+    "series": [
+      {
+        "date": "2026-10-01",
+        "confirmedOrders": 1,
+        "confirmedTotalMinor": "9500"
+      },
+      {
+        "date": "2026-10-02",
+        "confirmedOrders": 1,
+        "confirmedTotalMinor": "5500"
+      },
+      {
+        "date": "2026-10-03",
+        "confirmedOrders": 0,
+        "confirmedTotalMinor": "0"
+      }
+    ],
+    "byMethod": [
+      {
+        "method": "DEMO_TRANSFER",
+        "confirmedOrders": 1,
+        "confirmedTotalMinor": "9500"
+      },
+      {
+        "method": "DEMO_PAY_ON_PICKUP",
+        "confirmedOrders": 1,
+        "confirmedTotalMinor": "5500"
+      }
+    ],
+    "byDelivery": [
+      {
+        "deliveryMode": "PICKUP",
+        "confirmedOrders": 2,
+        "deliveryFeesMinor": "500",
+        "confirmedTotalMinor": "15000"
+      }
+    ],
+    "presentationRanking": [
+      {
+        "unit": "UNIT",
+        "quantity": "2",
+        "productsSubtotalMinor": "6000"
+      },
+      {
+        "unit": "ROLL",
+        "quantity": "1",
+        "productsSubtotalMinor": "5500"
+      },
+      {
+        "unit": "METER",
+        "quantity": "3",
+        "productsSubtotalMinor": "3000"
+      }
+    ],
+    "simulationApprovedPendingSales": 0,
+    "paidCurrentOrderAttempts": 2,
+    "paidCurrentOrderEvents": 2,
+    "paidCurrentOrderNotificationJobs": 2,
+    "stockAndOrderPaymentJobHashesBeforeAfter": "identical",
+    "enumFilters": {
+      "methodCode_DEMO_TRANSFER_and_paymentStatus_PAID": {
+        "confirmedOrders": 1,
+        "confirmedTotalMinor": "9500"
+      },
+      "methodCode_DEMO_SIMULATION_and_period_2026_10_05_to_2026_10_07": {
+        "confirmedOrders": 3,
+        "confirmedTotalMinor": "9007199254740998",
+        "averageTicketMinor": "3002399751580333"
+      },
+      "paymentStatus_PENDING": {
+        "confirmedOrders": 0,
+        "confirmedTotalMinor": "0"
+      },
+      "orderStatus_PREPARING_and_paymentStatus_PAID": {
+        "createdOrders": 1,
+        "confirmedOrders": 1
+      }
+    },
+    "emptyDataset": {
+      "confirmedOrders": 0,
+      "confirmedTotalMinor": "0",
+      "averageTicketMinor": "0",
+      "seriesIncludesZeroDays": true
+    },
+    "confirmedPaidWithoutConfirmedAt": {
+      "persistedCase": "not constructible: H5 Payment_confirmation_check forbids it; no constraint bypass"
+    },
+    "currentPolicyFeeAfterSnapshotMinor": "999999",
+    "historicalDeliveryFeeDespitePolicyChangeMinor": "500",
+    "paidStateChanges": {
+      "READY": {
+        "count": 2,
+        "totalMinor": "15000"
+      },
+      "DELIVERED": {
+        "count": 2,
+        "totalMinor": "15000"
+      }
+    }
+  },
+  "arithmetic": {
+    "roundHalfUp": {
+      "sumMinor": "5",
+      "count": 2,
+      "expectedAverageMinor": "3"
+    },
+    "largeExactMoney": {
+      "sumMinor": "9007199254740993",
+      "expectedJsonAmountMinor": "9007199254740993"
+    }
+  },
+  "evidence": {
+    "readonlyHashTables": [
+      "Order",
+      "Payment",
+      "OrderEvent",
+      "OrderItem",
+      "NotificationJob",
+      "StockOperation",
+      "StockEntry"
+    ],
+    "expectedHashAfterRead": "identical",
+    "migrationExpectation": "All existing migrations, including H6, deploy on the isolated database; H7 adds no migration; prisma migrate diff returns clean.",
+    "fixtureCorrection": "Use frozen H4 terms and non-null synthetic confirmation actor; do not weaken migrations or insert impossible PAID-with-null-confirmedAt."
+  }
+}

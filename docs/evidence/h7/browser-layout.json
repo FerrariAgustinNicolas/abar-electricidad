@@ -1,0 +1,92 @@
+[
+  {
+    "regions": [
+      {
+        "label": "Tabla de estados actuales de pedidos",
+        "scrollWidth": 812,
+        "tabindex": "0",
+        "width": 812
+      },
+      {
+        "label": "Tabla de ventas por método de pago",
+        "scrollWidth": 812,
+        "tabindex": "0",
+        "width": 812
+      },
+      {
+        "label": "Tabla de ventas por modalidad de entrega",
+        "scrollWidth": 812,
+        "tabindex": "0",
+        "width": 812
+      },
+      {
+        "label": "Tabla de cantidades separadas por presentación",
+        "scrollWidth": 812,
+        "tabindex": "0",
+        "width": 812
+      }
+    ],
+    "scrollWidth": 1440,
+    "width": 1440
+  },
+  {
+    "regions": [
+      {
+        "label": "Tabla de estados actuales de pedidos",
+        "scrollWidth": 702,
+        "tabindex": "0",
+        "width": 702
+      },
+      {
+        "label": "Tabla de ventas por método de pago",
+        "scrollWidth": 702,
+        "tabindex": "0",
+        "width": 702
+      },
+      {
+        "label": "Tabla de ventas por modalidad de entrega",
+        "scrollWidth": 702,
+        "tabindex": "0",
+        "width": 702
+      },
+      {
+        "label": "Tabla de cantidades separadas por presentación",
+        "scrollWidth": 702,
+        "tabindex": "0",
+        "width": 702
+      }
+    ],
+    "scrollWidth": 768,
+    "width": 768
+  },
+  {
+    "regions": [
+      {
+        "label": "Tabla de estados actuales de pedidos",
+        "scrollWidth": 544,
+        "tabindex": "0",
+        "width": 294
+      },
+      {
+        "label": "Tabla de ventas por método de pago",
+        "scrollWidth": 544,
+        "tabindex": "0",
+        "width": 294
+      },
+      {
+        "label": "Tabla de ventas por modalidad de entrega",
+        "scrollWidth": 544,
+        "tabindex": "0",
+        "width": 294
+      },
+      {
+        "label": "Tabla de cantidades separadas por presentación",
+        "scrollWidth": 544,
+        "tabindex": "0",
+        "width": 294
+      }
+    ],
+    "scrollWidth": 360,
+    "width": 360
+  }
+]

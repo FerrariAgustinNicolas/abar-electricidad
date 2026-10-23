@@ -1,0 +1,450 @@
+{
+  "schema": "h7-publication-sanitization/v1",
+  "sourceCommit": "ba27cfaa8b9c6553ae01c8cdc113f1c287958468",
+  "sourceTree": "4f24ce639ab95f874a99b234ab4757d92164affc",
+  "baseCommit": "8ff38e932eae7a09ffb1c531d4d040d4ca6ed9e8",
+  "approvedTechnicalTree": "1a7504cd1f7d429ba95714c323b9c1ff8092bb33",
+  "historyPolicy": "New snapshot commit(s) descend from H6 only; original H7 commit history is not an ancestor. Original audited branch remains unchanged. Commit identifiers here are provenance strings, not parent links.",
+  "functionalPolicy": "Every path outside docs/, odd/ and README.md must retain original Git blob and mode; screenshots, synthetic expected/API/CSV fixtures are preserved byte-identically.",
+  "evidencePolicy": "Sanitized derivatives preserve historical results and limitations; no suite or review was rerun. Raw evidence remains on the original local audited branch, not in this candidate history.",
+  "transformedFiles": [
+    {
+      "path": "README.md",
+      "transformation": "path and operational-identifier redaction",
+      "originalGitBlob": "6bd6cd289ef559ff1f17d65c67839b1ec1c993c7",
+      "sanitizedSha256": "98f12e991c2397a3f3448075a1a025aa4442974db2b0c5ba6d486e63f6ea6fcd"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-auth-green.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "b7f291296a28fae1a4bf885998d68c3dbed5408a",
+      "sanitizedSha256": "9c2aaf8756dae8e893807ec6eff1d1d8446055d637a08ea6225583680956dc49"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-auth-red.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "25f5134c128d4b322c670f40abbff977389a789d",
+      "sanitizedSha256": "3ddf4eb6aa1be5c6cc220ec012afc9858d175eef4e7ddb82844534be08a4f3da"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-backend-build-final-retry.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "b91d0d70d59d89856dc0f0f4b752a2ed3786276d",
+      "sanitizedSha256": "ae4e6ed82825316c330390266b19aa6c2d54045d3e6797e60aef9dfc913ce359"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-backend-build-final.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "1df7e839d018ae7eecf082ebd8b35d0eaa1abaf1",
+      "sanitizedSha256": "c9ad8c98687a5ba2c75e1eafabd4561f9d2d2f6f2465409e743101f704736361"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-backend-lint-final.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "03c1e9a274f5e877931f4729dda3a4158609b4ee",
+      "sanitizedSha256": "598183e84617a5d30fd7532f620fca7d94317d1cb1449478678461bc81d28c56"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-backend-suite-final-retry.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "54f8c9b9aa0f50ceb39d14453ddecce42468386f",
+      "sanitizedSha256": "d53300cb96db1906cc0124e3ec17534803258c3c6c19ec01ac6a7638f9c19a43"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-backend-suite-final.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "42a24544ad1ab0cd8a36614a704000898c0708a8",
+      "sanitizedSha256": "9077fcc136a49b8a8484f31fe582bd035e9318c3823b7369ccda6f8f7ab4d45b"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-contract-correction.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "fe987f217c30d0dba531d1ef184956b4f37c2fb2",
+      "sanitizedSha256": "2007c60eab0aa665d53774c628f44479848b2ee1005c1ce34b9358b06892ad11"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-contract-green.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "cc90df33251c9783121b08a8282f47d71049e4b4",
+      "sanitizedSha256": "c2d84853194504c9b67c2c5ac8f4c2ac93dee223c7487433b0138a15ce0d5bb4"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-contract-red.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "17b854e5e602efbc681b3d41bebf080dae6b5748",
+      "sanitizedSha256": "e86f6a8d16b15c2ab17a8283831fe8f6f42edebc8acc05dfe90390c09ec7d466"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-contract-suite-final.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "4564f940ac2b2f1733de84bb75f4606736cb2e3a",
+      "sanitizedSha256": "649a1be4285e32b2555bd2d3c7b4ffc9e0ee02ad0d0369076910705c22b66dfb"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-contract-suite.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "ed86bcc355108cce490c39274318faf6ca6100ce",
+      "sanitizedSha256": "68bcd17881cfafdf3dbd51ac31ef72bfe6e127f981ed222d19d61b9986b1b3df"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-contract-validation.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "78623a08f7133c5948cba10545a3e663b2a722dd",
+      "sanitizedSha256": "c34865ccf6cae1660848d3e4b1b3d9d95717e58ae32f8aac61bcfe001b465029"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-metadata-green.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "daed97710e6fcdde1f4f3ea7f23e4ef5df714705",
+      "sanitizedSha256": "0fb8c08f000bf1330a13d3d21d0e816d524c8036529eee688f4379d949286edb"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-native-ack.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "caf9ca343dd24c2f58efd323a0c68228367ff497",
+      "sanitizedSha256": "67a90bff56ce3e63f8d78ddc26208060693f245160979225c0f3379476e52948"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-native-correction-plan.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "0985aac6a4a54a57e1c2774664c7ba7e10af4459",
+      "sanitizedSha256": "b13a9ec48ad0cec9ad66bee64f6fbfdda48555947a160eabf053ae98fee6ba7e"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-native-correction-status.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "8c72a9bd19b5607e517bd1d6f2117facc0dde72d",
+      "sanitizedSha256": "194ef996bfe09f632e4be2d295dea57e14fbbe547668a3a4dc2e23621d6106d3"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-native-fix-green.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "99878a9a1526dcdd5e16d81c47d5b9418823a5a8",
+      "sanitizedSha256": "ddbb8ae096c66bb1e07048fad9751411c04859efb2fc4844f91201ea2688fc45"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-native-fix-red.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "6862f39aada467a1be5d8ce0186702c87bb81005",
+      "sanitizedSha256": "132e9b98e479f3e3205b78fa027a9a0aab65af94a20546315ad75d125f00705c"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-native-fix-suite.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "a24601419b2643c9a67b3a025abbdfcbecba57fa",
+      "sanitizedSha256": "fbf8323520ff5898c99c949fbac387f85460f827e53bf5c5c8b121c959270a2a"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-native-fixed-status.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "6aa5b5ffb51ae09ce7189763a1c717b2a620a8cd",
+      "sanitizedSha256": "7246032f28952dcaa4a790dce8ff82858e4023ce82aa46d4aac0a3046525e0b9"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-native-granted.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "a7982061f82e338d80955308e0bc98ee84a662cf",
+      "sanitizedSha256": "e7858ba4e4c6e9d32ff6cb1168566d32d6f52ad7a70efbd8386d8b8222b19663"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-native-plan-status.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "e8a3df064abbd02cb9ba5a753f17792fb877bd4f",
+      "sanitizedSha256": "f862302081e886e9e59aa0ecf9574ee1c5a4416510aa11776e45d413fb625a04"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-native-preflight.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "1d68365e13f4b8c1af0a7af270b32d64df16111f",
+      "sanitizedSha256": "c160c363a0183f2a9080be933a3b67d361d4782ab6083e7ae5c531230e1cdba1"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-native-start.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "7d949eb6c8075d041649488916f14c512b917857",
+      "sanitizedSha256": "56eb0a4c28a5215b74466e890543da3ab0f8bda1d5eaf2242cc3feb50050209f"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-native-status.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "9b9b316fb18e5fd7b57dae6c6dd927a43ae46e5b",
+      "sanitizedSha256": "4d7bae164c27353862db66ad6c1bb18699013b9f2e480251d40796633c3a5333"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-native-validation.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "d172e34f9ddf3a6e4a8e0cbc8abcebe43ed4ce6d",
+      "sanitizedSha256": "188254f1350e4067dd2c96a5975f6bc4265a86e27a5aebb04a8e82618e0aa5f0"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-postgres-complete.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "b8438a93f367bef318d37e40525b89d94c02268b",
+      "sanitizedSha256": "89599a288935095d4674d5de0575ef73a188b96b2d5794f7f65b457eb30b1494"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-postgres-final.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "d27bf098ae45a75aa70f7bea099087023d8a26de",
+      "sanitizedSha256": "59950d91585fe215804411edf7a9cf178b23728fd1429debe6b0917b9322120c"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-postgres-first.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "eb67cfcec9c6159481dd0ee57d86b5b2ea9a1a09",
+      "sanitizedSha256": "a22fa4fc0f566edcac3a36f3c46b2dd9acd24c7a20f862238a22403f9028f406"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-postgres-second.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "5f3bb0357536d9f15ed755005dc92457a77f5197",
+      "sanitizedSha256": "2c69b630450c47f8510188ed9cd17864600c3f34704c3ffa2e4b0f8e94a76d91"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-swagger-green-final.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "a1d93f069d5418187a5906a607d69959b6ba9ca3",
+      "sanitizedSha256": "68e60f3b059aefced653afcc5564f34c4fd500f7024eba9b15707d59c427d582"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-swagger-green.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "e6496aa10576b95f27d1fdf3db709fe4c2d5ce9c",
+      "sanitizedSha256": "31f611e6dab627e18ee942ff64c5099cbb32f5fc9b9e86d9cea7e39735be76dc"
+    },
+    {
+      "path": "docs/evidence/h7/abar-h7-swagger-red.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "384e698106e5df877895d11dde88852abe5c7ca8",
+      "sanitizedSha256": "bcd5b2f756679164ab2dce2d14712029c45ce77b4ed82929f3afd2989f41bbd2"
+    },
+    {
+      "path": "docs/evidence/h7/backend-build.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "7c4d63bbdbefbc68159eb1d296a851e46152a472",
+      "sanitizedSha256": "803a1b17bacda3376c5abad130a1f1a817c52a76a9a72f0cdaeb6e6005a26a0e"
+    },
+    {
+      "path": "docs/evidence/h7/backend-suite-built.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "cae1671dce4dc700a8fb5b7122feb755844f9738",
+      "sanitizedSha256": "727823a2972be57bc8871691197f17a0f35336f83097bc0f424201b1bc73588d"
+    },
+    {
+      "path": "docs/evidence/h7/backend-suite-escalated.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "f67933416416ee1ffd73eb9015b8ad52834e0aa3",
+      "sanitizedSha256": "c07ee5b7026da11077c540adab6323bd45911fdd722605d030dce1d861b2e4ae"
+    },
+    {
+      "path": "docs/evidence/h7/backend-suite.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "c425daedb6d701fa12c853a29409acaea436c995",
+      "sanitizedSha256": "9545f0a93f35f5c4869fb3581ffb7acd5694b825151bd3b22ed6fc1052ea4f37"
+    },
+    {
+      "path": "docs/evidence/h7/cleanup.json",
+      "transformation": "aggregate owned-resource cleanup summary",
+      "originalGitBlob": "3ae5801100e65b503a490cb537e5d625a26142a9",
+      "sanitizedSha256": "b7b7e9662426f384cd132470af2cef656711a6132c388660a6bb6e0d6d72b47b"
+    },
+    {
+      "path": "docs/evidence/h7/contract-suite.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "d6896cdf82bfb5715fba1f870e3c09aa92cfc033",
+      "sanitizedSha256": "ece34759b8b8e9b24fcfc6ecf004ed8689607aac27e90e3d04d4d6ce2d8958d7"
+    },
+    {
+      "path": "docs/evidence/h7/frontend-suite.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "bf635494b39b3b2c164b089032ae451e0ff9af33",
+      "sanitizedSha256": "de55454e49b11e39b38c1f166ddbc6ec779f08d6a58f53c2452e9f30775673a7"
+    },
+    {
+      "path": "docs/evidence/h7/native-backend-ack.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "1601b20b7bc85573cdb34e48b842ccee8c8e0c89",
+      "sanitizedSha256": "93e4fdaf66684021775146f050b1bf430eb39913d661caf16b4e7ba4af61fbac"
+    },
+    {
+      "path": "docs/evidence/h7/native-backend-assessment-final.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "980362e3eea3d356d704be7bef21b1036b58151d",
+      "sanitizedSha256": "70f422964f02b69cbd29cad7902f63107b6e84feb2a6da9887de5d1ceb09f263"
+    },
+    {
+      "path": "docs/evidence/h7/native-backend-bound-status.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "875aa1d050095b351dd1e26e10fff4939c9dd4d3",
+      "sanitizedSha256": "d9c3d5d836a3caa08d3b9180532b24fc1a8724c2f8a01fd334a670e0a3da5eeb"
+    },
+    {
+      "path": "docs/evidence/h7/native-backend-consent.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "3dc058385a20c53433677c7a1cdb43506f14c797",
+      "sanitizedSha256": "1d802e765bc73f4ea33fa37e3205fe6885de572f83fe18662f31ffe62ceed773"
+    },
+    {
+      "path": "docs/evidence/h7/native-backend-lens-0.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "837f03a5367414d5c7607c04b04e7d0f542084d0",
+      "sanitizedSha256": "aacaf7d083c8f44c976e2180043b87defff8ddf4390930bbac8c1d9f70d83b29"
+    },
+    {
+      "path": "docs/evidence/h7/native-backend-lens-1.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "b0164404233e776f4acdd2d880450db36a7bea1f",
+      "sanitizedSha256": "33789ee5c7591539597c2912567318139f47f4746004a091a0e8b64293fc9e18"
+    },
+    {
+      "path": "docs/evidence/h7/native-backend-lens-2.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "90504aa41ef0550b54dd6fc091f456851ca9b4cf",
+      "sanitizedSha256": "cdcbe611ba1dcfc66c520127518932609ceed0679b900886215281ed0126f11a"
+    },
+    {
+      "path": "docs/evidence/h7/native-backend-lens-3.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "6c0091da392a975c04bb3bee40a87914038b4715",
+      "sanitizedSha256": "b27f80e7d0bda78fcbf6d1b6b3a5fcf7df8cc8f7ef9b8849fdfb51a3a461ab9c"
+    },
+    {
+      "path": "docs/evidence/h7/native-backend-preflight-final.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "3e023a30f140588737bd43e12ae7367216b7a1de",
+      "sanitizedSha256": "e03f28062c6cb750ab696827d562393aee6dcbcac495d3593bfd59d5d58bcab4"
+    },
+    {
+      "path": "docs/evidence/h7/native-backend-start-granted.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "19bde878670fdf625926d8aa9a510df0d91fc657",
+      "sanitizedSha256": "bb6b443f14ede4a9736e3126c7c81e03acd31f26148b61c892e5912d61bdb07e"
+    },
+    {
+      "path": "docs/evidence/h7/native-documentary-review-unavailable.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "b2ba08fdcd9b6d865630af3db9a285f861a10e6f",
+      "sanitizedSha256": "82b1b9dde7049634fb046e00ab87609ef751f265344446b63f940c1c31bc3e41"
+    },
+    {
+      "path": "docs/evidence/h7/native-frontend-ack.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "bba8b04cb1715db7124360279aadc3720439183a",
+      "sanitizedSha256": "b6d54c61015c96e7331c45d19b614b87df50c4ec951b62a05776687ed5f3f101"
+    },
+    {
+      "path": "docs/evidence/h7/native-frontend-assessment.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "4df3d0ae91be823f5866f15c92333e73a6e54ae4",
+      "sanitizedSha256": "1231fbe94319ae5c2f5dbb7d9d106de15aeb837f672bc39ff48c755550aee37d"
+    },
+    {
+      "path": "docs/evidence/h7/native-frontend-bound-status.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "77908879cf613ea333e05ba649e26a6fd38c5262",
+      "sanitizedSha256": "0db9fe88f0188da83d206d8d5329276b41bbee1f9e2306f0b4fc2d4a857698fb"
+    },
+    {
+      "path": "docs/evidence/h7/native-frontend-consent.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "1e283144e8237ae0f50f900a95aa124b26a44738",
+      "sanitizedSha256": "ee4f16c3875ed779b7fe45ca9a52823edf3f96bb4a0ef5cf2aaaefc0c6aa95cc"
+    },
+    {
+      "path": "docs/evidence/h7/native-frontend-lens-0.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "0e68bd2d520543917a756dc78a98fcbc48a9dbff",
+      "sanitizedSha256": "5a30085caa6dcde861a1ea90fbddc4c285d3fc5facf89db8f525e8e6ce9949b0"
+    },
+    {
+      "path": "docs/evidence/h7/native-frontend-lens-1.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "de297cf77e9ae4bf73f2e946d5ae0f0b3fd04a63",
+      "sanitizedSha256": "f86364e2ea2957dad9254507869d872c2b846fdb9279dafa318dffb6ffa22806"
+    },
+    {
+      "path": "docs/evidence/h7/native-frontend-lens-2.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "a0b113e0b907924c100e963bbaf74d549722c803",
+      "sanitizedSha256": "c7feb97f473b3b7f6b7c161794a4079b43fb32b1aa60b2a8f0109fd78c8abd19"
+    },
+    {
+      "path": "docs/evidence/h7/native-frontend-lens-3.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "caa87690b896c4c52de1b3467d2b911c1b801700",
+      "sanitizedSha256": "25c79cc6d652b89843258889b23d1d68cdff322d38a572a33a8c920888e11090"
+    },
+    {
+      "path": "docs/evidence/h7/native-frontend-preflight.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "ca691952e24c2c4ee71344f2a5b3237954a3ac46",
+      "sanitizedSha256": "23b6d07bbf978599e3d23153f51928e436236cefe84cdaae3f10c176f0e3ec7a"
+    },
+    {
+      "path": "docs/evidence/h7/native-frontend-start-granted.json",
+      "transformation": "non-replayable native outcome projection",
+      "originalGitBlob": "4a6812f25580839a738d40c224074492d052cb88",
+      "sanitizedSha256": "80ececde142b2f5075fcbfc016c3eae5410da990796a38649781b38177efeee4"
+    },
+    {
+      "path": "docs/evidence/h7/pg-suite-escalated.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "8ae8b9372b9257b8230f5de70d35dde5d32013cf",
+      "sanitizedSha256": "d7fdc82487e4e6ec71c16253cc58e7d75e8da74d0ccc9aca22d70a3384f0289d"
+    },
+    {
+      "path": "docs/evidence/h7/pg-suite.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "04eb90d1dd21828723b9050aaee9d24a6c600127",
+      "sanitizedSha256": "bae7e7c44178292af6b6f257cfbd9cc998654140a84b183d5a2555c3238f216d"
+    },
+    {
+      "path": "docs/evidence/h7/populated-h6-noop.json",
+      "transformation": "path and operational-identifier redaction",
+      "originalGitBlob": "466a753e8e22565cb772ec838e61ae0f7fc18e7c",
+      "sanitizedSha256": "77a74054e262dd0c5b236781a41af8f35b9d19e33e314aa40d0a12bbba042898"
+    },
+    {
+      "path": "docs/evidence/h7/preservation-after.json",
+      "transformation": "aggregate preservation summary",
+      "originalGitBlob": "839d91cae8f5454bebdb20747fd8fb7308b388b1",
+      "sanitizedSha256": "bffd0ea4273e855bea6d129b43cebde07868030b69eabaa98fe50bdeb3273154"
+    },
+    {
+      "path": "docs/evidence/h7/preservation-before.json",
+      "transformation": "aggregate preservation summary",
+      "originalGitBlob": "4d9e09e3adf198782cb9117c90e84a931600e164",
+      "sanitizedSha256": "310e4af49aadf83020969ab0654e853e757d1d8c9ce3c73157b50effb959db4a"
+    },
+    {
+      "path": "docs/evidence/h7/preservation-final.json",
+      "transformation": "aggregate preservation summary",
+      "originalGitBlob": "84b86439f94443e5ed593895fb5a34e418b6c84a",
+      "sanitizedSha256": "5007b29a13c999b2ef35ac31406ab3d0e57a8c4cbd7661d0ad493b1b68ee70f6"
+    },
+    {
+      "path": "docs/evidence/h7/review-correction-focused.log",
+      "transformation": "labeled redacted historical log",
+      "originalGitBlob": "bf157faecaf9d42c5ac7a95c8df13f379d43755c",
+      "sanitizedSha256": "422d3eedd1af5a471147f3bf5def17723616b1b8204f279702bba27a5119cb4d"
+    },
+    {
+      "path": "docs/milestones/H7-informe.md",
+      "transformation": "sanitized candidate provenance and derivative evidence labeling",
+      "originalGitBlob": "05ef17ac0448d669a4162204894c6a29fece9cae",
+      "sanitizedSha256": "1b11c62eccee2cce26c1b6925d45182a326ae70559d09b96115d095a1b19ba31"
+    },
+    {
+      "path": "odd/tasks/h7-dashboard-reports.md",
+      "transformation": "path and operational-identifier redaction",
+      "originalGitBlob": "44467cbb4ac1f38a81b6c918bb2fc8e5260435e0",
+      "sanitizedSha256": "5cdce7f8724450e0560656af821d581ad5aae9bbf55cd6ecd91f57b7543a2d6f"
+    }
+  ],
+  "newArtifacts": [
+    "odd/tasks/h7-publication-sanitized.md",
+    "docs/evidence/h7/publication-sanitization-manifest.json",
+    "docs/evidence/h7/publication-verification.json"
+  ],
+  "scopeQualification": "Only the H7 delta is sanitized. This is not certification that inherited H0–H6 repository/history is public-safe."
+}

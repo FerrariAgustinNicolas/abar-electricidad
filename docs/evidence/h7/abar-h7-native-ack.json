@@ -1,0 +1,12 @@
+{
+  "sanitizedDerivative": true,
+  "sourceEvidencePath": "docs/evidence/h7/abar-h7-native-ack.json",
+  "privacyNote": "Native command arguments, replay transitions, opaque repository/result handles and control tokens omitted. This derivative does not grant review authority or represent a new review.",
+  "schema": "gentle-ai.review-acknowledged/v1",
+  "operation": "review/acknowledge-approved",
+  "action": "acknowledged",
+  "lineage_id": "review-0301a7be05401e1f",
+  "target_identity": "sha256:f341bb2222b782626a02f4d55ca022900daade40ace419d9ca7feee10737f137",
+  "consumed_revision": "sha256:2d262b7c3bfbe9f8c6d1c28e4d9f2bc71d1e805985f341a12c1186db49215653",
+  "authority": "burned"
+}
