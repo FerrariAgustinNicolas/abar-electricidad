@@ -1,0 +1,10 @@
+{
+  "ownedProcessesStopped": [
+    "backend",
+    "frontend"
+  ],
+  "ownedContainersRemoved": 10,
+  "ownershipVerifiedBeforeRemoval": true,
+  "previousWorktreesUntouched": true,
+  "privateRawLogsRetainedOutsideRepository": true
+}

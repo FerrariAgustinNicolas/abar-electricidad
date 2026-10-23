@@ -1,8 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { NavigationEnd, provideRouter, Router } from '@angular/router';
+import { filter, firstValueFrom, Subject } from 'rxjs';
 import { AuthSessionService } from '../../core/auth/auth-session.service';
 import { H7ReportsApiService } from './h7-reports-api.service';
 import { isPasswordChangeRequired } from './h7-admin-error';
@@ -116,8 +116,11 @@ describe('AdminReportsPageComponent', () => {
     const response = new HttpErrorResponse({ status: 403, error: new Blob([JSON.stringify({ code: 'PASSWORD_CHANGE_REQUIRED' })], { type: 'application/json' }) });
     expect(response.error).toBeInstanceOf(Blob);
     expect(await isPasswordChangeRequired(response)).toBe(true);
+    const navigation = firstValueFrom(TestBed.inject(Router).events.pipe(
+      filter((event) => event instanceof NavigationEnd && event.urlAfterRedirects === '/admin/change-password'),
+    ));
     exports[0].error(response);
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await navigation;
     expect(auth.expire).not.toHaveBeenCalled();
     expect(TestBed.inject(Router).url).toBe('/admin/change-password');
     fixture.destroy();

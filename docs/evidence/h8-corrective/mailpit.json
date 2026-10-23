@@ -1,0 +1,49 @@
+{
+  "version": "v24.18.1",
+  "dispatchExit": 0,
+  "dispatch": {
+    "claimed": 5,
+    "sent": 5,
+    "failed": 0,
+    "retried": 0,
+    "stopped": false
+  },
+  "jobs": [
+    {
+      "state": "SENT",
+      "kind": "ORDER_CREATED_ADMIN",
+      "count": 1
+    },
+    {
+      "state": "SENT",
+      "kind": "ORDER_CREATED_BUYER",
+      "count": 1
+    },
+    {
+      "state": "SENT",
+      "kind": "ORDER_READY_BUYER",
+      "count": 1
+    },
+    {
+      "state": "SENT",
+      "kind": "PAYMENT_CONFIRMED_ADMIN",
+      "count": 1
+    },
+    {
+      "state": "SENT",
+      "kind": "PAYMENT_CONFIRMED_BUYER",
+      "count": 1
+    }
+  ],
+  "mailpit": {
+    "messages": 5,
+    "recipients": 5,
+    "testRecipients": 5,
+    "nonTestRecipients": 0
+  },
+  "facts": {
+    "before": "392fac0ae92855856a0150bcf78e6b31062bb5cf18939661c1067517c2369328",
+    "after": "392fac0ae92855856a0150bcf78e6b31062bb5cf18939661c1067517c2369328",
+    "unchanged": true
+  }
+}

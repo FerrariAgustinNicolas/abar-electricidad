@@ -1,0 +1,69 @@
+{
+  "version": "v24.18.1",
+  "http": {
+    "login": 200,
+    "report": 200,
+    "csv": 200
+  },
+  "totals": {
+    "confirmedOrderCount": 1,
+    "productsSubtotal": {
+      "amountMinor": "15000",
+      "currency": "ARS"
+    },
+    "deliveryFees": {
+      "amountMinor": "0",
+      "currency": "ARS"
+    },
+    "confirmedTotal": {
+      "amountMinor": "15000",
+      "currency": "ARS"
+    },
+    "averageTicket": {
+      "amountMinor": "15000",
+      "currency": "ARS"
+    },
+    "empty": false
+  },
+  "orders": {
+    "createdCount": 1,
+    "activeUnpaidCount": 0,
+    "cancelledUnpaidCount": 0,
+    "rejectedPaymentCount": 0,
+    "rejectedCurrentAttemptCount": 0,
+    "byStatus": [
+      {
+        "orderStatus": "RECEIVED",
+        "count": 0
+      },
+      {
+        "orderStatus": "PREPARING",
+        "count": 0
+      },
+      {
+        "orderStatus": "READY",
+        "count": 0
+      },
+      {
+        "orderStatus": "DELIVERED",
+        "count": 1
+      },
+      {
+        "orderStatus": "CANCELLED",
+        "count": 0
+      }
+    ]
+  },
+  "presentations": [
+    {
+      "unit": "UNIT",
+      "quantity": "1"
+    }
+  ],
+  "csv": {
+    "bytes": 2082,
+    "crlfCount": 12,
+    "bareLfCount": 0,
+    "sha256": "c57a7167d0d1b89cf481d4a60c9fd254234854e26dda4d18deeb740e59b8abdd"
+  }
+}

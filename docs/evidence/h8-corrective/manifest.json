@@ -1,0 +1,44 @@
+{
+  "baseCommit": "51fd7e898a650249cd616d69b6dbffe6732e6c0f",
+  "baseTree": "2659c64056f2c5a3bd2876daf85d4979af9cb763",
+  "productChangedInCorrectivePhase": false,
+  "sourceHashes": {
+    "backend/src/orders/orders.service.ts": "280cb201fafd3776c5241f418600665f99df9afd4c30a5a7f2686669645740fb",
+    "backend/test/h4-orders.spec.ts": "cbcfa9a1520a39e1542e462325a0df5f928c9881eb09d260b21e98279bd8f4f2",
+    "backend/test/h4-orders.e2e-spec.ts": "4c5711fb70206d82bdab3ebb90ec1b45b338ef503de4cc397a25aabe9e60cc8e",
+    "frontend/src/app/features/reports/admin-reports-page.component.spec.ts": "a5852ef619c2bf8464c770e64451382db395a31381fe889c06805a03378ffffb"
+  },
+  "runtime": {
+    "backend": {
+      "version": "v24.18.1",
+      "pid": 69323,
+      "execPathVerified": true
+    },
+    "frontend": {
+      "version": "v24.18.1",
+      "pid": 69324,
+      "execPathVerified": true
+    },
+    "dependencies": "fresh npm ci --offline from pinned lockfiles",
+    "mail": "owned loopback Mailpit only"
+  },
+  "limits": [
+    "Screenshots and business flow are fresh Node24; old h8 evidence remains separately qualified Node26.",
+    "Keyboard checkpoints are a bounded critical walk, not WCAG certification or zero-mouse claim for the whole session.",
+    "Native200percentZoom NOT RUN: browser capability exposes viewport/visibility, not native zoom.",
+    "API CSV bytes were independently fetched with valid dates after browser displayed CSV descargado; browser download bytes were not collected."
+  ],
+  "files": {
+    "checks.json": "b1c46a2bcb97ea75997891a9f97b0efbc5d8380ca1a006f781b5a9c73d9f3385",
+    "cleanup.json": "03baba1193a38e2bed64746eb5b93ff379553d725a679c1678bc3fdddd56951c",
+    "delivered-node24.jpg": "b04e15a6e42ebba9a964cb01796363a0396f578c6bf7cb83db058bab6df34c13",
+    "facts.json": "440c64458dc9268087bf2e41fa02b6f238b22c7311e9836275153f28f2970e0d",
+    "keyboard.json": "7f55d318e5e6ad482ee6baf6d6c5e4b2f695e95b598fa42c5289b11a580a16c9",
+    "mailpit.json": "238229f2e184ec57f43ab2f08512be3b1d6bddb68d8a679a0b2afe713cf9d25d",
+    "policy-fact-hashes.json": "95315b74df859e078de334e9526c534b805b9331e07f673f372a79083799bce2",
+    "preservation.json": "ab6732c2c1d2e29d85523123652b88a6c18c5ade8473a45e23f1c639b1b09e69",
+    "report-node24.jpg": "e85ed34cc189dfedf5abdfd304148e2006c25ae5cffb762c57477d3a76bbd4ed",
+    "report-reconciliation.json": "5e2f58a76f2f7583c6310562dac345cbcfac167c9cf8ecc606ea993470ea162e",
+    "report.csv": "c57a7167d0d1b89cf481d4a60c9fd254234854e26dda4d18deeb740e59b8abdd"
+  }
+}

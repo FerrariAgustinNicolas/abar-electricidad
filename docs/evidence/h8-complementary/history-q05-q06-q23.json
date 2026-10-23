@@ -1,0 +1,66 @@
+{
+  "executionCommit": "83f38abacb260fe37b7c40fb4763ab30af17bb28",
+  "executionTree": "14b1541ad4c49b14b69e4bfc1e66f50ce62947b7",
+  "reportCommit": "b7efb3bf9f88715e3bdaa99819b105dc57d1fc2f",
+  "reportTree": "3d352cb9f73886d64a2dfd5131088b78654e7a6a",
+  "backendBytesUnchangedBetweenExecutionAndReportCommit": true,
+  "sourceFiles": {
+    "backend/test/h2-stock-postgres.e2e-spec.ts": {
+      "blob": "01cf6b1d976c5bcc9eab28cb191bb3dbaf044dca",
+      "sha256": "1c84daced5987bfe66143f1293bf7665a7d1817dcea111f6d3c6a2f0fdadd17d"
+    },
+    "backend/src/catalog-shared/catalog-error.spec.ts": {
+      "blob": "bb25228a528fb55b506c8c2da9a612536c2ba3f4",
+      "sha256": "574a62ea601be020c9bb23ea50dccb4c5a8c63846ba4aa056be91b24ca6e22f2"
+    },
+    "backend/test/h2-catalog-images.spec.ts": {
+      "blob": "93dfc57cfd483d3cadabe48e3ff012dcf0a1c11b",
+      "sha256": "1c406da7d75aa6779d15ac93f57353bcbd5b981dbdc469ef78e2562410fa9de0"
+    },
+    "backend/src/catalog/image-storage.ts": {
+      "blob": "7030e0f1d5c106b9af297e4cdbaf269b594a16d6",
+      "sha256": "b4df5e9c00c0ede815d844d0aaaabd9d5596e639bbee556a76c8fb930f787c9d"
+    },
+    "backend/src/catalog/catalog.controller.ts": {
+      "blob": "712adec93f8f9a6d05ec80bfde5d686c6f7340ed",
+      "sha256": "f3579d92a10b2e2b88c513741753819eb85457e2cf3d6401662d72183b18c56f"
+    },
+    "docs/milestones/H2-informe.md": {
+      "blob": "989f229ca522f0fdf0dff42096806567cded0151",
+      "sha256": "b69c6ec590128e01cfd600803883dfa09377d629f36bab74ec868e06a2841aec"
+    }
+  },
+  "historicalObservedResults": {
+    "postgres": "13 PASS /4 SKIP, six stock cases, report lines83-106",
+    "jest": "1218 PASS /1 SKIP, report lines83-106"
+  },
+  "rawLogs": {
+    "availableForFreshInspection": false,
+    "priorRecordedE2eSha256": "7366966379735c9c9835e9fba0b1d323a07c1db08476d68e5daacdb50481b35f",
+    "priorRecordedJestSha256": "a042096bbadaff1811fae37e76be88adda396d30ae2a6ab68f8d9fdb1d6d3173",
+    "note": "These two raw log hashes are historical records, not freshly recomputed file hashes."
+  },
+  "Q05": {
+    "tests": [
+      "converts one 100m roll from the stored length with exactly two audit entries",
+      "leaves balance, operations and entries unchanged after an insufficient-roll rollback"
+    ],
+    "testLines": "backend/test/h2-stock-postgres.e2e-spec.ts:119-127,167-180",
+    "scope": "Direct service interface, real owned PostgreSQL; not a new browser/HTTP execution. Current StockService diff adds demand/read filters, not adjust/openRolls mutations."
+  },
+  "Q06": {
+    "historicalTest": "replays same actor/key/body before stale versions, and conflicts across operation type/body",
+    "testLines": "backend/test/h2-stock-postgres.e2e-spec.ts:155-165",
+    "limit": "Historical direct coverage is adjustment, not same-key opening replay; fresh gap probe separately recorded."
+  },
+  "Q23": {
+    "historicalTests": [
+      "preserves the frozen IMAGE_TOO_LARGE code after Multer transformation",
+      "PNG invalid checksums, dimensions, filters and raster regression probes"
+    ],
+    "testLines": "backend/src/catalog-shared/catalog-error.spec.ts:49-59; backend/test/h2-catalog-images.spec.ts:67-81",
+    "limit": "Large multipart test uses a deliberately reduced1byte boundary, not a5MiB production-route upload. Storage-key traversal is not a hostile multipart filename. Fresh filename probe separately recorded."
+  },
+  "currentProductCommit": "51fd7e898a650249cd616d69b6dbffe6732e6c0f",
+  "catalogStorageAndControllerBytesUnchangedFromH2": true
+}

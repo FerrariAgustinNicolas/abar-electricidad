@@ -54,4 +54,23 @@ describe('H8 payment-attempt raw-query conflict recovery', () => {
     await expect(f.service.createAttempt(f.orderId, f.token, f.key, f.body)).rejects.toMatchObject({ status: 503 });
     expect(f.prisma.orderIdempotencyKey.findUnique).not.toHaveBeenCalled();
   });
+
+  it.each(['P2002', '23505', 'P2034'])('keeps access ahead of a historical %s replay', async (code) => {
+    const f = await fixture({ code });
+    await expect(f.service.createAttempt(f.orderId, f.token, f.key, f.body)).resolves.toEqual(f.response);
+    f.prisma.orderIdempotencyKey.findUnique.mockClear();
+    await expect(f.service.createAttempt(f.orderId, 'another-order-token', f.key, f.body)).rejects.toMatchObject({ status: 403 });
+    f.prisma.order.findUnique.mockResolvedValue({ accessExpiresAt: new Date(0) } as never);
+    await expect(f.service.createAttempt(f.orderId, f.token, f.key, f.body)).rejects.toMatchObject({ status: 403 });
+    expect(f.prisma.orderIdempotencyKey.findUnique).not.toHaveBeenCalled();
+  });
+
+  it('fails unavailable authorization reads without consulting replay or starting another transaction', async () => {
+    const f = await fixture();
+    f.prisma.order.findUnique.mockRejectedValue(new Error('Synthetic authorization read failure'));
+    await expect(f.service.createAttempt(f.orderId, f.token, f.key, f.body)).rejects.toMatchObject({ status: 503 });
+    expect(f.prisma.orderIdempotencyKey.findUnique).not.toHaveBeenCalled();
+    expect(f.prisma.$transaction).toHaveBeenCalledTimes(1);
+  });
+
 });

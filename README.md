@@ -1,8 +1,10 @@
 # ABAR Electricidad
 
-## Backend y servicios locales (H1–H3 integrados y H4 local)
+## Estado integrado académico H1–H7 y validación local H8
 
-Esta sección describe la base local del backend y sus dependencias: NestJS, PostgreSQL y Mailpit. El frontend Angular se documenta más abajo. H1 mantiene autenticación por sesión y administración de usuarios; H2 integra catálogo, presentaciones, galería y stock auditado; H3 integra carrito y presupuesto autoritativo desde la base aprobada `d08adc1`. H4 agrega checkout de invitado y simulación académica en su rama local, pendiente de auditoría externa. El entorno es para desarrollo local; no es una configuración de producción.
+H1–H7 están integrados académicamente en la base aprobada `e2dba6f244e926610891cb927d8942825aeaf264` (árbol `61e1e04eb5109f898ca6372d6109070059e60cde`, tag anotado `h7-approved`). H8 valida localmente esa base; no autoriza producción ni cierre de PS. Contrato vigente: OpenAPI **0.10.0**. Las versiones de cada sección identifican su evolución histórica, no contratos simultáneos.
+
+Documentación vigente: [instalación](docs/manual-instalacion.md), [administrador](docs/manual-administrador.md), [cliente](docs/manual-cliente.md), [arquitectura](docs/arquitectura-h8.md) y [resultados H8](docs/milestones/H8-informe.md). Pagos DEMO; solo confirmación manual lleva a PAID y descuenta una vez. No hay reservas, pasarela real ni despliegue autorizado.
 
 ### H2 integrado: catálogo y stock
 
@@ -50,9 +52,9 @@ node --test scripts/h0-contract-validate.test.mjs scripts/h2-contract.test.mjs s
 npm --prefix backend run contract:validate
 ```
 
-### H4 local: checkout y pedidos de demostración
+### H4 integrado: checkout y pedidos de demostración
 
-Contrato aditivo **0.7.0**, [decisión H4](docs/decisions/H4-orders-payments.md) y
+Contrato histórico aditivo **0.7.0**, [decisión H4](docs/decisions/H4-orders-payments.md) y
 [alcance autorizado](docs/milestones/H4-prompt.md). La evidencia y las limitaciones,
 no una aprobación automática, se registran en [informe H4](docs/milestones/H4-informe.md).
 
@@ -67,9 +69,9 @@ Un pedido no tiene vencimiento comercial automático ni edición de renglones.
 El presupuesto y la credencial tienen vigencias técnicas independientes.
 **Crear, simular o reintentar no reserva ni descuenta existencias.**
 APPROVED corresponde al intento demo: el pago comercial permanece PENDING y el
-pedido RECEIVED. REJECTED conserva el pedido y permite otro intento. No hay H5,
-confirmación manual, datos bancarios/tarjetas ni correo enviado; las notificaciones
-se registran como trabajos pendientes. `requestedUnpaidQuantity` es demanda
+pedido RECEIVED. REJECTED conserva el pedido y permite otro intento. H5 agrega confirmación manual y H6 despacha trabajos hacia Mailpit local; no hay
+datos bancarios/tarjetas ni correo externo. En el corte histórico H4 las notificaciones
+solo se registraban como trabajos pendientes. `requestedUnpaidQuantity` es demanda
 informativa por presentación en stock administrativo, nunca disponibilidad neta.
 
 #### Configuración privada local
@@ -196,7 +198,7 @@ El script usa una API local ya disponible o inicia el backend compilado con conf
 
 ## H1 integrado: contrato y verificaciones
 
-`main` integró H1 en `18c39e9b86b7b7bf45263fe5bad4fe77125a6386`. La base aprobada para H2 es `5c0e0fc200c1c22eaa2731298eb7e8bf968a8466`, con H1 y su cierre correctivo integrados. `contracts/openapi.yaml` es ahora 0.6.0 candidata (extensión H3); conserva las nueve operaciones auth/admin más health y añade H2, sin promesa productiva. P01–P10 y las reglas comerciales siguen fuera de alcance. Ver [decisión H1](docs/decisions/H1-auth.md), [validación post-merge](docs/milestones/H1-postmerge-validation.md) e [historial contractual](contracts/CHANGELOG.md).
+`main` integró H1 en `18c39e9b86b7b7bf45263fe5bad4fe77125a6386`. La base aprobada para H2 es `5c0e0fc200c1c22eaa2731298eb7e8bf968a8466`, con H1 y su cierre correctivo integrados. `contracts/openapi.yaml` evolucionó hasta 0.10.0 (H7); conserva las nueve operaciones auth/admin más health y añade H2, sin promesa productiva. Las decisiones posteriores resuelven reglas DEMO; las validaciones comerciales reales pendientes se conservan como deuda. Ver [decisión H1](docs/decisions/H1-auth.md), [validación post-merge](docs/milestones/H1-postmerge-validation.md) e [historial contractual](contracts/CHANGELOG.md).
 
 ```sh
 npm --prefix backend run contract:validate
@@ -269,7 +271,7 @@ La contraseña temporal debe tener 15–128 puntos Unicode tras NFC y superar la
 
 Iniciá la API con esa misma base y su clave CSRF privada; abrí `/admin/login`, ingresá `admin@example.test`, cambiá la contraseña obligatoria y comprobá `/admin/usuarios`. Antes del cambio, users debe responder 403 `PASSWORD_CHANGE_REQUIRED`; luego verificá logout e imposibilidad de reutilizar la sesión anterior. No conserves la contraseña temporal. Para otra base local, creá un nuevo contenedor/base descartable en vez de borrar datos existentes. Los resultados efectivamente ejecutados están en el informe, no se deducen de estos pasos.
 
-## Frontend Angular (H1–H4)
+## Frontend Angular (H1–H7)
 
 El frontend es una aplicación Angular standalone/zoneless con dependencias fijadas en `frontend/package.json` y lockfile separado. Requiere Node.js 24.x y npm 11.x. No se añadió gestor de monorepo.
 
@@ -325,9 +327,9 @@ la eliminación de hasta cien archivos huérfanos con las publicaciones. Consult
 [política de imágenes](docs/decisions/H2-images.md); no ejecutar limpieza sobre
 archivos ajenos ni interpretar un fallo de transacción como rollback confirmado.
 
-## H5 — Confirmación manual y pedidos (candidato local)
+## H5 integrado — Confirmación manual y pedidos
 
-OpenAPI 0.8.0 agrega `/api/v1/admin/orders`: listado/detalle/historial, confirmación manual completa, notas, cancelación impaga y transiciones READY/DELIVERED. Solo confirmar pago descuenta stock, una vez por pago/presentación; APPROVED de simulación no es PAID. Cancelar un pago confirmado está prohibido; no hay devoluciones automáticas ni despacho H6. Sesión H1 y Origin/CSRF siguen siendo obligatorios. [Decisión H5](docs/decisions/H5-manual-confirmation.md). No implica aprobación externa ni disponibilidad productiva.
+OpenAPI 0.8.0 agrega `/api/v1/admin/orders`: listado/detalle/historial, confirmación manual completa, notas, cancelación impaga y transiciones READY/DELIVERED. Solo confirmar pago descuenta stock, una vez por pago/presentación; APPROVED de simulación no es PAID. Cancelar un pago confirmado está prohibido; no hay devoluciones automáticas ni despacho H6. Sesión H1 y Origin/CSRF siguen siendo obligatorios. [Decisión H5](docs/decisions/H5-manual-confirmation.md). Su integración académica no implica disponibilidad productiva.
 
 Verificación propia sobre PostgreSQL 17 nuevo, con Docker local e imagen `postgres:17.11-bookworm` previamente instalada:
 
@@ -337,7 +339,7 @@ node backend/scripts/h5-postgres.mjs
 
 El runner crea dos bases aisladas en un contenedor con ownership y puerto loopback aleatorio, despliega migraciones y comprueba upgrade H4 poblado, snapshots, drift, confirmación/rollback, locks reales, replay, transiciones y seguridad H1. No acepta DATABASE_URL como destino ni reutiliza bases ajenas. `--keep` conserva exclusivamente el contenedor de esa ejecución para evidencia local; verificar su manifest privado/labels antes de detenerlo. Los manifests temporales contienen credenciales efímeras: nunca versionarlos, capturarlos ni incluirlos en informes. Fallar el runner no constituye PASS ni autoriza fallback a otra base.
 
-## H6 local notification verification
+## H6 integrado — Local notification verification
 
 H6 extends the existing transactional notification outbox. This is a local DEMO,
 not production email or payment approval. Only a separately invoked foreground
@@ -395,11 +397,11 @@ send SMTP synchronously. `/contacto` reads minimal public DEMO contact; WhatsApp
 is a manual link only when a validated configured value exists.
 
 
-## H7 — Dashboard y reportes básicos (candidato local académico)
+## H7 integrado — Dashboard y reportes básicos
 
 - Dashboard protegido: `/admin/dashboard`; reportes: `/admin/reportes`. Ambos consultan hechos persistidos, no el carrito ni resultados simulados sin confirmar.
 - Contrato normativo: OpenAPI `0.10.0`, marcador `dashboard-reports-v1`. Las ventas usan `Payment.confirmedAt`; los pedidos nuevos usan `Order.createdAt`. Fechas locales de Buenos Aires, inicio incluido y fin exclusivo; máximo 366 días.
 - Importes ARS exactos en centavos como strings. CSV UTF-8 con 24 columnas y secciones reconciliables: no sumar totales y desgloses entre sí ni mezclar cantidades UNIT/METER/ROLL.
 - Prueba PostgreSQL aislada: `node backend/scripts/h7-postgres.mjs`. Requiere Docker local y la imagen local `postgres:17.11-bookworm`; no descarga imágenes ni reutiliza bases. `--keep` conserva únicamente un fixture exitoso para comprobaciones locales y genera un manifiesto privado con credenciales: nunca versionarlo.
 - No migration required: H7 utiliza las ocho migraciones H1–H6 existentes. No modifica pagos, confirmaciones, stock ni notificaciones.
-- Evidencia y límites: [informe H7](docs/milestones/H7-informe.md). No es contabilidad, facturación ni certificación productiva; no se autoriza publicación.
+- Evidencia y límites: [informe H7](docs/milestones/H7-informe.md). No es contabilidad, facturación ni certificación productiva; H8 no autoriza una nueva publicación.

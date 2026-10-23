@@ -1,0 +1,25 @@
+{
+  "technicalCommit": "e2dba6f244e926610891cb927d8942825aeaf264",
+  "technicalTree": "61e1e04eb5109f898ca6372d6109070059e60cde",
+  "scope": "Initial buyer/report screenshots on exact H7. Final cancellation/mail checks on51fd7e8; no other screenshot is claimed as final-delta rerun. Interactive UI processes used Node26; runtime24-smoke.json is a separate later smoke only. All owned app processes/containers stopped after ownership checks.",
+  "files": {
+    "buyer-360.jpg": "02de318247370e4e2d751fc565971ec309a29ee0c898883dd39d04cb5f12e858",
+    "buyer-order.jpg": "bc67ca1bf3acf0e5f9ca47273689c4ba752a5605fe32e201a527d7907b012fa1",
+    "cleanup-check.json": "e992ad3e4927c0b2ff6ac34b93bd2a022314c0d687d995763cece6130227d98e",
+    "final-cancel.jpg": "025c862c112d1a9da740093be695ae01e9149f0311284b61d34eadf36275e794",
+    "final-mail-check.json": "67319aebc2b40c005c4bf8086df826e71110142988afd032d8235f868aab73e2",
+    "preservation-check.json": "4d910e5152440f8d550813b37d7b75f6658925c0285a9f141839e465e391c6c0",
+    "report-360.jpg": "562bf9cd387104e2bf4db7ad5e77b0b1d7e587e701662227b96a57be1c4eb199",
+    "report-viewports.json": "1a9f530cb63198ffe756ac8f5389f2e1843ab824a509dba2ba09f3115680f35b",
+    "report.csv": "73e602aadb6df7c09a1f6a38bd1f0c5ffc025e51aabae93dfe51d2c7be188502",
+    "runtime24-smoke.json": "5a881771b7c126a17923969d99119a1a2aaeecdffd8c2c72b7814b82c5cc6a6e",
+    "viewport-measures.json": "67e5ae8af37aaa85b2a165b5171f0b4eff0d89c5cc8b53f8dbe7e80f1210e872"
+  },
+  "deltaTechnicalCommit": "51fd7e898a650249cd616d69b6dbffe6732e6c0f",
+  "deltaTechnicalTree": "2659c64056f2c5a3bd2876daf85d4979af9cb763",
+  "sourceHashes": {
+    "backend/src/orders/orders.service.ts": "280cb201fafd3776c5241f418600665f99df9afd4c30a5a7f2686669645740fb",
+    "backend/test/h4-orders.spec.ts": "e348fec7a159b714ff8e8db5e2410a045335d5d14fc9eaebf5caef16bbb5a024",
+    "backend/test/h4-orders.e2e-spec.ts": "7b0f03e547050a3ff005e27fab943dec18745368b1d8628b9e0c28450c08f966"
+  }
+}

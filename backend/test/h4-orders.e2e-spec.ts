@@ -392,4 +392,61 @@ describe('H4 orders on a verified owned PostgreSQL 17 fixture', () => {
       expect(JSON.stringify(limited.body)).not.toContain('third@example.test');
     } finally { await limitedApplication.close(); }
   }, 20_000);
+
+  it('authorizes historical attempt replays before returning data and preserves every business fact on rejection', async () => {
+    const create = async () => {
+      const quote = await checkout.createQuote(quoteRequest(presentationId));
+      return (await request(server).post('/api/v1/public/orders').set('Idempotency-Key', key()).send(createBody(quote.quoteId)).expect(201)).body;
+    };
+    const order = await create(), otherOrder = await create();
+    const route = `/api/v1/public/orders/${order.orderId}/payment-attempts`;
+    const intent = key(), body = { methodCode: 'DEMO_TRANSFER' };
+    const send = (token: string, input = body) => request(server).post(route)
+      .set('X-Order-Access-Token', token).set('Idempotency-Key', intent).send(input);
+    const first = await send(order.accessToken).expect(201);
+    const unchanged = async (action: () => PromiseLike<unknown>) => {
+      const before = await h4PersistenceHash();
+      await action();
+      const after = await h4PersistenceHash();
+      expect(after).toBe(before);
+      return { before, after };
+    };
+    const replayHash = await unchanged(async () => {
+      const replay = await send(order.accessToken).expect(201);
+      expect(replay.body).toEqual(first.body);
+    });
+    await unchanged(async () => {
+      const conflict = await send(order.accessToken, { methodCode: 'DEMO_PAY_ON_PICKUP' }).expect(409);
+      expect(conflict.body.code).toBe('IDEMPOTENCY_CONFLICT');
+    });
+    for (const token of ['invalid-order-access-token-for-h8', otherOrder.accessToken]) {
+      await unchanged(async () => {
+        const denied = await send(token).expect(403);
+        expect(denied.body.code).toBe('ORDER_ACCESS_INVALID');
+        expect(denied.body).not.toHaveProperty('currentAttempt');
+      });
+    }
+    // Fault injection selects conflict recovery; the failed authorization query runs on the real owned PostgreSQL fixture.
+    const transaction = jest.spyOn(prisma, '$transaction').mockRejectedValueOnce({ code: 'P2034' });
+    const read = jest.spyOn(prisma.order, 'findUnique').mockImplementationOnce(() =>
+      prisma.$queryRawUnsafe('SELECT * FROM "__h8_missing_authorization_source__"') as never);
+    const unavailableHash = await unchanged(async () => {
+      try {
+        const unavailable = await send(order.accessToken).expect(503);
+        expect(unavailable.body.code).toBe('SERVICE_UNAVAILABLE');
+        expect(unavailable.body).not.toHaveProperty('currentAttempt');
+      } finally { read.mockRestore(); transaction.mockRestore(); }
+    });
+    await prisma.order.update({ where: { id: order.orderId }, data: { accessExpiresAt: new Date(0) } });
+    const expiredHash = await unchanged(async () => {
+      const denied = await send(order.accessToken).expect(403);
+      expect(denied.body.code).toBe('ORDER_ACCESS_INVALID');
+    });
+    expect((await prisma.order.findUniqueOrThrow({ where: { id: order.orderId } })).status).toBe('RECEIVED');
+    expect(await prisma.paymentAttempt.count({ where: { payment: { orderId: order.orderId } } })).toBe(2);
+    expect(await prisma.orderIdempotencyKey.count({ where: { scope: `attempt:${order.orderId}`, key: intent } })).toBe(1);
+    expect(await stockHash()).toBe(startStockHash);
+    console.log('H8 sanitized access-policy fact hashes', JSON.stringify({ replayHash, unavailableHash, expiredHash }));
+  }, 20000);
+
 });

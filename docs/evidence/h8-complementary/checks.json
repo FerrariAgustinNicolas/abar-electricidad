@@ -1,0 +1,56 @@
+{
+  "receivedIndexTree": "8430ad6eeb6c5752ca62364f499a12acbcd23d94",
+  "receivedIndexFiles": 39,
+  "receivedStagedBinaryDiffSha256": "66e686562a3b11ac171677fadad403c33bceb8d0096ef59229567bc5580d49f4",
+  "receivedIndexEntriesSha256": "68b97b23b0c503e5f0bcf93157864d7ef9ae9ab2ecb9d8924b698b80827d20a3",
+  "productCommit": "51fd7e898a650249cd616d69b6dbffe6732e6c0f",
+  "productTree": "2659c64056f2c5a3bd2876daf85d4979af9cb763",
+  "newProductCodeChanges": false,
+  "nativeReviewRepeated": false,
+  "nativeStatus": "correction_required / BLOCKER / no ACK",
+  "externalException": "R4 only; no publication or academic approval",
+  "checks": {
+    "contract-validate": {
+      "result": "PASS OpenAPI3.0.3/16examples exit0",
+      "privateLogBasename": "contract-validate.log",
+      "sha256": "5619fe955a78ac8524e6fd0131e6d0b878d66eedb130dd6ab4aa13da867cf9dd"
+    },
+    "contract-tests": {
+      "result": "41PASS/0FAIL/0SKIP exit0",
+      "privateLogBasename": "contract-tests.log",
+      "sha256": "08e86a4432f6769cdbf95e22f96b582da30eebc9b0d7ac5d0b232bd33274f81e"
+    },
+    "parent-contract-spotcheck": {
+      "result": "PASS exit0",
+      "privateLogBasename": "parent-contract-spotcheck.log",
+      "sha256": "5619fe955a78ac8524e6fd0131e6d0b878d66eedb130dd6ab4aa13da867cf9dd"
+    },
+    "Q06-Q23-missing": {
+      "result": "2PASS exit0",
+      "privateLogBasename": "probes.log",
+      "sha256": "61ea6def41c3789a7a36a904cfed97b6c4934adadab3b429b31f0809117937d8"
+    },
+    "Q23-rejections": {
+      "result": "1PASS/2subcases exit0",
+      "privateLogBasename": "rejection-probe.log",
+      "sha256": "6d4ffeb55c00050beaa3274213ddceb7874738b3f39876285a8ea337bb17e3f8"
+    }
+  },
+  "privateProbes": {
+    "missing-probes.cjs": "e549d642266ecdf6490d6cbac96f2c3a42051e074d2418a79405ada02314f848",
+    "rejection-probe.cjs": "279dc0ab50ef66eb528bf96300a8a3968c0d8a5c4ce0cdd6bd632ab8de10aa92"
+  },
+  "limits": [
+    "No full frontend/system/browser rerun: previous161/161 and Node24 critical flow retained.",
+    "Q05 raw historical logs unavailable, report/versioned source recovered.",
+    "Fresh stock probe uses service interface; upload probe uses actual multipart HTTP/controller/service/filesystem and persisted test session, no login.",
+    "Initial offline empty-cache ENOTCACHED/build127 attempts retained; same pinned dependencies succeeded from existing cache without network.",
+    "Q29 evaluated, not executed: guarded bootstrap identities disjoint; no installer built."
+  ],
+  "independentReview": {
+    "scope": "15 new/current documentary artifacts and private probe assertions; not whole-index privacy or execution",
+    "result": "No substantive blocker found",
+    "reviewedArtifactsAggregateSha256": "9c3e9c5ff26ac751628e90cae76a3bacae26a89986071f757aeaeaea1a71ad33",
+    "note": "Aggregate identifies the reviewer input before this passive result record and final closure update, not the final index."
+  }
+}

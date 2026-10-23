@@ -1,0 +1,8 @@
+{
+  "candidate": "51fd7e898a650249cd616d69b6dbffe6732e6c0f",
+  "nodeVersion": "v24.18.1",
+  "backendHealth": 200,
+  "angularHealthProxy": 200,
+  "swaggerJson": 200,
+  "qualification": "Prior interactive browser flows ran on Node26; this is a later bounded pinned-Node24 smoke, not a full repetition."
+}

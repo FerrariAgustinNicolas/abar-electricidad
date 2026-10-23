@@ -1,0 +1,376 @@
+[
+  {
+    "step": "created-unpaid",
+    "candidate": "51fd7e898a650249cd616d69b6dbffe6732e6c0f",
+    "hash": "d4b5500e5ed2aac75be3d5ac2bd04770121a30b19fab0d59dada8c64f91df00f",
+    "orders": [
+      {
+        "status": "RECEIVED",
+        "version": 1
+      }
+    ],
+    "payments": [
+      {
+        "status": "PENDING",
+        "amountMinor": "15000"
+      }
+    ],
+    "attempts": [
+      {
+        "status": "PENDING",
+        "sequence": 1
+      }
+    ],
+    "balances": [
+      {
+        "unit": "UNIT",
+        "availableQuantity": 50
+      },
+      {
+        "unit": "METER",
+        "availableQuantity": 100
+      },
+      {
+        "unit": "ROLL",
+        "availableQuantity": 10
+      }
+    ],
+    "ledgerCount": 0
+  },
+  {
+    "step": "approved-unpaid",
+    "candidate": "51fd7e898a650249cd616d69b6dbffe6732e6c0f",
+    "hash": "f8b8e35c1a7f45c461d6bfb11d08c955816577da74fb8c96cdc739f13191e49a",
+    "orders": [
+      {
+        "status": "RECEIVED",
+        "version": 2
+      }
+    ],
+    "payments": [
+      {
+        "status": "PENDING",
+        "amountMinor": "15000"
+      }
+    ],
+    "attempts": [
+      {
+        "status": "PENDING",
+        "sequence": 1
+      },
+      {
+        "status": "APPROVED",
+        "sequence": 2
+      }
+    ],
+    "balances": [
+      {
+        "unit": "UNIT",
+        "availableQuantity": 50
+      },
+      {
+        "unit": "METER",
+        "availableQuantity": 100
+      },
+      {
+        "unit": "ROLL",
+        "availableQuantity": 10
+      }
+    ],
+    "ledgerCount": 0
+  },
+  {
+    "step": "paid-preparing",
+    "candidate": "51fd7e898a650249cd616d69b6dbffe6732e6c0f",
+    "hash": "63000391741bfd29aff92ae92a27905b2f4915e71f2622a837872fef9aca311c",
+    "orders": [
+      {
+        "status": "PREPARING",
+        "version": 3
+      }
+    ],
+    "payments": [
+      {
+        "status": "PAID",
+        "amountMinor": "15000"
+      }
+    ],
+    "attempts": [
+      {
+        "status": "PENDING",
+        "sequence": 1
+      },
+      {
+        "status": "APPROVED",
+        "sequence": 2
+      }
+    ],
+    "balances": [
+      {
+        "unit": "UNIT",
+        "availableQuantity": 49
+      },
+      {
+        "unit": "METER",
+        "availableQuantity": 100
+      },
+      {
+        "unit": "ROLL",
+        "availableQuantity": 10
+      }
+    ],
+    "ledgerCount": 1
+  },
+  {
+    "step": "ready",
+    "candidate": "51fd7e898a650249cd616d69b6dbffe6732e6c0f",
+    "hash": "e8c26599dacd0f9f21c5ac7a133998339869463a0f4508d3277faed3e56f8828",
+    "orders": [
+      {
+        "status": "READY",
+        "version": 4
+      }
+    ],
+    "payments": [
+      {
+        "status": "PAID",
+        "amountMinor": "15000"
+      }
+    ],
+    "attempts": [
+      {
+        "status": "PENDING",
+        "sequence": 1
+      },
+      {
+        "status": "APPROVED",
+        "sequence": 2
+      }
+    ],
+    "balances": [
+      {
+        "unit": "UNIT",
+        "availableQuantity": 49
+      },
+      {
+        "unit": "METER",
+        "availableQuantity": 100
+      },
+      {
+        "unit": "ROLL",
+        "availableQuantity": 10
+      }
+    ],
+    "ledgerCount": 1
+  },
+  {
+    "step": "before-dispatch-report-read",
+    "candidate": "51fd7e898a650249cd616d69b6dbffe6732e6c0f",
+    "hash": "392fac0ae92855856a0150bcf78e6b31062bb5cf18939661c1067517c2369328",
+    "orders": [
+      {
+        "status": "DELIVERED",
+        "version": 5
+      }
+    ],
+    "payments": [
+      {
+        "status": "PAID",
+        "amountMinor": "15000"
+      }
+    ],
+    "attempts": [
+      {
+        "status": "PENDING",
+        "sequence": 1
+      },
+      {
+        "status": "APPROVED",
+        "sequence": 2
+      }
+    ],
+    "balances": [
+      {
+        "unit": "UNIT",
+        "availableQuantity": 49
+      },
+      {
+        "unit": "METER",
+        "availableQuantity": 100
+      },
+      {
+        "unit": "ROLL",
+        "availableQuantity": 10
+      }
+    ],
+    "ledgerCount": 1
+  },
+  {
+    "step": "after-dispatch-read-block",
+    "candidate": "51fd7e898a650249cd616d69b6dbffe6732e6c0f",
+    "hash": "392fac0ae92855856a0150bcf78e6b31062bb5cf18939661c1067517c2369328",
+    "orders": [
+      {
+        "status": "DELIVERED",
+        "version": 5
+      }
+    ],
+    "payments": [
+      {
+        "status": "PAID",
+        "amountMinor": "15000"
+      }
+    ],
+    "attempts": [
+      {
+        "status": "PENDING",
+        "sequence": 1
+      },
+      {
+        "status": "APPROVED",
+        "sequence": 2
+      }
+    ],
+    "balances": [
+      {
+        "unit": "UNIT",
+        "availableQuantity": 49
+      },
+      {
+        "unit": "METER",
+        "availableQuantity": 100
+      },
+      {
+        "unit": "ROLL",
+        "availableQuantity": 10
+      }
+    ],
+    "ledgerCount": 1
+  },
+  {
+    "step": "after-dated-report-read",
+    "candidate": "51fd7e898a650249cd616d69b6dbffe6732e6c0f",
+    "hash": "392fac0ae92855856a0150bcf78e6b31062bb5cf18939661c1067517c2369328",
+    "orders": [
+      {
+        "status": "DELIVERED",
+        "version": 5
+      }
+    ],
+    "payments": [
+      {
+        "status": "PAID",
+        "amountMinor": "15000"
+      }
+    ],
+    "attempts": [
+      {
+        "status": "PENDING",
+        "sequence": 1
+      },
+      {
+        "status": "APPROVED",
+        "sequence": 2
+      }
+    ],
+    "balances": [
+      {
+        "unit": "UNIT",
+        "availableQuantity": 49
+      },
+      {
+        "unit": "METER",
+        "availableQuantity": 100
+      },
+      {
+        "unit": "ROLL",
+        "availableQuantity": 10
+      }
+    ],
+    "ledgerCount": 1
+  },
+  {
+    "step": "after-report-export-reconciliation",
+    "candidate": "51fd7e898a650249cd616d69b6dbffe6732e6c0f",
+    "hash": "392fac0ae92855856a0150bcf78e6b31062bb5cf18939661c1067517c2369328",
+    "orders": [
+      {
+        "status": "DELIVERED",
+        "version": 5
+      }
+    ],
+    "payments": [
+      {
+        "status": "PAID",
+        "amountMinor": "15000"
+      }
+    ],
+    "attempts": [
+      {
+        "status": "PENDING",
+        "sequence": 1
+      },
+      {
+        "status": "APPROVED",
+        "sequence": 2
+      }
+    ],
+    "balances": [
+      {
+        "unit": "UNIT",
+        "availableQuantity": 49
+      },
+      {
+        "unit": "METER",
+        "availableQuantity": 100
+      },
+      {
+        "unit": "ROLL",
+        "availableQuantity": 10
+      }
+    ],
+    "ledgerCount": 1
+  },
+  {
+    "step": "delivered-final",
+    "candidate": "51fd7e898a650249cd616d69b6dbffe6732e6c0f",
+    "hash": "392fac0ae92855856a0150bcf78e6b31062bb5cf18939661c1067517c2369328",
+    "orders": [
+      {
+        "status": "DELIVERED",
+        "version": 5
+      }
+    ],
+    "payments": [
+      {
+        "status": "PAID",
+        "amountMinor": "15000"
+      }
+    ],
+    "attempts": [
+      {
+        "status": "PENDING",
+        "sequence": 1
+      },
+      {
+        "status": "APPROVED",
+        "sequence": 2
+      }
+    ],
+    "balances": [
+      {
+        "unit": "UNIT",
+        "availableQuantity": 49
+      },
+      {
+        "unit": "METER",
+        "availableQuantity": 100
+      },
+      {
+        "unit": "ROLL",
+        "availableQuantity": 10
+      }
+    ],
+    "ledgerCount": 1
+  }
+]

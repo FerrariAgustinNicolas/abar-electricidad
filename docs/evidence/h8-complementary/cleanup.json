@@ -1,0 +1,7 @@
+{
+  "newOwnedContainersRemoved": 1,
+  "exactScratchRootsRemoved": 2,
+  "ownerIdImageTmpfsNoHostMountLoopbackVerified": true,
+  "privateLogsAndProbeSourcesArchived": true,
+  "ambientResourcesTouched": false
+}

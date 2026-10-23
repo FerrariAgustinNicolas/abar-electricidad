@@ -1,0 +1,15 @@
+{
+  "candidate": "51fd7e898a650249cd616d69b6dbffe6732e6c0f",
+  "dispatchExit": 0,
+  "businessBefore": "ba72915f721a8bb923655e8adef167a0",
+  "businessAfter": "ba72915f721a8bb923655e8adef167a0",
+  "unchanged": true,
+  "jobs": [
+    {
+      "state": "SENT",
+      "count": 9
+    }
+  ],
+  "mailpitMessages": 27,
+  "allRecipientsFictitious": true
+}

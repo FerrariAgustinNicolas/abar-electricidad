@@ -1,0 +1,17 @@
+{
+  "tree": "8430ad6eeb6c5752ca62364f499a12acbcd23d94",
+  "hashes": {
+    "backend/src/stock/stock.service.ts": "bf08e3530e24a950290afa7e73222678d2b05ad67ed91182f1951799631a1efd",
+    "backend/src/auth/admin-users.service.ts": "d6bec4fe26557388fb9122bd08c308d674e7097f4b333313b3cc26b2632ecaf8",
+    "backend/src/auth/csrf-nonce.cipher.ts": "259febf7504e7070fd4a5c5407ab34992b10e7e65799556a8d6ef167b5619aaf",
+    "backend/src/catalog/catalog.controller.ts": "f3579d92a10b2e2b88c513741753819eb85457e2cf3d6401662d72183b18c56f",
+    "backend/src/catalog/catalog.service.ts": "acd232301c14a1c5a35a94eb57ce3e5eb9547f9af1492e327c951fe57b73733d",
+    "backend/src/catalog/image-storage.ts": "b4df5e9c00c0ede815d844d0aaaabd9d5596e639bbee556a76c8fb930f787c9d",
+    "backend/dist/stock/stock.service.js": "fcc6b8263c9ef429429486cbe5f7666dea2c4d8b59876b7811ab646d21f481ed",
+    "backend/dist/catalog/catalog.controller.js": "4871c30d0e0bfdfa2a94cef3d8aa756eea5c1c1eae51c5b8b351c3dcba781b23",
+    "backend/dist/catalog/catalog.service.js": "b9b79265019250abaf4aeebb382a12cad3925ae537329df41e14e5b070d8600d",
+    "backend/dist/catalog/image-storage.js": "67c64c72bdb4260009853ff9eb67745924523a562a21462bdd1267213ac48e0f",
+    "private-logs/missing-probes.cjs": "e549d642266ecdf6490d6cbac96f2c3a42051e074d2418a79405ada02314f848",
+    "private-logs/setup.cjs": "11c46e0588b35ea3c9d3936eb065e26ee3b734d288737eae790341e93c874288"
+  }
+}

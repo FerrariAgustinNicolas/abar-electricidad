@@ -1,0 +1,11 @@
+{
+  "registeredWorktrees": 20,
+  "presentDirectories": 13,
+  "missingDirectories": 7,
+  "allRegistrationsIdentical": true,
+  "otherPresentWorktreesHeadStatusIndexDiffCachedIdentical": 12,
+  "originalPromptBytesIdentical": true,
+  "noPruneOrReconstruction": true,
+  "originalH8StagedTreeBeforeCorrectiveStaging": "7e94b65ab7234e17e74fca3f5437eba411eab222",
+  "h8IndexEntriesBeforeCorrectiveStagingSha256": "3d3187e78581a6877b3f1374839d7b9c85ff688bc0bb8903e71fec69e079a082"
+}

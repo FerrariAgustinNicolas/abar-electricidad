@@ -1,0 +1,74 @@
+{
+  "frontend-red": {
+    "candidate": "51fd7e898a650249cd616d69b6dbffe6732e6c0f",
+    "result": "160 PASS / 1 FAIL; exit1",
+    "privateLogBasename": "frontend-full.log",
+    "sha256": "1a22435c72b1db6237c5393f4add865f724bdbc20f66a7d9fc52b7476c27d005"
+  },
+  "frontend-focused-green": {
+    "candidate": "51fd7e8 + exact corrective test",
+    "result": "9 PASS; exit0",
+    "privateLogBasename": "frontend-target-corrected.log",
+    "sha256": "01588b14af357a8a954f77772e84612a9e480b10d7745d3fa31e75432587c36c"
+  },
+  "frontend-full-green": {
+    "candidate": "51fd7e8 + exact corrective test",
+    "result": "161 PASS / 39 files; exit0",
+    "privateLogBasename": "frontend-full-corrected.log",
+    "sha256": "3569e2b2e034b388ab14d77ff7a2ba912b8d79a81a11c14a6fcdc71f0dd2963d"
+  },
+  "backend-policy-unit": {
+    "candidate": "51fd7e8 + exact corrective tests",
+    "result": "8 PASS; exit0",
+    "privateLogBasename": "policy-unit.log",
+    "sha256": "069d0c7a68c4057b5650e75139f8317f0befec56d9af397305f690a16928bc97"
+  },
+  "backend-policy-pg": {
+    "candidate": "51fd7e8 + exact corrective tests",
+    "result": "12 PASS; exit0",
+    "privateLogBasename": "policy-h4-postgres.log",
+    "sha256": "27b26cb562d9eb708e9f2f1a101298abf90bee9d14b397f4ef47f1df4d969edb"
+  },
+  "backend-lint": {
+    "candidate": "51fd7e8 + exact corrective tests",
+    "result": "PASS; exit0",
+    "privateLogBasename": "policy-lint.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "historical-h5": {
+    "candidate": "51fd7e898a650249cd616d69b6dbffe6732e6c0f",
+    "result": "15 PASS; exit0",
+    "privateLogBasename": "final-h5.log",
+    "sha256": "cf4219d2bb88bf5fe9fbb6244acf8cf9c6b32908561941e6c15ea7a460ea72ea"
+  },
+  "historical-h6": {
+    "candidate": "51fd7e898a650249cd616d69b6dbffe6732e6c0f",
+    "result": "15 PASS; exit0",
+    "privateLogBasename": "final-h6.log",
+    "sha256": "89b8e8dfbc9d1da5eaf1636190a39d41de5729ce4ecb4076c201b85b6057a6a6"
+  },
+  "historical-h7": {
+    "candidate": "51fd7e898a650249cd616d69b6dbffe6732e6c0f",
+    "result": "10 PASS; exit0",
+    "privateLogBasename": "final-h7.log",
+    "sha256": "ed8c323ef7c54c636c8ae67fda74d13e3f5c7ba6773ac5b226e1684fcae9178e"
+  },
+  "independent-verify-unit": {
+    "candidate": "51fd7e8 + exact corrective test hashes in manifest",
+    "result": "8 PASS; exit0",
+    "privateLogBasename": "backend-unit.log",
+    "sha256": "431ff40dc56a6a205bce2a300b53468c3b376f97ee52919271c914f1816edd2e"
+  },
+  "independent-verify-frontend": {
+    "candidate": "51fd7e8 + exact corrective test hashes in manifest",
+    "result": "9 PASS; exit0",
+    "privateLogBasename": "frontend-focused.log",
+    "sha256": "338210b6ca7a6607afc1afcf0cfa1e26b215648577d179dd563eefd4bdc10b65"
+  },
+  "parent-spotcheck": {
+    "candidate": "51fd7e8 + exact corrective test hashes in manifest",
+    "result": "8 PASS; exit0",
+    "privateLogBasename": "parent-spotcheck.log",
+    "sha256": "4f9b7d87f7b2bea58ba6f2820c53e0d31903e85c7a4396673d8c4e53e791668b"
+  }
+}
