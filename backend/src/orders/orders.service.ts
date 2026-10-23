@@ -168,7 +168,13 @@ export class OrdersService {
       }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable, maxWait: 5000, timeout: 10000 });
     } catch (error) {
       if (error instanceof CatalogException) throw error;
-      if ((error as any)?.code === 'P2002' || (error as any)?.code === '23505' || (error as any)?.code === 'P2034') {
+      const rawWriteConflict = (error as any)?.code === 'P2010' &&
+        (error as any)?.meta?.driverAdapterError?.cause?.kind === 'TransactionWriteConflict';
+      if ((error as any)?.code === 'P2002' || (error as any)?.code === '23505' || (error as any)?.code === 'P2034' || rawWriteConflict) {
+        // A raw row-lock conflict can occur before the in-transaction access check.
+        const currentOrder = await this.prisma.order.findUnique({ where: { id: canonicalOrderId } })
+          .catch(() => fail(503, 'SERVICE_UNAVAILABLE'));
+        if (!this.validAccess(currentOrder, token)) fail(403, 'ORDER_ACCESS_INVALID');
         const existing = await this.prisma.orderIdempotencyKey.findUnique({ where: { scope_key: { scope, key } } }).catch(() => null);
         if (existing) return this.replay(existing, requestFingerprint, scope, key, keyBytes);
       }
