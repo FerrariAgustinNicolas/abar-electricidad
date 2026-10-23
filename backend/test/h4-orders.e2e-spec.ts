@@ -71,8 +71,13 @@ describe('H4 orders on a verified owned PostgreSQL 17 fixture', () => {
     const urls = assertOwnedFixture();
     const migrations = (await readdir(migrationsPath)).filter((entry) => /^\d+_/.test(entry)).sort();
     const h4 = migrations.filter((entry) => entry.includes('_h4_orders'));
-    const historical = migrations.filter((entry) => !entry.includes('_h4_orders'));
-    if (h4.length !== 1 || historical.length !== 5 || migrations.at(-1) !== h4[0]) throw new Error('Expected five historical H0-H3 migrations followed by exactly one H4 migration');
+    const h4Index = migrations.indexOf(h4[0]);
+    const historical = migrations.slice(0, h4Index);
+    const subsequent = migrations.slice(h4Index + 1);
+    if (h4.length !== 1 || historical.length !== 5 || subsequent.length !== 2 ||
+        !subsequent[0].includes('_h5_') || !subsequent[1].includes('_h6_')) {
+      throw new Error('Expected five H0-H3 migrations, one H4 migration, then H5 and H6');
+    }
 
     await assertEmpty(urls.clean);
     await applyMigrations(urls.clean, migrations);
@@ -114,6 +119,8 @@ describe('H4 orders on a verified owned PostgreSQL 17 fixture', () => {
       const afterUpgrade = await verify.query(preservationSql);
       expect(createHash('sha256').update(afterUpgrade.rows[0].snapshot).digest('hex')).toBe(h3PreservationHash!);
     } finally { await verify.end(); }
+    // Preserve the historical H3-to-H4 assertion before upgrading to the current schema.
+    await applyMigrations(urls.upgrade, subsequent);
 
     prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: urls.clean }) }); await prisma.$connect();
     checkout = new CheckoutService(prisma as never);
@@ -337,6 +344,8 @@ describe('H4 orders on a verified owned PostgreSQL 17 fixture', () => {
     const concurrent = await Promise.all([request(server).post(route).set(headers).set('Idempotency-Key', raceKey).send({ methodCode: 'DEMO_TRANSFER' }), request(server).post(route).set(headers).set('Idempotency-Key', raceKey).send({ methodCode: 'DEMO_TRANSFER' })]);
     expect(concurrent.map((response) => response.status)).toEqual([201, 201]);
     expect(concurrent[0].body).toEqual(concurrent[1].body);
+    expect(await prisma.paymentAttempt.count({ where: { payment: { orderId: created.body.orderId } } })).toBe(attemptsBefore + 2);
+    expect(await prisma.orderIdempotencyKey.count({ where: { scope: `attempt:${created.body.orderId}`, key: raceKey } })).toBe(1);
     const staleReplay = await request(server).post(route).set(headers).set('Idempotency-Key', attemptKey).send({ methodCode: 'DEMO_SIMULATION', scenario: 'PENDING' }).expect(201);
     expect(staleReplay.body).toEqual(attempt.body);
     expect((await prisma.payment.findUnique({ where: { orderId: created.body.orderId } }))?.currentAttemptId).toBe(concurrent[0].body.currentAttempt.id);
@@ -383,4 +392,61 @@ describe('H4 orders on a verified owned PostgreSQL 17 fixture', () => {
       expect(JSON.stringify(limited.body)).not.toContain('third@example.test');
     } finally { await limitedApplication.close(); }
   }, 20_000);
+
+  it('authorizes historical attempt replays before returning data and preserves every business fact on rejection', async () => {
+    const create = async () => {
+      const quote = await checkout.createQuote(quoteRequest(presentationId));
+      return (await request(server).post('/api/v1/public/orders').set('Idempotency-Key', key()).send(createBody(quote.quoteId)).expect(201)).body;
+    };
+    const order = await create(), otherOrder = await create();
+    const route = `/api/v1/public/orders/${order.orderId}/payment-attempts`;
+    const intent = key(), body = { methodCode: 'DEMO_TRANSFER' };
+    const send = (token: string, input = body) => request(server).post(route)
+      .set('X-Order-Access-Token', token).set('Idempotency-Key', intent).send(input);
+    const first = await send(order.accessToken).expect(201);
+    const unchanged = async (action: () => PromiseLike<unknown>) => {
+      const before = await h4PersistenceHash();
+      await action();
+      const after = await h4PersistenceHash();
+      expect(after).toBe(before);
+      return { before, after };
+    };
+    const replayHash = await unchanged(async () => {
+      const replay = await send(order.accessToken).expect(201);
+      expect(replay.body).toEqual(first.body);
+    });
+    await unchanged(async () => {
+      const conflict = await send(order.accessToken, { methodCode: 'DEMO_PAY_ON_PICKUP' }).expect(409);
+      expect(conflict.body.code).toBe('IDEMPOTENCY_CONFLICT');
+    });
+    for (const token of ['invalid-order-access-token-for-h8', otherOrder.accessToken]) {
+      await unchanged(async () => {
+        const denied = await send(token).expect(403);
+        expect(denied.body.code).toBe('ORDER_ACCESS_INVALID');
+        expect(denied.body).not.toHaveProperty('currentAttempt');
+      });
+    }
+    // Fault injection selects conflict recovery; the failed authorization query runs on the real owned PostgreSQL fixture.
+    const transaction = jest.spyOn(prisma, '$transaction').mockRejectedValueOnce({ code: 'P2034' });
+    const read = jest.spyOn(prisma.order, 'findUnique').mockImplementationOnce(() =>
+      prisma.$queryRawUnsafe('SELECT * FROM "__h8_missing_authorization_source__"') as never);
+    const unavailableHash = await unchanged(async () => {
+      try {
+        const unavailable = await send(order.accessToken).expect(503);
+        expect(unavailable.body.code).toBe('SERVICE_UNAVAILABLE');
+        expect(unavailable.body).not.toHaveProperty('currentAttempt');
+      } finally { read.mockRestore(); transaction.mockRestore(); }
+    });
+    await prisma.order.update({ where: { id: order.orderId }, data: { accessExpiresAt: new Date(0) } });
+    const expiredHash = await unchanged(async () => {
+      const denied = await send(order.accessToken).expect(403);
+      expect(denied.body.code).toBe('ORDER_ACCESS_INVALID');
+    });
+    expect((await prisma.order.findUniqueOrThrow({ where: { id: order.orderId } })).status).toBe('RECEIVED');
+    expect(await prisma.paymentAttempt.count({ where: { payment: { orderId: order.orderId } } })).toBe(2);
+    expect(await prisma.orderIdempotencyKey.count({ where: { scope: `attempt:${order.orderId}`, key: intent } })).toBe(1);
+    expect(await stockHash()).toBe(startStockHash);
+    console.log('H8 sanitized access-policy fact hashes', JSON.stringify({ replayHash, unavailableHash, expiredHash }));
+  }, 20000);
+
 });

@@ -1,0 +1,63 @@
+{
+  "sourceTree": "8430ad6eeb6c5752ca62364f499a12acbcd23d94",
+  "version": "v24.18.1",
+  "auth": {
+    "session": "real persisted H1 session with real AES-GCM nonce cipher and authorization rechecks",
+    "login": "not executed; synthetic fixture session",
+    "passwordHasher": "unused dependency stub, not invoked",
+    "authorization": "no mocks"
+  },
+  "checks": {
+    "Q23Rejections": {
+      "status": "PASS",
+      "interface": "actual CatalogController FileInterceptor with unchanged production5MiB limit, real CatalogService and FileCatalogImageStorage",
+      "cases": [
+        {
+          "case": "malformedPNG",
+          "fileBytes": 8,
+          "status": 400,
+          "code": "INVALID_IMAGE",
+          "safeEnvelope": true,
+          "noStore": true,
+          "before": {
+            "factsHash": "bd3a629b0629d50e45d808c4f1d772d5fbb7e505a4b44b0ac7ab805858092946",
+            "filesHash": "bcdc93e789d7eb92f12185732d27d03bb8edd8f75f04025d56ecd59278d3aa74",
+            "imageCount": 2,
+            "productVersion": 1,
+            "fileCount": 2
+          },
+          "after": {
+            "factsHash": "bd3a629b0629d50e45d808c4f1d772d5fbb7e505a4b44b0ac7ab805858092946",
+            "filesHash": "bcdc93e789d7eb92f12185732d27d03bb8edd8f75f04025d56ecd59278d3aa74",
+            "imageCount": 2,
+            "productVersion": 1,
+            "fileCount": 2
+          }
+        },
+        {
+          "case": "overProductionFiveMiB",
+          "fileBytes": 5242881,
+          "status": 413,
+          "code": "IMAGE_TOO_LARGE",
+          "safeEnvelope": true,
+          "noStore": true,
+          "before": {
+            "factsHash": "bd3a629b0629d50e45d808c4f1d772d5fbb7e505a4b44b0ac7ab805858092946",
+            "filesHash": "bcdc93e789d7eb92f12185732d27d03bb8edd8f75f04025d56ecd59278d3aa74",
+            "imageCount": 2,
+            "productVersion": 1,
+            "fileCount": 2
+          },
+          "after": {
+            "factsHash": "bd3a629b0629d50e45d808c4f1d772d5fbb7e505a4b44b0ac7ab805858092946",
+            "filesHash": "bcdc93e789d7eb92f12185732d27d03bb8edd8f75f04025d56ecd59278d3aa74",
+            "imageCount": 2,
+            "productVersion": 1,
+            "fileCount": 2
+          }
+        }
+      ]
+    }
+  },
+  "explicitNode24ExecutableVerified": true
+}

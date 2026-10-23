@@ -1,0 +1,13 @@
+{
+  "receivedIndexTree": "8430ad6eeb6c5752ca62364f499a12acbcd23d94",
+  "scope": "Complementary descriptive contract/R4 decision/history and missing probes only; no system rerun.",
+  "files": {
+    "checks.json": "7651a36ebb815ec0c0fbd3e887bcc23012965ca0c507eba8a88126a2062fe515",
+    "cleanup.json": "e222b5a994e35075228c3b37b5290dc59eebc61ade7eee70e1c1c083f0d27a3c",
+    "contract-description-delta.json": "88fd063476bf8085ce146114e063b35f23500fc6c4032dd5e7ab2bbbc5a3f39d",
+    "history-q05-q06-q23.json": "172ddf67b3b51a7e8848416c84383d30556a5cdba4350910eef842c92efc539d",
+    "public-aggregate.json": "a037247f89cd185e18ab04c06a5b2fb7d39aa227f7f9687edd3d47af7d2805bf",
+    "public-rejection-aggregate.json": "045877421e85c5bcc8c1f9a70adb4ffcb64e51cb9edcb06b017048de006a1ccf",
+    "source-identity.json": "2b944386ad05d6d16bb5bda187d8d8a2142faf8e57f2b33ea38e5e7493ef3500"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "ownedProcessesStopped": 2,
+  "ownedContainersRemoved": 3,
+  "exactScratchRootsRemoved": 4,
+  "identityOwnerTmpfsNoHostMountLoopbackVerified": true,
+  "privateLogsArchived": true,
+  "ambientResourcesTouched": false
+}

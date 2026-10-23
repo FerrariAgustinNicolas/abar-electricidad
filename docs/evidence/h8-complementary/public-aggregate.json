@@ -1,0 +1,51 @@
+{
+  "sourceTree": "8430ad6eeb6c5752ca62364f499a12acbcd23d94",
+  "version": "v24.18.1",
+  "auth": {
+    "session": "real persisted H1 session with real AES-GCM nonce cipher and authorization rechecks",
+    "login": "not executed; synthetic fixture session",
+    "passwordHasher": "unused dependency stub, not invoked",
+    "authorization": "no mocks"
+  },
+  "checks": {
+    "Q06": {
+      "status": "PASS",
+      "interface": "StockService.openRolls; actual AdminUsersService and PostgreSQL",
+      "sameActorKeyBody": true,
+      "staleExpectedVersionsReplayed": true,
+      "responseExact": true,
+      "balances": {
+        "before": {
+          "ROLL": 3,
+          "METER": 20
+        },
+        "after": {
+          "ROLL": 2,
+          "METER": 120
+        }
+      },
+      "operations": 1,
+      "entries": 2,
+      "beforeReplay": "8e806a4afeaf66a197eb8a08e47d92c4d2136a56980d798d580a3fff02efdc7b",
+      "afterReplay": "8e806a4afeaf66a197eb8a08e47d92c4d2136a56980d798d580a3fff02efdc7b"
+    },
+    "Q23": {
+      "status": "PASS",
+      "interface": "actual CatalogController FileInterceptor multipart -> actual CatalogService -> real FileCatalogImageStorage",
+      "authorization": "real persisted session, Origin, CSRF and transaction recheck",
+      "hostileHeadersTransmitted": 2,
+      "httpStatuses": [
+        201,
+        201
+      ],
+      "persistedImages": 2,
+      "files": 2,
+      "opaqueUuidPng": true,
+      "noOriginalFilenamePersisted": true,
+      "noFilesystemEscape": true,
+      "noSensitiveResponseFields": true,
+      "pngSha256": "980055f32603462384baae4a3dbfa580f0579627bb98c190f84443a047126613"
+    }
+  },
+  "explicitNode24ExecutableVerified": true
+}

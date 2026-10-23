@@ -2108,7 +2108,12 @@ paths:
       summary: createPublicPaymentAttempt
       security:
         - OrderAccessToken: []
-      description: H4 academic demo. Stored quote snapshots authoritative. Orders have no automatic
+      description: Current same-order token authorization precedes every idempotent replay.
+        Expired, invalid or cross-order access returns 403 ORDER_ACCESS_INVALID, including for
+        historical operations. Failed authorization reads return 503 SERVICE_UNAVAILABLE without
+        replay or a new attempt. A timeout followed by an authorization error does not prove that
+        the original operation was not committed. Order-creation replay is unchanged.
+        H4 academic demo. Stored quote snapshots authoritative. Orders have no automatic
         commercial expiry. Token expiry is separate. All responses no-store. Durable
         transaction/idempotency; never reserves stock. Lookup is rate limited with indistinguishable
         missing/wrong contact errors. No H5 payment confirmation.
@@ -2126,9 +2131,10 @@ paths:
             minLength: 16
             maxLength: 200
             pattern: ^[A-Za-z0-9_-]{16,200}$
-          description: "Durable scope: create-order or orderId/payment-attempt. Same canonical request replays
-            exact original status/body before quote expiry checks; differing request 409. Keep
-            key/body after ambiguous transport. No caller PII in key."
+          description: "Durable scope: orderId/payment-attempt. With valid current same-order authorization,
+            the same canonical request replays the exact original status/body without duplicate effects;
+            a differing request returns 409 IDEMPOTENCY_CONFLICT. Authorization is required even when
+            a historical response exists. Keep key/body after ambiguous transport. No caller PII in key."
       x-abar-errors:
         "400":
           - VALIDATION_ERROR

@@ -1,0 +1,14 @@
+{
+  "originalRegistrations": 19,
+  "originalPresent": 12,
+  "originalAbsent": 7,
+  "differences": [],
+  "originalRefsSha256": "af5d6fd061c6be376685a3c90f162cf066297a0abe2cfed7ab600636d417261e",
+  "originalRefsUnchanged": false,
+  "currentRegistrationCount": 20,
+  "originalRefsUnchangedExcludingNewRuntimeSnapshots": false,
+  "addedRuntimeSnapshotRefCount": null,
+  "referenceQualification": "Whole-ref digest differs; Codex turn-diff snapshots changed across turns. Original19HEAD/status/index/diff/untracked hashes identical; no preexisting heads/remotes/tags ref or reflog file modified since snapshot; packed-refs unchanged. Whole-ref baseline cannot be reconstructed exactly.",
+  "persistentRefFilesChangedSinceSnapshot": [],
+  "packedRefsChangedSinceSnapshot": false
+}

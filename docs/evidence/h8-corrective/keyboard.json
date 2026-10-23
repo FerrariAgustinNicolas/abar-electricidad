@@ -1,0 +1,402 @@
+[
+  {
+    "step": "home-skip-link-tab",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "A",
+    "text": "Saltar al contenido"
+  },
+  {
+    "step": "home-main-next-tab",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "A",
+    "text": "Ver productos"
+  },
+  {
+    "step": "catalog-search-keyboard",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "SELECT",
+    "text": "122040100"
+  },
+  {
+    "step": "catalog-search-verified",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "INPUT",
+    "text": "input"
+  },
+  {
+    "step": "catalog-product-link",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "A",
+    "text": "H8 Audit Demo CatalogH8 Audit Demo Cable$ 150,00 / unidadDisponibleVer producto"
+  },
+  {
+    "step": "product-first-tab",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "A",
+    "text": "← Volver al catálogo"
+  },
+  {
+    "step": "product-presentation",
+    "focusVisible": true,
+    "id": "presentation",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "SELECT",
+    "text": "unidad — Disponiblemetro — Disponiblerollo de 50 m — Disponible"
+  },
+  {
+    "step": "product-add-button",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "BUTTON",
+    "text": "Agregar al carrito"
+  },
+  {
+    "step": "product-to-cart-link",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "A",
+    "text": "Carrito"
+  },
+  {
+    "step": "cart-demo-method",
+    "focusVisible": true,
+    "id": "payment-method",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "SELECT",
+    "text": "Pago ficticio al retirarTransferencia ficticiaSimulación ficticia"
+  },
+  {
+    "step": "cart-request-quote",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "BUTTON",
+    "text": "Solicitar presupuesto"
+  },
+  {
+    "step": "cart-accept-quote",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "BUTTON",
+    "text": "Aceptar este presupuesto"
+  },
+  {
+    "step": "cart-continue-checkout",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "A",
+    "text": "Continuar al checkout"
+  },
+  {
+    "step": "checkout-first-field",
+    "focusVisible": true,
+    "id": "first-name",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "INPUT",
+    "text": "input"
+  },
+  {
+    "step": "checkout-demo-terms",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "INPUT",
+    "text": "input"
+  },
+  {
+    "step": "checkout-create",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "A",
+    "text": "Contacto · información DEMO"
+  },
+  {
+    "step": "checkout-last-name",
+    "focusVisible": true,
+    "id": "last-name",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "INPUT",
+    "text": "input"
+  },
+  {
+    "step": "checkout-email",
+    "focusVisible": true,
+    "id": "email",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "INPUT",
+    "text": "input"
+  },
+  {
+    "step": "checkout-phone",
+    "focusVisible": true,
+    "id": "phone",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "INPUT",
+    "text": "input"
+  },
+  {
+    "step": "checkout-terms-checkbox",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "INPUT",
+    "text": "input"
+  },
+  {
+    "step": "checkout-create-enabled",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "BUTTON",
+    "text": "Crear pedido"
+  },
+  {
+    "step": "order-retry-method",
+    "focusVisible": true,
+    "id": "retry-method",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "SELECT",
+    "text": "Pago ficticio al retirarTransferencia ficticiaSimulación ficticia"
+  },
+  {
+    "step": "order-retry-scenario",
+    "focusVisible": true,
+    "id": "retry-scenario",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "SELECT",
+    "text": "PendienteAprobado (solo intento)Rechazado"
+  },
+  {
+    "step": "order-register-attempt",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "BUTTON",
+    "text": "Registrar intento demo"
+  },
+  {
+    "step": "order-to-admin",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "A",
+    "text": "Administración"
+  },
+  {
+    "step": "admin-login-email",
+    "focusVisible": true,
+    "id": "email",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "INPUT",
+    "text": "input"
+  },
+  {
+    "step": "admin-login-password",
+    "focusVisible": true,
+    "id": "password",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "INPUT",
+    "text": "input"
+  },
+  {
+    "step": "admin-login-submit",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "BUTTON",
+    "text": "Ingresar"
+  },
+  {
+    "step": "admin-first-tab",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "A",
+    "text": "Saltar al contenido"
+  },
+  {
+    "step": "admin-orders-navigation",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "A",
+    "text": "Pedidos"
+  },
+  {
+    "step": "tab-to-Ver detalle",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "A",
+    "text": "Ver detalle"
+  },
+  {
+    "step": "tab-to-Revisar importe, intento y saldos",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "BUTTON",
+    "text": "Revisar importe, intento y saldos"
+  },
+  {
+    "step": "manual-confirm-checkbox",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "INPUT",
+    "text": "input"
+  },
+  {
+    "step": "manual-confirm-submit",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "BUTTON",
+    "text": "Volver sin confirmar"
+  },
+  {
+    "step": "manual-confirm-enabled",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "BUTTON",
+    "text": "Confirmar pago y descontar existencias"
+  },
+  {
+    "step": "tab-to-Marcar listo para retirar",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "BUTTON",
+    "text": "Marcar listo para retirar"
+  },
+  {
+    "step": "tab-to-Marcar entregado",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "BUTTON",
+    "text": "Marcar entregado"
+  },
+  {
+    "step": "tab-to-Reportes DEMO",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "A",
+    "text": "Reportes DEMO"
+  },
+  {
+    "step": "tab-to-Descargar CSV del servidor",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "BUTTON",
+    "text": "Descargar CSV del servidor"
+  },
+  {
+    "step": "tab-to-Stock y movimientos",
+    "focusVisible": true,
+    "id": "",
+    "outline": "solid",
+    "outlineWidth": "3px",
+    "role": null,
+    "tag": "A",
+    "text": "Stock y movimientos"
+  }
+]
