@@ -1,0 +1,159 @@
+{
+  "demoMode": true,
+  "period": {
+    "from": "2026-10-01",
+    "to": "2026-10-04",
+    "timeZone": "America/Argentina/Buenos_Aires",
+    "semantics": "[from,to)"
+  },
+  "filters": {
+    "methodCode": null,
+    "orderStatus": null,
+    "paymentStatus": null
+  },
+  "totals": {
+    "confirmedOrderCount": 2,
+    "productsSubtotal": {
+      "amountMinor": "14500",
+      "currency": "ARS"
+    },
+    "deliveryFees": {
+      "amountMinor": "500",
+      "currency": "ARS"
+    },
+    "confirmedTotal": {
+      "amountMinor": "15000",
+      "currency": "ARS"
+    },
+    "averageTicket": {
+      "amountMinor": "7500",
+      "currency": "ARS"
+    },
+    "empty": false
+  },
+  "orders": {
+    "createdCount": 5,
+    "activeUnpaidCount": 2,
+    "cancelledUnpaidCount": 1,
+    "rejectedPaymentCount": 1,
+    "rejectedCurrentAttemptCount": 1,
+    "byStatus": [
+      {
+        "orderStatus": "RECEIVED",
+        "count": 2
+      },
+      {
+        "orderStatus": "PREPARING",
+        "count": 1
+      },
+      {
+        "orderStatus": "READY",
+        "count": 1
+      },
+      {
+        "orderStatus": "DELIVERED",
+        "count": 0
+      },
+      {
+        "orderStatus": "CANCELLED",
+        "count": 1
+      }
+    ]
+  },
+  "series": [
+    {
+      "date": "2026-10-01",
+      "confirmedOrderCount": 1,
+      "confirmedTotal": {
+        "amountMinor": "9500",
+        "currency": "ARS"
+      }
+    },
+    {
+      "date": "2026-10-02",
+      "confirmedOrderCount": 1,
+      "confirmedTotal": {
+        "amountMinor": "5500",
+        "currency": "ARS"
+      }
+    },
+    {
+      "date": "2026-10-03",
+      "confirmedOrderCount": 0,
+      "confirmedTotal": {
+        "amountMinor": "0",
+        "currency": "ARS"
+      }
+    }
+  ],
+  "byMethod": [
+    {
+      "methodCode": "DEMO_TRANSFER",
+      "confirmedOrderCount": 1,
+      "confirmedTotal": {
+        "amountMinor": "9500",
+        "currency": "ARS"
+      }
+    },
+    {
+      "methodCode": "DEMO_PAY_ON_PICKUP",
+      "confirmedOrderCount": 1,
+      "confirmedTotal": {
+        "amountMinor": "5500",
+        "currency": "ARS"
+      }
+    }
+  ],
+  "byDelivery": [
+    {
+      "deliveryMode": "PICKUP",
+      "confirmedOrderCount": 2,
+      "deliveryFees": {
+        "amountMinor": "500",
+        "currency": "ARS"
+      },
+      "confirmedTotal": {
+        "amountMinor": "15000",
+        "currency": "ARS"
+      }
+    }
+  ],
+  "presentations": [
+    {
+      "productId": "fd084252-8ada-4a08-9559-143570a21f34",
+      "presentationId": "42d62ef4-2cbb-42b1-a7d2-a4585db2f27b",
+      "productName": "=DEMO historical name",
+      "unit": "UNIT",
+      "rollLengthMeters": null,
+      "quantity": "2",
+      "productsSubtotal": {
+        "amountMinor": "6000",
+        "currency": "ARS"
+      }
+    },
+    {
+      "productId": "fd084252-8ada-4a08-9559-143570a21f34",
+      "presentationId": "eb7b89db-90e1-44f2-8f52-609f1fa5e4f2",
+      "productName": "Historical roll name",
+      "unit": "ROLL",
+      "rollLengthMeters": 10,
+      "quantity": "1",
+      "productsSubtotal": {
+        "amountMinor": "5500",
+        "currency": "ARS"
+      }
+    },
+    {
+      "productId": "fd084252-8ada-4a08-9559-143570a21f34",
+      "presentationId": "a1876305-6a19-4ac2-8e25-5b3a890778a8",
+      "productName": "Historical meter name",
+      "unit": "METER",
+      "rollLengthMeters": null,
+      "quantity": "3",
+      "productsSubtotal": {
+        "amountMinor": "3000",
+        "currency": "ARS"
+      }
+    }
+  ]
+}

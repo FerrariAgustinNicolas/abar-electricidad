@@ -1,0 +1,516 @@
+SANITIZED DERIVATIVE — historical output, not a new execution. Local paths and operational identifiers are replaced; original retained privately on the audited branch.
+
+
+> abar-backend@0.1.0 test
+> node scripts/copy-catalog-contract.mjs && jest --runInBand
+
+FAIL src/auth/auth-runtime.module.spec.ts
+  ● AuthRuntimeModule source DI (build prerequisite) › snapshots full raw AUTH settings once and shares one real packaged runtime
+
+    PasswordPolicyError: Password policy is unavailable
+
+      17 | const SECLISTS_SHA = '3dbdc93d5f8829de0941744841730a09c106d0732e5ae0e98ca1d77be7ded66c';
+      18 |
+    > 19 | function fail(): never { throw new PasswordPolicyError('unavailable'); }
+         |                                ^
+      20 | function sha256(bytes: Buffer): string { return createHash('sha256').update(bytes).digest('hex'); }
+      21 |
+      22 | function validateManifest(bytes: Buffer): void {
+
+      at fail (src/auth/password-blocklist.ts:19:32)
+      at loadPasswordBlocklist (src/auth/password-blocklist.ts:144:12)
+      at InstanceWrapper.useFactory [as metatype] (src/auth/auth-runtime.module.ts:21:46)
+      at TestingInjector.instantiateClass (../../../../../../../../..<LOCAL_PATH>
+      at callback (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.resolveConstructorParams (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.loadInstance (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.loadProvider (../../../../../../../../..<LOCAL_PATH>
+      at ../../../../../../../../..<LOCAL_PATH>
+          at async Promise.all (index 3)
+      at TestingInstanceLoader.createInstancesOfProviders (../../../../../../../../..<LOCAL_PATH>
+      at ../../../../../../../../..<LOCAL_PATH>
+          at async Promise.all (index 2)
+      at TestingInstanceLoader.createInstances (../../../../../../../../..<LOCAL_PATH>
+      at TestingInstanceLoader.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingInstanceLoader.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingModuleBuilder.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingModuleBuilder.compile (../../../../../../../../..<LOCAL_PATH>
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:58:20)
+
+  ● AuthRuntimeModule source DI (build prerequisite) › keeps H0 runtime construction independent of a missing or synthetic CSRF key and never serializes it
+
+    PasswordPolicyError: Password policy is unavailable
+
+      17 | const SECLISTS_SHA = '3dbdc93d5f8829de0941744841730a09c106d0732e5ae0e98ca1d77be7ded66c';
+      18 |
+    > 19 | function fail(): never { throw new PasswordPolicyError('unavailable'); }
+         |                                ^
+      20 | function sha256(bytes: Buffer): string { return createHash('sha256').update(bytes).digest('hex'); }
+      21 |
+      22 | function validateManifest(bytes: Buffer): void {
+
+      at fail (src/auth/password-blocklist.ts:19:32)
+      at loadPasswordBlocklist (src/auth/password-blocklist.ts:144:12)
+      at InstanceWrapper.useFactory [as metatype] (src/auth/auth-runtime.module.ts:21:46)
+      at TestingInjector.instantiateClass (../../../../../../../../..<LOCAL_PATH>
+      at callback (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.resolveConstructorParams (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.loadInstance (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.loadProvider (../../../../../../../../..<LOCAL_PATH>
+      at ../../../../../../../../..<LOCAL_PATH>
+          at async Promise.all (index 3)
+      at TestingInstanceLoader.createInstancesOfProviders (../../../../../../../../..<LOCAL_PATH>
+      at ../../../../../../../../..<LOCAL_PATH>
+          at async Promise.all (index 2)
+      at TestingInstanceLoader.createInstances (../../../../../../../../..<LOCAL_PATH>
+      at TestingInstanceLoader.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingInstanceLoader.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingModuleBuilder.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingModuleBuilder.compile (../../../../../../../../..<LOCAL_PATH>
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:86:21)
+
+  ● AuthRuntimeModule source DI (build prerequisite) › creates a separate runtime and hasher per container
+
+    PasswordPolicyError: Password policy is unavailable
+
+      17 | const SECLISTS_SHA = '3dbdc93d5f8829de0941744841730a09c106d0732e5ae0e98ca1d77be7ded66c';
+      18 |
+    > 19 | function fail(): never { throw new PasswordPolicyError('unavailable'); }
+         |                                ^
+      20 | function sha256(bytes: Buffer): string { return createHash('sha256').update(bytes).digest('hex'); }
+      21 |
+      22 | function validateManifest(bytes: Buffer): void {
+
+      at fail (src/auth/password-blocklist.ts:19:32)
+      at loadPasswordBlocklist (src/auth/password-blocklist.ts:144:12)
+      at InstanceWrapper.useFactory [as metatype] (src/auth/auth-runtime.module.ts:21:46)
+      at TestingInjector.instantiateClass (../../../../../../../../..<LOCAL_PATH>
+      at callback (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.resolveConstructorParams (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.loadInstance (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.loadProvider (../../../../../../../../..<LOCAL_PATH>
+      at ../../../../../../../../..<LOCAL_PATH>
+          at async Promise.all (index 3)
+      at TestingInstanceLoader.createInstancesOfProviders (../../../../../../../../..<LOCAL_PATH>
+      at ../../../../../../../../..<LOCAL_PATH>
+          at async Promise.all (index 2)
+      at TestingInstanceLoader.createInstances (../../../../../../../../..<LOCAL_PATH>
+      at TestingInstanceLoader.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingInstanceLoader.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingModuleBuilder.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingModuleBuilder.compile (../../../../../../../../..<LOCAL_PATH>
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:106:19)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › resolves the packaged code-owned path from unrelated cwd with singleton identity
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects config before creation returns 0
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects config before creation returns 1
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely password-blocklist.bin missing before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely password-blocklist.bin corrupt before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely password-blocklist.manifest.json missing before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely password-blocklist.manifest.json corrupt before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely LICENSE.pwdb.txt missing before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely LICENSE.pwdb.txt corrupt before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely LICENSE.seclists.txt missing before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely LICENSE.seclists.txt corrupt before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+
+Summary of all failing tests
+FAIL src/auth/auth-runtime.module.spec.ts
+  ● AuthRuntimeModule source DI (build prerequisite) › snapshots full raw AUTH settings once and shares one real packaged runtime
+
+    PasswordPolicyError: Password policy is unavailable
+
+      17 | const SECLISTS_SHA = '3dbdc93d5f8829de0941744841730a09c106d0732e5ae0e98ca1d77be7ded66c';
+      18 |
+    > 19 | function fail(): never { throw new PasswordPolicyError('unavailable'); }
+         |                                ^
+      20 | function sha256(bytes: Buffer): string { return createHash('sha256').update(bytes).digest('hex'); }
+      21 |
+      22 | function validateManifest(bytes: Buffer): void {
+
+      at fail (src/auth/password-blocklist.ts:19:32)
+      at loadPasswordBlocklist (src/auth/password-blocklist.ts:144:12)
+      at InstanceWrapper.useFactory [as metatype] (src/auth/auth-runtime.module.ts:21:46)
+      at TestingInjector.instantiateClass (../../../../../../../../..<LOCAL_PATH>
+      at callback (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.resolveConstructorParams (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.loadInstance (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.loadProvider (../../../../../../../../..<LOCAL_PATH>
+      at ../../../../../../../../..<LOCAL_PATH>
+          at async Promise.all (index 3)
+      at TestingInstanceLoader.createInstancesOfProviders (../../../../../../../../..<LOCAL_PATH>
+      at ../../../../../../../../..<LOCAL_PATH>
+          at async Promise.all (index 2)
+      at TestingInstanceLoader.createInstances (../../../../../../../../..<LOCAL_PATH>
+      at TestingInstanceLoader.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingInstanceLoader.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingModuleBuilder.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingModuleBuilder.compile (../../../../../../../../..<LOCAL_PATH>
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:58:20)
+
+  ● AuthRuntimeModule source DI (build prerequisite) › keeps H0 runtime construction independent of a missing or synthetic CSRF key and never serializes it
+
+    PasswordPolicyError: Password policy is unavailable
+
+      17 | const SECLISTS_SHA = '3dbdc93d5f8829de0941744841730a09c106d0732e5ae0e98ca1d77be7ded66c';
+      18 |
+    > 19 | function fail(): never { throw new PasswordPolicyError('unavailable'); }
+         |                                ^
+      20 | function sha256(bytes: Buffer): string { return createHash('sha256').update(bytes).digest('hex'); }
+      21 |
+      22 | function validateManifest(bytes: Buffer): void {
+
+      at fail (src/auth/password-blocklist.ts:19:32)
+      at loadPasswordBlocklist (src/auth/password-blocklist.ts:144:12)
+      at InstanceWrapper.useFactory [as metatype] (src/auth/auth-runtime.module.ts:21:46)
+      at TestingInjector.instantiateClass (../../../../../../../../..<LOCAL_PATH>
+      at callback (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.resolveConstructorParams (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.loadInstance (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.loadProvider (../../../../../../../../..<LOCAL_PATH>
+      at ../../../../../../../../..<LOCAL_PATH>
+          at async Promise.all (index 3)
+      at TestingInstanceLoader.createInstancesOfProviders (../../../../../../../../..<LOCAL_PATH>
+      at ../../../../../../../../..<LOCAL_PATH>
+          at async Promise.all (index 2)
+      at TestingInstanceLoader.createInstances (../../../../../../../../..<LOCAL_PATH>
+      at TestingInstanceLoader.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingInstanceLoader.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingModuleBuilder.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingModuleBuilder.compile (../../../../../../../../..<LOCAL_PATH>
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:86:21)
+
+  ● AuthRuntimeModule source DI (build prerequisite) › creates a separate runtime and hasher per container
+
+    PasswordPolicyError: Password policy is unavailable
+
+      17 | const SECLISTS_SHA = '3dbdc93d5f8829de0941744841730a09c106d0732e5ae0e98ca1d77be7ded66c';
+      18 |
+    > 19 | function fail(): never { throw new PasswordPolicyError('unavailable'); }
+         |                                ^
+      20 | function sha256(bytes: Buffer): string { return createHash('sha256').update(bytes).digest('hex'); }
+      21 |
+      22 | function validateManifest(bytes: Buffer): void {
+
+      at fail (src/auth/password-blocklist.ts:19:32)
+      at loadPasswordBlocklist (src/auth/password-blocklist.ts:144:12)
+      at InstanceWrapper.useFactory [as metatype] (src/auth/auth-runtime.module.ts:21:46)
+      at TestingInjector.instantiateClass (../../../../../../../../..<LOCAL_PATH>
+      at callback (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.resolveConstructorParams (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.loadInstance (../../../../../../../../..<LOCAL_PATH>
+      at TestingInjector.loadProvider (../../../../../../../../..<LOCAL_PATH>
+      at ../../../../../../../../..<LOCAL_PATH>
+          at async Promise.all (index 3)
+      at TestingInstanceLoader.createInstancesOfProviders (../../../../../../../../..<LOCAL_PATH>
+      at ../../../../../../../../..<LOCAL_PATH>
+          at async Promise.all (index 2)
+      at TestingInstanceLoader.createInstances (../../../../../../../../..<LOCAL_PATH>
+      at TestingInstanceLoader.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingInstanceLoader.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingModuleBuilder.createInstancesOfDependencies (../../../../../../../../..<LOCAL_PATH>
+      at TestingModuleBuilder.compile (../../../../../../../../..<LOCAL_PATH>
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:106:19)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › resolves the packaged code-owned path from unrelated cwd with singleton identity
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects config before creation returns 0
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects config before creation returns 1
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely password-blocklist.bin missing before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely password-blocklist.bin corrupt before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely password-blocklist.manifest.json missing before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely password-blocklist.manifest.json corrupt before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely LICENSE.pwdb.txt missing before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely LICENSE.pwdb.txt corrupt before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely LICENSE.seclists.txt missing before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+  ● compiled standalone AuthRuntimeModule artifact (no Prisma or socket) › rejects genuinely LICENSE.seclists.txt corrupt before creation returns
+
+    ENOENT: no such file or directory, scandir '<LOCAL_PATH>'
+
+      149 |     fs.mkdirSync(auth, { recursive: true });
+      150 |     fs.mkdirSync(resources, { recursive: true });
+    > 151 |     for (const file of fs.readdirSync(path.resolve(__dirname, '../../dist/auth'))) {
+          |                           ^
+      152 |       if (file.endsWith('.js')) fs.copyFileSync(path.resolve(__dirname, '../../dist/auth', file), path.join(auth, file));
+      153 |     }
+      154 |     for (const asset of assets) fs.copyFileSync(path.join(packaged, asset), path.join(resources, asset));
+
+      at Object.<anonymous> (src/auth/auth-runtime.module.spec.ts:151:27)
+
+
+Test Suites: 1 failed, 1 skipped, 35 passed, 36 of 37 total
+Tests:       14 failed, 1 skipped, 1299 passed, 1314 total
+Snapshots:   0 total
+Time:        4.593 s, estimated 14 s
+Ran all test suites.

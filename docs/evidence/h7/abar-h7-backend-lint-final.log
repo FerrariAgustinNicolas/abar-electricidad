@@ -1,0 +1,6 @@
+SANITIZED DERIVATIVE — historical output, not a new execution. Local paths and operational identifiers are replaced; original retained privately on the audited branch.
+
+
+> abar-backend@0.1.0 lint
+> eslint "{src,test}/**/*.ts"
+

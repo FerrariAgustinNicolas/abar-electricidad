@@ -1,0 +1,11 @@
+{
+  "sanitizedDerivative": true,
+  "sourceEvidencePath": "docs/evidence/h7/preservation-before.json",
+  "baselineProtectedWorktrees": 17,
+  "capturedBeforeH7": true,
+  "originalH7WorktreeTotal": null,
+  "allProtectedUnchanged": null,
+  "persistentRefsUnchanged": null,
+  "transientReferenceDifference": null,
+  "privacyNote": "Per-worktree paths, states, refs, indexes and unrelated identities omitted; original retained on untouched audited branch."
+}

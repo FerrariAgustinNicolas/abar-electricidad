@@ -1,0 +1,7 @@
+SANITIZED DERIVATIVE — historical output, not a new execution. Local paths and operational identifiers are replaced; original retained privately on the audited branch.
+
+Test Suites: 1 passed, 1 total
+Tests:       3 skipped, 6 passed, 9 total
+Snapshots:   0 total
+Time:        0.851 s, estimated 2 s
+Ran all test suites within paths "test/h7-reports.e2e-spec.ts".

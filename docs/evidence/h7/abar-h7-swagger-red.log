@@ -1,0 +1,113 @@
+SANITIZED DERIVATIVE — historical output, not a new execution. Local paths and operational identifiers are replaced; original retained privately on the audited branch.
+
+
+> abar-backend@0.1.0 test
+> node scripts/copy-catalog-contract.mjs && jest --runInBand src/configure-application.openapi.spec.ts
+
+FAIL src/configure-application.openapi.spec.ts
+  ● production Swagger projection of the frozen H1-H6 interface › keeps exactly the implemented H1-H6 routes and all three security schemes
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 0
+
+    @@ -1,10 +1,9 @@
+      Array [
+        "/api/v1/admin/categories",
+        "/api/v1/admin/categories/order",
+        "/api/v1/admin/categories/{id}",
+    -   "/api/v1/admin/dashboard",
+        "/api/v1/admin/notifications",
+        "/api/v1/admin/notifications/{id}/retry",
+        "/api/v1/admin/orders",
+        "/api/v1/admin/orders/{id}",
+        "/api/v1/admin/orders/{id}/cancel",
+    @@ -15,12 +14,10 @@
+        "/api/v1/admin/payment-methods/{code}",
+        "/api/v1/admin/products",
+        "/api/v1/admin/products/{id}",
+        "/api/v1/admin/products/{id}/images",
+        "/api/v1/admin/products/{id}/images/{imageId}",
+    -   "/api/v1/admin/reports/sales",
+    -   "/api/v1/admin/reports/sales/export",
+        "/api/v1/admin/settings",
+        "/api/v1/admin/stock",
+        "/api/v1/admin/stock/adjustments",
+        "/api/v1/admin/stock/movements",
+        "/api/v1/admin/stock/roll-openings",
+
+      86 |
+      87 |   it('keeps exactly the implemented H1-H6 routes and all three security schemes', () => {
+    > 88 |     expect(Object.keys(document.paths).sort()).toEqual(Object.keys(contract.paths).sort());
+         |                                                ^
+      89 |     expect(semantics(document.components.securitySchemes, document))
+      90 |       .toEqual(semantics(contract.components.securitySchemes, contract));
+      91 |     expect(document.openapi).toBe(contract.openapi);
+
+      at Object.<anonymous> (src/configure-application.openapi.spec.ts:88:48)
+
+  ● production Swagger projection of the frozen H1-H6 interface › matches GET /api/v1/admin/dashboard schemas, headers, errors and security
+
+    TypeError: Cannot read properties of undefined (reading 'get')
+
+       96 |       if (!item[method]) continue;
+       97 |       it(`matches ${method.toUpperCase()} ${path} schemas, headers, errors and security`, () => {
+    >  98 |         expect(semantics(document.paths[path][method], document))
+          |                                              ^
+       99 |           .toEqual(semantics(item[method], contract));
+      100 |       });
+      101 |     }
+
+      at Object.<anonymous> (src/configure-application.openapi.spec.ts:98:46)
+
+  ● production Swagger projection of the frozen H1-H6 interface › matches GET /api/v1/admin/reports/sales schemas, headers, errors and security
+
+    TypeError: Cannot read properties of undefined (reading 'get')
+
+       96 |       if (!item[method]) continue;
+       97 |       it(`matches ${method.toUpperCase()} ${path} schemas, headers, errors and security`, () => {
+    >  98 |         expect(semantics(document.paths[path][method], document))
+          |                                              ^
+       99 |           .toEqual(semantics(item[method], contract));
+      100 |       });
+      101 |     }
+
+      at Object.<anonymous> (src/configure-application.openapi.spec.ts:98:46)
+
+  ● production Swagger projection of the frozen H1-H6 interface › matches GET /api/v1/admin/reports/sales/export schemas, headers, errors and security
+
+    TypeError: Cannot read properties of undefined (reading 'get')
+
+       96 |       if (!item[method]) continue;
+       97 |       it(`matches ${method.toUpperCase()} ${path} schemas, headers, errors and security`, () => {
+    >  98 |         expect(semantics(document.paths[path][method], document))
+          |                                              ^
+       99 |           .toEqual(semantics(item[method], contract));
+      100 |       });
+      101 |     }
+
+      at Object.<anonymous> (src/configure-application.openapi.spec.ts:98:46)
+
+  ● production Swagger projection of the frozen H1-H6 interface › uses current metadata without presenting the historical H0 projection as runtime state
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "0.10.0"
+    Received: "0.9.0"
+
+      104 |   it('uses current metadata without presenting the historical H0 projection as runtime state', () => {
+      105 |     expect(document.info.title).toBe(contract.info.title);
+    > 106 |     expect(document.info.version).toBe(contract.info.version);
+          |                                   ^
+      107 |     expect(document.info.description).toContain('H1');
+      108 |     expect(document.info.description).not.toMatch(/Only GET \/health currently runs|H0\.2/);
+      109 |     expect(document.info['x-abar-runtime-stage']).not.toBe('h0');
+
+      at Object.<anonymous> (src/configure-application.openapi.spec.ts:106:35)
+
+Test Suites: 1 failed, 1 total
+Tests:       5 failed, 53 passed, 58 total
+Snapshots:   0 total
+Time:        2.308 s
+Ran all test suites matching src/configure-application.openapi.spec.ts.

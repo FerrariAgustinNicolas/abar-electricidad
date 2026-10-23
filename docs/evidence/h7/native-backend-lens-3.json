@@ -1,0 +1,172 @@
+{
+  "sanitizedDerivative": true,
+  "sourceEvidencePath": "docs/evidence/h7/native-backend-lens-3.json",
+  "privacyNote": "Native command arguments, replay transitions, opaque repository/result handles and control tokens omitted. This derivative does not grant review authority or represent a new review.",
+  "schema": "gentle-ai.review-last-event-closure/v1",
+  "operation": "review/capture-result",
+  "lineage_id": "review-bd4e3911c9569e41",
+  "state": "approved",
+  "action": "the approved review completed on the last admitted event and awaits its exact acknowledgement",
+  "advisory_findings": {
+    "statement": "This review is approved and its receipt stands. Every finding listed here is non-blocking: none opened a correction, none reopens this review, and no correction transition is offered for this candidate. Treat them as separate later work, never as a reason to re-run review on this candidate.",
+    "findings": [
+      {
+        "id": "R2-discarded-script-error-context",
+        "lens": "readability",
+        "location": "backend/scripts/h7-postgres.mjs:30",
+        "severity": "WARNING",
+        "disposition": "informational"
+      },
+      {
+        "id": "R2-duplicate-state-filter-builders",
+        "lens": "readability",
+        "location": "backend/src/reports/reports.service.ts:301-310",
+        "severity": "WARNING",
+        "disposition": "informational"
+      },
+      {
+        "id": "R2-untyped-csv-contract",
+        "lens": "readability",
+        "location": "backend/src/reports/reports.service.ts:329",
+        "severity": "WARNING",
+        "disposition": "informational"
+      },
+      {
+        "id": "R2-unused-admin-dependency",
+        "lens": "readability",
+        "location": "backend/src/reports/reports.service.ts:159",
+        "severity": "WARNING",
+        "disposition": "informational"
+      },
+      {
+        "id": "R3-endpoint-coverage",
+        "lens": "reliability",
+        "location": "backend/src/reports/reports.controller.ts:11-16",
+        "severity": "WARNING",
+        "disposition": "informational"
+      },
+      {
+        "id": "R3-post-snapshot-recheck",
+        "lens": "reliability",
+        "location": "backend/src/reports/reports.service.ts:261",
+        "severity": "WARNING",
+        "disposition": "informational"
+      }
+    ]
+  },
+  "reviewer_results": [
+    {
+      "lens": "review-risk",
+      "findings": [],
+      "evidence": [
+        "The complete 12-path candidate was inspected. The new report routes enforce admin authorization before report access in backend/src/reports/reports.controller.ts:11-16, and backend/src/reports/reports.service.ts:166-227 revalidates authorization inside the read-only transaction and again after the snapshot.",
+        "Query inputs are allowlisted, type-checked, enum-checked, and limited to a 366-day interval in backend/src/reports/reports.service.ts:82-110; SQL predicates use Prisma parameter binding in backend/src/reports/reports.service.ts:113-125 and backend/src/reports/reports.service.ts:290-300.",
+        "The CSV projection neutralizes formula-leading and control-bearing textual cells and escapes quotes in backend/src/reports/reports.service.ts:309-319; the coverage in backend/test/h7-reports.e2e-spec.ts:74-90 exercises formula neutralization.",
+        "The PostgreSQL integration helper restricts the database port to loopback, verifies container ownership and tmpfs storage, and writes the credential-bearing fixture manifest with owner-only permissions in backend/scripts/h7-postgres.mjs:13-32. No reachable candidate-caused security, authorization, data-exposure, data-loss, unsafe-input, secret, or dependency-vulnerability defect was established from the immutable patch."
+      ],
+      "result_hash": "sha256:0484077d143e3132c3365e8f7df9e5a78458013580b0c497d3c128ebed211452"
+    },
+    {
+      "lens": "review-resilience",
+      "findings": [],
+      "evidence": [
+        "The report implementation bounds accepted periods and presentation groups, converts unexpected database or aggregation failures to a sanitized unavailable response, uses a read-only repeatable-read transaction, and rechecks authorization after leaving the snapshot in backend/src/reports/reports.service.ts:80-280.",
+        "The disposable PostgreSQL runner bounds readiness retries, validates container ownership before cleanup, avoids pulling an image, and returns a nonzero exit on setup or test failure in backend/scripts/h7-postgres.mjs:13-39.",
+        "The candidate includes real-database checks for read-only behavior, boundary handling, exact large-number aggregation, state changes, and authorization failure propagation in backend/test/h7-reports.e2e-spec.ts:105-181.",
+        "No concrete candidate-caused production failure mode or measured resilience impact satisfying the review severity rules was established from the complete immutable patch."
+      ],
+      "result_hash": "sha256:fa2799b04249804db2dd25e2b50c44a89b74f65265733cfe8d45cdc6468b87ab"
+    },
+    {
+      "lens": "review-readability",
+      "findings": [
+        {
+          "id": "R2-duplicate-state-filter-builders",
+          "lens": "readability",
+          "location": "backend/src/reports/reports.service.ts:301-310",
+          "severity": "WARNING",
+          "claim": "The presentation query uses a second near-copy of the report filter builder solely to substitute SQL aliases. This duplicates the supported filters, enum casts, null handling, and predicate ordering, so a future filter change can silently diverge between the six aggregate queries and the presentation ranking.",
+          "proof_refs": [
+            "backend/src/reports/reports.service.ts:117-127 defines the first filter builder; backend/src/reports/reports.service.ts:301-310 repeats the same business rules with different aliases."
+          ]
+        },
+        {
+          "id": "R2-unused-admin-dependency",
+          "lens": "readability",
+          "location": "backend/src/reports/reports.service.ts:159",
+          "severity": "WARNING",
+          "claim": "ReportsService declares and stores AdminUsersService but never uses it; authorization is performed by the controller and passed in as an opaque authorization object. The dead dependency misstates the service boundary and forces production dependency injection to provide a collaborator that tests correctly replace with an unused dummy.",
+          "proof_refs": [
+            "backend/src/reports/reports.service.ts:159 declares the unused constructor dependency; backend/src/reports/reports.controller.ts:9-16 performs authorization outside the service."
+          ]
+        },
+        {
+          "id": "R2-discarded-script-error-context",
+          "lens": "readability",
+          "location": "backend/scripts/h7-postgres.mjs:30",
+          "severity": "WARNING",
+          "claim": "The top-level catch discards the caught error and always prints one generic sentence. Failures raised by the script's own ownership, readiness, manifest, or migration-status checks may have no more specific command output, leaving maintainers unable to identify which invariant failed despite the message instructing them to inspect that output.",
+          "proof_refs": [
+            "backend/scripts/h7-postgres.mjs:18-29 raises multiple distinct script-owned errors; backend/scripts/h7-postgres.mjs:30 discards their messages."
+          ]
+        },
+        {
+          "id": "R2-untyped-csv-contract",
+          "lens": "readability",
+          "location": "backend/src/reports/reports.service.ts:329",
+          "severity": "WARNING",
+          "claim": "csvReport accepts any even though it projects a large, fixed report schema through deeply nested property access. This hides the endpoint-to-export contract from the type checker, so renaming or reshaping buildReport fields can compile successfully and fail only when the export endpoint executes.",
+          "proof_refs": [
+            "backend/src/reports/reports.service.ts:329-380 accesses the report structure without a declared input type; backend/src/reports/reports.controller.ts:15-16 passes the service result directly into it."
+          ]
+        }
+      ],
+      "evidence": [
+        "Inspected all 12 immutable candidate patches in manifest order, focusing on maintainability defects that obscure behavior or make future changes unsafe."
+      ],
+      "result_hash": "sha256:23027e80534ebb3b033009811cb13ee04a3d8ef3a9473fb0bb5739fb93906905"
+    },
+    {
+      "lens": "review-reliability",
+      "findings": [
+        {
+          "id": "R3-endpoint-coverage",
+          "lens": "reliability",
+          "location": "backend/src/reports/reports.controller.ts:11-16",
+          "severity": "WARNING",
+          "claim": "The new HTTP endpoints have no request-level test proving route wiring, authorization rejection, query parsing, exception-filter status mapping, or export response headers and body. The PostgreSQL suite calls ReportsService directly, while the CSV test calls csvReport directly, so a controller or Nest integration regression could pass every added test.",
+          "proof_refs": [
+            "backend/test/h7-reports.e2e-spec.ts:105-181",
+            "backend/test/h7-reports.e2e-spec.ts:76-98",
+            "backend/src/configure-application.openapi.spec.ts:68-89"
+          ]
+        },
+        {
+          "id": "R3-post-snapshot-recheck",
+          "lens": "reliability",
+          "location": "backend/src/reports/reports.service.ts:261",
+          "severity": "WARNING",
+          "claim": "The second authorization recheck, which is specifically intended to observe revocation committed after the report snapshot, is not exercised. The only rejection test configures the shared mock to fail immediately, so execution never reaches the root-client recheck and does not prove that a session revoked between the two checks suppresses the completed report.",
+          "proof_refs": [
+            "backend/test/h7-reports.e2e-spec.ts:16-18",
+            "backend/test/h7-reports.e2e-spec.ts:171-181",
+            "backend/src/reports/reports.service.ts:261"
+          ]
+        }
+      ],
+      "evidence": [
+        "Inspected the complete immutable patch for all 12 manifest paths. Aggregate arithmetic, date boundaries, filtering, read-only database behavior, exact large integers, CSV formula neutralization, and first authorization-recheck failures receive direct tests in backend/test/h7-reports.e2e-spec.ts:34-181; the remaining findings identify candidate behavior not reached through the externally observable HTTP boundary or the post-snapshot authorization path."
+      ],
+      "result_hash": "sha256:a4ab8c9db782218173128abe3738e80d3dc73d9ba2fc2d1d658fa2ddeaa854d0"
+    }
+  ],
+  "acknowledgement": {
+    "operation": "review.acknowledge-approved",
+    "binding": {
+      "lineage_id": "review-bd4e3911c9569e41",
+      "revision": "sha256:d19c15935c440123d0ab4ca6d2cb0e2773698bb24588468edbc8c97135a38614",
+      "target_identity": "sha256:9d9cf81b8e2d49bc5ff1fd3b05f95a58b92f55b2ba2969535cd567124b074d4a"
+    }
+  },
+  "store_revision": "sha256:d19c15935c440123d0ab4ca6d2cb0e2773698bb24588468edbc8c97135a38614"
+}

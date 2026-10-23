@@ -1,0 +1,203 @@
+{
+  "sanitizedDerivative": true,
+  "sourceEvidencePath": "docs/evidence/h7/native-backend-start-granted.json",
+  "privacyNote": "Native command arguments, replay transitions, opaque repository/result handles and control tokens omitted. This derivative does not grant review authority or represent a new review.",
+  "schema": "gentle-ai.review-integration.start/v4",
+  "contract": "gentle-ai.review-integration/v2",
+  "operation": "review.start",
+  "action": "created",
+  "lenses_required": true,
+  "lineage_id": "review-bd4e3911c9569e41",
+  "state": "reviewing",
+  "risk_level": "medium",
+  "selected_lenses": [
+    "review-risk",
+    "review-resilience",
+    "review-readability",
+    "review-reliability"
+  ],
+  "projection": "workspace",
+  "base_tree": "08255694d028495aa0be1c6275c77e794e2d7a4c",
+  "candidate_tree": "ff54bb41cfb10e262c9ef94c7bd42b7fd085032a",
+  "changed_files": 12,
+  "changed_lines": 1081,
+  "correction_budget": 200,
+  "risk_reasons": [
+    {
+      "code": "executable_change",
+      "path": "backend/scripts/h7-postgres.mjs"
+    }
+  ],
+  "artifact_subjects": [
+    {
+      "schema": "gentle-ai.review-artifact-subject/v2",
+      "subject_hash": "sha256:18af8b2a523739499e533eae3418090db4b19fec91a1e2f4b80035f254c24be0",
+      "lineage_id": "review-bd4e3911c9569e41",
+      "authority_revision": "sha256:0a0d16331f2131a9f577b8a88b4078467aea6ae436fd54137e7bdaa9b7df1df6",
+      "target_identity": "sha256:9d9cf81b8e2d49bc5ff1fd3b05f95a58b92f55b2ba2969535cd567124b074d4a",
+      "base_tree": "08255694d028495aa0be1c6275c77e794e2d7a4c",
+      "candidate_tree": "ff54bb41cfb10e262c9ef94c7bd42b7fd085032a",
+      "changed_path_manifest_sha256": "sha256:626080a45e24cd34e5f0fe1e4f6f5f6bc5992e088501eda9aedf0516ad802b24",
+      "lens": "review-risk",
+      "selected_order": 0
+    },
+    {
+      "schema": "gentle-ai.review-artifact-subject/v2",
+      "subject_hash": "sha256:7738dcfa5a00883f59b2afbda9279fa3d2098d3271b0b167d8d47850d8d7ce26",
+      "lineage_id": "review-bd4e3911c9569e41",
+      "authority_revision": "sha256:0a0d16331f2131a9f577b8a88b4078467aea6ae436fd54137e7bdaa9b7df1df6",
+      "target_identity": "sha256:9d9cf81b8e2d49bc5ff1fd3b05f95a58b92f55b2ba2969535cd567124b074d4a",
+      "base_tree": "08255694d028495aa0be1c6275c77e794e2d7a4c",
+      "candidate_tree": "ff54bb41cfb10e262c9ef94c7bd42b7fd085032a",
+      "changed_path_manifest_sha256": "sha256:626080a45e24cd34e5f0fe1e4f6f5f6bc5992e088501eda9aedf0516ad802b24",
+      "lens": "review-resilience",
+      "selected_order": 1
+    },
+    {
+      "schema": "gentle-ai.review-artifact-subject/v2",
+      "subject_hash": "sha256:fb1446a4a767740541b0cb7a00adf8a3d0156bbaeb6135688321a4ba06ec6f16",
+      "lineage_id": "review-bd4e3911c9569e41",
+      "authority_revision": "sha256:0a0d16331f2131a9f577b8a88b4078467aea6ae436fd54137e7bdaa9b7df1df6",
+      "target_identity": "sha256:9d9cf81b8e2d49bc5ff1fd3b05f95a58b92f55b2ba2969535cd567124b074d4a",
+      "base_tree": "08255694d028495aa0be1c6275c77e794e2d7a4c",
+      "candidate_tree": "ff54bb41cfb10e262c9ef94c7bd42b7fd085032a",
+      "changed_path_manifest_sha256": "sha256:626080a45e24cd34e5f0fe1e4f6f5f6bc5992e088501eda9aedf0516ad802b24",
+      "lens": "review-readability",
+      "selected_order": 2
+    },
+    {
+      "schema": "gentle-ai.review-artifact-subject/v2",
+      "subject_hash": "sha256:a5677db0e23f590877629c853acef4070252f3da2649987c48f4dce40c9ae999",
+      "lineage_id": "review-bd4e3911c9569e41",
+      "authority_revision": "sha256:0a0d16331f2131a9f577b8a88b4078467aea6ae436fd54137e7bdaa9b7df1df6",
+      "target_identity": "sha256:9d9cf81b8e2d49bc5ff1fd3b05f95a58b92f55b2ba2969535cd567124b074d4a",
+      "base_tree": "08255694d028495aa0be1c6275c77e794e2d7a4c",
+      "candidate_tree": "ff54bb41cfb10e262c9ef94c7bd42b7fd085032a",
+      "changed_path_manifest_sha256": "sha256:626080a45e24cd34e5f0fe1e4f6f5f6bc5992e088501eda9aedf0516ad802b24",
+      "lens": "review-reliability",
+      "selected_order": 3
+    }
+  ],
+  "changed_path_manifest": [
+    {
+      "path": "backend/scripts/h7-postgres.mjs",
+      "status": "A",
+      "old_mode": "000000",
+      "new_mode": "100644",
+      "deleted": false,
+      "type_changed": false,
+      "mode_only": false,
+      "intended_untracked": false
+    },
+    {
+      "path": "backend/src/app.module.ts",
+      "status": "M",
+      "old_mode": "100644",
+      "new_mode": "100644",
+      "deleted": false,
+      "type_changed": false,
+      "mode_only": false,
+      "intended_untracked": false
+    },
+    {
+      "path": "backend/src/auth/login.service.spec.ts",
+      "status": "M",
+      "old_mode": "100644",
+      "new_mode": "100644",
+      "deleted": false,
+      "type_changed": false,
+      "mode_only": false,
+      "intended_untracked": false
+    },
+    {
+      "path": "backend/src/configure-application.openapi.spec.ts",
+      "status": "M",
+      "old_mode": "100644",
+      "new_mode": "100644",
+      "deleted": false,
+      "type_changed": false,
+      "mode_only": false,
+      "intended_untracked": false
+    },
+    {
+      "path": "backend/src/configure-application.ts",
+      "status": "M",
+      "old_mode": "100644",
+      "new_mode": "100644",
+      "deleted": false,
+      "type_changed": false,
+      "mode_only": false,
+      "intended_untracked": false
+    },
+    {
+      "path": "backend/src/reports/reports.controller.ts",
+      "status": "A",
+      "old_mode": "000000",
+      "new_mode": "100644",
+      "deleted": false,
+      "type_changed": false,
+      "mode_only": false,
+      "intended_untracked": false
+    },
+    {
+      "path": "backend/src/reports/reports.module.ts",
+      "status": "A",
+      "old_mode": "000000",
+      "new_mode": "100644",
+      "deleted": false,
+      "type_changed": false,
+      "mode_only": false,
+      "intended_untracked": false
+    },
+    {
+      "path": "backend/src/reports/reports.service.ts",
+      "status": "A",
+      "old_mode": "000000",
+      "new_mode": "100644",
+      "deleted": false,
+      "type_changed": false,
+      "mode_only": false,
+      "intended_untracked": false
+    },
+    {
+      "path": "backend/test/h7-reports-fixture.ts",
+      "status": "A",
+      "old_mode": "000000",
+      "new_mode": "100644",
+      "deleted": false,
+      "type_changed": false,
+      "mode_only": false,
+      "intended_untracked": false
+    },
+    {
+      "path": "backend/test/h7-reports.e2e-spec.ts",
+      "status": "A",
+      "old_mode": "000000",
+      "new_mode": "100644",
+      "deleted": false,
+      "type_changed": false,
+      "mode_only": false,
+      "intended_untracked": false
+    },
+    {
+      "path": "docs/decisions/H7-dashboard-reports.md",
+      "status": "M",
+      "old_mode": "100644",
+      "new_mode": "100644",
+      "deleted": false,
+      "type_changed": false,
+      "mode_only": false,
+      "intended_untracked": false
+    },
+    {
+      "path": "docs/evidence/h7/dataset-expected.json",
+      "status": "A",
+      "old_mode": "000000",
+      "new_mode": "100644",
+      "deleted": false,
+      "type_changed": false,
+      "mode_only": false,
+      "intended_untracked": false
+    }
+  ]
+}

@@ -11,7 +11,7 @@ export const H6_OPERATIONS = [
 export function validateH6Contract(document) {
   const errors = [];
   const check = (ok, message) => { if (!ok) errors.push(message); };
-  check(document.info?.version === '0.9.0', 'H6 version must be 0.9.0');
+  check(document.info?.version === '0.9.0' || (document.info?.version === '0.10.0' && document.info?.['x-abar-h7-freeze'] === 'dashboard-reports-v1'), 'H6 version must be 0.9.0');
   check(document.info?.['x-abar-h6-freeze'] === 'notifications-settings-v1', 'H6 freeze marker required');
   for (const [route, verb, output, input] of H6_OPERATIONS) {
     const op = document.paths?.[route]?.[verb];

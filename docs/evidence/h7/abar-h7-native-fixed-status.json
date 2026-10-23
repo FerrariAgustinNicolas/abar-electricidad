@@ -1,0 +1,118 @@
+{
+  "sanitizedDerivative": true,
+  "sourceEvidencePath": "docs/evidence/h7/abar-h7-native-fixed-status.json",
+  "privacyNote": "Native command arguments, replay transitions, opaque repository/result handles and control tokens omitted. This derivative does not grant review authority or represent a new review.",
+  "schema": "gentle-ai.review-integration.status/v9",
+  "contract": "gentle-ai.review-integration/v2",
+  "operation": "review.status",
+  "applicability": "current_target",
+  "authority": {
+    "version": "compact-v2",
+    "lineage_id": "review-0301a7be05401e1f",
+    "state": "correction_required",
+    "generation": 1,
+    "revision": "sha256:35d8a1d24895103c6b2e8c54b19c624abfbe37059b975cec190f35bb02a8e860"
+  },
+  "action": "collect",
+  "replayability": "manual_action_required",
+  "frozen": {
+    "tier": "medium",
+    "original_changed_lines": 1485,
+    "correction_budget": 200
+  },
+  "target_identity": "sha256:f341bb2222b782626a02f4d55ca022900daade40ace419d9ca7feee10737f137",
+  "authority_target_identity": "sha256:8bb228c35d570392fb31d22c10e4748e3077c7690cc2efb37def65064fa48a93",
+  "projection": {
+    "schema": "gentle-ai.review-integration.projection/v1",
+    "kind": "base-diff",
+    "projection": "workspace",
+    "base_tree": "ca6565085fc6abe6d403c299b3e8680aa019132d",
+    "initial_review_tree": "a4116f3a78ef5b74f551d51f2fa97dcb85571c62",
+    "current_candidate_tree": "08255694d028495aa0be1c6275c77e794e2d7a4c",
+    "paths_digest": "sha256:fcebe58857fe6b2e6a98e3f804835788e10cdb731609f0f45d76fdf30d961e48",
+    "paths": [
+      "contracts/CHANGELOG.md",
+      "contracts/openapi.yaml",
+      "docs/decisions/H7-dashboard-reports.md",
+      "docs/evidence/h7/abar-h7-contract-correction.log",
+      "docs/evidence/h7/abar-h7-contract-green.log",
+      "docs/evidence/h7/abar-h7-contract-red.log",
+      "docs/evidence/h7/abar-h7-contract-suite-final.log",
+      "docs/evidence/h7/abar-h7-contract-suite.log",
+      "docs/evidence/h7/abar-h7-contract-validation.log",
+      "docs/evidence/h7/preservation-before.json",
+      "docs/milestones/H7-prompt.md",
+      "odd/tasks/h7-dashboard-reports.md",
+      "scripts/h0-contract-validate.mjs",
+      "scripts/h2-contract.test.mjs",
+      "scripts/h3-contract.mjs",
+      "scripts/h4-contract.mjs",
+      "scripts/h5-contract.mjs",
+      "scripts/h5-contract.test.mjs",
+      "scripts/h6-contract.mjs",
+      "scripts/h7-contract.mjs",
+      "scripts/h7-contract.test.mjs"
+    ],
+    "intended_untracked": [],
+    "intended_untracked_proof": "sha256:b97229718d4c7fe50a8892eb474ae5aa6491697bccb400e3e31dbaca4894d2f3",
+    "initial_snapshot_identity": "sha256:8bb228c35d570392fb31d22c10e4748e3077c7690cc2efb37def65064fa48a93",
+    "current_snapshot_identity": "sha256:f341bb2222b782626a02f4d55ca022900daade40ace419d9ca7feee10737f137"
+  },
+  "eligible_untracked_inventory": "sha256:0fc9c89f9fb57a5340cb06a0d61707dbf4d16b8d18d78a55fd8c28d114b47735",
+  "candidates": [],
+  "forecast": {
+    "horizon": "partial",
+    "steps": [
+      {
+        "step": 1,
+        "kind": "collect",
+        "reason_code": "targeted_validation_required",
+        "description": "Targeted validation run required for correction plan"
+      }
+    ]
+  },
+  "validation_request": {
+    "schema": "gentle-ai.review-targeted-validation-request/v1",
+    "request_hash": "sha256:23b2dab40f6e7e1b8f8ca54e36b89bb6a6574f9e2f32beb287f1d28734b62209",
+    "lineage_id": "review-0301a7be05401e1f",
+    "expected_revision": "sha256:9372dd5bfdea1a64637d7cd63ae340c044b43b87009bba6e7d6b6ae969d0cfd1",
+    "target_identity": "sha256:8bb228c35d570392fb31d22c10e4748e3077c7690cc2efb37def65064fa48a93",
+    "fix_finding_ids": [
+      "R3-cache-header-semantics"
+    ],
+    "policy_content": "Gentle AI native bounded review policy.\n\nOnly candidate-caused BLOCKER or CRITICAL findings may require correction. Pre-existing and base-only findings are follow-ups. One correction is bounded by the frozen original scope. Gates are informational and unmanaged; ordinary repository policy decides delivery.\n",
+    "fix_findings": [
+      {
+        "id": "R3-cache-header-semantics",
+        "lens": "reliability",
+        "location": "scripts/h7-contract.mjs:19",
+        "severity": "BLOCKER",
+        "claim": "The H7 validator checks only that Cache-Control is marked x-required, so a contract mutation that changes its allowed value from no-store to a cacheable value is silently accepted. It also never validates the export's required Content-Disposition, X-Content-Type-Options, or Content-Type values. This leaves the frozen administrative-report and CSV response-header behavior unprotected despite those exact headers being an explicit security and reliability requirement.",
+        "proof_refs": [
+          "scripts/h7-contract.mjs:18-20",
+          "scripts/h7-contract.test.mjs:15-24",
+          "contracts/openapi.yaml:101"
+        ],
+        "evidence_class": "deterministic",
+        "causal_disposition": "introduced"
+      }
+    ],
+    "fix_classifications": [
+      {
+        "finding_id": "R3-cache-header-semantics",
+        "severity": "BLOCKER",
+        "class": "deterministic",
+        "causal_disposition": "introduced",
+        "proof": "scripts/h7-contract.mjs:18-20\nscripts/h7-contract.test.mjs:15-24\ncontracts/openapi.yaml:101"
+      }
+    ],
+    "projection": "workspace",
+    "correction_candidate_tree": "08255694d028495aa0be1c6275c77e794e2d7a4c",
+    "correction_target_identity": "sha256:8a2f356205c6e1733e8a6b1aa8b9eb4674d2a63b73f0f495b266ef516fadff45",
+    "correction_paths": [
+      "scripts/h7-contract.mjs",
+      "scripts/h7-contract.test.mjs"
+    ],
+    "correction_paths_digest": "sha256:1d858b8044d3568a8810d6bbf3b93d3ab023f66bdbc6f4ed5b36f09065f559f3"
+  }
+}

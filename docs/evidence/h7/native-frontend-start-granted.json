@@ -1,0 +1,223 @@
+{
+  "sanitizedDerivative": true,
+  "sourceEvidencePath": "docs/evidence/h7/native-frontend-start-granted.json",
+  "privacyNote": "Native command arguments, replay transitions, opaque repository/result handles and control tokens omitted. This derivative does not grant review authority or represent a new review.",
+  "schema": "gentle-ai.review-integration.start/v4",
+  "contract": "gentle-ai.review-integration/v2",
+  "operation": "review.start",
+  "action": "created",
+  "lenses_required": true,
+  "lineage_id": "review-047ff832a270e9ae",
+  "state": "reviewing",
+  "risk_level": "medium",
+  "selected_lenses": [
+    "review-risk",
+    "review-resilience",
+    "review-readability",
+    "review-reliability"
+  ],
+  "projection": "workspace",
+  "base_tree": "ff54bb41cfb10e262c9ef94c7bd42b7fd085032a",
+  "candidate_tree": "4fb0e6ec886530eb604304d3ae469a0b6893718c",
+  "changed_files": 14,
+  "changed_lines": 706,
+  "correction_budget": 200,
+  "risk_reasons": [
+    {
+      "code": "executable_change",
+      "path": "frontend/src/app/app.routes.ts"
+    }
+  ],
+  "artifact_subjects": [
+    {
+      "schema": "gentle-ai.review-artifact-subject/v2",
+      "subject_hash": "sha256:34a380eff1024999ae8a2e79e8e6e7714fca4d25dc7fd545b4907e067f12e14d",
+      "lineage_id": "review-047ff832a270e9ae",
+      "authority_revision": "sha256:7df1cf7ecfea56af8b9f8c422cc74ab47ba3833ff668afe586981a208568d176",
+      "target_identity": "sha256:529ef67d42cd0e65538375bf71b62533a22733c12d4676f042c07198b9dc8c88",
+      "base_tree": "ff54bb41cfb10e262c9ef94c7bd42b7fd085032a",
+      "candidate_tree": "4fb0e6ec886530eb604304d3ae469a0b6893718c",
+      "changed_path_manifest_sha256": "sha256:72d6848786eeb433a7c7cfa42f1f49aabc8191d993887594799a5f28cf7fece2",
+      "lens": "review-risk",
+      "selected_order": 0
+    },
+    {
+      "schema": "gentle-ai.review-artifact-subject/v2",
+      "subject_hash": "sha256:6c9a095a07c446a08f47f8535d1ebe50059c12f4d739407f27001416bf2ab06a",
+      "lineage_id": "review-047ff832a270e9ae",
+      "authority_revision": "sha256:7df1cf7ecfea56af8b9f8c422cc74ab47ba3833ff668afe586981a208568d176",
+      "target_identity": "sha256:529ef67d42cd0e65538375bf71b62533a22733c12d4676f042c07198b9dc8c88",
+      "base_tree": "ff54bb41cfb10e262c9ef94c7bd42b7fd085032a",
+      "candidate_tree": "4fb0e6ec886530eb604304d3ae469a0b6893718c",
+      "changed_path_manifest_sha256": "sha256:72d6848786eeb433a7c7cfa42f1f49aabc8191d993887594799a5f28cf7fece2",
+      "lens": "review-resilience",
+      "selected_order": 1
+    },
+    {
+      "schema": "gentle-ai.review-artifact-subject/v2",
+      "subject_hash": "sha256:a6696e9c463fc819b9ca0424426d9767881865ba159d0785f3cca44e8d7d771f",
+      "lineage_id": "review-047ff832a270e9ae",
+      "authority_revision": "sha256:7df1cf7ecfea56af8b9f8c422cc74ab47ba3833ff668afe586981a208568d176",
+      "target_identity": "sha256:529ef67d42cd0e65538375bf71b62533a22733c12d4676f042c07198b9dc8c88",
+      "base_tree": "ff54bb41cfb10e262c9ef94c7bd42b7fd085032a",
+      "candidate_tree": "4fb0e6ec886530eb604304d3ae469a0b6893718c",
+      "changed_path_manifest_sha256": "sha256:72d6848786eeb433a7c7cfa42f1f49aabc8191d993887594799a5f28cf7fece2",
+      "lens": "review-readability",
+      "selected_order": 2
+    },
+    {
+      "schema": "gentle-ai.review-artifact-subject/v2",
+      "subject_hash": "sha256:1258896b6a5beaa9f779cd90b8e1ed05b6c750a0a843a0a7dff4868db170fe75",
+      "lineage_id": "review-047ff832a270e9ae",
+      "authority_revision": "sha256:7df1cf7ecfea56af8b9f8c422cc74ab47ba3833ff668afe586981a208568d176",
+      "target_identity": "sha256:529ef67d42cd0e65538375bf71b62533a22733c12d4676f042c07198b9dc8c88",
+      "base_tree": "ff54bb41cfb10e262c9ef94c7bd42b7fd085032a",
+      "candidate_tree": "4fb0e6ec886530eb604304d3ae469a0b6893718c",
+      "changed_path_manifest_sha256": "sha256:72d6848786eeb433a7c7cfa42f1f49aabc8191d993887594799a5f28cf7fece2",
+      "lens": "review-reliability",
+      "selected_order": 3
+    }
+  ],
+  "changed_path_manifest": [
+    {
+      "path": "README.md",
+      "status": "M",
+      "old_mode": "100644",
+      "new_mode": "100644",
+      "deleted": false,
+      "type_changed": false,
+      "mode_only": false,
+      "intended_untracked": false
+    },
+    {
+      "path": "frontend/src/app/app.routes.ts",
+      "status": "M",
+      "old_mode": "100644",
+      "new_mode": "100644",
+      "deleted": false,
+      "type_changed": false,
+      "mode_only": false,
+      "intended_untracked": false
+    },
+    {
+      "path": "frontend/src/app/features/reports/admin-dashboard-page.component.spec.ts",
+      "status": "A",
+      "old_mode": "000000",
+      "new_mode": "100644",
+      "deleted": false,
+      "type_changed": false,
+      "mode_only": false,
+      "intended_untracked": false
+    },
+    {
+      "path": "frontend/src/app/features/reports/admin-dashboard-page.component.ts",
+      "status": "A",
+      "old_mode": "000000",
+      "new_mode": "100644",
+      "deleted": false,
+      "type_changed": false,
+      "mode_only": false,
+      "intended_untracked": false
+    },
+    {
+      "path": "frontend/src/app/features/reports/admin-reports-page.component.spec.ts",
+      "status": "A",
+      "old_mode": "000000",
+      "new_mode": "100644",
+      "deleted": false,
+      "type_changed": false,
+      "mode_only": false,
+      "intended_untracked": false
+    },
+    {
+      "path": "frontend/src/app/features/reports/admin-reports-page.component.ts",
+      "status": "A",
+      "old_mode": "000000",
+      "new_mode": "100644",
+      "deleted": false,
+      "type_changed": false,
+      "mode_only": false,
+      "intended_untracked": false
+    },
+    {
+      "path": "frontend/src/app/features/reports/admin-routes.spec.ts",
+      "status": "A",
+      "old_mode": "000000",
+      "new_mode": "100644",
+      "deleted": false,
+      "type_changed": false,
+      "mode_only": false,
+      "intended_untracked": false
+    },
+    {
+      "path": "frontend/src/app/features/reports/h7-admin-error.ts",
+      "status": "A",
+      "old_mode": "000000",
+      "new_mode": "100644",
+      "deleted": false,
+      "type_changed": false,
+      "mode_only": false,
+      "intended_untracked": false
+    },
+    {
+      "path": "frontend/src/app/features/reports/h7-period.spec.ts",
+      "status": "A",
+      "old_mode": "000000",
+      "new_mode": "100644",
+      "deleted": false,
+      "type_changed": false,
+      "mode_only": false,
+      "intended_untracked": false
+    },
+    {
+      "path": "frontend/src/app/features/reports/h7-period.ts",
+      "status": "A",
+      "old_mode": "000000",
+      "new_mode": "100644",
+      "deleted": false,
+      "type_changed": false,
+      "mode_only": false,
+      "intended_untracked": false
+    },
+    {
+      "path": "frontend/src/app/features/reports/h7-reports-api.service.spec.ts",
+      "status": "A",
+      "old_mode": "000000",
+      "new_mode": "100644",
+      "deleted": false,
+      "type_changed": false,
+      "mode_only": false,
+      "intended_untracked": false
+    },
+    {
+      "path": "frontend/src/app/features/reports/h7-reports-api.service.ts",
+      "status": "A",
+      "old_mode": "000000",
+      "new_mode": "100644",
+      "deleted": false,
+      "type_changed": false,
+      "mode_only": false,
+      "intended_untracked": false
+    },
+    {
+      "path": "frontend/src/app/features/reports/h7-reports.models.ts",
+      "status": "A",
+      "old_mode": "000000",
+      "new_mode": "100644",
+      "deleted": false,
+      "type_changed": false,
+      "mode_only": false,
+      "intended_untracked": false
+    },
+    {
+      "path": "frontend/src/app/layouts/admin-layout.component.ts",
+      "status": "M",
+      "old_mode": "100644",
+      "new_mode": "100644",
+      "deleted": false,
+      "type_changed": false,
+      "mode_only": false,
+      "intended_untracked": false
+    }
+  ]
+}

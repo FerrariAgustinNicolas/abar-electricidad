@@ -134,7 +134,7 @@ docker compose --env-file .env.example up -d
 docker compose --env-file .env.example ps
 ```
 
-El ejemplo contiene credenciales ficticias y exclusivas para desarrollo local. PostgreSQL está publicado en `127.0.0.1:5432`; el SMTP de Mailpit en `127.0.0.1:1025`; su interfaz/API HTTP en `127.0.0.1:8025`. Compose conserva PostgreSQL en `postgres_data` y los mensajes capturados en Mailpit en `mailpit_data`. Para detener los contenedores sin eliminar los volúmenes:
+El ejemplo contiene credenciales ficticias y exclusivas para desarrollo local. PostgreSQL está publicado en `<LOOPBACK_ENDPOINT>`; el SMTP de Mailpit en `<LOOPBACK_ENDPOINT>`; su interfaz/API HTTP en `<LOOPBACK_ENDPOINT>`. Compose conserva PostgreSQL en `postgres_data` y los mensajes capturados en Mailpit en `mailpit_data`. Para detener los contenedores sin eliminar los volúmenes:
 
 ```sh
 docker compose --env-file .env.example stop
@@ -181,10 +181,10 @@ La configuración schema-only no migra ni provisiona recursos. Para migraciones,
 El esquema Prisma contiene `AdminUser`, `AuthSession`, `AuthPreAuthContext` y `AdminUserAudit`, con tres migraciones H1. H2 agrega siete modelos comerciales/auditables y una cuarta migración aditiva. No hay seed automático al iniciar la aplicación. El cliente generado se escribe explícitamente en `backend/src/generated/prisma`; vuelve a generarlo con el script de Prisma al instalar o actualizar dependencias. La configuración de Nest no carga archivos `.env`; define la conexión local explícitamente al iniciar:
 
 ```sh
-DATABASE_URL='postgresql://abar_local:abar_local_demo_only@127.0.0.1:5432/abar_local?schema=public' npm --prefix backend run start:dev
+DATABASE_URL='<DATABASE_URL_REDACTED><LOOPBACK_ENDPOINT>/abar_local?schema=public' npm --prefix backend run start:dev
 ```
 
-La API escucha solo en `127.0.0.1:3000`. `GET /health` ejecuta `SELECT 1` antes de responder `200 {"status":"ok"}`. Si PostgreSQL no está disponible, devuelve `503` con un error seguro y un `requestId` UUID. Swagger está en `/api/docs` y `/api/docs-json`; OpenAPI 3.0.3 conserva health y nueve operaciones H1 y agrega las 21 operaciones H2. Para iniciar H1, además de `DATABASE_URL`, exportá una `AUTH_CSRF_ENCRYPTION_KEY` aleatoria de 32 bytes en base64url (por ejemplo, generada con `node -e "console.log(require('node:crypto').randomBytes(32).toString('base64url'))"`); mantenela privada y estable durante la sesión local. No la versiones. Desarrollo admite HTTP únicamente en loopback; producción requiere Secure y orígenes HTTPS explícitos.
+La API escucha solo en `<LOOPBACK_ENDPOINT>`. `GET /health` ejecuta `SELECT 1` antes de responder `200 {"status":"ok"}`. Si PostgreSQL no está disponible, devuelve `503` con un error seguro y un `requestId` UUID. Swagger está en `/api/docs` y `/api/docs-json`; OpenAPI 3.0.3 conserva health y nueve operaciones H1 y agrega las 21 operaciones H2. Para iniciar H1, además de `DATABASE_URL`, exportá una `AUTH_CSRF_ENCRYPTION_KEY` aleatoria de 32 bytes en base64url (por ejemplo, generada con `node -e "console.log(require('node:crypto').randomBytes(32).toString('base64url'))"`); mantenela privada y estable durante la sesión local. No la versiones. Desarrollo admite HTTP únicamente en loopback; producción requiere Secure y orígenes HTTPS explícitos.
 
 Con PostgreSQL y Mailpit en ejecución, verifica conexión real, OpenAPI, errores seguros, el 503 al probar una base local no disponible y captura SMTP local:
 
@@ -273,7 +273,7 @@ Iniciá la API con esa misma base y su clave CSRF privada; abrí `/admin/login`,
 
 El frontend es una aplicación Angular standalone/zoneless con dependencias fijadas en `frontend/package.json` y lockfile separado. Requiere Node.js 24.x y npm 11.x. No se añadió gestor de monorepo.
 
-Con PostgreSQL/Mailpit locales y el backend iniciado en loopback `127.0.0.1:3000` (ver comandos anteriores), desde la raíz:
+Con PostgreSQL/Mailpit locales y el backend iniciado en loopback `<LOOPBACK_ENDPOINT>` (ver comandos anteriores), desde la raíz:
 
 ```sh
 npm --prefix frontend ci
@@ -283,7 +283,7 @@ npm --prefix frontend test -- --watch=false
 npm --prefix frontend start
 ```
 
-Abrí `http://127.0.0.1:4200`. El servidor Angular se liga solo a loopback y el proxy conserva `GET /health` fuera de `/api/v1`; también pasa `/api` sin reescribirlo. El estado visible consulta la respuesta normativa `{"status":"ok"}` y muestra carga, disponibilidad, error o reintento. El endpoint solo responde saludable cuando PostgreSQL contestó `SELECT 1`.
+Abrí `<LOCAL_APP_URL>`. El servidor Angular se liga solo a loopback y el proxy conserva `GET /health` fuera de `/api/v1`; también pasa `/api` sin reescribirlo. El estado visible consulta la respuesta normativa `{"status":"ok"}` y muestra carga, disponibilidad, error o reintento. El endpoint solo responde saludable cuando PostgreSQL contestó `SELECT 1`.
 
 El shell público toma como referencia documental Home CORREGIDA (`17:256`), sin afirmar acceso o reproducción directa de Figma. H1 incorpora login, cambio obligatorio de contraseña y administración de usuarios; H2 agrega catálogo público y administración de catálogo/stock. H3 incorpora carrito y H4 incorpora checkout y consulta de pedidos de demostración, sin cobros reales. Las pruebas con Vitest/jsdom verifican DOM, rutas y HTTP, no son pruebas de navegador real ni certifican responsive/contraste.
 
@@ -293,7 +293,7 @@ Para iniciar procesos backend y frontend propios, comprobar que el landing se si
 node scripts/h0-frontend-smoke.mjs
 ```
 
-El smoke requiere que `127.0.0.1:3000` esté libre, inicia backend propio en ese puerto (target fijo del proxy) y elige un puerto frontend loopback disponible. Usa únicamente una URL PostgreSQL local ficticia explícita, no lee archivos de entorno, no inicia ni detiene Compose y termina solo los procesos que inició. Si 3000 está ocupado, falla sin contactar ni detener ese proceso.
+El smoke requiere que `<LOOPBACK_ENDPOINT>` esté libre, inicia backend propio en ese puerto (target fijo del proxy) y elige un puerto frontend loopback disponible. Usa únicamente una URL PostgreSQL local ficticia explícita, no lee archivos de entorno, no inicia ni detiene Compose y termina solo los procesos que inició. Si 3000 está ocupado, falla sin contactar ni detener ese proceso.
 
 El mapa completo de nodos/rutas, brechas y criterios visuales pendientes está en `docs/figma-map.md`. Las corridas históricas de navegador se conservan en el informe H1; el informe post-merge distingue lo repetido sobre este candidato de lo todavía pendiente. Compilar y jsdom no sustituyen una nueva verificación visual.
 
@@ -393,3 +393,13 @@ pagination and eligible retry actions. It never exposes recipients or payloads.
 The separate foreground worker delivers jobs; retrying in the interface does not
 send SMTP synchronously. `/contacto` reads minimal public DEMO contact; WhatsApp
 is a manual link only when a validated configured value exists.
+
+
+## H7 — Dashboard y reportes básicos (candidato local académico)
+
+- Dashboard protegido: `/admin/dashboard`; reportes: `/admin/reportes`. Ambos consultan hechos persistidos, no el carrito ni resultados simulados sin confirmar.
+- Contrato normativo: OpenAPI `0.10.0`, marcador `dashboard-reports-v1`. Las ventas usan `Payment.confirmedAt`; los pedidos nuevos usan `Order.createdAt`. Fechas locales de Buenos Aires, inicio incluido y fin exclusivo; máximo 366 días.
+- Importes ARS exactos en centavos como strings. CSV UTF-8 con 24 columnas y secciones reconciliables: no sumar totales y desgloses entre sí ni mezclar cantidades UNIT/METER/ROLL.
+- Prueba PostgreSQL aislada: `node backend/scripts/h7-postgres.mjs`. Requiere Docker local y la imagen local `postgres:17.11-bookworm`; no descarga imágenes ni reutiliza bases. `--keep` conserva únicamente un fixture exitoso para comprobaciones locales y genera un manifiesto privado con credenciales: nunca versionarlo.
+- No migration required: H7 utiliza las ocho migraciones H1–H6 existentes. No modifica pagos, confirmaciones, stock ni notificaciones.
+- Evidencia y límites: [informe H7](docs/milestones/H7-informe.md). No es contabilidad, facturación ni certificación productiva; no se autoriza publicación.

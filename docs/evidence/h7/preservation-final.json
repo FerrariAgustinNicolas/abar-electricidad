@@ -1,0 +1,11 @@
+{
+  "sanitizedDerivative": true,
+  "sourceEvidencePath": "docs/evidence/h7/preservation-final.json",
+  "baselineProtectedWorktrees": 17,
+  "capturedBeforeH7": false,
+  "originalH7WorktreeTotal": 18,
+  "allProtectedUnchanged": true,
+  "persistentRefsUnchanged": true,
+  "transientReferenceDifference": "One pre-existing transient native capture ref absent after H7; cause not established; no restoration performed.",
+  "privacyNote": "Per-worktree paths, states, refs, indexes and unrelated identities omitted; original retained on untouched audited branch."
+}

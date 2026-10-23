@@ -9,7 +9,7 @@ import { AuthSessionService } from '../core/auth/auth-session.service';
   template: `
     <a class="skip-link" href="#admin-content" (click)="$event.preventDefault(); content.focus()">Saltar al contenido</a>
     <header class="admin-header">
-      <a routerLink="/admin/usuarios" class="admin-brand">ABAR Electricidad · Administración</a>
+      <a routerLink="/admin/dashboard" class="admin-brand">ABAR Electricidad · Administración</a>
       <div class="admin-account">
         <span>{{ accountName() }}</span>
         <button type="button" class="button-light" (click)="logout()">Cerrar sesión</button>
@@ -17,6 +17,8 @@ import { AuthSessionService } from '../core/auth/auth-session.service';
     </header>
     <div class="admin-shell">
       <nav class="admin-nav" aria-label="Navegación administrativa">
+        <a routerLink="/admin/dashboard" routerLinkActive="active" ariaCurrentWhenActive="page">Resumen DEMO</a>
+        <a routerLink="/admin/reportes" routerLinkActive="active" ariaCurrentWhenActive="page">Reportes DEMO</a>
         <a routerLink="/admin/usuarios" routerLinkActive="active" ariaCurrentWhenActive="page">Usuarios administradores</a>
         <a routerLink="/admin/pedidos" routerLinkActive="active" ariaCurrentWhenActive="page">Pedidos</a>
         <a routerLink="/admin/productos">Productos</a>

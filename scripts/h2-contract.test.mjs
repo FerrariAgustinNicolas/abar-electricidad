@@ -1,3 +1,4 @@
+import { H7_OPERATIONS } from './h7-contract.mjs';
 import { H6_OPERATIONS } from './h6-contract.mjs';
 import { H5_OPERATIONS } from './h5-contract.mjs';
 import { H4_OPERATIONS } from './h4-contract.mjs';
@@ -92,7 +93,8 @@ test('frozen H2 validator rejects removal of endpoints, error schemas and multip
 
 test('legacy H1-only contract remains accepted by the same public validator interface', async () => {
   const document = await normative();
-  for (const [route] of [...H2_OPERATIONS, ...H3_OPERATIONS, ...H4_OPERATIONS, ...H5_OPERATIONS, ...H6_OPERATIONS]) delete document.paths[route];
+  for (const [route] of [...H2_OPERATIONS, ...H3_OPERATIONS, ...H4_OPERATIONS, ...H5_OPERATIONS, ...H6_OPERATIONS, ...H7_OPERATIONS]) delete document.paths[route];
+  delete document.info['x-abar-h7-freeze'];
   delete document.info['x-abar-h6-freeze'];
   delete document.info['x-abar-h5-freeze'];
   delete document.info['x-abar-h4-freeze'];

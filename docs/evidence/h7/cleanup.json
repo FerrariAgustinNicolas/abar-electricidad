@@ -1,0 +1,6 @@
+{
+  "sanitizedDerivative": true,
+  "sourceEvidencePath": "docs/evidence/h7/cleanup.json",
+  "outcome": "Owned API/UI processes and owned PostgreSQL resources stopped; eleven explicit scratch/build directories removed after ownership checks. Original external cache not modified.",
+  "privacyNote": "Private paths, process/container identities and operational commands omitted."
+}

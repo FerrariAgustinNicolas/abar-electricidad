@@ -1,0 +1,126 @@
+SANITIZED DERIVATIVE — historical output, not a new execution. Local paths and operational identifiers are replaced; original retained privately on the audited branch.
+
+Loaded Prisma config from ../../../../../../..<LOCAL_PATH>
+
+Prisma schema loaded from prisma/schema.prisma.
+Datasource "db": PostgreSQL database "h7_reports", schema "public" at "<LOOPBACK_ENDPOINT>"
+
+8 migrations found in prisma/migrations
+
+Applying migration `20261009000100_h1_admin_user`
+Applying migration `20261009000200_h1_auth_context`
+Applying migration `20261009000300_h1_admin_audit`
+Applying migration `20261020000100_h2_catalog_stock`
+Applying migration `20261020190000_h3_checkout_quotes`
+Applying migration `20261020200000_h4_orders`
+Applying migration `20261021000100_h5_manual_confirmation`
+Applying migration `20261022000000_h6_notifications_settings`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20261009000100_h1_admin_user/
+    └─ migration.sql
+  └─ 20261009000200_h1_auth_context/
+    └─ migration.sql
+  └─ 20261009000300_h1_admin_audit/
+    └─ migration.sql
+  └─ 20261020000100_h2_catalog_stock/
+    └─ migration.sql
+  └─ 20261020190000_h3_checkout_quotes/
+    └─ migration.sql
+  └─ 20261020200000_h4_orders/
+    └─ migration.sql
+  └─ 20261021000100_h5_manual_confirmation/
+    └─ migration.sql
+  └─ 20261022000000_h6_notifications_settings/
+    └─ migration.sql
+
+All migrations have been successfully applied.
+Loaded Prisma config from ../../../../../../..<LOCAL_PATH>
+
+No difference detected.
+
+FAIL test/h7-reports.e2e-spec.ts
+  ● H7 real PostgreSQL aggregate fixture › matches independently declared totals, statuses, series, methods, delivery and ranking
+
+    PrismaClientKnownRequestError: 
+    Invalid `prisma.$executeRaw()` invocation:
+
+
+    Raw query failed. Code: `23514`. Message: `new row for relation "Order" violates check constraint "Order_terms_check"`
+
+       96 |   await tx.$executeRaw`INSERT INTO "CheckoutQuote" (id, "policyVersion", "stateFingerprint", response, "expiresAt")
+       97 |     VALUES (${quoteId}, 1, ${fingerprint}, '{}'::jsonb, now() + interval '1 day')`;
+    >  98 |   await tx.$executeRaw`INSERT INTO "Order" (id, "orderNumber", "quoteId", "createdAt", status, version, "deliveryMode",
+          |   ^
+       99 |     "customerFirstName", "customerLastName", "customerEmail", "customerPhone", "acceptedTermsVersion",
+      100 |     "subtotalMinor", "deliveryFeeMinor", "totalMinor", "accessTokenHash", "accessExpiresAt")
+      101 |     VALUES (${orderId}, ${`H7-${record.key}`}, ${quoteId}, ${new Date(record.createdAt)}, ${record.orderStatus}::"H4OrderStatus",
+
+      at vn.handleRequestError (../../../abar-electricidad/backend/node_modules/@prisma/client/src/runtime/RequestHandler.ts:238:13)
+      at vn.handleAndLogRequestError (../../../abar-electricidad/backend/node_modules/@prisma/client/src/runtime/RequestHandler.ts:184:12)
+      at vn.request (../../../abar-electricidad/backend/node_modules/@prisma/client/src/runtime/RequestHandler.ts:153:12)
+      at a (../../../abar-electricidad/backend/node_modules/@prisma/client/src/runtime/getPrismaClient.ts:1014:24)
+      at createOrder (test/h7-reports-fixture.ts:98:3)
+      at seedH7ReportsFixture (test/h7-reports-fixture.ts:136:62)
+      at Proxy._transactionWithCallback (../../../abar-electricidad/backend/node_modules/@prisma/client/src/runtime/getPrismaClient.ts:861:18)
+      at Object.<anonymous> (test/h7-reports.e2e-spec.ts:106:52)
+
+  ● H7 real PostgreSQL aggregate fixture › applies enum-valued filters and never counts unconfirmed PAID rows as sales
+
+    PrismaClientKnownRequestError: 
+    Invalid `prisma.$executeRaw()` invocation:
+
+
+    Raw query failed. Code: `23514`. Message: `new row for relation "Order" violates check constraint "Order_terms_check"`
+
+       96 |   await tx.$executeRaw`INSERT INTO "CheckoutQuote" (id, "policyVersion", "stateFingerprint", response, "expiresAt")
+       97 |     VALUES (${quoteId}, 1, ${fingerprint}, '{}'::jsonb, now() + interval '1 day')`;
+    >  98 |   await tx.$executeRaw`INSERT INTO "Order" (id, "orderNumber", "quoteId", "createdAt", status, version, "deliveryMode",
+          |   ^
+       99 |     "customerFirstName", "customerLastName", "customerEmail", "customerPhone", "acceptedTermsVersion",
+      100 |     "subtotalMinor", "deliveryFeeMinor", "totalMinor", "accessTokenHash", "accessExpiresAt")
+      101 |     VALUES (${orderId}, ${`H7-${record.key}`}, ${quoteId}, ${new Date(record.createdAt)}, ${record.orderStatus}::"H4OrderStatus",
+
+      at vn.handleRequestError (../../../abar-electricidad/backend/node_modules/@prisma/client/src/runtime/RequestHandler.ts:238:13)
+      at vn.handleAndLogRequestError (../../../abar-electricidad/backend/node_modules/@prisma/client/src/runtime/RequestHandler.ts:184:12)
+      at vn.request (../../../abar-electricidad/backend/node_modules/@prisma/client/src/runtime/RequestHandler.ts:153:12)
+      at a (../../../abar-electricidad/backend/node_modules/@prisma/client/src/runtime/getPrismaClient.ts:1014:24)
+      at createOrder (test/h7-reports-fixture.ts:98:3)
+      at seedH7ReportsFixture (test/h7-reports-fixture.ts:136:62)
+      at Proxy._transactionWithCallback (../../../abar-electricidad/backend/node_modules/@prisma/client/src/runtime/getPrismaClient.ts:861:18)
+      at Object.<anonymous> (test/h7-reports.e2e-spec.ts:106:52)
+
+  ● H7 real PostgreSQL aggregate fixture › keeps large PostgreSQL numeric totals exact and rounds non-integral ticket averages half up
+
+    PrismaClientKnownRequestError: 
+    Invalid `prisma.$executeRaw()` invocation:
+
+
+    Raw query failed. Code: `23514`. Message: `new row for relation "Order" violates check constraint "Order_terms_check"`
+
+       96 |   await tx.$executeRaw`INSERT INTO "CheckoutQuote" (id, "policyVersion", "stateFingerprint", response, "expiresAt")
+       97 |     VALUES (${quoteId}, 1, ${fingerprint}, '{}'::jsonb, now() + interval '1 day')`;
+    >  98 |   await tx.$executeRaw`INSERT INTO "Order" (id, "orderNumber", "quoteId", "createdAt", status, version, "deliveryMode",
+          |   ^
+       99 |     "customerFirstName", "customerLastName", "customerEmail", "customerPhone", "acceptedTermsVersion",
+      100 |     "subtotalMinor", "deliveryFeeMinor", "totalMinor", "accessTokenHash", "accessExpiresAt")
+      101 |     VALUES (${orderId}, ${`H7-${record.key}`}, ${quoteId}, ${new Date(record.createdAt)}, ${record.orderStatus}::"H4OrderStatus",
+
+      at vn.handleRequestError (../../../abar-electricidad/backend/node_modules/@prisma/client/src/runtime/RequestHandler.ts:238:13)
+      at vn.handleAndLogRequestError (../../../abar-electricidad/backend/node_modules/@prisma/client/src/runtime/RequestHandler.ts:184:12)
+      at vn.request (../../../abar-electricidad/backend/node_modules/@prisma/client/src/runtime/RequestHandler.ts:153:12)
+      at a (../../../abar-electricidad/backend/node_modules/@prisma/client/src/runtime/getPrismaClient.ts:1014:24)
+      at createOrder (test/h7-reports-fixture.ts:98:3)
+      at seedH7ReportsFixture (test/h7-reports-fixture.ts:136:62)
+      at Proxy._transactionWithCallback (../../../abar-electricidad/backend/node_modules/@prisma/client/src/runtime/getPrismaClient.ts:861:18)
+      at Object.<anonymous> (test/h7-reports.e2e-spec.ts:106:52)
+
+Test Suites: 1 failed, 1 total
+Tests:       3 failed, 5 passed, 8 total
+Snapshots:   0 total
+Time:        1.055 s, estimated 2 s
+Ran all test suites within paths "<LOCAL_PATH>".
+H7 owned PostgreSQL setup or report tests failed; inspect local command output.
+Private fixture manifest retained for parent-owned checks: <LOCAL_PATH>

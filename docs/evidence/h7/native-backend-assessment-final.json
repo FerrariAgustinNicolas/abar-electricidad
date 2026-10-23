@@ -1,0 +1,26 @@
+{
+  "sanitizedDerivative": true,
+  "sourceEvidencePath": "docs/evidence/h7/native-backend-assessment-final.json",
+  "privacyNote": "Native command arguments, replay transitions, opaque repository/result handles and control tokens omitted. This derivative does not grant review authority or represent a new review.",
+  "schema": "gentle-ai.review-assessment/v1",
+  "risk": "high",
+  "reasons": [
+    {
+      "code": "executable_change",
+      "path": "backend/scripts/h7-postgres.mjs"
+    },
+    {
+      "code": "agent_escalation",
+      "detail": "item 2 (security): New administrative report authorization, exact read-only aggregates and CSV safety"
+    }
+  ],
+  "changed_paths": 12,
+  "changed_lines": 1081,
+  "candidate": {
+    "kind": "base-diff",
+    "base_ref": "cdcebfc42dc67a0547a62631d965a970ca381cb6",
+    "consumed": false
+  },
+  "review_due": true,
+  "review_due_reason": "high_risk"
+}
